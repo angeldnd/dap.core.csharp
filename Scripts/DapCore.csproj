@@ -31,11 +31,9 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Utils\" />
     <Folder Include="DapCore\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Utils\Logger.cs" />
     <Compile Include="DapCore\core\Aspect.cs" />
     <Compile Include="DapCore\core\DapObject.cs" />
     <Compile Include="DapCore\core\Entity.cs" />
@@ -53,5 +51,6 @@
     <Compile Include="DapCore\registry\Item.cs" />
     <Compile Include="DapCore\registry\Registry.cs" />
     <Compile Include="DapCore\registry\Factory.cs" />
+    <Compile Include="DapCore\utils\Logger.cs" />
   </ItemGroup>
 </Project>

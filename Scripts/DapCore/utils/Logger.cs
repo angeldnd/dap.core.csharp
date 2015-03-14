@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 //using System.Text.RegularExpressions;
 
-namespace ADD.Utils {
+namespace ADD.Dap {
     public interface Logger {
         bool LogDebug { get; }
         void Critical(string format, params object[] values);

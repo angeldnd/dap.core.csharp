@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using ADD.Utils;
-
 namespace ADD.Dap {
     public interface EntityWatcher {
         void onEntityAspectAdded(Entity entity, Aspect aspect);
