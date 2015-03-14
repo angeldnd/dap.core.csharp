@@ -257,7 +257,7 @@ namespace ADD.Dap {
                                                                                                           //__SILP__
         public void Info(string format, params object[] values) {                                         //__SILP__
             if (DebugMode) {                                                                              //__SILP__
-                _DebugLogger.LogWithPatterns("INFO", DebugPatterns,                                       //__SILP__
+                _DebugLogger.LogWithPatterns(LoggerConsts.INFO, DebugPatterns,                            //__SILP__
                         GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values)); //__SILP__
             } else {                                                                                      //__SILP__
                 Log.Info(GetLogPrefix() + string.Format(format, values));                                 //__SILP__
@@ -266,7 +266,7 @@ namespace ADD.Dap {
                                                                                                           //__SILP__
         public void Debug(string format, params object[] values) {                                        //__SILP__
             if (DebugMode) {                                                                              //__SILP__
-                _DebugLogger.LogWithPatterns("DEBUG", DebugPatterns,                                      //__SILP__
+                _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, DebugPatterns,                           //__SILP__
                         GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values)); //__SILP__
             } else {                                                                                      //__SILP__
                 Log.Debug(GetLogPrefix() + string.Format(format, values));                                //__SILP__

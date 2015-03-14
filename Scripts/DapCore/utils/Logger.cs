@@ -4,6 +4,13 @@ using System.IO;
 //using System.Text.RegularExpressions;
 
 namespace ADD.Dap {
+    public struct LoggerConsts {
+        public const string CRITICAL = "CRITICAL";
+        public const string ERROR = "ERROR";
+        public const string INFO = "INFO";
+        public const string DEBUG = "DEBUG";
+    }
+
     public interface Logger {
         bool LogDebug { get; }
         void Critical(string format, params object[] values);
@@ -27,20 +34,20 @@ namespace ADD.Dap {
 
         public static void Critical(string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(1, true);
-            Provider.AddLog("CRICICAL", stackTrace, format, values);
+            Provider.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
         }
 
         public static void Error(string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(1, true);
-            Provider.AddLog("ERROR", stackTrace, format, values);
+            Provider.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
         }
 
         public static void Info(string format, params object[] values) {
-            Provider.AddLog("INFO", null, format, values);
+            Provider.AddLog(LoggerConsts.INFO, null, format, values);
         }
 
         public static void Debug(string format, params object[] values) {
-            if (LogDebug) Provider.AddLog("DEBUG", null, format, values);
+            if (LogDebug) Provider.AddLog(LoggerConsts.DEBUG, null, format, values);
         }
 
         public static void Custom(string type, string format, params object[] values) {
@@ -73,20 +80,20 @@ namespace ADD.Dap {
 
         public void Critical(string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog("CRICICAL", stackTrace, format, values);
+            Log.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
         }
 
         public void Error(string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog("ERROR", stackTrace, format, values);
+            Log.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
         }
 
         public void Info(string format, params object[] values) {
-            Log.AddLog("INFO", null, format, values);
+            Log.AddLog(LoggerConsts.INFO, null, format, values);
         }
 
         public void Debug(string format, params object[] values) {
-            Log.AddLog("DEBUG", null, format, values);
+            Log.AddLog(LoggerConsts.DEBUG, null, format, values);
         }
 
         public void LogWithPatterns(string type, string[] patterns, string format, params object[] values) {

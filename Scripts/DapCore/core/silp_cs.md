@@ -236,7 +236,7 @@ public void Error(string format, params object[] values) {
 
 public void Info(string format, params object[] values) {
     if (DebugMode) {
-        _DebugLogger.LogWithPatterns("INFO", DebugPatterns,
+        _DebugLogger.LogWithPatterns(LoggerConsts.INFO, DebugPatterns,
                 GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values));
     } else {
         Log.Info(GetLogPrefix() + string.Format(format, values));
@@ -245,7 +245,7 @@ public void Info(string format, params object[] values) {
 
 public void Debug(string format, params object[] values) {
     if (DebugMode) {
-        _DebugLogger.LogWithPatterns("DEBUG", DebugPatterns,
+        _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, DebugPatterns,
                 GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values));
     } else {
         Log.Debug(GetLogPrefix() + string.Format(format, values));
@@ -292,7 +292,7 @@ public void Error(string format, params object[] values) {
 
 public void Info(string format, params object[] values) {
     if (DebugMode) {
-        _DebugLogger.LogWithPatterns("INFO", Entity.DebugPatterns,
+        _DebugLogger.LogWithPatterns(LoggerConsts.INFO, Entity.DebugPatterns,
                 GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values));
     } else {
         Log.Info(GetLogPrefix() + string.Format(format, values));
@@ -301,7 +301,7 @@ public void Info(string format, params object[] values) {
 
 public void Debug(string format, params object[] values) {
     if (DebugMode) {
-        _DebugLogger.LogWithPatterns("DEBUG", Entity.DebugPatterns,
+        _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, Entity.DebugPatterns,
                 GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values));
     } else {
         Log.Debug(GetLogPrefix() + string.Format(format, values));
