@@ -167,29 +167,6 @@ public bool Decode(Data data) {
 
 ```
 
-# SINGLETON_MIXIN() #
-```C#
-protected static T _Instance;
-
-public static T GetInstance(bool logError) {
-    if (_Instance == null) {
-        _Instance = Helper.GetSingleton<T>(logError);
-    }
-    return _Instance;
-}
-
-public static T Instance {
-    get {
-        return GetInstance(true);
-    }
-}
-
-public static bool HasInstance() {
-    return GetInstance(false) != null;
-}
-
-```
-
 # ENTITY_LOG_MIXIN() #
 ```
 private DebugLogger _DebugLogger = DebugLogger.Instance;

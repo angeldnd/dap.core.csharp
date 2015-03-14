@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace ADD.Dap {
     public interface EntityWatcher {
-        void onEntityAspectAdded(Entity entity, Aspect aspect);
-        void onEntityAspectRemoved(Entity entity, Aspect aspect);
+        void OnEntityAspectAdded(Entity entity, Aspect aspect);
+        void OnEntityAspectRemoved(Entity entity, Aspect aspect);
     }
 
     public struct EntityConsts {
@@ -144,20 +144,19 @@ namespace ADD.Dap {
             return null;
         }
 
-        internal bool SetAspect(Aspect aspect) {
+        protected bool SetAspect(Aspect aspect) {
             Aspect oldAspect = GetAspect(aspect.Path);
             if (oldAspect != null) {
-                for (int i = 0; i < _Watchers.Count; i++) {
-                    _Watchers[i].onEntityAspectRemoved(this, oldAspect);
-                }
+                Error("Aspect Exist: {0}, {1}, {2}", aspect.Path, oldAspect, aspect);
+                return false;
             }
             if (aspect.Entity != this) {
-                Error("Invalid aspect: {0}", aspect);
+                Error("Invalid Aspect: {0}", aspect);
                 return false;
             }
             _Aspects[aspect.Path] = aspect;
             for (int i = 0; i < _Watchers.Count; i++) {
-                _Watchers[i].onEntityAspectAdded(this, aspect);
+                _Watchers[i].OnEntityAspectAdded(this, aspect);
             }
             return true;
         }
@@ -178,7 +177,7 @@ namespace ADD.Dap {
             if (aspect != null) {
                 _Aspects.Remove(path);
                 for (int i = 0; i < _Watchers.Count; i++) {
-                    _Watchers[i].onEntityAspectRemoved(this, aspect);
+                    _Watchers[i].OnEntityAspectRemoved(this, aspect);
                 }
                 return aspect;
             }
