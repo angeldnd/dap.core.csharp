@@ -18,8 +18,12 @@ namespace ADD.Dap {
             get { return EntityConsts.Separator; }
         }
 
-        public virtual string Name {
-            get { return string.Empty; }
+        private string _Name = string.Empty;
+        public string Name {
+            get { return _Name; }
+        }
+        public void SetName(string name) {
+            _Name = name;
         }
 
         private Dictionary<string, Aspect> _Aspects = new Dictionary<string, Aspect>();
