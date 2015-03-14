@@ -35,20 +35,23 @@
     <Folder Include="DapCore\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Utils\Log.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="DapCore\core\Aspect.cs" />
     <Compile Include="DapCore\core\DapObject.cs" />
     <Compile Include="DapCore\core\Entity.cs" />
     <Compile Include="DapCore\core\Data.cs" />
     <Compile Include="DapCore\utils\PatternMatcher.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="UnityEngine">
-      <HintPath>..\dll\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor">
-      <HintPath>..\dll\UnityEditor.dll</HintPath>
-    </Reference>
+    <Compile Include="DapCore\core\Var.cs" />
+    <Compile Include="DapCore\core\Vars.cs" />
+    <Compile Include="DapCore\context\Property.cs" />
+    <Compile Include="DapCore\context\Properties.cs" />
+    <Compile Include="DapCore\context\Channel.cs" />
+    <Compile Include="DapCore\context\Channels.cs" />
+    <Compile Include="DapCore\context\Handler.cs" />
+    <Compile Include="DapCore\context\Handlers.cs" />
+    <Compile Include="DapCore\context\Context.cs" />
+    <Compile Include="DapCore\registry\Item.cs" />
+    <Compile Include="DapCore\registry\Registry.cs" />
+    <Compile Include="DapCore\registry\Factory.cs" />
   </ItemGroup>
 </Project>

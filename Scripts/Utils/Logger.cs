@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.IO;
 //using System.Text.RegularExpressions;
 
-using UnityEngine;
-
 namespace ADD.Utils {
     public interface Logger {
         bool LogDebug { get; }
@@ -12,6 +10,42 @@ namespace ADD.Utils {
         void Error(string format, params object[] values);
         void Info(string format, params object[] values);
         void Debug(string format, params object[] values);
+    }
+
+    public interface LogProvider {
+        void AddLog(string type, StackTrace stackTrace, string format, params object[] values);
+    }
+
+    public class Log {
+        public static LogProvider Provider = null;
+
+        public static void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
+            Provider.AddLog(type, stackTrace, format, values);
+        }
+
+        public static bool LogDebug;
+
+        public static void Critical(string format, params object[] values) {
+            StackTrace stackTrace = new StackTrace(1, true);
+            Provider.AddLog("CRICICAL", stackTrace, format, values);
+        }
+
+        public static void Error(string format, params object[] values) {
+            StackTrace stackTrace = new StackTrace(1, true);
+            Provider.AddLog("ERROR", stackTrace, format, values);
+        }
+
+        public static void Info(string format, params object[] values) {
+            Provider.AddLog("INFO", null, format, values);
+        }
+
+        public static void Debug(string format, params object[] values) {
+            if (LogDebug) Provider.AddLog("DEBUG", null, format, values);
+        }
+
+        public static void Custom(string type, string format, params object[] values) {
+            Provider.AddLog(type, null, format, values);
+        }
     }
 
     public class DebugLogger : Logger {
@@ -40,7 +74,6 @@ namespace ADD.Utils {
         public void Critical(string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
             Log.AddLog("CRICICAL", stackTrace, format, values);
-            Log.FlushLogging();
         }
 
         public void Error(string format, params object[] values) {
@@ -49,13 +82,11 @@ namespace ADD.Utils {
         }
 
         public void Info(string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog("INFO", stackTrace, format, values);
+            Log.AddLog("INFO", null, format, values);
         }
 
         public void Debug(string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog("DEBUG", stackTrace, format, values);
+            Log.AddLog("DEBUG", null, format, values);
         }
 
         public void LogWithPatterns(string type, string[] patterns, string format, params object[] values) {

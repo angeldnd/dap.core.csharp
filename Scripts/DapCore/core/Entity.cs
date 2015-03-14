@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using UnityEngine;
-
 using ADD.Utils;
 
 namespace ADD.Dap {
@@ -11,16 +9,35 @@ namespace ADD.Dap {
         void onEntityAspectRemoved(Entity entity, Aspect aspect);
     }
 
-    public class EntityConsts {
+    public struct EntityConsts {
         public const string KeyAspects = "aspects";
+
+        public const char Separator = '.';
     }
 
-    public abstract class Entity : MonoBehaviour, DapObject, Logger {
-        public char Separator {
-            get { return '.'; }
+    public abstract class Entity : DapObject, Logger {
+        public virtual char Separator {
+            get { return EntityConsts.Separator; }
+        }
+
+        public virtual string Name {
+            get { return string.Empty; }
         }
 
         private Dictionary<string, Aspect> _Aspects = new Dictionary<string, Aspect>();
+
+        public Dictionary<string, Aspect>.KeyCollection AllPathes {
+            get {
+                return _Aspects.Keys;
+            }
+        }
+
+        public Dictionary<string, Aspect>.ValueCollection AllAspects {
+            get {
+                return _Aspects.Values;
+            }
+        }
+
         private List<EntityWatcher> _Watchers = new List<EntityWatcher>();
 
         protected virtual bool DoEncode(Data data) {
@@ -54,7 +71,7 @@ namespace ADD.Dap {
                         string type = aspectData.GetString(DapObjectConsts.KeyType);
                         if (!string.IsNullOrEmpty(type)) {
                             aspect = FactoryAspect(this, path, type);
-                            if (aspect != null && aspect.Decode(aspectData)) {
+                            if (aspect != null && aspect.Init(this, path) && aspect.Decode(aspectData)) {
                                 SetAspect(aspect);
                                 succeed = true;
                             }
@@ -73,7 +90,9 @@ namespace ADD.Dap {
             return succeedCount;
         }
 
-        public abstract Aspect FactoryAspect(Entity entity, string path, string type);
+        public virtual Aspect FactoryAspect(Entity entity, string path, string type) {
+            return null;
+        }
 
         public bool AddWatcher(EntityWatcher watcher) {
             if (!_Watchers.Contains(watcher)) {
@@ -169,7 +188,7 @@ namespace ADD.Dap {
         }
 
         //SILP: DAPOBJECT_MIXIN()
-        public string Type {                                          //__SILP__
+        public virtual string Type {                                  //__SILP__
             get { return null; }                                      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
@@ -182,7 +201,7 @@ namespace ADD.Dap {
                     }                                                 //__SILP__
                 }                                                     //__SILP__
             }                                                         //__SILP__
-            if (LogDebug) Log.Debug("Not Encodable!");                //__SILP__
+            if (LogDebug) Debug("Not Encodable!");                    //__SILP__
             return null;                                              //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
@@ -195,28 +214,35 @@ namespace ADD.Dap {
         }                                                             //__SILP__
                                                                       //__SILP__
 
-        //SILP: MONO_LOG_MIXIN()
-        //Keep them public so default editor inspector can be shown                                       //__SILP__
-        //TODO: Create custom editor so they can be private again                                         //__SILP__
-        public bool _DebugMode = false;                                                                   //__SILP__
-        public string[] _DebugPatterns = {""};                                                            //__SILP__
-                                                                                                          //__SILP__
+        //SILP: ENTITY_LOG_MIXIN()
         private DebugLogger _DebugLogger = DebugLogger.Instance;                                          //__SILP__
                                                                                                           //__SILP__
-        public virtual bool LogDebug {                                                                    //__SILP__
+        private bool _DebugMode = false;                                                                  //__SILP__
+        public bool DebugMode {                                                                           //__SILP__
             get { return _DebugMode; }                                                                    //__SILP__
+            set {                                                                                         //__SILP__
+                _DebugMode = true;                                                                        //__SILP__
+            }                                                                                             //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
+        private string[] _DebugPatterns = {""};                                                           //__SILP__
         public virtual string[] DebugPatterns {                                                           //__SILP__
             get { return _DebugPatterns; }                                                                //__SILP__
+            set {                                                                                         //__SILP__
+                _DebugPatterns = value;                                                                   //__SILP__
+            }                                                                                             //__SILP__
+        }                                                                                                 //__SILP__
+                                                                                                          //__SILP__
+        public virtual bool LogDebug {                                                                    //__SILP__
+            get { return _DebugMode || Log.LogDebug; }                                                    //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
         public virtual string GetLogPrefix() {                                                            //__SILP__
-            return string.Format("[{0}] [{1}] ", GetType().Name, name);                                   //__SILP__
+            return string.Format("[{0}] [{1}] ", GetType().Name, Name);                                   //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
         public void Critical(string format, params object[] values) {                                     //__SILP__
-            if (LogDebug) {                                                                               //__SILP__
+            if (DebugMode) {                                                                              //__SILP__
                 _DebugLogger.Critical(GetLogPrefix() + string.Format(format, values));                    //__SILP__
             } else {                                                                                      //__SILP__
                 Log.Critical(GetLogPrefix() + string.Format(format, values));                             //__SILP__
@@ -224,7 +250,7 @@ namespace ADD.Dap {
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
         public void Error(string format, params object[] values) {                                        //__SILP__
-            if (LogDebug) {                                                                               //__SILP__
+            if (DebugMode) {                                                                              //__SILP__
                 _DebugLogger.Error(GetLogPrefix() + string.Format(format, values));                       //__SILP__
             } else {                                                                                      //__SILP__
                 Log.Error(GetLogPrefix() + string.Format(format, values));                                //__SILP__
@@ -232,7 +258,7 @@ namespace ADD.Dap {
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
         public void Info(string format, params object[] values) {                                         //__SILP__
-            if (LogDebug) {                                                                               //__SILP__
+            if (DebugMode) {                                                                              //__SILP__
                 _DebugLogger.LogWithPatterns("INFO", DebugPatterns,                                       //__SILP__
                         GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values)); //__SILP__
             } else {                                                                                      //__SILP__
@@ -241,7 +267,7 @@ namespace ADD.Dap {
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
         public void Debug(string format, params object[] values) {                                        //__SILP__
-            if (LogDebug) {                                                                               //__SILP__
+            if (DebugMode) {                                                                              //__SILP__
                 _DebugLogger.LogWithPatterns("DEBUG", DebugPatterns,                                      //__SILP__
                         GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values)); //__SILP__
             } else {                                                                                      //__SILP__

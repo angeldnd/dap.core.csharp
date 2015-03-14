@@ -7,7 +7,7 @@ namespace ADD.Dap {
         bool Decode(Data data);
     }
 
-    public class DapObjectConsts {
+    public struct DapObjectConsts {
         public const string KeyType = "type";
     }
 }
