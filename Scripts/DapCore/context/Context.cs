@@ -62,7 +62,7 @@ namespace ADD.Dap {
             return Properties.GetBool(path);                          //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public bool GetBool(string path bool defaultValue) {          //__SILP__
+        public bool GetBool(string path, bool defaultValue) {         //__SILP__
             return Properties.GetBool(path, defaultValue);            //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
@@ -87,7 +87,7 @@ namespace ADD.Dap {
             return Properties.GetInt(path);                           //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public int GetInt(string path int defaultValue) {             //__SILP__
+        public int GetInt(string path, int defaultValue) {            //__SILP__
             return Properties.GetInt(path, defaultValue);             //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
@@ -112,7 +112,7 @@ namespace ADD.Dap {
             return Properties.GetLong(path);                          //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public long GetLong(string path long defaultValue) {          //__SILP__
+        public long GetLong(string path, long defaultValue) {         //__SILP__
             return Properties.GetLong(path, defaultValue);            //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
@@ -137,7 +137,7 @@ namespace ADD.Dap {
             return Properties.GetFloat(path);                         //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public float GetFloat(string path float defaultValue) {       //__SILP__
+        public float GetFloat(string path, float defaultValue) {      //__SILP__
             return Properties.GetFloat(path, defaultValue);           //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
@@ -162,7 +162,7 @@ namespace ADD.Dap {
             return Properties.GetDouble(path);                        //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public double GetDouble(string path double defaultValue) {    //__SILP__
+        public double GetDouble(string path, double defaultValue) {   //__SILP__
             return Properties.GetDouble(path, defaultValue);          //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
@@ -187,7 +187,7 @@ namespace ADD.Dap {
             return Properties.GetString(path);                        //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public string GetString(string path string defaultValue) {    //__SILP__
+        public string GetString(string path, string defaultValue) {   //__SILP__
             return Properties.GetString(path, defaultValue);          //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
@@ -212,7 +212,7 @@ namespace ADD.Dap {
             return Properties.GetData(path);                          //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public Data GetData(string path Data defaultValue) {          //__SILP__
+        public Data GetData(string path, Data defaultValue) {         //__SILP__
             return Properties.GetData(path, defaultValue);            //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__

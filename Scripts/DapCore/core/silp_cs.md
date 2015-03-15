@@ -25,7 +25,7 @@ public ${cs_type} Get${type}(string path) {
     return default(${cs_type});
 }
 
-public ${cs_type} Get${type}(string path ${cs_type} defaultValue) {
+public ${cs_type} Get${type}(string path, ${cs_type} defaultValue) {
     ${type}Var v = Get<${type}Var>(path);
     if (v != null) {
         return v.Value;

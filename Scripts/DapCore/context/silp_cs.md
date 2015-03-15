@@ -16,7 +16,7 @@ public ${cs_type} Get${type}(string path) {
     return Properties.Get${type}(path);
 }
 
-public ${cs_type} Get${type}(string path ${cs_type} defaultValue) {
+public ${cs_type} Get${type}(string path, ${cs_type} defaultValue) {
     return Properties.Get${type}(path, defaultValue);
 }
 
