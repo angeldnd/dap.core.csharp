@@ -6,7 +6,7 @@ namespace ADD.Dap {
         public const char Separator = '/';
     }
 
-    public class Registry : Entity {
+    public class Registry : Context {
         public override char Separator {
             get { return RegistryConsts.Separator; }
         }
