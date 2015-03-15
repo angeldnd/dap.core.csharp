@@ -79,6 +79,14 @@ namespace ADD.Dap {
             return default(bool);                                     //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
+        public bool GetBool(string path bool defaultValue) {          //__SILP__
+            BoolVar v = Get<BoolVar>(path);                           //__SILP__
+            if (v != null) {                                          //__SILP__
+                return v.Value;                                       //__SILP__
+            }                                                         //__SILP__
+            return defaultValue;                                      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
         public bool SetValue(string path, bool val) {                 //__SILP__
             BoolVar v = Get<BoolVar>(path);                           //__SILP__
             if (v != null) {                                          //__SILP__
@@ -111,6 +119,14 @@ namespace ADD.Dap {
                 return v.Value;                                       //__SILP__
             }                                                         //__SILP__
             return default(int);                                      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public int GetInt(string path int defaultValue) {             //__SILP__
+            IntVar v = Get<IntVar>(path);                             //__SILP__
+            if (v != null) {                                          //__SILP__
+                return v.Value;                                       //__SILP__
+            }                                                         //__SILP__
+            return defaultValue;                                      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetValue(string path, int val) {                  //__SILP__
@@ -147,6 +163,14 @@ namespace ADD.Dap {
             return default(long);                                     //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
+        public long GetLong(string path long defaultValue) {          //__SILP__
+            LongVar v = Get<LongVar>(path);                           //__SILP__
+            if (v != null) {                                          //__SILP__
+                return v.Value;                                       //__SILP__
+            }                                                         //__SILP__
+            return defaultValue;                                      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
         public bool SetValue(string path, long val) {                 //__SILP__
             LongVar v = Get<LongVar>(path);                           //__SILP__
             if (v != null) {                                          //__SILP__
@@ -179,6 +203,14 @@ namespace ADD.Dap {
                 return v.Value;                                       //__SILP__
             }                                                         //__SILP__
             return default(float);                                    //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public float GetFloat(string path float defaultValue) {       //__SILP__
+            FloatVar v = Get<FloatVar>(path);                         //__SILP__
+            if (v != null) {                                          //__SILP__
+                return v.Value;                                       //__SILP__
+            }                                                         //__SILP__
+            return defaultValue;                                      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetValue(string path, float val) {                //__SILP__
@@ -215,6 +247,14 @@ namespace ADD.Dap {
             return default(double);                                   //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
+        public double GetDouble(string path double defaultValue) {    //__SILP__
+            DoubleVar v = Get<DoubleVar>(path);                       //__SILP__
+            if (v != null) {                                          //__SILP__
+                return v.Value;                                       //__SILP__
+            }                                                         //__SILP__
+            return defaultValue;                                      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
         public bool SetValue(string path, double val) {               //__SILP__
             DoubleVar v = Get<DoubleVar>(path);                       //__SILP__
             if (v != null) {                                          //__SILP__
@@ -249,6 +289,14 @@ namespace ADD.Dap {
             return default(string);                                   //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
+        public string GetString(string path string defaultValue) {    //__SILP__
+            StringVar v = Get<StringVar>(path);                       //__SILP__
+            if (v != null) {                                          //__SILP__
+                return v.Value;                                       //__SILP__
+            }                                                         //__SILP__
+            return defaultValue;                                      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
         public bool SetValue(string path, string val) {               //__SILP__
             StringVar v = Get<StringVar>(path);                       //__SILP__
             if (v != null) {                                          //__SILP__
@@ -281,6 +329,14 @@ namespace ADD.Dap {
                 return v.Value;                                       //__SILP__
             }                                                         //__SILP__
             return default(Data);                                     //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public Data GetData(string path Data defaultValue) {          //__SILP__
+            DataVar v = Get<DataVar>(path);                           //__SILP__
+            if (v != null) {                                          //__SILP__
+                return v.Value;                                       //__SILP__
+            }                                                         //__SILP__
+            return defaultValue;                                      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetValue(string path, Data val) {                 //__SILP__

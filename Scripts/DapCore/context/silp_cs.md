@@ -16,6 +16,10 @@ public ${cs_type} Get${type}(string path) {
     return Properties.Get${type}(path);
 }
 
+public ${cs_type} Get${type}(string path ${cs_type} defaultValue) {
+    return Properties.Get${type}(path, defaultValue);
+}
+
 public bool Set${type}(string path, ${cs_type} value) {
     return Properties.Set${type}(path, value);
 }
@@ -132,6 +136,15 @@ public ${cs_type} Get${type}(string path) {
     }
     return default(${cs_type});
 }
+
+public ${cs_type} Get${type}(string path, ${cs_type} defaultValue) {
+    ${type}Property v = Get<${type}Property>(path);
+    if (v != null) {
+        return v.Value;
+    }
+    return defaultValue;
+}
+
 
 public bool Set${type}(string path, ${cs_type} val) {
     ${type}Property v = Get<${type}Property>(path);

@@ -88,6 +88,15 @@ namespace ADD.Dap {
             return default(bool);                                                                     //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
+        public bool GetBool(string path, bool defaultValue) {                                         //__SILP__
+            BoolProperty v = Get<BoolProperty>(path);                                                 //__SILP__
+            if (v != null) {                                                                          //__SILP__
+                return v.Value;                                                                       //__SILP__
+            }                                                                                         //__SILP__
+            return defaultValue;                                                                      //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+                                                                                                      //__SILP__
         public bool SetBool(string path, bool val) {                                                  //__SILP__
             BoolProperty v = Get<BoolProperty>(path);                                                 //__SILP__
             if (v != null) {                                                                          //__SILP__
@@ -162,6 +171,15 @@ namespace ADD.Dap {
             }                                                                                       //__SILP__
             return default(int);                                                                    //__SILP__
         }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        public int GetInt(string path, int defaultValue) {                                          //__SILP__
+            IntProperty v = Get<IntProperty>(path);                                                 //__SILP__
+            if (v != null) {                                                                        //__SILP__
+                return v.Value;                                                                     //__SILP__
+            }                                                                                       //__SILP__
+            return defaultValue;                                                                    //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
                                                                                                     //__SILP__
         public bool SetInt(string path, int val) {                                                  //__SILP__
             IntProperty v = Get<IntProperty>(path);                                                 //__SILP__
@@ -238,6 +256,15 @@ namespace ADD.Dap {
             return default(long);                                                                     //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
+        public long GetLong(string path, long defaultValue) {                                         //__SILP__
+            LongProperty v = Get<LongProperty>(path);                                                 //__SILP__
+            if (v != null) {                                                                          //__SILP__
+                return v.Value;                                                                       //__SILP__
+            }                                                                                         //__SILP__
+            return defaultValue;                                                                      //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+                                                                                                      //__SILP__
         public bool SetLong(string path, long val) {                                                  //__SILP__
             LongProperty v = Get<LongProperty>(path);                                                 //__SILP__
             if (v != null) {                                                                          //__SILP__
@@ -312,6 +339,15 @@ namespace ADD.Dap {
             }                                                                                           //__SILP__
             return default(float);                                                                      //__SILP__
         }                                                                                               //__SILP__
+                                                                                                        //__SILP__
+        public float GetFloat(string path, float defaultValue) {                                        //__SILP__
+            FloatProperty v = Get<FloatProperty>(path);                                                 //__SILP__
+            if (v != null) {                                                                            //__SILP__
+                return v.Value;                                                                         //__SILP__
+            }                                                                                           //__SILP__
+            return defaultValue;                                                                        //__SILP__
+        }                                                                                               //__SILP__
+                                                                                                        //__SILP__
                                                                                                         //__SILP__
         public bool SetFloat(string path, float val) {                                                  //__SILP__
             FloatProperty v = Get<FloatProperty>(path);                                                 //__SILP__
@@ -388,6 +424,15 @@ namespace ADD.Dap {
             return default(double);                                                                       //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
+        public double GetDouble(string path, double defaultValue) {                                       //__SILP__
+            DoubleProperty v = Get<DoubleProperty>(path);                                                 //__SILP__
+            if (v != null) {                                                                              //__SILP__
+                return v.Value;                                                                           //__SILP__
+            }                                                                                             //__SILP__
+            return defaultValue;                                                                          //__SILP__
+        }                                                                                                 //__SILP__
+                                                                                                          //__SILP__
+                                                                                                          //__SILP__
         public bool SetDouble(string path, double val) {                                                  //__SILP__
             DoubleProperty v = Get<DoubleProperty>(path);                                                 //__SILP__
             if (v != null) {                                                                              //__SILP__
@@ -463,6 +508,15 @@ namespace ADD.Dap {
             return default(string);                                                                       //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
+        public string GetString(string path, string defaultValue) {                                       //__SILP__
+            StringProperty v = Get<StringProperty>(path);                                                 //__SILP__
+            if (v != null) {                                                                              //__SILP__
+                return v.Value;                                                                           //__SILP__
+            }                                                                                             //__SILP__
+            return defaultValue;                                                                          //__SILP__
+        }                                                                                                 //__SILP__
+                                                                                                          //__SILP__
+                                                                                                          //__SILP__
         public bool SetString(string path, string val) {                                                  //__SILP__
             StringProperty v = Get<StringProperty>(path);                                                 //__SILP__
             if (v != null) {                                                                              //__SILP__
@@ -537,6 +591,15 @@ namespace ADD.Dap {
             }                                                                                         //__SILP__
             return default(Data);                                                                     //__SILP__
         }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public Data GetData(string path, Data defaultValue) {                                         //__SILP__
+            DataProperty v = Get<DataProperty>(path);                                                 //__SILP__
+            if (v != null) {                                                                          //__SILP__
+                return v.Value;                                                                       //__SILP__
+            }                                                                                         //__SILP__
+            return defaultValue;                                                                      //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
                                                                                                       //__SILP__
         public bool SetData(string path, Data val) {                                                  //__SILP__
             DataProperty v = Get<DataProperty>(path);                                                 //__SILP__
