@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public class Handlers : EntityAspect {
         public Handler GetHandler(string handlerPath) {
             return Get<Handler>(handlerPath);

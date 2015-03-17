@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public struct RegistryConsts {
         public const char Separator = '/';
     }

@@ -1,6 +1,6 @@
 using System;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public interface Aspect : DapObject, Logger {
         Entity Entity { get; }
         string Path { get; }

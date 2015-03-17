@@ -1,6 +1,6 @@
 using System;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public interface DapObject {
         string Type { get; }
         Data Encode();

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public interface EventListener {
         void OnEvent(string channelPath, Data evt);
     }

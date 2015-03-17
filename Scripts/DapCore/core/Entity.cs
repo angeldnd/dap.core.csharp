@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public interface EntityWatcher {
         void OnEntityAspectAdded(Entity entity, Aspect aspect);
         void OnEntityAspectRemoved(Entity entity, Aspect aspect);

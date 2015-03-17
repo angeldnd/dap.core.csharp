@@ -1,6 +1,6 @@
 using System;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public delegate Entity EntityFactory();
     public delegate Aspect AspectFactory(Entity entity, string path);
 

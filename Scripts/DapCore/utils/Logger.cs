@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 //using System.Text.RegularExpressions;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public struct LoggerConsts {
         public const string CRITICAL = "CRITICAL";
         public const string ERROR = "ERROR";

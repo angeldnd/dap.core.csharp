@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ADD.Dap {
+namespace angeldnd.dap {
     public class Channels : EntityAspect {
         public Channel GetChannel(string channelPath) {
             return Get<Channel>(channelPath);
