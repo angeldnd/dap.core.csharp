@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class Var<T> : BaseAspect {
+    public abstract class Var : BaseAspect {
+        public abstract Object GetValue();
+    }
+
+    public abstract class Var<T> : Var {
         private T _Value;
         public T Value {
             get { return _Value; }
@@ -11,6 +15,10 @@ namespace angeldnd.dap {
         public virtual bool SetValue(T newValue) {
             _Value = newValue;
             return true;
+        }
+
+        public override Object GetValue() {
+            return _Value;
         }
     }
 

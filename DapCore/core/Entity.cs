@@ -128,6 +128,12 @@ namespace angeldnd.dap {
             List<T> result = null;
             var matcher = new PatternMatcher(Separator, pattern);
             foreach (var pair in _Aspects) {
+                if (LogDebug) {
+                    Debug("Check: {0}, {1} -> {2}, {3} -> {4}, {5}",
+                        pattern, typeof(T),
+                        pair.Key, pair.Value.GetType(),
+                        (pair.Value is T), matcher.IsMatched(pair.Key));
+                }
                 if (pair.Value is T && matcher.IsMatched(pair.Key)) {
                     if (result == null) result = new List<T>();
                     result.Add(pair.Value as T);

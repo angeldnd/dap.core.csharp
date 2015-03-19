@@ -19,6 +19,9 @@ namespace angeldnd.dap {
         }
 
         public bool IsMatched(string path) {
+            if (Pattern == PatternMatcherConsts.WildcastSegments) {
+                return true;
+            }
             //string[] pathSegments = path.Split(Separator);
             //TODO
             return false;

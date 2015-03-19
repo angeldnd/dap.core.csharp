@@ -10,7 +10,25 @@ namespace angeldnd.dap {
         void OnChanged(string path, T lastVal, T val);
     }
 
-    public abstract class Property<T>: Var<T> {
+    public abstract class Property : BaseAspect {
+        public abstract Object GetValue();
+    }
+
+    public abstract class Property<T>: Property {
+        private T _Value;
+        public T Value {
+            get { return _Value; }
+        }
+
+        public virtual bool SetValue(T newValue) {
+            _Value = newValue;
+            return true;
+        }
+
+        public override Object GetValue() {
+            return _Value;
+        }
+
         //SILP: DECLARE_LIST(ValueChecker, checker, ValueChecker<T>, _Checkers)
         protected List<ValueChecker<T>> _Checkers = null;                   //__SILP__
                                                                             //__SILP__
