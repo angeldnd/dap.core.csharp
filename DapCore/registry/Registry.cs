@@ -11,7 +11,7 @@ namespace angeldnd.dap {
             get { return RegistryConsts.Separator; }
         }
 
-        public static Registry Global = new Registry();
+        public static readonly Registry Global = new Registry();
 
         public readonly Factory Factory;
 

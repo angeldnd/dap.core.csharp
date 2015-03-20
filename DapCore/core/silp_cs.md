@@ -69,7 +69,7 @@ public bool Is${type}(string key) {
 }
 
 public ${cs_type} Get${type}(string key) {
-    if (Is${type}(key)) {
+    if (_${type}Values != null && Is${type}(key)) {
         ${cs_type} result;
         if (_${type}Values.TryGetValue(key, out result)) {
             return result;
@@ -79,7 +79,7 @@ public ${cs_type} Get${type}(string key) {
 }
 
 public ${cs_type} Get${type}(string key, ${cs_type} defaultValue) {
-    if (Is${type}(key)) {
+    if (_${type}Values != null && Is${type}(key)) {
         ${cs_type} result;
         if (_${type}Values.TryGetValue(key, out result)) {
             return result;
@@ -91,6 +91,9 @@ public ${cs_type} Get${type}(string key, ${cs_type} defaultValue) {
 public bool Set${type}(string key, ${cs_type} value) {
     if (!_ValueTypes.ContainsKey(key)) {
         _ValueTypes[key] = DataType.${type};
+        if (_${type}Values == null) {
+            _${type}Values = new Dictionary<string, ${cs_type}>();
+        }
         _${type}Values[key] = value;
         return true;
     }

@@ -49,7 +49,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool GetBool(string key) {                             //__SILP__
-            if (IsBool(key)) {                                        //__SILP__
+            if (_BoolValues != null && IsBool(key)) {                 //__SILP__
                 bool result;                                          //__SILP__
                 if (_BoolValues.TryGetValue(key, out result)) {       //__SILP__
                     return result;                                    //__SILP__
@@ -59,7 +59,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool GetBool(string key, bool defaultValue) {          //__SILP__
-            if (IsBool(key)) {                                        //__SILP__
+            if (_BoolValues != null && IsBool(key)) {                 //__SILP__
                 bool result;                                          //__SILP__
                 if (_BoolValues.TryGetValue(key, out result)) {       //__SILP__
                     return result;                                    //__SILP__
@@ -71,6 +71,9 @@ namespace angeldnd.dap {
         public bool SetBool(string key, bool value) {                 //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Bool;                     //__SILP__
+                if (_BoolValues == null) {                            //__SILP__
+                    _BoolValues = new Dictionary<string, bool>();     //__SILP__
+                }                                                     //__SILP__
                 _BoolValues[key] = value;                             //__SILP__
                 return true;                                          //__SILP__
             }                                                         //__SILP__
@@ -84,7 +87,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public int GetInt(string key) {                               //__SILP__
-            if (IsInt(key)) {                                         //__SILP__
+            if (_IntValues != null && IsInt(key)) {                   //__SILP__
                 int result;                                           //__SILP__
                 if (_IntValues.TryGetValue(key, out result)) {        //__SILP__
                     return result;                                    //__SILP__
@@ -94,7 +97,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public int GetInt(string key, int defaultValue) {             //__SILP__
-            if (IsInt(key)) {                                         //__SILP__
+            if (_IntValues != null && IsInt(key)) {                   //__SILP__
                 int result;                                           //__SILP__
                 if (_IntValues.TryGetValue(key, out result)) {        //__SILP__
                     return result;                                    //__SILP__
@@ -106,6 +109,9 @@ namespace angeldnd.dap {
         public bool SetInt(string key, int value) {                   //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Int;                      //__SILP__
+                if (_IntValues == null) {                             //__SILP__
+                    _IntValues = new Dictionary<string, int>();       //__SILP__
+                }                                                     //__SILP__
                 _IntValues[key] = value;                              //__SILP__
                 return true;                                          //__SILP__
             }                                                         //__SILP__
@@ -119,7 +125,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public long GetLong(string key) {                             //__SILP__
-            if (IsLong(key)) {                                        //__SILP__
+            if (_LongValues != null && IsLong(key)) {                 //__SILP__
                 long result;                                          //__SILP__
                 if (_LongValues.TryGetValue(key, out result)) {       //__SILP__
                     return result;                                    //__SILP__
@@ -129,7 +135,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public long GetLong(string key, long defaultValue) {          //__SILP__
-            if (IsLong(key)) {                                        //__SILP__
+            if (_LongValues != null && IsLong(key)) {                 //__SILP__
                 long result;                                          //__SILP__
                 if (_LongValues.TryGetValue(key, out result)) {       //__SILP__
                     return result;                                    //__SILP__
@@ -141,6 +147,9 @@ namespace angeldnd.dap {
         public bool SetLong(string key, long value) {                 //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Long;                     //__SILP__
+                if (_LongValues == null) {                            //__SILP__
+                    _LongValues = new Dictionary<string, long>();     //__SILP__
+                }                                                     //__SILP__
                 _LongValues[key] = value;                             //__SILP__
                 return true;                                          //__SILP__
             }                                                         //__SILP__
@@ -154,7 +163,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public float GetFloat(string key) {                           //__SILP__
-            if (IsFloat(key)) {                                       //__SILP__
+            if (_FloatValues != null && IsFloat(key)) {               //__SILP__
                 float result;                                         //__SILP__
                 if (_FloatValues.TryGetValue(key, out result)) {      //__SILP__
                     return result;                                    //__SILP__
@@ -164,7 +173,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public float GetFloat(string key, float defaultValue) {       //__SILP__
-            if (IsFloat(key)) {                                       //__SILP__
+            if (_FloatValues != null && IsFloat(key)) {               //__SILP__
                 float result;                                         //__SILP__
                 if (_FloatValues.TryGetValue(key, out result)) {      //__SILP__
                     return result;                                    //__SILP__
@@ -176,6 +185,9 @@ namespace angeldnd.dap {
         public bool SetFloat(string key, float value) {               //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Float;                    //__SILP__
+                if (_FloatValues == null) {                           //__SILP__
+                    _FloatValues = new Dictionary<string, float>();   //__SILP__
+                }                                                     //__SILP__
                 _FloatValues[key] = value;                            //__SILP__
                 return true;                                          //__SILP__
             }                                                         //__SILP__
@@ -189,7 +201,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public double GetDouble(string key) {                         //__SILP__
-            if (IsDouble(key)) {                                      //__SILP__
+            if (_DoubleValues != null && IsDouble(key)) {             //__SILP__
                 double result;                                        //__SILP__
                 if (_DoubleValues.TryGetValue(key, out result)) {     //__SILP__
                     return result;                                    //__SILP__
@@ -199,7 +211,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public double GetDouble(string key, double defaultValue) {    //__SILP__
-            if (IsDouble(key)) {                                      //__SILP__
+            if (_DoubleValues != null && IsDouble(key)) {             //__SILP__
                 double result;                                        //__SILP__
                 if (_DoubleValues.TryGetValue(key, out result)) {     //__SILP__
                     return result;                                    //__SILP__
@@ -211,6 +223,9 @@ namespace angeldnd.dap {
         public bool SetDouble(string key, double value) {             //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Double;                   //__SILP__
+                if (_DoubleValues == null) {                          //__SILP__
+                    _DoubleValues = new Dictionary<string, double>(); //__SILP__
+                }                                                     //__SILP__
                 _DoubleValues[key] = value;                           //__SILP__
                 return true;                                          //__SILP__
             }                                                         //__SILP__
@@ -224,7 +239,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public string GetString(string key) {                         //__SILP__
-            if (IsString(key)) {                                      //__SILP__
+            if (_StringValues != null && IsString(key)) {             //__SILP__
                 string result;                                        //__SILP__
                 if (_StringValues.TryGetValue(key, out result)) {     //__SILP__
                     return result;                                    //__SILP__
@@ -234,7 +249,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public string GetString(string key, string defaultValue) {    //__SILP__
-            if (IsString(key)) {                                      //__SILP__
+            if (_StringValues != null && IsString(key)) {             //__SILP__
                 string result;                                        //__SILP__
                 if (_StringValues.TryGetValue(key, out result)) {     //__SILP__
                     return result;                                    //__SILP__
@@ -246,6 +261,9 @@ namespace angeldnd.dap {
         public bool SetString(string key, string value) {             //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.String;                   //__SILP__
+                if (_StringValues == null) {                          //__SILP__
+                    _StringValues = new Dictionary<string, string>(); //__SILP__
+                }                                                     //__SILP__
                 _StringValues[key] = value;                           //__SILP__
                 return true;                                          //__SILP__
             }                                                         //__SILP__
@@ -259,7 +277,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public Data GetData(string key) {                             //__SILP__
-            if (IsData(key)) {                                        //__SILP__
+            if (_DataValues != null && IsData(key)) {                 //__SILP__
                 Data result;                                          //__SILP__
                 if (_DataValues.TryGetValue(key, out result)) {       //__SILP__
                     return result;                                    //__SILP__
@@ -269,7 +287,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public Data GetData(string key, Data defaultValue) {          //__SILP__
-            if (IsData(key)) {                                        //__SILP__
+            if (_DataValues != null && IsData(key)) {                 //__SILP__
                 Data result;                                          //__SILP__
                 if (_DataValues.TryGetValue(key, out result)) {       //__SILP__
                     return result;                                    //__SILP__
@@ -281,6 +299,9 @@ namespace angeldnd.dap {
         public bool SetData(string key, Data value) {                 //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Data;                     //__SILP__
+                if (_DataValues == null) {                            //__SILP__
+                    _DataValues = new Dictionary<string, Data>();     //__SILP__
+                }                                                     //__SILP__
                 _DataValues[key] = value;                             //__SILP__
                 return true;                                          //__SILP__
             }                                                         //__SILP__
