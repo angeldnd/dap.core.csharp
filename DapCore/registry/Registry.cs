@@ -23,6 +23,10 @@ namespace angeldnd.dap {
             Factory = Factory.NewBuiltinFactory();
         }
 
+        public Item GetItem(string path) {
+            return Get<Item>(path);
+        }
+
         public Item AddItem(string path, string type) {
             if (!Has(path)) {
                 Aspect aspect = Factory.FactoryAspect(this, path, type);
