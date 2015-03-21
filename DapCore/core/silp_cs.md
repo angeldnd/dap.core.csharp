@@ -64,7 +64,7 @@ public class ${type}Var : Var<${cs_type}> {
 # DATA_TYPE(type, cs_type) #
 ```
 public bool Is${type}(string key) {
-    DataType type = GetType(key);
+    DataType type = GetValueType(key);
     return type == DataType.${type};
 }
 
