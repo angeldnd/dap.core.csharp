@@ -88,13 +88,13 @@ public ${cs_type} Get${type}(string key, ${cs_type} defaultValue) {
     return defaultValue;
 }
 
-public bool Set${type}(string key, ${cs_type} value) {
+public bool Set${type}(string key, ${cs_type} val) {
     if (!_ValueTypes.ContainsKey(key)) {
         _ValueTypes[key] = DataType.${type};
         if (_${type}Values == null) {
             _${type}Values = new Dictionary<string, ${cs_type}>();
         }
-        _${type}Values[key] = value;
+        _${type}Values[key] = val;
         return true;
     }
     return false;
