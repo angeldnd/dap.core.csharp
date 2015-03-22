@@ -102,6 +102,15 @@ public bool Set${type}(string key, ${cs_type} val) {
 
 ``` 
 
+# DATA_QUICK_SETTER(name, type, cs_type) #
+```
+public Data ${name}(string key, ${cs_type} val) {
+    Set${type}(key, val);
+    return this;
+}
+
+```
+
 # ASPECT_MIXIN() #
 ```
 private Entity _Entity = null;

@@ -375,5 +375,48 @@ namespace angeldnd.dap {
             return false;                                             //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
+
+        //SILP: DATA_QUICK_SETTER(B, Bool, bool)
+        public Data B(string key, bool val) {                         //__SILP__
+            SetBool(key, val);                                        //__SILP__
+            return this;                                              //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        //SILP: DATA_QUICK_SETTER(I, Int, int)
+        public Data I(string key, int val) {                          //__SILP__
+            SetInt(key, val);                                         //__SILP__
+            return this;                                              //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        //SILP: DATA_QUICK_SETTER(L, Long, long)
+        public Data L(string key, long val) {                         //__SILP__
+            SetLong(key, val);                                        //__SILP__
+            return this;                                              //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        //SILP: DATA_QUICK_SETTER(F, Float, float)
+        public Data F(string key, float val) {                        //__SILP__
+            SetFloat(key, val);                                       //__SILP__
+            return this;                                              //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        //SILP: DATA_QUICK_SETTER(D, Double, double)
+        public Data D(string key, double val) {                       //__SILP__
+            SetDouble(key, val);                                      //__SILP__
+            return this;                                              //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        //SILP: DATA_QUICK_SETTER(S, String, string)
+        public Data S(string key, string val) {                       //__SILP__
+            SetString(key, val);                                      //__SILP__
+            return this;                                              //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        //SILP: DATA_QUICK_SETTER(A, Data, Data)
+        public Data A(string key, Data val) {                         //__SILP__
+            SetData(key, val);                                        //__SILP__
+            return this;                                              //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
     }
 }
