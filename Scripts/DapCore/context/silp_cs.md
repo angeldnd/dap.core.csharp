@@ -99,7 +99,7 @@ public bool Remove${type}ValueChecker(string path, ValueChecker<${cs_type}> chec
      return false;
 }
 
-public bool AddBlock${cs_type}ValueChecker(string path, Block${type}ValueChecker.CheckerBlock block) {
+public bool AddBlock${type}ValueChecker(string path, Block${type}ValueChecker.CheckerBlock block) {
     Block${type}ValueChecker checker = new Block${type}ValueChecker(block);
     return Add${type}ValueChecker(path, checker);
 }
@@ -120,7 +120,7 @@ public bool Remove${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watc
      return false;
 }
 
-public bool AddBlock${cs_type}ValueWatcher(string path, Block${type}ValueWatcher.WatcherBlock block) {
+public bool AddBlock${type}ValueWatcher(string path, Block${type}ValueWatcher.WatcherBlock block) {
     Block${type}ValueWatcher watcher = new Block${type}ValueWatcher(block);
     return Add${type}ValueWatcher(path, watcher);
 }

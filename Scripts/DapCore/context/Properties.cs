@@ -69,7 +69,7 @@ namespace angeldnd.dap {
              return false;                                                                            //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public bool AddBlockboolValueChecker(string path, BlockBoolValueChecker.CheckerBlock block) { //__SILP__
+        public bool AddBlockBoolValueChecker(string path, BlockBoolValueChecker.CheckerBlock block) { //__SILP__
             BlockBoolValueChecker checker = new BlockBoolValueChecker(block);                         //__SILP__
             return AddBoolValueChecker(path, checker);                                                //__SILP__
         }                                                                                             //__SILP__
@@ -90,7 +90,7 @@ namespace angeldnd.dap {
              return false;                                                                            //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public bool AddBlockboolValueWatcher(string path, BlockBoolValueWatcher.WatcherBlock block) { //__SILP__
+        public bool AddBlockBoolValueWatcher(string path, BlockBoolValueWatcher.WatcherBlock block) { //__SILP__
             BlockBoolValueWatcher watcher = new BlockBoolValueWatcher(block);                         //__SILP__
             return AddBoolValueWatcher(path, watcher);                                                //__SILP__
         }                                                                                             //__SILP__
@@ -153,7 +153,7 @@ namespace angeldnd.dap {
              return false;                                                                          //__SILP__
         }                                                                                           //__SILP__
                                                                                                     //__SILP__
-        public bool AddBlockintValueChecker(string path, BlockIntValueChecker.CheckerBlock block) { //__SILP__
+        public bool AddBlockIntValueChecker(string path, BlockIntValueChecker.CheckerBlock block) { //__SILP__
             BlockIntValueChecker checker = new BlockIntValueChecker(block);                         //__SILP__
             return AddIntValueChecker(path, checker);                                               //__SILP__
         }                                                                                           //__SILP__
@@ -174,7 +174,7 @@ namespace angeldnd.dap {
              return false;                                                                          //__SILP__
         }                                                                                           //__SILP__
                                                                                                     //__SILP__
-        public bool AddBlockintValueWatcher(string path, BlockIntValueWatcher.WatcherBlock block) { //__SILP__
+        public bool AddBlockIntValueWatcher(string path, BlockIntValueWatcher.WatcherBlock block) { //__SILP__
             BlockIntValueWatcher watcher = new BlockIntValueWatcher(block);                         //__SILP__
             return AddIntValueWatcher(path, watcher);                                               //__SILP__
         }                                                                                           //__SILP__
@@ -237,7 +237,7 @@ namespace angeldnd.dap {
              return false;                                                                            //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public bool AddBlocklongValueChecker(string path, BlockLongValueChecker.CheckerBlock block) { //__SILP__
+        public bool AddBlockLongValueChecker(string path, BlockLongValueChecker.CheckerBlock block) { //__SILP__
             BlockLongValueChecker checker = new BlockLongValueChecker(block);                         //__SILP__
             return AddLongValueChecker(path, checker);                                                //__SILP__
         }                                                                                             //__SILP__
@@ -258,7 +258,7 @@ namespace angeldnd.dap {
              return false;                                                                            //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public bool AddBlocklongValueWatcher(string path, BlockLongValueWatcher.WatcherBlock block) { //__SILP__
+        public bool AddBlockLongValueWatcher(string path, BlockLongValueWatcher.WatcherBlock block) { //__SILP__
             BlockLongValueWatcher watcher = new BlockLongValueWatcher(block);                         //__SILP__
             return AddLongValueWatcher(path, watcher);                                                //__SILP__
         }                                                                                             //__SILP__
@@ -321,7 +321,7 @@ namespace angeldnd.dap {
              return false;                                                                              //__SILP__
         }                                                                                               //__SILP__
                                                                                                         //__SILP__
-        public bool AddBlockfloatValueChecker(string path, BlockFloatValueChecker.CheckerBlock block) { //__SILP__
+        public bool AddBlockFloatValueChecker(string path, BlockFloatValueChecker.CheckerBlock block) { //__SILP__
             BlockFloatValueChecker checker = new BlockFloatValueChecker(block);                         //__SILP__
             return AddFloatValueChecker(path, checker);                                                 //__SILP__
         }                                                                                               //__SILP__
@@ -342,7 +342,7 @@ namespace angeldnd.dap {
              return false;                                                                              //__SILP__
         }                                                                                               //__SILP__
                                                                                                         //__SILP__
-        public bool AddBlockfloatValueWatcher(string path, BlockFloatValueWatcher.WatcherBlock block) { //__SILP__
+        public bool AddBlockFloatValueWatcher(string path, BlockFloatValueWatcher.WatcherBlock block) { //__SILP__
             BlockFloatValueWatcher watcher = new BlockFloatValueWatcher(block);                         //__SILP__
             return AddFloatValueWatcher(path, watcher);                                                 //__SILP__
         }                                                                                               //__SILP__
@@ -405,7 +405,7 @@ namespace angeldnd.dap {
              return false;                                                                                //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
-        public bool AddBlockdoubleValueChecker(string path, BlockDoubleValueChecker.CheckerBlock block) { //__SILP__
+        public bool AddBlockDoubleValueChecker(string path, BlockDoubleValueChecker.CheckerBlock block) { //__SILP__
             BlockDoubleValueChecker checker = new BlockDoubleValueChecker(block);                         //__SILP__
             return AddDoubleValueChecker(path, checker);                                                  //__SILP__
         }                                                                                                 //__SILP__
@@ -426,7 +426,7 @@ namespace angeldnd.dap {
              return false;                                                                                //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
-        public bool AddBlockdoubleValueWatcher(string path, BlockDoubleValueWatcher.WatcherBlock block) { //__SILP__
+        public bool AddBlockDoubleValueWatcher(string path, BlockDoubleValueWatcher.WatcherBlock block) { //__SILP__
             BlockDoubleValueWatcher watcher = new BlockDoubleValueWatcher(block);                         //__SILP__
             return AddDoubleValueWatcher(path, watcher);                                                  //__SILP__
         }                                                                                                 //__SILP__
@@ -489,7 +489,7 @@ namespace angeldnd.dap {
              return false;                                                                                //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
-        public bool AddBlockstringValueChecker(string path, BlockStringValueChecker.CheckerBlock block) { //__SILP__
+        public bool AddBlockStringValueChecker(string path, BlockStringValueChecker.CheckerBlock block) { //__SILP__
             BlockStringValueChecker checker = new BlockStringValueChecker(block);                         //__SILP__
             return AddStringValueChecker(path, checker);                                                  //__SILP__
         }                                                                                                 //__SILP__
@@ -510,7 +510,7 @@ namespace angeldnd.dap {
              return false;                                                                                //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
-        public bool AddBlockstringValueWatcher(string path, BlockStringValueWatcher.WatcherBlock block) { //__SILP__
+        public bool AddBlockStringValueWatcher(string path, BlockStringValueWatcher.WatcherBlock block) { //__SILP__
             BlockStringValueWatcher watcher = new BlockStringValueWatcher(block);                         //__SILP__
             return AddStringValueWatcher(path, watcher);                                                  //__SILP__
         }                                                                                                 //__SILP__
