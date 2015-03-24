@@ -45,10 +45,6 @@ namespace angeldnd.dap {
             return Handlers.HandleRequest(handlerPath, req);
         }
 
-        public DataType GetValueType(string path) {
-            return Properties.GetValueType(path);
-        }
-
         //SILP: CONTEXT_PROPERTIES_HELPER(Bool, bool)
         public BoolProperty AddBool(string path, bool val) {          //__SILP__
             return Properties.AddBool(path, val);                     //__SILP__

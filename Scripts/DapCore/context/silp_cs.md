@@ -1,5 +1,5 @@
 # CONTEXT_PROPERTIES_HELPER(type, cs_type) #
-```swift
+```C#
 public ${type}Property Add${type}(string path, ${cs_type} val) {
     return Properties.Add${type}(path, val);
 }
@@ -27,7 +27,7 @@ public bool Set${type}(string path, ${cs_type} value) {
 ```
 
 # DECLARE_LIST(name, var_name, cs_type, list_name) #
-```
+```C#
 protected List<${cs_type}> ${list_name} = null;
 
 public bool Add${name}(${cs_type} ${var_name}) {
@@ -50,7 +50,7 @@ public bool Remove${name}(${cs_type} ${var_name}) {
 ``` 
 
 # ADD_REMOVE_HELPER(name, a_path, a_var, a_type, l_name, l_var, l_type) #
-``` 
+```C#
 public bool Add${name}(string ${a_path}, ${l_type} ${l_var}) {
     ${a_type} ${a_var} = Get<${a_type}>(${a_path});
     if (${a_var} != null) {
@@ -157,7 +157,7 @@ public bool Set${type}(string path, ${cs_type} val) {
 ```
 
 # PROPERTY_CLASS(type, cs_type) #
-```
+```C#
 public sealed class Block${type}ValueChecker : ValueChecker<${cs_type}> {
     public delegate bool CheckerBlock(string path, ${cs_type} val, ${cs_type} newVal);
 

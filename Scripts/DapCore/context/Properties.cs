@@ -21,25 +21,6 @@ namespace angeldnd.dap {
             get { return PropertiesConsts.TypeProperties; }
         }
 
-        public DataType GetValueType(string path) {
-            if (IsBool(path)) {
-                return DataType.Bool;
-            } else if (IsInt(path)) {
-                return DataType.Int;
-            } else if (IsLong(path)) {
-                return DataType.Long;
-            } else if (IsFloat(path)) {
-                return DataType.Float;
-            } else if (IsDouble(path)) {
-                return DataType.Double;
-            } else if (IsString(path)) {
-                return DataType.String;
-            } else if (IsData(path)) {
-                return DataType.Data;
-            }
-            return DataType.Invalid;
-        }
-
         //SILP: PROPERTIES_HELPER(Bool, bool)
         public BoolProperty AddBool(string path, bool val) {                                          //__SILP__
             BoolProperty v = Add<BoolProperty>(path);                                                 //__SILP__
