@@ -30,8 +30,7 @@ namespace angeldnd.dap {
         public Item AddItem(string path, string type) {
             if (!Has(path)) {
                 Aspect aspect = Factory.FactoryAspect(this, path, type);
-                if (aspect != null && aspect is Item) {
-                    SetAspect(aspect);
+                if (aspect != null && aspect is Item && AddAspect(aspect)) {
                     return aspect as Item;
                 }
             }

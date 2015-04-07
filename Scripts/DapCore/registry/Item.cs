@@ -39,14 +39,17 @@ namespace angeldnd.dap {
             _Entity = entity;                                               //__SILP__
             _Path = path;                                                   //__SILP__
             _Inited = true;                                                 //__SILP__
-            OnInit();                                                       //__SILP__
             return true;                                                    //__SILP__
         }                                                                   //__SILP__
                                                                             //__SILP__
 
-        public virtual void OnInit() {
+        public virtual void OnAdded() {
             _Registry = FindRegistry(_Entity);
         }
+        public virtual void OnRemoved() {
+            _Registry = null;
+        }
+
 
         private Registry FindRegistry(Entity entity) {
             if (entity is Registry) {

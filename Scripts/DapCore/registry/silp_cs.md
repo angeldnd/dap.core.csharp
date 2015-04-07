@@ -41,7 +41,6 @@ public bool Init(Entity entity, string path) {
     _Entity = entity;
     _Path = path;
     _Inited = true;
-    OnInit();
     return true;
 }
 
