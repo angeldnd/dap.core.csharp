@@ -3,6 +3,9 @@ using System;
 namespace angeldnd.dap {
     public abstract class Accessor : Logger {
         public abstract Entity Entity { get; }
+        private Entity _Entity {
+            get { return Entity; }
+        }
 
         //SILP: ASPECT_LOG_MIXIN()
         private DebugLogger _DebugLogger = DebugLogger.Instance;                                          //__SILP__
