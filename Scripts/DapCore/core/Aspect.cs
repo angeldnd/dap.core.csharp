@@ -6,6 +6,8 @@ namespace angeldnd.dap {
         string Path { get; }
 
         bool Init(Entity entity, string path);
+        void OnAdded();
+        void OnRemoved();
     }
 
     public abstract class BaseAspect : Aspect {
