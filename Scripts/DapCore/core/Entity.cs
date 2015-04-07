@@ -74,7 +74,7 @@ namespace angeldnd.dap {
                         if (!string.IsNullOrEmpty(type)) {
                             aspect = FactoryAspect(this, path, type);
                             if (aspect != null && aspect.Init(this, path) && aspect.Decode(aspectData)) {
-                                SetAspect(aspect);
+                                AddAspect(aspect);
                                 succeed = true;
                             }
                         }
@@ -154,7 +154,7 @@ namespace angeldnd.dap {
             return null;
         }
 
-        protected bool SetAspect(Aspect aspect) {
+        protected bool AddAspect(Aspect aspect) {
             Aspect oldAspect = GetAspect(aspect.Path);
             if (oldAspect != null) {
                 Error("Aspect Exist: {0}, {1}, {2}", aspect.Path, oldAspect, aspect);
@@ -165,6 +165,8 @@ namespace angeldnd.dap {
                 return false;
             }
             _Aspects[aspect.Path] = aspect;
+            aspect.OnAdded();
+
             for (int i = 0; i < _Watchers.Count; i++) {
                 _Watchers[i].OnEntityAspectAdded(this, aspect);
             }
@@ -175,7 +177,7 @@ namespace angeldnd.dap {
             if (!Has(path)) {
                 T aspect = Activator.CreateInstance(typeof(T)) as T;
                 if (aspect != null && aspect.Init(this, path)) {
-                    SetAspect(aspect);
+                    AddAspect(aspect);
                 }
                 return aspect;
             }
@@ -185,7 +187,9 @@ namespace angeldnd.dap {
         public T Remove<T>(string path) where T : class, Aspect {
             T aspect = Get<T>(path);
             if (aspect != null) {
+                aspect.OnRemoved();
                 _Aspects.Remove(path);
+
                 for (int i = 0; i < _Watchers.Count; i++) {
                     _Watchers[i].OnEntityAspectRemoved(this, aspect);
                 }

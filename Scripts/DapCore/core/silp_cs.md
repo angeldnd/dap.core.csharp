@@ -135,15 +135,15 @@ public bool Init(Entity entity, string path) {
     _Entity = entity;
     _Path = path;
     _Inited = true;
-    OnInit();
     return true;
 }
 
 ```
 
-# ASPECT_ONINIT_MIXIN() #
+# ASPECT_EVENTS_MIXIN() #
 ```
-protected virtual void OnInit() {}
+public virtual void OnAdded() {}
+public virtual void OnRemoved() {}
 ```
 
 # ASPECT_ENCODE_DECODE_MIXIN() #

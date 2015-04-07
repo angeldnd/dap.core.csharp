@@ -58,12 +58,12 @@ namespace angeldnd.dap {
             _Entity = entity;                                               //__SILP__
             _Path = path;                                                   //__SILP__
             _Inited = true;                                                 //__SILP__
-            OnInit();                                                       //__SILP__
             return true;                                                    //__SILP__
         }                                                                   //__SILP__
                                                                             //__SILP__
-        //SILP: ASPECT_ONINIT_MIXIN()
-        protected virtual void OnInit() {}                            //__SILP__
+        //SILP: ASPECT_EVENTS_MIXIN()
+        public virtual void OnAdded() {}                              //__SILP__
+        public virtual void OnRemoved() {}                            //__SILP__
         //SILP: ASPECT_ENCODE_DECODE_MIXIN()
         protected virtual bool DoEncode(Data data) {                  //__SILP__
             return true;                                              //__SILP__
@@ -190,11 +190,11 @@ namespace angeldnd.dap {
             _Entity = entity;                                               //__SILP__
             _Path = path;                                                   //__SILP__
             _Inited = true;                                                 //__SILP__
-            OnInit();                                                       //__SILP__
             return true;                                                    //__SILP__
         }                                                                   //__SILP__
                                                                             //__SILP__
-        //SILP: ASPECT_ONINIT_MIXIN()
-        protected virtual void OnInit() {}                            //__SILP__
+        //SILP: ASPECT_EVENTS_MIXIN()
+        public virtual void OnAdded() {}                              //__SILP__
+        public virtual void OnRemoved() {}                            //__SILP__
     }
 }
