@@ -88,9 +88,9 @@ namespace angeldnd.dap {
                                                                                                           //__SILP__
         public virtual string GetLogPrefix() {                                                            //__SILP__
             if (_Entity != null) {                                                                        //__SILP__
-                return string.Format("{0}[{1}] ", _Entity.GetLogPrefix(), GetType().Name);                //__SILP__
+                return string.Format("{0}[{1}] [{2}]", _Entity.GetLogPrefix(), GetType().Name, Path);     //__SILP__
             } else {                                                                                      //__SILP__
-                return string.Format("[] [] [{0}] ", GetType().Name);                                     //__SILP__
+                return string.Format("[] [] [{0}] [{1}]", GetType().Name, Path);                          //__SILP__
             }                                                                                             //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__

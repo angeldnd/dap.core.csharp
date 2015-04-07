@@ -265,9 +265,9 @@ public bool LogDebug {
 
 public virtual string GetLogPrefix() {
     if (_Entity != null) {
-        return string.Format("{0}[{1}] ", _Entity.GetLogPrefix(), GetType().Name);
+        return string.Format("{0}[{1}] [{2}]", _Entity.GetLogPrefix(), GetType().Name, Path);
     } else {
-        return string.Format("[] [] [{0}] ", GetType().Name);
+        return string.Format("[] [] [{0}] [{1}]", GetType().Name, Path);
     }
 }
 
