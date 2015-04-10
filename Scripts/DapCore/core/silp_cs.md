@@ -2,8 +2,9 @@
 ```C#
 public ${type}Var Add${type}(string path, ${cs_type} val) {
     ${type}Var v = Add<${type}Var>(path);
-    if (v != null) {
-        v.SetValue(val);
+    if (v != null && !v.Setup(val)) {
+        Remove<${type}Var>(path);
+        v = null;
     }
     return v;
 }
@@ -212,7 +213,7 @@ public virtual bool LogDebug {
 }
 
 public virtual string GetLogPrefix() {
-    return string.Format("[{0}] [{1}] ", GetType().Name, Name);
+    return string.Format("[{0}] ", GetType().Name);
 }
 
 public void Critical(string format, params object[] values) {
@@ -253,6 +254,17 @@ public void Debug(string format, params object[] values) {
 
 # ASPECT_LOG_MIXIN() #
 ```C#
+public virtual string GetLogPrefix() {
+    if (_Entity != null) {
+        return string.Format("{0}[{1}] [{2}]", _Entity.GetLogPrefix(), GetType().Name, Path);
+    } else {
+        return string.Format("[] [{0}] [{1}]", GetType().Name, Path);
+    }
+}
+```
+
+# ACCESSOR_LOG_MIXIN() #
+```C#
 private DebugLogger _DebugLogger = DebugLogger.Instance;
 
 public bool DebugMode {
@@ -261,14 +273,6 @@ public bool DebugMode {
 
 public bool LogDebug {
     get { return (Entity != null && Entity.LogDebug) || Log.LogDebug; }
-}
-
-public virtual string GetLogPrefix() {
-    if (_Entity != null) {
-        return string.Format("{0}[{1}] [{2}]", _Entity.GetLogPrefix(), GetType().Name, Path);
-    } else {
-        return string.Format("[] [] [{0}] [{1}]", GetType().Name, Path);
-    }
 }
 
 public void Critical(string format, params object[] values) {
@@ -309,36 +313,5 @@ public void Debug(string format, params object[] values) {
 
 # ENTITY_ASPECT_LOG_MIXIN() #
 ```
-public override bool LogDebug {
-    get { return base.LogDebug || (_Entity != null && _Entity.LogDebug); }
-}
-
-public override string GetLogPrefix() {
-    if (Entity != null) {
-        return string.Format("{0}[{1}] [{2}]", Entity.GetLogPrefix(), GetType().Name, Name);
-    } else {
-        return string.Format("[] [] [{0}] [{1}] ", GetType().Name, Name);
-    }
-}
-
-public override string[] DebugPatterns {
-    get {
-        string[] basePatterns = base.DebugPatterns;
-        string[] entityPatterns = null;
-        if (_Entity != null) {
-            entityPatterns = _Entity.DebugPatterns;
-        }
-        if (basePatterns == null || basePatterns.Length == 0) {
-            return entityPatterns;
-        } else if (entityPatterns == null || entityPatterns.Length == 0) {
-            return basePatterns;
-        }
-        string[] result = new string[basePatterns.Length + entityPatterns.Length];
-        basePatterns.CopyTo(result, 0);
-        entityPatterns.CopyTo(result, basePatterns.Length);
-        return result; 
-    }
-}
-
 ```
 

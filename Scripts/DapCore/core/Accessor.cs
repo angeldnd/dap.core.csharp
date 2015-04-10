@@ -3,11 +3,16 @@ using System;
 namespace angeldnd.dap {
     public abstract class Accessor : Logger {
         public abstract Entity Entity { get; }
-        private Entity _Entity {
-            get { return Entity; }
+
+        public virtual string GetLogPrefix() {
+            if (Entity != null) {
+                return string.Format("{0}[{1}]", Entity.GetLogPrefix(), GetType().Name);
+            } else {
+                return string.Format("[] [{0}]", GetType().Name);
+            }
         }
 
-        //SILP: ASPECT_LOG_MIXIN()
+        //SILP: ACCESSOR_LOG_MIXIN()
         private DebugLogger _DebugLogger = DebugLogger.Instance;                                          //__SILP__
                                                                                                           //__SILP__
         public bool DebugMode {                                                                           //__SILP__
@@ -16,14 +21,6 @@ namespace angeldnd.dap {
                                                                                                           //__SILP__
         public bool LogDebug {                                                                            //__SILP__
             get { return (Entity != null && Entity.LogDebug) || Log.LogDebug; }                           //__SILP__
-        }                                                                                                 //__SILP__
-                                                                                                          //__SILP__
-        public virtual string GetLogPrefix() {                                                            //__SILP__
-            if (_Entity != null) {                                                                        //__SILP__
-                return string.Format("{0}[{1}] [{2}]", _Entity.GetLogPrefix(), GetType().Name, Path);     //__SILP__
-            } else {                                                                                      //__SILP__
-                return string.Format("[] [] [{0}] [{1}]", GetType().Name, Path);                          //__SILP__
-            }                                                                                             //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
         public void Critical(string format, params object[] values) {                                     //__SILP__

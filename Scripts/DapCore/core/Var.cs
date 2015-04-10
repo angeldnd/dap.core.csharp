@@ -2,22 +2,39 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class Var : BaseAspect {
-        public abstract Object GetValue();
+    public interface Var : Aspect {
+        Object GetValue();
     }
 
-    public abstract class Var<T> : Var {
+    public abstract class Var<T> : BaseAspect, Var {
         private T _Value;
         public T Value {
             get { return _Value; }
         }
 
-        public virtual bool SetValue(T newValue) {
-            _Value = newValue;
-            return true;
+        private bool _Setup = false;
+        public virtual bool Setup(T defaultValue) {
+            if (!_Setup) {
+                _Value = defaultValue;
+                _Setup = true;
+                return true;
+            } else {
+                Error("Setup Failed: Already Setup: {0} -> {1}", _Value, defaultValue);
+                return false;
+            }
         }
 
-        public override Object GetValue() {
+        public virtual bool SetValue(T newValue) {
+            if (_Setup) {
+                _Value = newValue;
+                return true;
+            } else {
+                Error("SetValue Failed: Not Setup: {0} -> {1}", _Value, newValue);
+                return false;
+            }
+        }
+
+        public virtual Object GetValue() {
             return _Value;
         }
     }

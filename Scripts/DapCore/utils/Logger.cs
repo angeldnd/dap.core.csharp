@@ -121,6 +121,7 @@ namespace angeldnd.dap {
         }
 
         public bool IsMatchPatterns(string[] patterns, string msg) {
+            if (patterns == null) return false;
             foreach (string pattern in patterns) {
                 if (IsMatchPattern(pattern, msg)) {
                     return true;

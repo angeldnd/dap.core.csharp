@@ -23,10 +23,15 @@ namespace angeldnd.dap {
 
         public AnyVar<T> AddAnyVar<T>(string path, T val) {
             AnyVar<T> result = Add<AnyVar<T>>(path);
-            if (result != null) {
-                result.SetValue(val);
+            if (result != null && !result.Setup(val)) {
+                Remove<AnyVar<T>>(path);
+                result = null;
             }
             return result;
+        }
+
+        public AnyVar<T> AddAnyVar<T>(string path) {
+            return Remove<AnyVar<T>>(path);
         }
 
         public bool HasAnyVar<T>(string path) {
@@ -56,8 +61,9 @@ namespace angeldnd.dap {
         //SILP: VARS_HELPER(Bool, bool)
         public BoolVar AddBool(string path, bool val) {               //__SILP__
             BoolVar v = Add<BoolVar>(path);                           //__SILP__
-            if (v != null) {                                          //__SILP__
-                v.SetValue(val);                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                         //__SILP__
+                Remove<BoolVar>(path);                                //__SILP__
+                v = null;                                             //__SILP__
             }                                                         //__SILP__
             return v;                                                 //__SILP__
         }                                                             //__SILP__
@@ -98,8 +104,9 @@ namespace angeldnd.dap {
         //SILP: VARS_HELPER(Int, int)
         public IntVar AddInt(string path, int val) {                  //__SILP__
             IntVar v = Add<IntVar>(path);                             //__SILP__
-            if (v != null) {                                          //__SILP__
-                v.SetValue(val);                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                         //__SILP__
+                Remove<IntVar>(path);                                 //__SILP__
+                v = null;                                             //__SILP__
             }                                                         //__SILP__
             return v;                                                 //__SILP__
         }                                                             //__SILP__
@@ -140,8 +147,9 @@ namespace angeldnd.dap {
         //SILP: VARS_HELPER(Long, long)
         public LongVar AddLong(string path, long val) {               //__SILP__
             LongVar v = Add<LongVar>(path);                           //__SILP__
-            if (v != null) {                                          //__SILP__
-                v.SetValue(val);                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                         //__SILP__
+                Remove<LongVar>(path);                                //__SILP__
+                v = null;                                             //__SILP__
             }                                                         //__SILP__
             return v;                                                 //__SILP__
         }                                                             //__SILP__
@@ -182,8 +190,9 @@ namespace angeldnd.dap {
         //SILP: VARS_HELPER(Float, float)
         public FloatVar AddFloat(string path, float val) {            //__SILP__
             FloatVar v = Add<FloatVar>(path);                         //__SILP__
-            if (v != null) {                                          //__SILP__
-                v.SetValue(val);                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                         //__SILP__
+                Remove<FloatVar>(path);                               //__SILP__
+                v = null;                                             //__SILP__
             }                                                         //__SILP__
             return v;                                                 //__SILP__
         }                                                             //__SILP__
@@ -224,8 +233,9 @@ namespace angeldnd.dap {
         //SILP: VARS_HELPER(Double, double)
         public DoubleVar AddDouble(string path, double val) {         //__SILP__
             DoubleVar v = Add<DoubleVar>(path);                       //__SILP__
-            if (v != null) {                                          //__SILP__
-                v.SetValue(val);                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                         //__SILP__
+                Remove<DoubleVar>(path);                              //__SILP__
+                v = null;                                             //__SILP__
             }                                                         //__SILP__
             return v;                                                 //__SILP__
         }                                                             //__SILP__
@@ -266,8 +276,9 @@ namespace angeldnd.dap {
         //SILP: VARS_HELPER(String, string)
         public StringVar AddString(string path, string val) {         //__SILP__
             StringVar v = Add<StringVar>(path);                       //__SILP__
-            if (v != null) {                                          //__SILP__
-                v.SetValue(val);                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                         //__SILP__
+                Remove<StringVar>(path);                              //__SILP__
+                v = null;                                             //__SILP__
             }                                                         //__SILP__
             return v;                                                 //__SILP__
         }                                                             //__SILP__
@@ -308,8 +319,9 @@ namespace angeldnd.dap {
         //SILP: VARS_HELPER(Data, Data)
         public DataVar AddData(string path, Data val) {               //__SILP__
             DataVar v = Add<DataVar>(path);                           //__SILP__
-            if (v != null) {                                          //__SILP__
-                v.SetValue(val);                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                         //__SILP__
+                Remove<DataVar>(path);                                //__SILP__
+                v = null;                                             //__SILP__
             }                                                         //__SILP__
             return v;                                                 //__SILP__
         }                                                             //__SILP__

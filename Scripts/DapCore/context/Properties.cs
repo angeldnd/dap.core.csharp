@@ -24,8 +24,9 @@ namespace angeldnd.dap {
         //SILP: PROPERTIES_HELPER(Bool, bool)
         public BoolProperty AddBool(string path, bool val) {                                          //__SILP__
             BoolProperty v = Add<BoolProperty>(path);                                                 //__SILP__
-            if (v != null) {                                                                          //__SILP__
-                v.SetValue(val);                                                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                                                         //__SILP__
+                Remove<BoolProperty>(path);                                                           //__SILP__
+                v = null;                                                                             //__SILP__
             }                                                                                         //__SILP__
             return v;                                                                                 //__SILP__
         }                                                                                             //__SILP__
@@ -108,8 +109,9 @@ namespace angeldnd.dap {
         //SILP: PROPERTIES_HELPER(Int, int)
         public IntProperty AddInt(string path, int val) {                                           //__SILP__
             IntProperty v = Add<IntProperty>(path);                                                 //__SILP__
-            if (v != null) {                                                                        //__SILP__
-                v.SetValue(val);                                                                    //__SILP__
+            if (v != null && !v.Setup(val)) {                                                       //__SILP__
+                Remove<IntProperty>(path);                                                          //__SILP__
+                v = null;                                                                           //__SILP__
             }                                                                                       //__SILP__
             return v;                                                                               //__SILP__
         }                                                                                           //__SILP__
@@ -192,8 +194,9 @@ namespace angeldnd.dap {
         //SILP: PROPERTIES_HELPER(Long, long)
         public LongProperty AddLong(string path, long val) {                                          //__SILP__
             LongProperty v = Add<LongProperty>(path);                                                 //__SILP__
-            if (v != null) {                                                                          //__SILP__
-                v.SetValue(val);                                                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                                                         //__SILP__
+                Remove<LongProperty>(path);                                                           //__SILP__
+                v = null;                                                                             //__SILP__
             }                                                                                         //__SILP__
             return v;                                                                                 //__SILP__
         }                                                                                             //__SILP__
@@ -276,8 +279,9 @@ namespace angeldnd.dap {
         //SILP: PROPERTIES_HELPER(Float, float)
         public FloatProperty AddFloat(string path, float val) {                                         //__SILP__
             FloatProperty v = Add<FloatProperty>(path);                                                 //__SILP__
-            if (v != null) {                                                                            //__SILP__
-                v.SetValue(val);                                                                        //__SILP__
+            if (v != null && !v.Setup(val)) {                                                           //__SILP__
+                Remove<FloatProperty>(path);                                                            //__SILP__
+                v = null;                                                                               //__SILP__
             }                                                                                           //__SILP__
             return v;                                                                                   //__SILP__
         }                                                                                               //__SILP__
@@ -360,8 +364,9 @@ namespace angeldnd.dap {
         //SILP: PROPERTIES_HELPER(Double, double)
         public DoubleProperty AddDouble(string path, double val) {                                        //__SILP__
             DoubleProperty v = Add<DoubleProperty>(path);                                                 //__SILP__
-            if (v != null) {                                                                              //__SILP__
-                v.SetValue(val);                                                                          //__SILP__
+            if (v != null && !v.Setup(val)) {                                                             //__SILP__
+                Remove<DoubleProperty>(path);                                                             //__SILP__
+                v = null;                                                                                 //__SILP__
             }                                                                                             //__SILP__
             return v;                                                                                     //__SILP__
         }                                                                                                 //__SILP__
@@ -444,8 +449,9 @@ namespace angeldnd.dap {
         //SILP: PROPERTIES_HELPER(String, string)
         public StringProperty AddString(string path, string val) {                                        //__SILP__
             StringProperty v = Add<StringProperty>(path);                                                 //__SILP__
-            if (v != null) {                                                                              //__SILP__
-                v.SetValue(val);                                                                          //__SILP__
+            if (v != null && !v.Setup(val)) {                                                             //__SILP__
+                Remove<StringProperty>(path);                                                             //__SILP__
+                v = null;                                                                                 //__SILP__
             }                                                                                             //__SILP__
             return v;                                                                                     //__SILP__
         }                                                                                                 //__SILP__
@@ -528,8 +534,9 @@ namespace angeldnd.dap {
         //SILP: PROPERTIES_HELPER(Data, Data)
         public DataProperty AddData(string path, Data val) {                                          //__SILP__
             DataProperty v = Add<DataProperty>(path);                                                 //__SILP__
-            if (v != null) {                                                                          //__SILP__
-                v.SetValue(val);                                                                      //__SILP__
+            if (v != null && !v.Setup(val)) {                                                         //__SILP__
+                Remove<DataProperty>(path);                                                           //__SILP__
+                v = null;                                                                             //__SILP__
             }                                                                                         //__SILP__
             return v;                                                                                 //__SILP__
         }                                                                                             //__SILP__

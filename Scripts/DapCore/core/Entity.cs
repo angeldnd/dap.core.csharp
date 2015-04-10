@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public interface EntityWatcher {
-        void OnEntityAspectAdded(Entity entity, Aspect aspect);
-        void OnEntityAspectRemoved(Entity entity, Aspect aspect);
+        void OnAspectAdded(Entity entity, Aspect aspect);
+        void OnAspectRemoved(Entity entity, Aspect aspect);
     }
 
     public struct EntityConsts {
@@ -16,14 +16,6 @@ namespace angeldnd.dap {
     public abstract class Entity : DapObject, Logger {
         public virtual char Separator {
             get { return EntityConsts.Separator; }
-        }
-
-        private string _Name = string.Empty;
-        public string Name {
-            get { return _Name; }
-        }
-        public void SetName(string name) {
-            _Name = name;
         }
 
         private Dictionary<string, Aspect> _Aspects = new Dictionary<string, Aspect>();
@@ -168,7 +160,7 @@ namespace angeldnd.dap {
             aspect.OnAdded();
 
             for (int i = 0; i < _Watchers.Count; i++) {
-                _Watchers[i].OnEntityAspectAdded(this, aspect);
+                _Watchers[i].OnAspectAdded(this, aspect);
             }
             return true;
         }
@@ -191,7 +183,7 @@ namespace angeldnd.dap {
                 _Aspects.Remove(path);
 
                 for (int i = 0; i < _Watchers.Count; i++) {
-                    _Watchers[i].OnEntityAspectRemoved(this, aspect);
+                    _Watchers[i].OnAspectRemoved(this, aspect);
                 }
                 return aspect;
             }
@@ -249,7 +241,7 @@ namespace angeldnd.dap {
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
         public virtual string GetLogPrefix() {                                                            //__SILP__
-            return string.Format("[{0}] [{1}] ", GetType().Name, Name);                                   //__SILP__
+            return string.Format("[{0}] ", GetType().Name);                                               //__SILP__
         }                                                                                                 //__SILP__
                                                                                                           //__SILP__
         public void Critical(string format, params object[] values) {                                     //__SILP__

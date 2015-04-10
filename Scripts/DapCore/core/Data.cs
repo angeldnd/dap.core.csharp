@@ -11,7 +11,6 @@ namespace angeldnd.dap {
     public enum DataType {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
     public sealed class Data {
-
         private Dictionary<string, DataType> _ValueTypes = new Dictionary<string, DataType>();
 
         private Dictionary<string, bool> _BoolValues = null;
@@ -32,6 +31,17 @@ namespace angeldnd.dap {
             get {
                 return _ValueTypes.Keys;
             }
+        }
+
+        public delegate bool CheckKeyType(string key, DataType type);
+        public bool CheckEachValueType(CheckKeyType check) {
+            var en = _ValueTypes.GetEnumerator();
+            while (en.MoveNext()) {
+                if (!check(en.Current.Key, en.Current.Value)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public DataType GetValueType(string key) {

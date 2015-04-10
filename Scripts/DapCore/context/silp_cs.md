@@ -73,8 +73,9 @@ public bool Remove${name}(string ${a_path}, ${l_type} ${l_var}) {
 ```C#
 public ${type}Property Add${type}(string path, ${cs_type} val) {
     ${type}Property v = Add<${type}Property>(path);
-    if (v != null) {
-        v.SetValue(val);
+    if (v != null && !v.Setup(val)) {
+        Remove<${type}Property>(path);
+        v = null;
     }
     return v;
 }
