@@ -41,8 +41,24 @@ namespace angeldnd.dap {
             return Channels.FireEvent(channelPath, evt);
         }
 
+        public Channel GetChannel(string channelPath) {
+            return Channels.GetChannel(channelPath);
+        }
+
+        public Channel AddChannel(string channelPath) {
+            return Channels.AddChannel(channelPath);
+        }
+
         public Data HandleRequest(string handlerPath, Data req) {
             return Handlers.HandleRequest(handlerPath, req);
+        }
+
+        public Handler GetHandler(string handlerPath) {
+            return Handlers.GetHandler(handlerPath);
+        }
+
+        public Handler AddHandler(string handlerPath) {
+            return Handlers.AddHandler(handlerPath);
         }
 
         //SILP: CONTEXT_PROPERTIES_HELPER(Bool, bool)
