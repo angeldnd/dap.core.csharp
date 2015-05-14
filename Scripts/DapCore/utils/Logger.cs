@@ -19,8 +19,22 @@ namespace angeldnd.dap {
         void Debug(string format, params object[] values);
     }
 
+    /*
+     * To setup logging properly, need to create a LogProvider Class like this
+     * The one with highest priority will be selected.
+     * The reason to use this trick is to have a working log provider at all time
+     *
+    [DapPriority(1)]
+    public class TestLogProvider : FileLogProvider {
+        public static bool SetupLogging() {
+            Log.Provider = new TestLogProvider("dap", "init", -1, true);
+            return true;
+        }
+    }
+    */
     public interface LogProvider {
         void AddLog(string type, StackTrace stackTrace, string format, params object[] values);
+        void Flush();
     }
 
     public class Log {
@@ -28,6 +42,10 @@ namespace angeldnd.dap {
 
         public static void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
             Provider.AddLog(type, stackTrace, format, values);
+        }
+
+        public static void Flush() {
+            Provider.Flush();
         }
 
         public static bool LogDebug;
@@ -68,14 +86,17 @@ namespace angeldnd.dap {
             get { return true; }
         }
 
-        public string GetMethodPrefix() {
+        public string GetLogHint() {
             StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
             if (stackTrace == null || stackTrace.FrameCount < 1) {
                 return "() ";
             }
             StackFrame stackFrame = stackTrace.GetFrame(0);
+            var fileName = stackFrame.GetFileName();
+            fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
+            var lineNumber = stackFrame.GetFileLineNumber();
             var method = stackFrame.GetMethod();
-            return method.Name + "() ";
+            return string.Format("{0}[{1}]:{2}() ", fileName, lineNumber, method.Name);
         }
 
         public void Critical(string format, params object[] values) {

@@ -1,67 +1,26 @@
-# VARS_HELPER(type, cs_type) #
+# DECLARE_LIST(name, var_name, cs_type, list_name) #
 ```C#
-public ${type}Var Add${type}(string path, ${cs_type} val) {
-    ${type}Var v = Add<${type}Var>(path);
-    if (v != null && !v.Setup(val)) {
-        Remove<${type}Var>(path);
-        v = null;
-    }
-    return v;
-}
+protected List<${cs_type}> ${list_name} = null;
 
-public ${type}Var Remove${type}(string path) {
-    return Remove<${type}Var>(path);
-}
-
-
-public bool Is${type}(string path) {
-    return Get<${type}Var>(path) != null;
-}
-
-public ${cs_type} Get${type}(string path) {
-    ${type}Var v = Get<${type}Var>(path);
-    if (v != null) {
-        return v.Value;
-    }
-    return default(${cs_type});
-}
-
-public ${cs_type} Get${type}(string path, ${cs_type} defaultValue) {
-    ${type}Var v = Get<${type}Var>(path);
-    if (v != null) {
-        return v.Value;
-    }
-    return defaultValue;
-}
-
-public bool SetValue(string path, ${cs_type} val) {
-    ${type}Var v = Get<${type}Var>(path);
-    if (v != null) {
-        return v.SetValue(val);
+public bool Add${name}(${cs_type} ${var_name}) {
+    if (${list_name} == null) ${list_name} = new List<${cs_type}>();
+    if (!${list_name}.Contains(${var_name})) {
+        ${list_name}.Add(${var_name});
+        return true;
     }
     return false;
 }
 
-```
-
-# VAR_CLASS(type, cs_type) #
-```C#
-public class ${type}Var : Var<${cs_type}> {
-    public override string Type {
-        get { return VarsConsts.Type${type}Var; }
-    }
-        
-    protected override bool DoEncode(Data data) {
-        return data.Set${type}(VarsConsts.KeyValue, Value);
-    }
-
-    protected override bool DoDecode(Data data) {
-        SetValue(data.Get${type}(VarsConsts.KeyValue));
+public bool Remove${name}(${cs_type} ${var_name}) {
+    if (${list_name} != null && ${list_name}.Contains(${var_name})) {
+        ${list_name}.Remove(${var_name});
         return true;
     }
+    return false;
 }
 
-```
+``` 
+
 # DATA_TYPE(type, cs_type) #
 ```
 public bool Is${type}(string key) {
@@ -218,7 +177,8 @@ public virtual string GetLogPrefix() {
 
 public void Critical(string format, params object[] values) {
     if (DebugMode) {
-        _DebugLogger.Critical(GetLogPrefix() + string.Format(format, values));
+        _DebugLogger.Critical(
+            _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Critical(GetLogPrefix() + string.Format(format, values));
     }
@@ -226,7 +186,8 @@ public void Critical(string format, params object[] values) {
 
 public void Error(string format, params object[] values) {
     if (DebugMode) {
-        _DebugLogger.Error(GetLogPrefix() + string.Format(format, values));
+        _DebugLogger.Error(
+            _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Error(GetLogPrefix() + string.Format(format, values));
     }
@@ -235,7 +196,7 @@ public void Error(string format, params object[] values) {
 public void Info(string format, params object[] values) {
     if (DebugMode) {
         _DebugLogger.LogWithPatterns(LoggerConsts.INFO, DebugPatterns,
-                GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values));
+                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Info(GetLogPrefix() + string.Format(format, values));
     }
@@ -244,7 +205,7 @@ public void Info(string format, params object[] values) {
 public void Debug(string format, params object[] values) {
     if (DebugMode) {
         _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, DebugPatterns,
-                GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values));
+                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Debug(GetLogPrefix() + string.Format(format, values));
     }
@@ -277,7 +238,8 @@ public bool LogDebug {
 
 public void Critical(string format, params object[] values) {
     if (DebugMode) {
-        _DebugLogger.Critical(GetLogPrefix() + string.Format(format, values));
+        _DebugLogger.Critical(
+                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Critical(GetLogPrefix() + string.Format(format, values));
     }
@@ -285,7 +247,8 @@ public void Critical(string format, params object[] values) {
 
 public void Error(string format, params object[] values) {
     if (DebugMode) {
-        _DebugLogger.Error(GetLogPrefix() + string.Format(format, values));
+        _DebugLogger.Error(
+                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Error(GetLogPrefix() + string.Format(format, values));
     }
@@ -294,7 +257,7 @@ public void Error(string format, params object[] values) {
 public void Info(string format, params object[] values) {
     if (DebugMode) {
         _DebugLogger.LogWithPatterns(LoggerConsts.INFO, Entity.DebugPatterns,
-                GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values));
+                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Info(GetLogPrefix() + string.Format(format, values));
     }
@@ -303,7 +266,7 @@ public void Info(string format, params object[] values) {
 public void Debug(string format, params object[] values) {
     if (DebugMode) {
         _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, Entity.DebugPatterns,
-                GetLogPrefix() + _DebugLogger.GetMethodPrefix() + string.Format(format, values));
+                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Debug(GetLogPrefix() + string.Format(format, values));
     }

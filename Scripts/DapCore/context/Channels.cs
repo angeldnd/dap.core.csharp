@@ -11,23 +11,23 @@ namespace angeldnd.dap {
             return Add<Channel>(channelPath);
         }
 
-        //SILP: ADD_REMOVE_HELPER(EventChecker, channelPath, channel, Channel, EventChecker, checker, DataChecker)
-        public bool AddEventChecker(string channelPath, DataChecker checker) {    //__SILP__
-            Channel channel = Get<Channel>(channelPath);                          //__SILP__
-            if (channel != null) {                                                //__SILP__
-                return channel.AddEventChecker(checker);                          //__SILP__
-            }                                                                     //__SILP__
-            return false;                                                         //__SILP__
-        }                                                                         //__SILP__
-                                                                                  //__SILP__
-        public bool RemoveEventChecker(string channelPath, DataChecker checker) { //__SILP__
-            Channel channel = Get<Channel>(channelPath);                          //__SILP__
-            if (channel != null) {                                                //__SILP__
-                return channel.RemoveEventChecker(checker);                       //__SILP__
-            }                                                                     //__SILP__
-            return false;                                                         //__SILP__
-        }                                                                         //__SILP__
-                                                                                  //__SILP__
+        //SILP: ADD_REMOVE_HELPER(EventChecker, channelPath, channel, Channel, EventChecker, checker, EventChecker)
+        public bool AddEventChecker(string channelPath, EventChecker checker) {    //__SILP__
+            Channel channel = Get<Channel>(channelPath);                           //__SILP__
+            if (channel != null) {                                                 //__SILP__
+                return channel.AddEventChecker(checker);                           //__SILP__
+            }                                                                      //__SILP__
+            return false;                                                          //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public bool RemoveEventChecker(string channelPath, EventChecker checker) { //__SILP__
+            Channel channel = Get<Channel>(channelPath);                           //__SILP__
+            if (channel != null) {                                                 //__SILP__
+                return channel.RemoveEventChecker(checker);                        //__SILP__
+            }                                                                      //__SILP__
+            return false;                                                          //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
 
         //SILP: ADD_REMOVE_HELPER(EventListener, channelPath, channel, Channel, EventListener, listener, EventListener)
         public bool AddEventListener(string channelPath, EventListener listener) {    //__SILP__

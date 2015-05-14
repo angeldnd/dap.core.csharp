@@ -2,44 +2,87 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface Var : Aspect {
-        Object GetValue();
+    public interface VarWatcher {
+        void OnVarChanged(Var v);
     }
 
-    public abstract class Var<T> : BaseAspect, Var {
+    public interface Var : Aspect {
+        Object GetValue();
+        bool AddVarWatcher(VarWatcher watcher);
+        bool RemoveVarWatcher(VarWatcher watcher);
+    }
+
+    public class Var<T> : BaseAspect, Var {
         private T _Value;
         public T Value {
             get { return _Value; }
         }
 
         private bool _Setup = false;
-        public virtual bool Setup(T defaultValue) {
+        private Object _Pass = null;
+
+        public virtual bool Setup(Object pass, T defaultValue) {
             if (!_Setup) {
+                _Pass = pass;
                 _Value = defaultValue;
                 _Setup = true;
                 return true;
             } else {
-                Error("Setup Failed: Already Setup: {0} -> {1}", _Value, defaultValue);
+                Error("Already Setup: {0} -> {1}", _Value, defaultValue);
                 return false;
             }
         }
 
-        public virtual bool SetValue(T newValue) {
-            if (_Setup) {
-                _Value = newValue;
-                return true;
+        public virtual bool Setup(T defaultValue) {
+            return Setup(null, defaultValue);
+        }
+
+        //SILP: DECLARE_LIST(VarWatcher, watcher, VarWatcher, _VarWatchers)
+        protected List<VarWatcher> _VarWatchers = null;                      //__SILP__
+                                                                             //__SILP__
+        public bool AddVarWatcher(VarWatcher watcher) {                      //__SILP__
+            if (_VarWatchers == null) _VarWatchers = new List<VarWatcher>(); //__SILP__
+            if (!_VarWatchers.Contains(watcher)) {                           //__SILP__
+                _VarWatchers.Add(watcher);                                   //__SILP__
+                return true;                                                 //__SILP__
+            }                                                                //__SILP__
+            return false;                                                    //__SILP__
+        }                                                                    //__SILP__
+                                                                             //__SILP__
+        public bool RemoveVarWatcher(VarWatcher watcher) {                   //__SILP__
+            if (_VarWatchers != null && _VarWatchers.Contains(watcher)) {    //__SILP__
+                _VarWatchers.Remove(watcher);                                //__SILP__
+                return true;                                                 //__SILP__
+            }                                                                //__SILP__
+            return false;                                                    //__SILP__
+        }                                                                    //__SILP__
+                                                                             //__SILP__
+        public bool SetValue(Object pass, T newValue) {
+            if (!_Setup) {
+                Error("Not Setup: {0} -> {1}", _Value, newValue);
+            } else if (_Pass != pass) {
+                Error("Access Denied: _Pass = {0}, pass = {1}: {2} -> {3}", _Pass, pass, _Value, newValue);
             } else {
-                Error("SetValue Failed: Not Setup: {0} -> {1}", _Value, newValue);
-                return false;
+                _Value = newValue;
+
+                if (_VarWatchers != null) {
+                    for (int i = 0; i < _VarWatchers.Count; i++) {
+                        _VarWatchers[i].OnVarChanged(this);
+                    }
+                }
+                return true;
             }
+            return false;
+        }
+
+        public virtual bool SetValue(T newValue) {
+            return SetValue(null, newValue);
         }
 
         public virtual Object GetValue() {
             return _Value;
         }
-    }
 
-    public class AnyVar<T> : Var<T> {
         protected override bool DoEncode(Data data) {
             return false;
         }
@@ -48,117 +91,4 @@ namespace angeldnd.dap {
             return false;
         }
     }
-
-    //SILP: VAR_CLASS(Bool, bool)
-    public class BoolVar : Var<bool> {                                //__SILP__
-        public override string Type {                                 //__SILP__
-            get { return VarsConsts.TypeBoolVar; }                    //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoEncode(Data data) {                 //__SILP__
-            return data.SetBool(VarsConsts.KeyValue, Value);          //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoDecode(Data data) {                 //__SILP__
-            SetValue(data.GetBool(VarsConsts.KeyValue));              //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-    }                                                                 //__SILP__
-                                                                      //__SILP__
-    //SILP: VAR_CLASS(Int, int)
-    public class IntVar : Var<int> {                                  //__SILP__
-        public override string Type {                                 //__SILP__
-            get { return VarsConsts.TypeIntVar; }                     //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoEncode(Data data) {                 //__SILP__
-            return data.SetInt(VarsConsts.KeyValue, Value);           //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoDecode(Data data) {                 //__SILP__
-            SetValue(data.GetInt(VarsConsts.KeyValue));               //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-    }                                                                 //__SILP__
-                                                                      //__SILP__
-    //SILP: VAR_CLASS(Long, long)
-    public class LongVar : Var<long> {                                //__SILP__
-        public override string Type {                                 //__SILP__
-            get { return VarsConsts.TypeLongVar; }                    //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoEncode(Data data) {                 //__SILP__
-            return data.SetLong(VarsConsts.KeyValue, Value);          //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoDecode(Data data) {                 //__SILP__
-            SetValue(data.GetLong(VarsConsts.KeyValue));              //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-    }                                                                 //__SILP__
-                                                                      //__SILP__
-    //SILP: VAR_CLASS(Float, float)
-    public class FloatVar : Var<float> {                              //__SILP__
-        public override string Type {                                 //__SILP__
-            get { return VarsConsts.TypeFloatVar; }                   //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoEncode(Data data) {                 //__SILP__
-            return data.SetFloat(VarsConsts.KeyValue, Value);         //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoDecode(Data data) {                 //__SILP__
-            SetValue(data.GetFloat(VarsConsts.KeyValue));             //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-    }                                                                 //__SILP__
-                                                                      //__SILP__
-    //SILP: VAR_CLASS(Double, double)
-    public class DoubleVar : Var<double> {                            //__SILP__
-        public override string Type {                                 //__SILP__
-            get { return VarsConsts.TypeDoubleVar; }                  //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoEncode(Data data) {                 //__SILP__
-            return data.SetDouble(VarsConsts.KeyValue, Value);        //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoDecode(Data data) {                 //__SILP__
-            SetValue(data.GetDouble(VarsConsts.KeyValue));            //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-    }                                                                 //__SILP__
-                                                                      //__SILP__
-    //SILP: VAR_CLASS(String, string)
-    public class StringVar : Var<string> {                            //__SILP__
-        public override string Type {                                 //__SILP__
-            get { return VarsConsts.TypeStringVar; }                  //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoEncode(Data data) {                 //__SILP__
-            return data.SetString(VarsConsts.KeyValue, Value);        //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoDecode(Data data) {                 //__SILP__
-            SetValue(data.GetString(VarsConsts.KeyValue));            //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-    }                                                                 //__SILP__
-                                                                      //__SILP__
-    //SILP: VAR_CLASS(Data, Data)
-    public class DataVar : Var<Data> {                                //__SILP__
-        public override string Type {                                 //__SILP__
-            get { return VarsConsts.TypeDataVar; }                    //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoEncode(Data data) {                 //__SILP__
-            return data.SetData(VarsConsts.KeyValue, Value);          //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override bool DoDecode(Data data) {                 //__SILP__
-            SetValue(data.GetData(VarsConsts.KeyValue));              //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-    }                                                                 //__SILP__
-                                                                      //__SILP__
 }

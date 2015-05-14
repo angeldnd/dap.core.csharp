@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
+    public interface RequestChecker {
+        bool IsValidRequest(string handlerPath, Data req);
+    }
+
     public interface RequestListener {
         void OnRequest(string handlerPath, Data req);
     }
@@ -26,26 +30,26 @@ namespace angeldnd.dap {
             return false;
         }
 
-        //SILP: DECLARE_LIST(RequestChecker, checker, DataChecker, _RequestCheckers)
-        protected List<DataChecker> _RequestCheckers = null;                          //__SILP__
-                                                                                      //__SILP__
-        public bool AddRequestChecker(DataChecker checker) {                          //__SILP__
-            if (_RequestCheckers == null) _RequestCheckers = new List<DataChecker>(); //__SILP__
-            if (!_RequestCheckers.Contains(checker)) {                                //__SILP__
-                _RequestCheckers.Add(checker);                                        //__SILP__
-                return true;                                                          //__SILP__
-            }                                                                         //__SILP__
-            return false;                                                             //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
-        public bool RemoveRequestChecker(DataChecker checker) {                       //__SILP__
-            if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {     //__SILP__
-                _RequestCheckers.Remove(checker);                                     //__SILP__
-                return true;                                                          //__SILP__
-            }                                                                         //__SILP__
-            return false;                                                             //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
+        //SILP: DECLARE_LIST(RequestChecker, checker, RequestChecker, _RequestCheckers)
+        protected List<RequestChecker> _RequestCheckers = null;                          //__SILP__
+                                                                                         //__SILP__
+        public bool AddRequestChecker(RequestChecker checker) {                          //__SILP__
+            if (_RequestCheckers == null) _RequestCheckers = new List<RequestChecker>(); //__SILP__
+            if (!_RequestCheckers.Contains(checker)) {                                   //__SILP__
+                _RequestCheckers.Add(checker);                                           //__SILP__
+                return true;                                                             //__SILP__
+            }                                                                            //__SILP__
+            return false;                                                                //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public bool RemoveRequestChecker(RequestChecker checker) {                       //__SILP__
+            if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {        //__SILP__
+                _RequestCheckers.Remove(checker);                                        //__SILP__
+                return true;                                                             //__SILP__
+            }                                                                            //__SILP__
+            return false;                                                                //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
         //SILP: DECLARE_LIST(RequestListener, listener, RequestListener, _RequestListeners)
         protected List<RequestListener> _RequestListeners = null;                           //__SILP__
                                                                                             //__SILP__
@@ -90,7 +94,7 @@ namespace angeldnd.dap {
             if (_Handler == null) return null;
             if (_RequestCheckers != null) {
                 for (int i = 0; i < _RequestCheckers.Count; i++) {
-                    if (!_RequestCheckers[i].IsValid(req)) {
+                    if (!_RequestCheckers[i].IsValidRequest(Path, req)) {
                         return null;
                     }
                 }

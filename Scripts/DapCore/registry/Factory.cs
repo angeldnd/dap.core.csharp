@@ -28,81 +28,6 @@ namespace angeldnd.dap {
             });                                                                          //__SILP__
                                                                                          //__SILP__
 
-            //Vars
-            //SILP: REGISTER_ASPECT_FACTORY(VarsConsts.TypeVars, Vars);
-            result.RegisterAspect(VarsConsts.TypeVars, (Entity entity, string path) => { //__SILP__
-                Vars aspect = new Vars();                                                //__SILP__
-                if (aspect.Init(entity, path)) {                                         //__SILP__
-                    return aspect;                                                       //__SILP__
-                }                                                                        //__SILP__
-                return null;                                                             //__SILP__
-            });                                                                          //__SILP__
-                                                                                         //__SILP__
-
-            //SILP: REGISTER_ASPECT_FACTORY(VarsConsts.TypeBoolVar, BoolVar);
-            result.RegisterAspect(VarsConsts.TypeBoolVar, (Entity entity, string path) => { //__SILP__
-                BoolVar aspect = new BoolVar();                                             //__SILP__
-                if (aspect.Init(entity, path)) {                                            //__SILP__
-                    return aspect;                                                          //__SILP__
-                }                                                                           //__SILP__
-                return null;                                                                //__SILP__
-            });                                                                             //__SILP__
-                                                                                            //__SILP__
-            //SILP: REGISTER_ASPECT_FACTORY(VarsConsts.TypeIntVar, IntVar);
-            result.RegisterAspect(VarsConsts.TypeIntVar, (Entity entity, string path) => { //__SILP__
-                IntVar aspect = new IntVar();                                              //__SILP__
-                if (aspect.Init(entity, path)) {                                           //__SILP__
-                    return aspect;                                                         //__SILP__
-                }                                                                          //__SILP__
-                return null;                                                               //__SILP__
-            });                                                                            //__SILP__
-                                                                                           //__SILP__
-            //SILP: REGISTER_ASPECT_FACTORY(VarsConsts.TypeLongVar, LongVar);
-            result.RegisterAspect(VarsConsts.TypeLongVar, (Entity entity, string path) => { //__SILP__
-                LongVar aspect = new LongVar();                                             //__SILP__
-                if (aspect.Init(entity, path)) {                                            //__SILP__
-                    return aspect;                                                          //__SILP__
-                }                                                                           //__SILP__
-                return null;                                                                //__SILP__
-            });                                                                             //__SILP__
-                                                                                            //__SILP__
-            //SILP: REGISTER_ASPECT_FACTORY(VarsConsts.TypeFloatVar, FloatVar);
-            result.RegisterAspect(VarsConsts.TypeFloatVar, (Entity entity, string path) => { //__SILP__
-                FloatVar aspect = new FloatVar();                                            //__SILP__
-                if (aspect.Init(entity, path)) {                                             //__SILP__
-                    return aspect;                                                           //__SILP__
-                }                                                                            //__SILP__
-                return null;                                                                 //__SILP__
-            });                                                                              //__SILP__
-                                                                                             //__SILP__
-            //SILP: REGISTER_ASPECT_FACTORY(VarsConsts.TypeDoubleVar, DoubleVar);
-            result.RegisterAspect(VarsConsts.TypeDoubleVar, (Entity entity, string path) => { //__SILP__
-                DoubleVar aspect = new DoubleVar();                                           //__SILP__
-                if (aspect.Init(entity, path)) {                                              //__SILP__
-                    return aspect;                                                            //__SILP__
-                }                                                                             //__SILP__
-                return null;                                                                  //__SILP__
-            });                                                                               //__SILP__
-                                                                                              //__SILP__
-            //SILP: REGISTER_ASPECT_FACTORY(VarsConsts.TypeStringVar, StringVar);
-            result.RegisterAspect(VarsConsts.TypeStringVar, (Entity entity, string path) => { //__SILP__
-                StringVar aspect = new StringVar();                                           //__SILP__
-                if (aspect.Init(entity, path)) {                                              //__SILP__
-                    return aspect;                                                            //__SILP__
-                }                                                                             //__SILP__
-                return null;                                                                  //__SILP__
-            });                                                                               //__SILP__
-                                                                                              //__SILP__
-            //SILP: REGISTER_ASPECT_FACTORY(VarsConsts.TypeDataVar, DataVar);
-            result.RegisterAspect(VarsConsts.TypeDataVar, (Entity entity, string path) => { //__SILP__
-                DataVar aspect = new DataVar();                                             //__SILP__
-                if (aspect.Init(entity, path)) {                                            //__SILP__
-                    return aspect;                                                          //__SILP__
-                }                                                                           //__SILP__
-                return null;                                                                //__SILP__
-            });                                                                             //__SILP__
-                                                                                            //__SILP__
-
             //Properties
             //SILP: REGISTER_ASPECT_FACTORY(PropertiesConsts.TypeProperties, Properties);
             result.RegisterAspect(PropertiesConsts.TypeProperties, (Entity entity, string path) => { //__SILP__
@@ -180,24 +105,24 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public readonly Vars EntityFactories;
-        public readonly Vars AspectFactories;
+        public readonly Vars<EntityFactory> EntityFactories;
+        public readonly Vars<AspectFactory> AspectFactories;
 
         public Factory() {
-            EntityFactories = Add<Vars>("entity_factories");
-            AspectFactories = Add<Vars>("aspect_factories");
+            EntityFactories = Add<Vars<EntityFactory>>("entity_factories");
+            AspectFactories = Add<Vars<AspectFactory>>("aspect_factories");
         }
 
         public bool RegisterEntity(string type, EntityFactory factory) {
-            return EntityFactories.AddAnyVar<EntityFactory>(type, factory) != null;
+            return EntityFactories.AddVar(type, factory) != null;
         }
 
         public bool RegisterAspect(string type, AspectFactory factory) {
-            return AspectFactories.AddAnyVar(type, factory) != null;
+            return AspectFactories.AddVar(type, factory) != null;
         }
 
         public Entity FactoryEntity(string type) {
-            EntityFactory factory = EntityFactories.GetAnyValue<EntityFactory>(type);
+            EntityFactory factory = EntityFactories.GetValue<EntityFactory>(type);
             if (factory != null) {
                 return factory();
             }
@@ -205,7 +130,7 @@ namespace angeldnd.dap {
         }
 
         public override Aspect FactoryAspect(Entity entity, string path, string type) {
-            AspectFactory factory = AspectFactories.GetAnyValue<AspectFactory>(type);
+            AspectFactory factory = AspectFactories.GetValue(type);
             if (factory != null) {
                 return factory(entity, path);
             }

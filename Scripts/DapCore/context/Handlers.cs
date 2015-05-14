@@ -11,23 +11,23 @@ namespace angeldnd.dap {
             return Add<Handler>(handlerPath);
         }
 
-        //SILP: ADD_REMOVE_HELPER(RequestChecker, handlerPath, handler, Handler, RequestChecker, checker, DataChecker)
-        public bool AddRequestChecker(string handlerPath, DataChecker checker) {    //__SILP__
-            Handler handler = Get<Handler>(handlerPath);                            //__SILP__
-            if (handler != null) {                                                  //__SILP__
-                return handler.AddRequestChecker(checker);                          //__SILP__
-            }                                                                       //__SILP__
-            return false;                                                           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public bool RemoveRequestChecker(string handlerPath, DataChecker checker) { //__SILP__
-            Handler handler = Get<Handler>(handlerPath);                            //__SILP__
-            if (handler != null) {                                                  //__SILP__
-                return handler.RemoveRequestChecker(checker);                       //__SILP__
-            }                                                                       //__SILP__
-            return false;                                                           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
+        //SILP: ADD_REMOVE_HELPER(RequestChecker, handlerPath, handler, Handler, RequestChecker, checker, RequestChecker)
+        public bool AddRequestChecker(string handlerPath, RequestChecker checker) {    //__SILP__
+            Handler handler = Get<Handler>(handlerPath);                               //__SILP__
+            if (handler != null) {                                                     //__SILP__
+                return handler.AddRequestChecker(checker);                             //__SILP__
+            }                                                                          //__SILP__
+            return false;                                                              //__SILP__
+        }                                                                              //__SILP__
+                                                                                       //__SILP__
+        public bool RemoveRequestChecker(string handlerPath, RequestChecker checker) { //__SILP__
+            Handler handler = Get<Handler>(handlerPath);                               //__SILP__
+            if (handler != null) {                                                     //__SILP__
+                return handler.RemoveRequestChecker(checker);                          //__SILP__
+            }                                                                          //__SILP__
+            return false;                                                              //__SILP__
+        }                                                                              //__SILP__
+                                                                                       //__SILP__
         //SILP: ADD_REMOVE_HELPER(RequestListener, handlerPath, handler, Handler, RequestListener, listener, RequestListener)
         public bool AddRequestListener(string handlerPath, RequestListener listener) {    //__SILP__
             Handler handler = Get<Handler>(handlerPath);                                  //__SILP__

@@ -46,6 +46,7 @@ namespace angeldnd.dap {
         public virtual void OnAdded() {
             _Registry = FindRegistry(_Entity);
         }
+
         public virtual void OnRemoved() {
             _Registry = null;
         }

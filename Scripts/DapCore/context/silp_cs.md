@@ -1,5 +1,9 @@
 # CONTEXT_PROPERTIES_HELPER(type, cs_type) #
 ```C#
+public ${type}Property Add${type}(string path, Object owner, ${cs_type} val) {
+    return Properties.Add${type}(path, owner, val);
+}
+
 public ${type}Property Add${type}(string path, ${cs_type} val) {
     return Properties.Add${type}(path, val);
 }
@@ -71,13 +75,17 @@ public bool Remove${name}(string ${a_path}, ${l_type} ${l_var}) {
 
 # PROPERTIES_HELPER(type, cs_type) #
 ```C#
-public ${type}Property Add${type}(string path, ${cs_type} val) {
+public ${type}Property Add${type}(string path, Object owner, ${cs_type} val) {
     ${type}Property v = Add<${type}Property>(path);
-    if (v != null && !v.Setup(val)) {
+    if (v != null && !v.Setup(owner, val)) {
         Remove<${type}Property>(path);
         v = null;
     }
     return v;
+}
+
+public ${type}Property Add${type}(string path, ${cs_type} val) {
+    return Add${type}(path, null, val);
 }
 
 public ${type}Property Remove${type}(string path) {
@@ -100,8 +108,8 @@ public bool Remove${type}ValueChecker(string path, ValueChecker<${cs_type}> chec
      return false;
 }
 
-public bool AddBlock${type}ValueChecker(string path, Block${type}ValueChecker.CheckerBlock block) {
-    Block${type}ValueChecker checker = new Block${type}ValueChecker(block);
+public bool Add${type}BlockValueChecker(string path, ${type}BlockValueChecker.CheckerBlock block) {
+    ${type}BlockValueChecker checker = new ${type}BlockValueChecker(block);
     return Add${type}ValueChecker(path, checker);
 }
 
@@ -121,8 +129,8 @@ public bool Remove${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watc
      return false;
 }
 
-public bool AddBlock${type}ValueWatcher(string path, Block${type}ValueWatcher.WatcherBlock block) {
-    Block${type}ValueWatcher watcher = new Block${type}ValueWatcher(block);
+public bool Add${type}BlockValueWatcher(string path, ${type}BlockValueWatcher.WatcherBlock block) {
+    ${type}BlockValueWatcher watcher = new ${type}BlockValueWatcher(block);
     return Add${type}ValueWatcher(path, watcher);
 }
  
@@ -159,12 +167,12 @@ public bool Set${type}(string path, ${cs_type} val) {
 
 # PROPERTY_CLASS(type, cs_type) #
 ```C#
-public sealed class Block${type}ValueChecker : ValueChecker<${cs_type}> {
+public sealed class ${type}BlockValueChecker : ValueChecker<${cs_type}> {
     public delegate bool CheckerBlock(string path, ${cs_type} val, ${cs_type} newVal);
 
     private readonly CheckerBlock _Block;
 
-    public Block${type}ValueChecker(CheckerBlock block) {
+    public ${type}BlockValueChecker(CheckerBlock block) {
         _Block = block;
     }
 
@@ -173,12 +181,12 @@ public sealed class Block${type}ValueChecker : ValueChecker<${cs_type}> {
     }
 }
 
-public sealed class Block${type}ValueWatcher : ValueWatcher<${cs_type}> {
+public sealed class ${type}BlockValueWatcher : ValueWatcher<${cs_type}> {
     public delegate void WatcherBlock(string path, ${cs_type} val, ${cs_type} newVal);
 
     private readonly WatcherBlock _Block;
 
-    public Block${type}ValueWatcher(WatcherBlock block) {
+    public ${type}BlockValueWatcher(WatcherBlock block) {
         _Block = block;
     }
 
@@ -234,6 +242,16 @@ public class ${type}Property : Property<${cs_type}> {
             return true;
         }
         return false;
+    }
+
+    public bool AddBlockValueChecker(${type}BlockValueChecker.CheckerBlock block) {
+        ${type}BlockValueChecker checker = new ${type}BlockValueChecker(block);
+        return AddValueChecker(checker);
+    }
+
+    public bool AddBlockValueWatcher(${type}BlockValueWatcher.WatcherBlock block) {
+        ${type}BlockValueWatcher watcher = new ${type}BlockValueWatcher(block);
+        return AddValueWatcher(watcher);
     }
 }
 
