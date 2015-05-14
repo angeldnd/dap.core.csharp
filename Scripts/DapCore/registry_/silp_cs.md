@@ -1,22 +1,3 @@
-# REGISTER_ASPECT_FACTORY(type, cs_type) #
-```
-result.RegisterAspect(${type}, (Entity entity, string path) => {
-    ${cs_type} aspect = new ${cs_type}();
-    if (aspect.Init(entity, path)) {
-        return aspect;
-    }
-    return null;
-});
-
-```
-
-# REGISTER_ENTITY_FACTORY(type, cs_type) #
-```
-result.RegisterEntity(${type}, () => {
-    return new ${cs_type}();
-});
-```
-
 # ASPECT_MIXIN() #
 ```
 private Entity _Entity = null;
