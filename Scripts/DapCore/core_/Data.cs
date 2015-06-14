@@ -11,6 +11,13 @@ namespace angeldnd.dap {
     public enum DataType {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
     public sealed class Data {
+        public static string ToFullString(Data data) {
+            if (data == null) {
+                return "null";
+            }
+            return data.ToFullString(true);
+        }
+
         private Dictionary<string, DataType> _ValueTypes = new Dictionary<string, DataType>();
 
         private Dictionary<string, bool> _BoolValues = null;

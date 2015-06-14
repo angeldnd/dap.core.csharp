@@ -28,12 +28,12 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public readonly Vars<EntityFactory> EntityFactories;
-        public readonly Vars<AspectFactory> AspectFactories;
+        public readonly Vars EntityFactories;
+        public readonly Vars AspectFactories;
 
         public Factory() {
-            EntityFactories = Add<Vars<EntityFactory>>("entity_factories");
-            AspectFactories = Add<Vars<AspectFactory>>("aspect_factories");
+            EntityFactories = Add<Vars>("entity_factories");
+            AspectFactories = Add<Vars>("aspect_factories");
         }
 
         public bool RegisterEntity(string type, EntityFactory factory) {
@@ -70,7 +70,7 @@ namespace angeldnd.dap {
         }
 
         public override Aspect FactoryAspect(Entity entity, string path, string type) {
-            AspectFactory factory = AspectFactories.GetValue(type);
+            AspectFactory factory = AspectFactories.GetValue<AspectFactory>(type);
             if (factory != null) {
                 return factory(entity, path);
             }

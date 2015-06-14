@@ -41,34 +41,41 @@ namespace angeldnd.dap {
         public static LogProvider Provider = null;
 
         public static void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
+            if (Provider == null) return;
             Provider.AddLog(type, stackTrace, format, values);
         }
 
         public static void Flush() {
+            if (Provider == null) return;
             Provider.Flush();
         }
 
         public static bool LogDebug;
 
         public static void Critical(string format, params object[] values) {
+            if (Provider == null) return;
             StackTrace stackTrace = new StackTrace(1, true);
             Provider.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
         }
 
         public static void Error(string format, params object[] values) {
+            if (Provider == null) return;
             StackTrace stackTrace = new StackTrace(1, true);
             Provider.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
         }
 
         public static void Info(string format, params object[] values) {
+            if (Provider == null) return;
             Provider.AddLog(LoggerConsts.INFO, null, format, values);
         }
 
         public static void Debug(string format, params object[] values) {
+            if (Provider == null) return;
             if (LogDebug) Provider.AddLog(LoggerConsts.DEBUG, null, format, values);
         }
 
         public static void Custom(string type, string format, params object[] values) {
+            if (Provider == null) return;
             Provider.AddLog(type, null, format, values);
         }
     }
@@ -190,11 +197,13 @@ namespace angeldnd.dap {
                 msg = msg.ToLower();
             }
             if (condition.StartsWith("^")) {
-                condition = condition.Replace("^", "");
-                return msg.StartsWith(condition);
-            } else if (condition.StartsWith("$")) {
-                condition = condition.Replace("$", "");
-                return msg.EndsWith(condition);
+                if (condition.EndsWith("$")) {
+                    return msg == condition.Replace("^", "").Replace("$", "");
+                } else {
+                    return msg.StartsWith(condition.Replace("^", ""));
+                }
+            } else if (condition.EndsWith("$")) {
+                return msg.EndsWith(condition.Replace("$", ""));
             } else {
                 return msg.Contains(condition);
             }

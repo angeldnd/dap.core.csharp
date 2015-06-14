@@ -34,6 +34,13 @@ namespace angeldnd.dap {
 
         private List<EntityWatcher> _Watchers = new List<EntityWatcher>();
 
+        /*
+         * For some really strange unknown reason, if try to add a constructor here
+         * and add an aspect in it, will cause infinite loop, which will crash unity
+         * editor, somehow the stack was corrupted in Has(), might related to the _Aspects
+         * init value, not sure why, if don't add any aspect here, will be fine.
+         */
+
         protected virtual bool DoEncode(Data data) {
             Data aspectsData = new Data();
             foreach (var pair in _Aspects) {
@@ -188,29 +195,6 @@ namespace angeldnd.dap {
                 return aspect;
             }
             return null;
-        }
-
-        public bool SetVarValue<T>(string varsPath, string varPath, T v) {
-            Vars vars = Get<Vars>(varsPath);
-            if (vars == null) {
-                vars = Add<Vars>(varsPath);
-            }
-            if (vars != null) {
-                if (vars.HasVar<T>(varPath)) {
-                    return vars.SetValue<T>(varPath, v);
-                } else {
-                    return vars.AddVar<T>(varPath, v) != null;
-                }
-            }
-            return false;
-        }
-
-        public T GetVarValue<T>(string varsPath, string varPath, T defaultValue) {
-            Vars vars = Get<Vars>(varsPath);
-            if (vars != null) {
-                return vars.GetValue<T>(varPath, defaultValue);
-            }
-            return defaultValue;
         }
 
         //SILP: DAPOBJECT_MIXIN()

@@ -18,11 +18,19 @@ namespace angeldnd.dap {
             get { return RegistryConsts.Separator; }
         }
 
-        public static readonly Registry Global;
-        static Registry() {
-            SetupLogging();
-            Global = new Registry();
-            BootstrapAutoBootstrappers();
+        public static readonly Registry Global = new Registry();
+
+        private static bool _Bootstrapped = false;
+        public static bool Bootstrapped {
+            get { return _Bootstrapped; }
+        }
+
+        public static void Bootstrap() {
+            if (!_Bootstrapped) {
+                _Bootstrapped = true;
+                SetupLogging();
+                BootstrapAutoBootstrappers();
+            }
         }
 
         public readonly Factory Factory;
@@ -96,6 +104,16 @@ namespace angeldnd.dap {
             return Filter<T>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments);
         }
 
+        public T GetDescendant<T>(string path, string relativePath) where T : Item {
+            string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
+            return Get<T>(absPath);
+        }
+
+        public T GetDescendantAspect<T>(string path, string relativePath, string aspectPath) where T : class, Aspect {
+            string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
+            return GetItemAspect<T>(absPath, aspectPath);
+        }
+
         public T GetParent<T>(string path) where T : Item {
             string[] segments = path.Split(RegistryConsts.Separator);
             if (segments.Length <= 1) return null;
@@ -108,6 +126,25 @@ namespace angeldnd.dap {
                 }
             }
             return Get<T>(parentPath.ToString());
+        }
+
+        public T GetAncestor<T>(string path) where T : Item {
+            Item parent = GetParent<Item>(path);
+            if (parent == null) {
+                return null;
+            } else if (parent is T) {
+                return (T)parent;
+            } else {
+                return GetAncestor<T>(parent.Path);
+            }
+        }
+
+        public string GetRelativePath(string ancestorPath, string descendantPath) {
+            string prefix = ancestorPath + RegistryConsts.Separator;
+            if (descendantPath.StartsWith(prefix)) {
+                return descendantPath.Replace(prefix, "");
+            }
+            return null;
         }
 
         public Item AddItem(string path, string type) {

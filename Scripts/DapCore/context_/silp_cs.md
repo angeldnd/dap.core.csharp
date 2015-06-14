@@ -1,7 +1,7 @@
 # CONTEXT_PROPERTIES_HELPER(type, cs_type) #
 ```C#
-public ${type}Property Add${type}(string path, Object owner, ${cs_type} val) {
-    return Properties.Add${type}(path, owner, val);
+public ${type}Property Add${type}(string path, Object pass, ${cs_type} val) {
+    return Properties.Add${type}(path, pass, val);
 }
 
 public ${type}Property Add${type}(string path, ${cs_type} val) {
@@ -26,6 +26,10 @@ public ${cs_type} Get${type}(string path, ${cs_type} defaultValue) {
 
 public bool Set${type}(string path, ${cs_type} value) {
     return Properties.Set${type}(path, value);
+}
+
+public bool Set${type}(string path, Object pass, ${cs_type} value) {
+    return Properties.Set${type}(path, pass, value);
 }
 
 ```
@@ -75,9 +79,9 @@ public bool Remove${name}(string ${a_path}, ${l_type} ${l_var}) {
 
 # PROPERTIES_HELPER(type, cs_type) #
 ```C#
-public ${type}Property Add${type}(string path, Object owner, ${cs_type} val) {
+public ${type}Property Add${type}(string path, Object pass, ${cs_type} val) {
     ${type}Property v = Add<${type}Property>(path);
-    if (v != null && !v.Setup(owner, val)) {
+    if (v != null && !v.Setup(pass, val)) {
         Remove<${type}Property>(path);
         v = null;
     }
@@ -159,6 +163,14 @@ public bool Set${type}(string path, ${cs_type} val) {
     ${type}Property v = Get<${type}Property>(path);
     if (v != null) {
         return v.SetValue(val);
+    }
+    return false;
+}
+
+public bool Set${type}(string path, Object pass, ${cs_type} val) {
+    ${type}Property v = Get<${type}Property>(path);
+    if (v != null) {
+        return v.SetValue(pass, val);
     }
     return false;
 }
