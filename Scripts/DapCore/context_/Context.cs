@@ -5,10 +5,10 @@ namespace angeldnd.dap {
     public struct ContextConsts {
         public const string TypeContext = "Context";
 
-        public const string PathVars = "vars";
-        public const string PathProperties = "properties";
-        public const string PathChannels = "channels";
-        public const string PathHandlers = "handlers";
+        public const string PathVars = "_vars";
+        public const string PathProperties = "_properties";
+        public const string PathChannels = "_channels";
+        public const string PathHandlers = "_handlers";
 
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";
