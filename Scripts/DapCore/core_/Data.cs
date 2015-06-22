@@ -8,7 +8,7 @@ namespace angeldnd.dap {
         bool IsValid(Data data);
     }
 
-    public enum DataType {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
+    public enum DataType : byte {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
     public sealed class Data {
         public static string ToFullString(Data data) {
