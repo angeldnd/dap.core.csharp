@@ -28,9 +28,28 @@ namespace angeldnd.dap {
         private Dictionary<string, string> _StringValues = null;
         private Dictionary<string, Data> _DataValues = null;
 
+        public override string ToString() {
+            if (DeepCount <= 12) {
+                return ToFullString(true);
+            }
+            return string.Format("[Data:{0}]", Count);
+        }
+
         public int Count {
             get {
                 return _ValueTypes.Count;
+            }
+        }
+
+        public int DeepCount {
+            get {
+                int result = _ValueTypes.Count;
+                if (_DataValues != null) {
+                    foreach (var val in _DataValues.Values) {
+                        result = result + val.DeepCount;
+                    }
+                }
+                return result;
             }
         }
 
