@@ -217,9 +217,9 @@ public void Debug(string format, params object[] values) {
 ```C#
 public virtual string GetLogPrefix() {
     if (_Entity != null) {
-        return string.Format("{0}[{1}] [{2}]", _Entity.GetLogPrefix(), GetType().Name, Path);
+        return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, Path);
     } else {
-        return string.Format("[] [{0}] [{1}]", GetType().Name, Path);
+        return string.Format("[] [{0}] [{1}] ", GetType().Name, Path);
     }
 }
 ```
