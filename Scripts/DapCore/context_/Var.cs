@@ -60,7 +60,7 @@ namespace angeldnd.dap {
         public bool SetValue(Object pass, T newValue) {
             if (!_Setup) {
                 Error("Not Setup: {0} -> {1}", _Value, newValue);
-            } else if (_Pass != pass) {
+            } else if (_Pass != null && _Pass != pass && !_Pass.Equals(pass)) {
                 Error("Access Denied: _Pass = {0}, pass = {1}: {2} -> {3}", _Pass, pass, _Value, newValue);
             } else {
                 _Value = newValue;
