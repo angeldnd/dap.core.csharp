@@ -64,7 +64,7 @@ public bool Add${name}(string ${a_path}, ${l_type} ${l_var}) {
     if (${a_var} != null) {
         return ${a_var}.Add${l_name}(${l_var});
     } else {
-        Error("${name} Not Found: {0}", ${a_path});
+        Error("${a_type} Not Found: {0}", ${a_path});
     }
     return false;
 }
@@ -74,7 +74,7 @@ public bool Remove${name}(string ${a_path}, ${l_type} ${l_var}) {
     if (${a_var} != null) {
         return ${a_var}.Remove${l_name}(${l_var});
     } else {
-        Error("${name} Not Found: {0}", ${a_path});
+        Error("${a_type} Not Found: {0}", ${a_path});
     }
     return false;
 }

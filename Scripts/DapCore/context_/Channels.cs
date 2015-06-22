@@ -17,7 +17,7 @@ namespace angeldnd.dap {
             if (channel != null) {                                                 //__SILP__
                 return channel.AddEventChecker(checker);                           //__SILP__
             } else {                                                               //__SILP__
-                Error("EventChecker Not Found: {0}", channelPath);                 //__SILP__
+                Error("Channel Not Found: {0}", channelPath);                      //__SILP__
             }                                                                      //__SILP__
             return false;                                                          //__SILP__
         }                                                                          //__SILP__
@@ -27,7 +27,7 @@ namespace angeldnd.dap {
             if (channel != null) {                                                 //__SILP__
                 return channel.RemoveEventChecker(checker);                        //__SILP__
             } else {                                                               //__SILP__
-                Error("EventChecker Not Found: {0}", channelPath);                 //__SILP__
+                Error("Channel Not Found: {0}", channelPath);                      //__SILP__
             }                                                                      //__SILP__
             return false;                                                          //__SILP__
         }                                                                          //__SILP__
@@ -39,7 +39,7 @@ namespace angeldnd.dap {
             if (channel != null) {                                                    //__SILP__
                 return channel.AddEventListener(listener);                            //__SILP__
             } else {                                                                  //__SILP__
-                Error("EventListener Not Found: {0}", channelPath);                   //__SILP__
+                Error("Channel Not Found: {0}", channelPath);                         //__SILP__
             }                                                                         //__SILP__
             return false;                                                             //__SILP__
         }                                                                             //__SILP__
@@ -49,7 +49,7 @@ namespace angeldnd.dap {
             if (channel != null) {                                                    //__SILP__
                 return channel.RemoveEventListener(listener);                         //__SILP__
             } else {                                                                  //__SILP__
-                Error("EventListener Not Found: {0}", channelPath);                   //__SILP__
+                Error("Channel Not Found: {0}", channelPath);                         //__SILP__
             }                                                                         //__SILP__
             return false;                                                             //__SILP__
         }                                                                             //__SILP__
