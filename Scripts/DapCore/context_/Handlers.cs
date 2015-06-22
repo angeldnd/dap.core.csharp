@@ -16,6 +16,8 @@ namespace angeldnd.dap {
             Handler handler = Get<Handler>(handlerPath);                               //__SILP__
             if (handler != null) {                                                     //__SILP__
                 return handler.AddRequestChecker(checker);                             //__SILP__
+            } else {                                                                   //__SILP__
+                Error("RequestChecker Not Found: {0}", handlerPath);                   //__SILP__
             }                                                                          //__SILP__
             return false;                                                              //__SILP__
         }                                                                              //__SILP__
@@ -24,6 +26,8 @@ namespace angeldnd.dap {
             Handler handler = Get<Handler>(handlerPath);                               //__SILP__
             if (handler != null) {                                                     //__SILP__
                 return handler.RemoveRequestChecker(checker);                          //__SILP__
+            } else {                                                                   //__SILP__
+                Error("RequestChecker Not Found: {0}", handlerPath);                   //__SILP__
             }                                                                          //__SILP__
             return false;                                                              //__SILP__
         }                                                                              //__SILP__
@@ -33,6 +37,8 @@ namespace angeldnd.dap {
             Handler handler = Get<Handler>(handlerPath);                                  //__SILP__
             if (handler != null) {                                                        //__SILP__
                 return handler.AddRequestListener(listener);                              //__SILP__
+            } else {                                                                      //__SILP__
+                Error("RequestListener Not Found: {0}", handlerPath);                     //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
         }                                                                                 //__SILP__
@@ -41,6 +47,8 @@ namespace angeldnd.dap {
             Handler handler = Get<Handler>(handlerPath);                                  //__SILP__
             if (handler != null) {                                                        //__SILP__
                 return handler.RemoveRequestListener(listener);                           //__SILP__
+            } else {                                                                      //__SILP__
+                Error("RequestListener Not Found: {0}", handlerPath);                     //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
         }                                                                                 //__SILP__
@@ -50,6 +58,8 @@ namespace angeldnd.dap {
             Handler handler = Get<Handler>(handlerPath);                                    //__SILP__
             if (handler != null) {                                                          //__SILP__
                 return handler.AddResponseListener(listener);                               //__SILP__
+            } else {                                                                        //__SILP__
+                Error("ResponseListener Not Found: {0}", handlerPath);                      //__SILP__
             }                                                                               //__SILP__
             return false;                                                                   //__SILP__
         }                                                                                   //__SILP__
@@ -58,6 +68,8 @@ namespace angeldnd.dap {
             Handler handler = Get<Handler>(handlerPath);                                    //__SILP__
             if (handler != null) {                                                          //__SILP__
                 return handler.RemoveResponseListener(listener);                            //__SILP__
+            } else {                                                                        //__SILP__
+                Error("ResponseListener Not Found: {0}", handlerPath);                      //__SILP__
             }                                                                               //__SILP__
             return false;                                                                   //__SILP__
         }                                                                                   //__SILP__

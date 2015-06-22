@@ -138,11 +138,12 @@ namespace angeldnd.dap {
         public bool SetBool(string path, bool value) {                    //__SILP__
             return Properties.SetBool(path, value);                       //__SILP__
         }                                                                 //__SILP__
-
+                                                                          //__SILP__
         public bool SetBool(string path, Object pass, bool value) {       //__SILP__
             return Properties.SetBool(path, pass, value);                 //__SILP__
         }                                                                 //__SILP__
                                                                           //__SILP__
+
         //SILP: CONTEXT_PROPERTIES_HELPER(Int, int)
         public IntProperty AddInt(string path, Object pass, int val) { //__SILP__
             return Properties.AddInt(path, pass, val);                 //__SILP__
