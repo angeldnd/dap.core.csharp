@@ -18,6 +18,15 @@ namespace angeldnd.dap {
         //SILP: DECLARE_LIST(ValueChecker, checker, ValueChecker<T>, _Checkers)
         protected List<ValueChecker<T>> _Checkers = null;                   //__SILP__
                                                                             //__SILP__
+        public int ValueCheckerCount {                                      //__SILP__
+            get {                                                           //__SILP__
+                if (_Checkers == null) {                                    //__SILP__
+                    return 0;                                               //__SILP__
+                }                                                           //__SILP__
+                return _Checkers.Count;                                     //__SILP__
+            }                                                               //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
         public bool AddValueChecker(ValueChecker<T> checker) {              //__SILP__
             if (_Checkers == null) _Checkers = new List<ValueChecker<T>>(); //__SILP__
             if (!_Checkers.Contains(checker)) {                             //__SILP__
@@ -37,6 +46,15 @@ namespace angeldnd.dap {
                                                                             //__SILP__
         //SILP: DECLARE_LIST(ValueWatcher, watcher, ValueWatcher<T>, _Watchers)
         protected List<ValueWatcher<T>> _Watchers = null;                   //__SILP__
+                                                                            //__SILP__
+        public int ValueWatcherCount {                                      //__SILP__
+            get {                                                           //__SILP__
+                if (_Watchers == null) {                                    //__SILP__
+                    return 0;                                               //__SILP__
+                }                                                           //__SILP__
+                return _Watchers.Count;                                     //__SILP__
+            }                                                               //__SILP__
+        }                                                                   //__SILP__
                                                                             //__SILP__
         public bool AddValueWatcher(ValueWatcher<T> watcher) {              //__SILP__
             if (_Watchers == null) _Watchers = new List<ValueWatcher<T>>(); //__SILP__

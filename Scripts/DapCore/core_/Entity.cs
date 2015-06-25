@@ -118,7 +118,13 @@ namespace angeldnd.dap {
         public T Get<T>(string path) where T : class, Aspect {
             Aspect aspect = null;
             if (_Aspects.TryGetValue(path, out aspect)) {
-                return aspect as T;
+                if (aspect is T) {
+                    return aspect as T;
+                } else {
+                    Error("Get<{0}>({1}): Type Mismatch: {2}", typeof(T).Name, path, aspect.GetType().Name);
+                }
+            } else {
+                Debug("Get<{0}>({1}): Not Found", typeof(T).Name, path);
             }
             return null;
         }

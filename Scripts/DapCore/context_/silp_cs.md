@@ -38,6 +38,15 @@ public bool Set${type}(string path, Object pass, ${cs_type} value) {
 ```C#
 protected List<${cs_type}> ${list_name} = null;
 
+public int ${name}Count {
+    get {
+        if (${list_name} == null) {
+            return 0;
+        }
+        return ${list_name}.Count;
+    }
+}
+
 public bool Add${name}(${cs_type} ${var_name}) {
     if (${list_name} == null) ${list_name} = new List<${cs_type}>();
     if (!${list_name}.Contains(${var_name})) {
