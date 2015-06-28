@@ -269,14 +269,20 @@ public class ${type}Property : Property<${cs_type}> {
         return false;
     }
 
-    public bool AddBlockValueChecker(${type}BlockValueChecker.CheckerBlock block) {
+    public ${type}BlockValueChecker AddBlockValueChecker(${type}BlockValueChecker.CheckerBlock block) {
         ${type}BlockValueChecker checker = new ${type}BlockValueChecker(block);
-        return AddValueChecker(checker);
+        if (AddValueChecker(checker)) {
+            return checker;
+        }
+        return null;
     }
 
-    public bool AddBlockValueWatcher(${type}BlockValueWatcher.WatcherBlock block) {
+    public ${type}BlockValueWatcher AddBlockValueWatcher(${type}BlockValueWatcher.WatcherBlock block) {
         ${type}BlockValueWatcher watcher = new ${type}BlockValueWatcher(block);
-        return AddValueWatcher(watcher);
+        if (AddValueWatcher(watcher)) {
+            return watcher;
+        }
+        return null;
     }
 }
 
