@@ -118,39 +118,45 @@ public bool Add${type}ValueChecker(string path, ValueChecker<${cs_type}> checker
 }
 
 public bool Remove${type}ValueChecker(string path, ValueChecker<${cs_type}> checker) {
-     ${type}Property p = Get<${type}Property>(path);
-     if (p != null) {
+    ${type}Property p = Get<${type}Property>(path);
+    if (p != null) {
         return p.RemoveValueChecker(checker);
-     }
-     return false;
+    }
+    return false;
 }
 
-public bool Add${type}BlockValueChecker(string path, ${type}BlockValueChecker.CheckerBlock block) {
-    ${type}BlockValueChecker checker = new ${type}BlockValueChecker(block);
-    return Add${type}ValueChecker(path, checker);
+public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, ${type}BlockValueChecker.CheckerBlock block) {
+    ${type}Property p = Get<${type}Property>(path);
+    if (p != null) {
+        return p.Add{type}BlockValueChecker(block);
+    }
+    return null;
 }
 
 public bool Add${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watcher) {
-     ${type}Property p = Get<${type}Property>(path);
-     if (p != null) {
+    ${type}Property p = Get<${type}Property>(path);
+    if (p != null) {
         return p.AddValueWatcher(watcher);
-     }
-     return false;
+    }
+    return false;
 }
 
 public bool Remove${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watcher) {
-     ${type}Property p = Get<${type}Property>(path);
-     if (p != null) {
+    ${type}Property p = Get<${type}Property>(path);
+    if (p != null) {
         return p.RemoveValueWatcher(watcher);
-     }
-     return false;
+    }
+    return false;
 }
 
-public bool Add${type}BlockValueWatcher(string path, ${type}BlockValueWatcher.WatcherBlock block) {
-    ${type}BlockValueWatcher watcher = new ${type}BlockValueWatcher(block);
-    return Add${type}ValueWatcher(path, watcher);
+public ${type}BlockValueWatcher Add${type}BlockValueWatcher(string path, ${type}BlockValueWatcher.WatcherBlock block) {
+    ${type}Property p = Get<${type}Property>(path);
+    if (p != null) {
+        return p.Add{type}BlockValueWatcher(block);
+    }
+    return null;
 }
- 
+
 public bool Is${type}(string path) {
     return Get<${type}Property>(path) != null;
 }
