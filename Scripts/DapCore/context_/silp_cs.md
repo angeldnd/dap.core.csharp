@@ -128,7 +128,7 @@ public bool Remove${type}ValueChecker(string path, ValueChecker<${cs_type}> chec
 public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, ${type}BlockValueChecker.CheckerBlock block) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
-        return p.Add${type}BlockValueChecker(block);
+        return p.AddBlockValueChecker(block);
     }
     return null;
 }
@@ -152,7 +152,7 @@ public bool Remove${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watc
 public ${type}BlockValueWatcher Add${type}BlockValueWatcher(string path, ${type}BlockValueWatcher.WatcherBlock block) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
-        return p.Add${type}BlockValueWatcher(block);
+        return p.AddBlockValueWatcher(block);
     }
     return null;
 }
