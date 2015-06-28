@@ -231,67 +231,67 @@ namespace angeldnd.dap {
                                                                       //__SILP__
 
         //SILP: ENTITY_LOG_MIXIN()
-        private DebugLogger _DebugLogger = DebugLogger.Instance;                                     //__SILP__
-                                                                                                     //__SILP__
-        private bool _DebugMode = false;                                                             //__SILP__
-        public bool DebugMode {                                                                      //__SILP__
-            get { return _DebugMode; }                                                               //__SILP__
-            set {                                                                                    //__SILP__
-                _DebugMode = true;                                                                   //__SILP__
-            }                                                                                        //__SILP__
-        }                                                                                            //__SILP__
-                                                                                                     //__SILP__
-        private string[] _DebugPatterns = {""};                                                      //__SILP__
-        public virtual string[] DebugPatterns {                                                      //__SILP__
-            get { return _DebugPatterns; }                                                           //__SILP__
-            set {                                                                                    //__SILP__
-                _DebugPatterns = value;                                                              //__SILP__
-            }                                                                                        //__SILP__
-        }                                                                                            //__SILP__
-                                                                                                     //__SILP__
-        public virtual bool LogDebug {                                                               //__SILP__
-            get { return _DebugMode || Log.LogDebug; }                                               //__SILP__
-        }                                                                                            //__SILP__
-                                                                                                     //__SILP__
-        public virtual string GetLogPrefix() {                                                       //__SILP__
-            return string.Format("[{0}] ", GetType().Name);                                          //__SILP__
-        }                                                                                            //__SILP__
-                                                                                                     //__SILP__
-        public void Critical(string format, params object[] values) {                                //__SILP__
-            if (DebugMode) {                                                                         //__SILP__
-                _DebugLogger.Critical(                                                               //__SILP__
-                    _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));     //__SILP__
-            } else {                                                                                 //__SILP__
-                Log.Critical(GetLogPrefix() + string.Format(format, values));                        //__SILP__
-            }                                                                                        //__SILP__
-        }                                                                                            //__SILP__
-                                                                                                     //__SILP__
-        public void Error(string format, params object[] values) {                                   //__SILP__
-            if (DebugMode) {                                                                         //__SILP__
-                _DebugLogger.Error(                                                                  //__SILP__
-                    _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));     //__SILP__
-            } else {                                                                                 //__SILP__
-                Log.Error(GetLogPrefix() + string.Format(format, values));                           //__SILP__
-            }                                                                                        //__SILP__
-        }                                                                                            //__SILP__
-                                                                                                     //__SILP__
-        public void Info(string format, params object[] values) {                                    //__SILP__
-            if (DebugMode) {                                                                         //__SILP__
-                _DebugLogger.LogWithPatterns(LoggerConsts.INFO, DebugPatterns,                       //__SILP__
-                        _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values)); //__SILP__
-            } else {                                                                                 //__SILP__
-                Log.Info(GetLogPrefix() + string.Format(format, values));                            //__SILP__
-            }                                                                                        //__SILP__
-        }                                                                                            //__SILP__
-                                                                                                     //__SILP__
-        public void Debug(string format, params object[] values) {                                   //__SILP__
-            if (DebugMode) {                                                                         //__SILP__
-                _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, DebugPatterns,                      //__SILP__
-                        _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values)); //__SILP__
-            } else {                                                                                 //__SILP__
-                Log.Debug(GetLogPrefix() + string.Format(format, values));                           //__SILP__
-            }                                                                                        //__SILP__
-        }                                                                                            //__SILP__
-                                                                                                     //__SILP__
+        private DebugLogger _DebugLogger = DebugLogger.Instance;                                      //__SILP__
+                                                                                                      //__SILP__
+        private bool _DebugMode = false;                                                              //__SILP__
+        public bool DebugMode {                                                                       //__SILP__
+            get { return _DebugMode; }                                                                //__SILP__
+            set {                                                                                     //__SILP__
+                _DebugMode = true;                                                                    //__SILP__
+            }                                                                                         //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        private string[] _DebugPatterns = {""};                                                       //__SILP__
+        public virtual string[] DebugPatterns {                                                       //__SILP__
+            get { return _DebugPatterns; }                                                            //__SILP__
+            set {                                                                                     //__SILP__
+                _DebugPatterns = value;                                                               //__SILP__
+            }                                                                                         //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public virtual bool LogDebug {                                                                //__SILP__
+            get { return _DebugMode || Log.LogDebug; }                                                //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public virtual string GetLogPrefix() {                                                        //__SILP__
+            return string.Format("[{0}] ", GetType().Name);                                           //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public void Critical(string format, params object[] values) {                                 //__SILP__
+            if (DebugMode) {                                                                          //__SILP__
+                _DebugLogger.Critical(                                                                //__SILP__
+                    _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));      //__SILP__
+            } else {                                                                                  //__SILP__
+                Log.Critical(GetLogPrefix() + string.Format(format, values));                         //__SILP__
+            }                                                                                         //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public void Error(string format, params object[] values) {                                    //__SILP__
+            if (DebugMode) {                                                                          //__SILP__
+                _DebugLogger.Error(                                                                   //__SILP__
+                    _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));      //__SILP__
+            } else {                                                                                  //__SILP__
+                Log.Error(GetLogPrefix() + string.Format(format, values));                            //__SILP__
+            }                                                                                         //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public void Info(string format, params object[] values) {                                     //__SILP__
+            if (DebugMode) {                                                                          //__SILP__
+                _DebugLogger.LogWithPatterns(LoggerConsts.INFO, DebugPatterns,                        //__SILP__
+                        _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
+            } else {                                                                                  //__SILP__
+                Log.Info(GetLogPrefix() + string.Format(format, values));                             //__SILP__
+            }                                                                                         //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public void Debug(string format, params object[] values) {                                    //__SILP__
+            if (DebugMode) {                                                                          //__SILP__
+                _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, DebugPatterns,                       //__SILP__
+                        _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
+            } else {                                                                                  //__SILP__
+                Log.Debug(GetLogPrefix() + string.Format(format, values));                            //__SILP__
+            }                                                                                         //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
     }
 }

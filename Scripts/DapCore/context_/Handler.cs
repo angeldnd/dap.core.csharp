@@ -91,92 +91,92 @@ namespace angeldnd.dap {
         }
 
         //SILP: DECLARE_LIST(RequestChecker, checker, RequestChecker, _RequestCheckers)
-        protected List<RequestChecker> _RequestCheckers = null;                          //__SILP__
-                                                                                         //__SILP__
-        public int RequestCheckerCount {                                                 //__SILP__
-            get {                                                                        //__SILP__
-                if (_RequestCheckers == null) {                                          //__SILP__
-                    return 0;                                                            //__SILP__
-                }                                                                        //__SILP__
-                return _RequestCheckers.Count;                                           //__SILP__
-            }                                                                            //__SILP__
-        }                                                                                //__SILP__
-                                                                                         //__SILP__
-        public bool AddRequestChecker(RequestChecker checker) {                          //__SILP__
-            if (_RequestCheckers == null) _RequestCheckers = new List<RequestChecker>(); //__SILP__
-            if (!_RequestCheckers.Contains(checker)) {                                   //__SILP__
-                _RequestCheckers.Add(checker);                                           //__SILP__
-                return true;                                                             //__SILP__
-            }                                                                            //__SILP__
-            return false;                                                                //__SILP__
-        }                                                                                //__SILP__
-                                                                                         //__SILP__
-        public bool RemoveRequestChecker(RequestChecker checker) {                       //__SILP__
-            if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {        //__SILP__
-                _RequestCheckers.Remove(checker);                                        //__SILP__
-                return true;                                                             //__SILP__
-            }                                                                            //__SILP__
-            return false;                                                                //__SILP__
-        }                                                                                //__SILP__
-                                                                                         //__SILP__
+        protected List<RequestChecker> _RequestCheckers = null;                           //__SILP__
+                                                                                          //__SILP__
+        public int RequestCheckerCount {                                                  //__SILP__
+            get {                                                                         //__SILP__
+                if (_RequestCheckers == null) {                                           //__SILP__
+                    return 0;                                                             //__SILP__
+                }                                                                         //__SILP__
+                return _RequestCheckers.Count;                                            //__SILP__
+            }                                                                             //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public bool AddRequestChecker(RequestChecker checker) {                           //__SILP__
+            if (_RequestCheckers == null) _RequestCheckers = new List<RequestChecker>();  //__SILP__
+            if (!_RequestCheckers.Contains(checker)) {                                    //__SILP__
+                _RequestCheckers.Add(checker);                                            //__SILP__
+                return true;                                                              //__SILP__
+            }                                                                             //__SILP__
+            return false;                                                                 //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public bool RemoveRequestChecker(RequestChecker checker) {                        //__SILP__
+            if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {         //__SILP__
+                _RequestCheckers.Remove(checker);                                         //__SILP__
+                return true;                                                              //__SILP__
+            }                                                                             //__SILP__
+            return false;                                                                 //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
         //SILP: DECLARE_LIST(RequestListener, listener, RequestListener, _RequestListeners)
-        protected List<RequestListener> _RequestListeners = null;                           //__SILP__
-                                                                                            //__SILP__
-        public int RequestListenerCount {                                                   //__SILP__
-            get {                                                                           //__SILP__
-                if (_RequestListeners == null) {                                            //__SILP__
-                    return 0;                                                               //__SILP__
-                }                                                                           //__SILP__
-                return _RequestListeners.Count;                                             //__SILP__
-            }                                                                               //__SILP__
-        }                                                                                   //__SILP__
-                                                                                            //__SILP__
-        public bool AddRequestListener(RequestListener listener) {                          //__SILP__
-            if (_RequestListeners == null) _RequestListeners = new List<RequestListener>(); //__SILP__
-            if (!_RequestListeners.Contains(listener)) {                                    //__SILP__
-                _RequestListeners.Add(listener);                                            //__SILP__
-                return true;                                                                //__SILP__
-            }                                                                               //__SILP__
-            return false;                                                                   //__SILP__
-        }                                                                                   //__SILP__
-                                                                                            //__SILP__
-        public bool RemoveRequestListener(RequestListener listener) {                       //__SILP__
-            if (_RequestListeners != null && _RequestListeners.Contains(listener)) {        //__SILP__
-                _RequestListeners.Remove(listener);                                         //__SILP__
-                return true;                                                                //__SILP__
-            }                                                                               //__SILP__
-            return false;                                                                   //__SILP__
-        }                                                                                   //__SILP__
-                                                                                            //__SILP__
+        protected List<RequestListener> _RequestListeners = null;                            //__SILP__
+                                                                                             //__SILP__
+        public int RequestListenerCount {                                                    //__SILP__
+            get {                                                                            //__SILP__
+                if (_RequestListeners == null) {                                             //__SILP__
+                    return 0;                                                                //__SILP__
+                }                                                                            //__SILP__
+                return _RequestListeners.Count;                                              //__SILP__
+            }                                                                                //__SILP__
+        }                                                                                    //__SILP__
+                                                                                             //__SILP__
+        public bool AddRequestListener(RequestListener listener) {                           //__SILP__
+            if (_RequestListeners == null) _RequestListeners = new List<RequestListener>();  //__SILP__
+            if (!_RequestListeners.Contains(listener)) {                                     //__SILP__
+                _RequestListeners.Add(listener);                                             //__SILP__
+                return true;                                                                 //__SILP__
+            }                                                                                //__SILP__
+            return false;                                                                    //__SILP__
+        }                                                                                    //__SILP__
+                                                                                             //__SILP__
+        public bool RemoveRequestListener(RequestListener listener) {                        //__SILP__
+            if (_RequestListeners != null && _RequestListeners.Contains(listener)) {         //__SILP__
+                _RequestListeners.Remove(listener);                                          //__SILP__
+                return true;                                                                 //__SILP__
+            }                                                                                //__SILP__
+            return false;                                                                    //__SILP__
+        }                                                                                    //__SILP__
+                                                                                             //__SILP__
         //SILP: DECLARE_LIST(ResponseListener, listener, ResponseListener, _ResponseListeners)
-        protected List<ResponseListener> _ResponseListeners = null;                            //__SILP__
-                                                                                               //__SILP__
-        public int ResponseListenerCount {                                                     //__SILP__
-            get {                                                                              //__SILP__
-                if (_ResponseListeners == null) {                                              //__SILP__
-                    return 0;                                                                  //__SILP__
-                }                                                                              //__SILP__
-                return _ResponseListeners.Count;                                               //__SILP__
-            }                                                                                  //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        public bool AddResponseListener(ResponseListener listener) {                           //__SILP__
-            if (_ResponseListeners == null) _ResponseListeners = new List<ResponseListener>(); //__SILP__
-            if (!_ResponseListeners.Contains(listener)) {                                      //__SILP__
-                _ResponseListeners.Add(listener);                                              //__SILP__
-                return true;                                                                   //__SILP__
-            }                                                                                  //__SILP__
-            return false;                                                                      //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        public bool RemoveResponseListener(ResponseListener listener) {                        //__SILP__
-            if (_ResponseListeners != null && _ResponseListeners.Contains(listener)) {         //__SILP__
-                _ResponseListeners.Remove(listener);                                           //__SILP__
-                return true;                                                                   //__SILP__
-            }                                                                                  //__SILP__
-            return false;                                                                      //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
+        protected List<ResponseListener> _ResponseListeners = null;                             //__SILP__
+                                                                                                //__SILP__
+        public int ResponseListenerCount {                                                      //__SILP__
+            get {                                                                               //__SILP__
+                if (_ResponseListeners == null) {                                               //__SILP__
+                    return 0;                                                                   //__SILP__
+                }                                                                               //__SILP__
+                return _ResponseListeners.Count;                                                //__SILP__
+            }                                                                                   //__SILP__
+        }                                                                                       //__SILP__
+                                                                                                //__SILP__
+        public bool AddResponseListener(ResponseListener listener) {                            //__SILP__
+            if (_ResponseListeners == null) _ResponseListeners = new List<ResponseListener>();  //__SILP__
+            if (!_ResponseListeners.Contains(listener)) {                                       //__SILP__
+                _ResponseListeners.Add(listener);                                               //__SILP__
+                return true;                                                                    //__SILP__
+            }                                                                                   //__SILP__
+            return false;                                                                       //__SILP__
+        }                                                                                       //__SILP__
+                                                                                                //__SILP__
+        public bool RemoveResponseListener(ResponseListener listener) {                         //__SILP__
+            if (_ResponseListeners != null && _ResponseListeners.Contains(listener)) {          //__SILP__
+                _ResponseListeners.Remove(listener);                                            //__SILP__
+                return true;                                                                    //__SILP__
+            }                                                                                   //__SILP__
+            return false;                                                                       //__SILP__
+        }                                                                                       //__SILP__
+                                                                                                //__SILP__
         public Data HandleRequest(Data req) {
             if (_Handler == null) return null;
             if (_RequestCheckers != null) {

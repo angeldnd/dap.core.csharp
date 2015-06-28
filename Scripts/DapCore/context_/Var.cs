@@ -38,34 +38,34 @@ namespace angeldnd.dap {
         }
 
         //SILP: DECLARE_LIST(VarWatcher, watcher, VarWatcher, _VarWatchers)
-        protected List<VarWatcher> _VarWatchers = null;                      //__SILP__
-                                                                             //__SILP__
-        public int VarWatcherCount {                                         //__SILP__
-            get {                                                            //__SILP__
-                if (_VarWatchers == null) {                                  //__SILP__
-                    return 0;                                                //__SILP__
-                }                                                            //__SILP__
-                return _VarWatchers.Count;                                   //__SILP__
-            }                                                                //__SILP__
-        }                                                                    //__SILP__
-                                                                             //__SILP__
-        public bool AddVarWatcher(VarWatcher watcher) {                      //__SILP__
-            if (_VarWatchers == null) _VarWatchers = new List<VarWatcher>(); //__SILP__
-            if (!_VarWatchers.Contains(watcher)) {                           //__SILP__
-                _VarWatchers.Add(watcher);                                   //__SILP__
-                return true;                                                 //__SILP__
-            }                                                                //__SILP__
-            return false;                                                    //__SILP__
-        }                                                                    //__SILP__
-                                                                             //__SILP__
-        public bool RemoveVarWatcher(VarWatcher watcher) {                   //__SILP__
-            if (_VarWatchers != null && _VarWatchers.Contains(watcher)) {    //__SILP__
-                _VarWatchers.Remove(watcher);                                //__SILP__
-                return true;                                                 //__SILP__
-            }                                                                //__SILP__
-            return false;                                                    //__SILP__
-        }                                                                    //__SILP__
-                                                                             //__SILP__
+        protected List<VarWatcher> _VarWatchers = null;                       //__SILP__
+                                                                              //__SILP__
+        public int VarWatcherCount {                                          //__SILP__
+            get {                                                             //__SILP__
+                if (_VarWatchers == null) {                                   //__SILP__
+                    return 0;                                                 //__SILP__
+                }                                                             //__SILP__
+                return _VarWatchers.Count;                                    //__SILP__
+            }                                                                 //__SILP__
+        }                                                                     //__SILP__
+                                                                              //__SILP__
+        public bool AddVarWatcher(VarWatcher watcher) {                       //__SILP__
+            if (_VarWatchers == null) _VarWatchers = new List<VarWatcher>();  //__SILP__
+            if (!_VarWatchers.Contains(watcher)) {                            //__SILP__
+                _VarWatchers.Add(watcher);                                    //__SILP__
+                return true;                                                  //__SILP__
+            }                                                                 //__SILP__
+            return false;                                                     //__SILP__
+        }                                                                     //__SILP__
+                                                                              //__SILP__
+        public bool RemoveVarWatcher(VarWatcher watcher) {                    //__SILP__
+            if (_VarWatchers != null && _VarWatchers.Contains(watcher)) {     //__SILP__
+                _VarWatchers.Remove(watcher);                                 //__SILP__
+                return true;                                                  //__SILP__
+            }                                                                 //__SILP__
+            return false;                                                     //__SILP__
+        }                                                                     //__SILP__
+                                                                              //__SILP__
         public bool SetValue(Object pass, T newValue) {
             if (!_Setup) {
                 Error("Not Setup: {0} -> {1}", _Value, newValue);
