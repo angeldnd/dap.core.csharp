@@ -16,6 +16,7 @@ namespace angeldnd.dap {
 
             //Aspects
             result.RegisterAspect<Item>(ItemConsts.TypeItem);
+            result.RegisterAspect<TickItem>(TickItemConsts.TypeTickItem);
             result.RegisterAspect<Properties>(PropertiesConsts.TypeProperties);
             result.RegisterAspect<BoolProperty>(PropertiesConsts.TypeBoolProperty);
             result.RegisterAspect<IntProperty>(PropertiesConsts.TypeIntProperty);
