@@ -13,14 +13,14 @@ namespace angeldnd.dap {
 
         public virtual void OnAdded() {
             base.OnAdded();
-            if (_Registry != null) {
-                _Registry.Channels.AddEventListener(ContextConsts.ChannelTick, this);
+            if (Registry != null) {
+                Registry.Channels.AddEventListener(ContextConsts.ChannelTick, this);
             }
         }
 
         public virtual void OnRemoved() {
-            if (_Registry != null) {
-                _Registry.Channels.RemoveEventListener(ContextConsts.ChannelTick, this);
+            if (Registry != null) {
+                Registry.Channels.RemoveEventListener(ContextConsts.ChannelTick, this);
             }
             base.OnRemoved();
         }
