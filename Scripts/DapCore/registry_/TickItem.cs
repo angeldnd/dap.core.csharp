@@ -11,14 +11,14 @@ namespace angeldnd.dap {
             get { return TickItemConsts.TypeTickItem; }
         }
 
-        public virtual void OnAdded() {
+        public override void OnAdded() {
             base.OnAdded();
             if (Registry != null) {
                 Registry.Channels.AddEventListener(ContextConsts.ChannelTick, this);
             }
         }
 
-        public virtual void OnRemoved() {
+        public override void OnRemoved() {
             if (Registry != null) {
                 Registry.Channels.RemoveEventListener(ContextConsts.ChannelTick, this);
             }
