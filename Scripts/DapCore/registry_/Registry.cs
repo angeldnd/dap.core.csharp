@@ -104,6 +104,22 @@ namespace angeldnd.dap {
             return Filter<T>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments);
         }
 
+        public List<T> GetDescendantWithAspects<T>(string path, string aspectPath) where T : class, Aspect {
+            List<T> result = null;
+            List<Item> descendants = GetDescendants<Item>(path);
+            if (descendants != null) {
+                for (int i = 0; i < descendants.Count; i++) {
+                    Item item = descendants[i];
+                    T aspect = item.Get<T>(aspectPath);
+                    if (aspect != null) {
+                        if (result == null) result = new List<T>();
+                        result.Add(aspect);
+                    }
+                }
+            }
+            return result;
+        }
+
         public T GetDescendant<T>(string path, string relativePath) where T : Item {
             string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
             return Get<T>(absPath);
