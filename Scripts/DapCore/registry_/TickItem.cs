@@ -11,23 +11,27 @@ namespace angeldnd.dap {
             get { return TickItemConsts.TypeTickItem; }
         }
 
+        public TickItem() {
+            AddChannel(RegistryConsts.ChannelTick);
+        }
+
         public override void OnAdded() {
             base.OnAdded();
             if (Registry != null) {
-                Registry.Channels.AddEventListener(ContextConsts.ChannelTick, this);
+                Registry.Channels.AddEventListener(RegistryConsts.ChannelTick, this);
             }
         }
 
         public override void OnRemoved() {
             if (Registry != null) {
-                Registry.Channels.RemoveEventListener(ContextConsts.ChannelTick, this);
+                Registry.Channels.RemoveEventListener(RegistryConsts.ChannelTick, this);
             }
             base.OnRemoved();
         }
 
         public void OnEvent(string channelPath, Data evt) {
-            if (channelPath == ContextConsts.ChannelTick) {
-                FireEvent(ContextConsts.ChannelTick, evt);
+            if (channelPath == RegistryConsts.ChannelTick) {
+                FireEvent(RegistryConsts.ChannelTick, evt);
             }
         }
     }

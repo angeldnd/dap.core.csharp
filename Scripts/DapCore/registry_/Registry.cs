@@ -8,6 +8,8 @@ namespace angeldnd.dap {
     public struct RegistryConsts {
         public const char Separator = '/';
 
+        public const string ChannelTick = "_tick";
+
         public const string DefaultLogDir = "dap";
         public const string DefaultLogName = "init";
         public const bool DefaultLogDebug = true;
@@ -37,6 +39,8 @@ namespace angeldnd.dap {
 
         public Registry() {
             Factory = Factory.NewBuiltinFactory();
+
+            AddChannel(RegistryConsts.ChannelTick);
         }
 
         private static void SetupLogging() {

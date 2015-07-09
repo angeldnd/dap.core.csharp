@@ -10,6 +10,12 @@ public string Path {
     get { return _Path; }
 }
 
+public string RevPath {
+    get {
+        return string.Format("{0}|{1}", _Path, Revision);
+    }
+}
+
 private bool _Inited = false;
 public bool Inited {
     get { return _Inited; }

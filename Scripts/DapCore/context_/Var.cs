@@ -73,6 +73,7 @@ namespace angeldnd.dap {
                 Error("Access Denied: _Pass = {0}, pass = {1}: {2} -> {3}", _Pass, pass, _Value, newValue);
             } else {
                 _Value = newValue;
+                AdvanceRevision();
 
                 if (_VarWatchers != null) {
                     for (int i = 0; i < _VarWatchers.Count; i++) {

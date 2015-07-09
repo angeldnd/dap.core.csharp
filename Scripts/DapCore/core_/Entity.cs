@@ -177,6 +177,7 @@ namespace angeldnd.dap {
             for (int i = 0; i < _Watchers.Count; i++) {
                 _Watchers[i].OnAspectAdded(this, aspect);
             }
+            AdvanceRevision();
             return true;
         }
 
@@ -196,6 +197,7 @@ namespace angeldnd.dap {
             if (aspect != null) {
                 aspect.OnRemoved();
                 _Aspects.Remove(path);
+                AdvanceRevision();
 
                 for (int i = 0; i < _Watchers.Count; i++) {
                     _Watchers[i].OnAspectRemoved(this, aspect);
@@ -208,6 +210,15 @@ namespace angeldnd.dap {
         //SILP: DAPOBJECT_MIXIN()
         public virtual string Type {                                  //__SILP__
             get { return null; }                                      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        private int _Revision = 1;                                    //__SILP__
+        public int Revision {                                         //__SILP__
+            get { return _Revision; }                                 //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        protected virtual void AdvanceRevision() {                    //__SILP__
+            _Revision += 1;                                           //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public Data Encode() {                                        //__SILP__
@@ -256,7 +267,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public virtual string GetLogPrefix() {                                                        //__SILP__
-            return string.Format("[{0}] ", GetType().Name);                                           //__SILP__
+            return string.Format("[{0}] ({1})", GetType().Name, Revision);                            //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Critical(string format, params object[] values) {                                 //__SILP__

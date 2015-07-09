@@ -10,8 +10,6 @@ namespace angeldnd.dap {
         public const string PathChannels = "_channels";
         public const string PathHandlers = "_handlers";
 
-        public const string ChannelTick = "_tick";
-
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";
 
@@ -39,8 +37,6 @@ namespace angeldnd.dap {
             Properties = Add<Properties>(ContextConsts.PathProperties);
             Channels = Add<Channels>(ContextConsts.PathChannels);
             Handlers = Add<Handlers>(ContextConsts.PathHandlers);
-
-            AddChannel(ContextConsts.ChannelTick);
         }
 
         public Data Dump() {

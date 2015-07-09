@@ -193,6 +193,8 @@ namespace angeldnd.dap {
             }
 
             Data res = _Handler.DoHandle(Path, req);
+            AdvanceRevision();
+
             if (_ResponseListeners != null) {
                 for (int i = 0; i < _ResponseListeners.Count; i++) {
                     _ResponseListeners[i].OnResponse(Path, req, res);

@@ -110,6 +110,7 @@ namespace angeldnd.dap {
                     _EventListeners[i].OnEvent(Path, evt);
                 }
             }
+            AdvanceRevision();
             return true;
         }
 

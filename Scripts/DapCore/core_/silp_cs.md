@@ -83,6 +83,12 @@ public string Path {
     get { return _Path; }
 }
 
+public string RevPath {
+    get {
+        return string.Format("{0} ({1})", _Path, Revision);
+    }
+}
+
 private bool _Inited = false;
 public bool Inited {
     get { return _Inited; }
@@ -122,6 +128,15 @@ protected virtual bool DoDecode(Data data) {
 ```
 public virtual string Type {
     get { return null; }
+}
+
+private int _Revision = 1;
+public int Revision {
+    get { return _Revision; }
+}
+
+protected virtual void AdvanceRevision() {
+    _Revision += 1;
 }
 
 public Data Encode() {
@@ -172,7 +187,7 @@ public virtual bool LogDebug {
 }
 
 public virtual string GetLogPrefix() {
-    return string.Format("[{0}] ", GetType().Name);
+    return string.Format("[{0}] ({1})", GetType().Name, Revision);
 }
 
 public void Critical(string format, params object[] values) {
@@ -217,9 +232,9 @@ public void Debug(string format, params object[] values) {
 ```C#
 public virtual string GetLogPrefix() {
     if (_Entity != null) {
-        return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, Path);
+        return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);
     } else {
-        return string.Format("[] [{0}] [{1}] ", GetType().Name, Path);
+        return string.Format("[] [{0}] [{1}] ", GetType().Name, RevPath);
     }
 }
 ```
