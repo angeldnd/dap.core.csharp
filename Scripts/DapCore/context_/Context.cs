@@ -79,6 +79,10 @@ namespace angeldnd.dap {
             return Handlers.AddHandler(handlerPath);
         }
 
+        public bool HasVar(string varPath) {
+            return Vars.Has(varPath);
+        }
+
         public bool SetVarValue<T>(string varPath, T v) {
             if (Vars.HasVar<T>(varPath)) {
                 return Vars.SetValue<T>(varPath, v);
@@ -89,6 +93,18 @@ namespace angeldnd.dap {
 
         public T GetVarValue<T>(string varPath, T defaultValue) {
             return Vars.GetValue<T>(varPath, defaultValue);
+        }
+
+        public T GetVarValue<T>(string varPath) {
+            return GetVarValue<T>(varPath, default(T));
+        }
+
+        public bool HasVar(string varsPath, string varPath) {
+            Vars vars = Get<Vars>(varsPath);
+            if (vars == null) {
+                return vars.Has(varPath);
+            }
+            return false;
         }
 
         public bool SetVarValue<T>(string varsPath, string varPath, T v) {
