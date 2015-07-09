@@ -74,5 +74,9 @@ namespace angeldnd.dap {
             }
             return null;
         }
+
+        public string GetDescendantPath(string relativePath) {
+            return Registry.GetAbsolutePath(Path, relativePath);
+        }
     }
 }

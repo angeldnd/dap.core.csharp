@@ -34,6 +34,8 @@ namespace angeldnd.dap {
 
         private List<EntityWatcher> _Watchers = new List<EntityWatcher>();
 
+        public delegate void OnAspect<T>(T aspect) where T : class, Aspect;
+
         /*
          * For some really strange unknown reason, if try to add a constructor here
          * and add an aspect in it, will cause infinite loop, which will crash unity
@@ -129,8 +131,7 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public List<T> Filter<T>(string pattern) where T : class, Aspect {
-            List<T> result = null;
+        public void Filter<T>(string pattern, OnAspect<T> callback) where T : class, Aspect {
             var matcher = new PatternMatcher(Separator, pattern);
             foreach (var pair in _Aspects) {
                 /*
@@ -142,10 +143,21 @@ namespace angeldnd.dap {
                 }
                 */
                 if (pair.Value is T && matcher.IsMatched(pair.Key)) {
-                    if (result == null) result = new List<T>();
-                    result.Add(pair.Value as T);
+                    callback(pair.Value as T);
                 }
             }
+        }
+
+        public void All<T>(OnAspect<T> callback) where T : class, Aspect {
+            Filter<T>(PatternMatcherConsts.WildcastSegments, callback);
+        }
+
+        public List<T> Filter<T>(string pattern) where T : class, Aspect {
+            List<T> result = null;
+            Filter<T>(pattern, (T aspect) => {
+                if (result == null) result = new List<T>();
+                result.Add(aspect);
+            });
             return result;
         }
 
