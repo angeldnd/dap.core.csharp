@@ -159,6 +159,10 @@ namespace angeldnd.dap {
             }
         }
 
+        public string GetAbsolutePath(string ancestorPath, string relativePath) {
+            return string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
+        }
+
         public string GetRelativePath(string ancestorPath, string descendantPath) {
             string prefix = ancestorPath + RegistryConsts.Separator;
             if (descendantPath.StartsWith(prefix)) {
