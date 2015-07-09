@@ -5,7 +5,9 @@ namespace angeldnd.dap {
         Entity Entity { get; }
         string Path { get; }
 
+        bool Inited { get; }
         bool Init(Entity entity, string path);
+
         void OnAdded();
         void OnRemoved();
     }
