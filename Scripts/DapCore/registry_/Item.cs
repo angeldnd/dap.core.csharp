@@ -29,7 +29,7 @@ namespace angeldnd.dap {
                                                                              //__SILP__
         public string RevPath {                                              //__SILP__
             get {                                                            //__SILP__
-                return string.Format("{0}|{1}", _Path, Revision);            //__SILP__
+                return string.Format("{0} ({1})", _Path, Revision);          //__SILP__
             }                                                                //__SILP__
         }                                                                    //__SILP__
                                                                              //__SILP__

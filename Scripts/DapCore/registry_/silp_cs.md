@@ -12,7 +12,7 @@ public string Path {
 
 public string RevPath {
     get {
-        return string.Format("{0}|{1}", _Path, Revision);
+        return string.Format("{0} ({1})", _Path, Revision);
     }
 }
 

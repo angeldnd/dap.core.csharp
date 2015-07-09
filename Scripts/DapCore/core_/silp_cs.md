@@ -130,7 +130,7 @@ public virtual string Type {
     get { return null; }
 }
 
-private int _Revision = 1;
+private int _Revision = 0;
 public int Revision {
     get { return _Revision; }
 }

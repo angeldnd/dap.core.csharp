@@ -19,7 +19,7 @@ namespace angeldnd.dap {
             get { return null; }                                      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        private int _Revision = 1;                                    //__SILP__
+        private int _Revision = 0;                                    //__SILP__
         public int Revision {                                         //__SILP__
             get { return _Revision; }                                 //__SILP__
         }                                                             //__SILP__

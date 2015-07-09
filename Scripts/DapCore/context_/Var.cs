@@ -26,6 +26,7 @@ namespace angeldnd.dap {
                 _Pass = pass;
                 _Value = defaultValue;
                 _Setup = true;
+                AdvanceRevision();
                 return true;
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
