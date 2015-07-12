@@ -36,6 +36,8 @@ namespace angeldnd.dap {
 
         public delegate void OnAspect<T>(T aspect) where T : class, Aspect;
 
+        public delegate bool CheckAspect<T>(T aspect) where T : class, Aspect;
+
         /*
          * For some really strange unknown reason, if try to add a constructor here
          * and add an aspect in it, will cause infinite loop, which will crash unity
@@ -217,6 +219,23 @@ namespace angeldnd.dap {
                 return aspect;
             }
             return null;
+        }
+
+        public List<T> RemoveByChecker<T>(CheckAspect<T> checker) where T : class, Aspect {
+            List<T> removed = null;
+            List<T> matched = All<T>();
+            foreach (T aspect in matched) {
+                if (checker(aspect)) {
+                    T _aspect = Remove<T>(aspect.Path);
+                    if (_aspect != null) {
+                        if (removed == null) {
+                            removed = new List<T>();
+                        }
+                        removed.Add(_aspect);
+                    }
+                }
+            }
+            return removed;
         }
 
         //SILP: DAPOBJECT_MIXIN()
