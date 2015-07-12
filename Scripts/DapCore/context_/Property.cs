@@ -17,7 +17,7 @@ namespace angeldnd.dap {
     }
 
     public abstract class Property<T>: Var<T>, Property {
-        public abstract AddToSpec(Data spec);
+        public abstract bool AddToSpec(Data spec);
 
         //SILP: DECLARE_LIST(ValueChecker, checker, ValueChecker<T>, _Checkers)
         protected List<ValueChecker<T>> _Checkers = null;                    //__SILP__
