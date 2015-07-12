@@ -123,7 +123,7 @@ namespace angeldnd.dap {
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         public override bool AddToSpec(Data spec) {                                                    //__SILP__
-            return data.SetBool(Path, Value);                                                          //__SILP__
+            return spec.SetBool(Path, Value);                                                          //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         private bool _CheckingValue = false;                                                           //__SILP__
@@ -222,7 +222,7 @@ namespace angeldnd.dap {
         }                                                                                            //__SILP__
                                                                                                      //__SILP__
         public override bool AddToSpec(Data spec) {                                                  //__SILP__
-            return data.SetInt(Path, Value);                                                         //__SILP__
+            return spec.SetInt(Path, Value);                                                         //__SILP__
         }                                                                                            //__SILP__
                                                                                                      //__SILP__
         private bool _CheckingValue = false;                                                         //__SILP__
@@ -321,7 +321,7 @@ namespace angeldnd.dap {
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         public override bool AddToSpec(Data spec) {                                                    //__SILP__
-            return data.SetLong(Path, Value);                                                          //__SILP__
+            return spec.SetLong(Path, Value);                                                          //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         private bool _CheckingValue = false;                                                           //__SILP__
@@ -420,7 +420,7 @@ namespace angeldnd.dap {
         }                                                                                                //__SILP__
                                                                                                          //__SILP__
         public override bool AddToSpec(Data spec) {                                                      //__SILP__
-            return data.SetFloat(Path, Value);                                                           //__SILP__
+            return spec.SetFloat(Path, Value);                                                           //__SILP__
         }                                                                                                //__SILP__
                                                                                                          //__SILP__
         private bool _CheckingValue = false;                                                             //__SILP__
@@ -519,7 +519,7 @@ namespace angeldnd.dap {
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
         public override bool AddToSpec(Data spec) {                                                        //__SILP__
-            return data.SetDouble(Path, Value);                                                            //__SILP__
+            return spec.SetDouble(Path, Value);                                                            //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
         private bool _CheckingValue = false;                                                               //__SILP__
@@ -618,7 +618,7 @@ namespace angeldnd.dap {
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
         public override bool AddToSpec(Data spec) {                                                        //__SILP__
-            return data.SetString(Path, Value);                                                            //__SILP__
+            return spec.SetString(Path, Value);                                                            //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
         private bool _CheckingValue = false;                                                               //__SILP__
@@ -717,7 +717,7 @@ namespace angeldnd.dap {
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         public override bool AddToSpec(Data spec) {                                                    //__SILP__
-            return data.SetData(Path, Value);                                                          //__SILP__
+            return spec.SetData(Path, Value);                                                          //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         private bool _CheckingValue = false;                                                           //__SILP__

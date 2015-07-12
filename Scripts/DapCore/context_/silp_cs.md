@@ -241,7 +241,7 @@ public class ${type}Property : Property<${cs_type}> {
     }
 
     public override bool AddToSpec(Data spec) {
-        return data.Set${type}(Path, Value);
+        return spec.Set${type}(Path, Value);
     }
 
     private bool _CheckingValue = false;
