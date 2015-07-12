@@ -122,7 +122,8 @@ namespace angeldnd.dap {
 
         public void FilterDescendantWithAspects<T>(string path, string aspectPath,
                                                     OnAspect<T> callback) where T : class, Aspect {
-            Filter<T>(pattern, (T aspect) => {
+            string pattern = path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments;
+            Filter<Item>(pattern, (Item item) => {
                 T aspect = item.Get<T>(aspectPath);
                 if (aspect != null) {
                     callback(aspect);
