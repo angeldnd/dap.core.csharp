@@ -95,8 +95,18 @@ public bool Inited {
 }
 
 public bool Init(Entity entity, string path) {
-    if (_Inited) return false;
-    if (entity == null || string.IsNullOrEmpty(path)) return false;
+    if (_Inited) {
+        Error("Already Inited: {0}, {1}", entity, path);
+        return false;
+    }
+    if (entity == null) {
+        Error("Invalid Entity: {0}, {1}", entity, path);
+        return false;
+    }
+    if (string.IsNullOrEmpty(path)) {
+        Error("Invalid Path: {0}, {1}", entity, path);
+        return false;
+    }
 
     _Entity = entity;
     _Path = path;
