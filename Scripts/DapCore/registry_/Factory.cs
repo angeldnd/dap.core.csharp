@@ -66,6 +66,8 @@ namespace angeldnd.dap {
             EntityFactory factory = EntityFactories.GetValue<EntityFactory>(type);
             if (factory != null) {
                 return factory();
+            } else {
+                Error("Unknown Entity Type: {0}", type);
             }
             return null;
         }
@@ -74,6 +76,8 @@ namespace angeldnd.dap {
             AspectFactory factory = AspectFactories.GetValue<AspectFactory>(type);
             if (factory != null) {
                 return factory(entity, path);
+            } else {
+                entity.Error("Unknown Aspect Type: {0}, {1}", path, type);
             }
             return null;
         }

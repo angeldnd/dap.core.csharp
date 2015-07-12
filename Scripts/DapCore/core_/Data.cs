@@ -46,7 +46,9 @@ namespace angeldnd.dap {
                 int result = _ValueTypes.Count;
                 if (_DataValues != null) {
                     foreach (var val in _DataValues.Values) {
-                        result = result + val.DeepCount;
+                        if (val != null) {
+                            result = result + val.DeepCount;
+                        }
                     }
                 }
                 return result;

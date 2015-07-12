@@ -62,6 +62,30 @@ namespace angeldnd.dap {
             return false;
         }
 
+        public bool DecodeAspect(string path, Data aspectData) {
+            bool succeed = false;
+            Aspect aspect = GetAspect(path);
+            if (aspect != null) {
+                succeed = aspect.Decode(aspectData);
+            } else {
+                string type = aspectData.GetString(DapObjectConsts.KeyType);
+                if (!string.IsNullOrEmpty(type)) {
+                    aspect = FactoryAspect(this, path, type);
+                    if (aspect == null) {
+                        Error("Failed to Factory Aspect: {0}, {1}", path, aspectData);
+                    } else if (!aspect.Init(this, path)) {
+                        Error("Failed to Init Aspect: {0}, {1}", path, aspectData);
+                    } else if (!aspect.Decode(aspectData)) {
+                        Error("Failed to Decode Aspect: {0}, {1}", path, aspectData);
+                    } else {
+                        AddAspect(aspect);
+                        succeed = true;
+                    }
+                }
+            }
+            return succeed;
+        }
+
         public int DecodeAspects(Data aspectsData) {
             int succeedCount = 0;
             int failedCount = 0;
@@ -69,19 +93,7 @@ namespace angeldnd.dap {
                 bool succeed = false;
                 Data aspectData = aspectsData.GetData(path);
                 if (aspectData != null) {
-                    Aspect aspect = GetAspect(path);
-                    if (aspect != null) {
-                        succeed = aspect.Decode(aspectData);
-                    } else {
-                        string type = aspectData.GetString(DapObjectConsts.KeyType);
-                        if (!string.IsNullOrEmpty(type)) {
-                            aspect = FactoryAspect(this, path, type);
-                            if (aspect != null && aspect.Init(this, path) && aspect.Decode(aspectData)) {
-                                AddAspect(aspect);
-                                succeed = true;
-                            }
-                        }
-                    }
+                    succeed = DecodeAspect(path, aspectData);
                 }
                 if (succeed) {
                     succeedCount++;
@@ -224,14 +236,16 @@ namespace angeldnd.dap {
         public List<T> RemoveByChecker<T>(CheckAspect<T> checker) where T : class, Aspect {
             List<T> removed = null;
             List<T> matched = All<T>();
-            foreach (T aspect in matched) {
-                if (checker(aspect)) {
-                    T _aspect = Remove<T>(aspect.Path);
-                    if (_aspect != null) {
-                        if (removed == null) {
-                            removed = new List<T>();
+            if (matched != null) {
+                foreach (T aspect in matched) {
+                    if (checker(aspect)) {
+                        T _aspect = Remove<T>(aspect.Path);
+                        if (_aspect != null) {
+                            if (removed == null) {
+                                removed = new List<T>();
+                            }
+                            removed.Add(_aspect);
                         }
-                        removed.Add(_aspect);
                     }
                 }
             }
@@ -298,7 +312,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public virtual string GetLogPrefix() {                                                        //__SILP__
-            return string.Format("[{0}] ({1})", GetType().Name, Revision);                            //__SILP__
+            return string.Format("[{0}] ({1}) ", GetType().Name, Revision);                           //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Critical(string format, params object[] values) {                                 //__SILP__

@@ -197,7 +197,7 @@ public virtual bool LogDebug {
 }
 
 public virtual string GetLogPrefix() {
-    return string.Format("[{0}] ({1})", GetType().Name, Revision);
+    return string.Format("[{0}] ({1}) ", GetType().Name, Revision);
 }
 
 public void Critical(string format, params object[] values) {
