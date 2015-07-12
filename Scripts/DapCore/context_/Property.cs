@@ -12,9 +12,16 @@ namespace angeldnd.dap {
 
     public interface Property : Var {
         Object GetValue();
+        bool DoDecode(Object pass, Data data);
     }
 
     public abstract class Property<T>: Var<T>, Property {
+        protected override bool DoDecode(Data data) {
+            return DoDecode(null, data);
+        }
+
+        public abstract bool DoDecode(Object pass, Data data);
+
         //SILP: DECLARE_LIST(ValueChecker, checker, ValueChecker<T>, _Checkers)
         protected List<ValueChecker<T>> _Checkers = null;                    //__SILP__
                                                                              //__SILP__
@@ -113,15 +120,14 @@ namespace angeldnd.dap {
             return data.SetBool(PropertiesConsts.KeyValue, Value);                                     //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
-        protected override bool DoDecode(Data data) {                                                  //__SILP__
-            SetValue(data.GetBool(PropertiesConsts.KeyValue));                                         //__SILP__
-            return true;                                                                               //__SILP__
+        public override bool DoDecode(Object pass, Data data) {                                        //__SILP__
+            return SetValue(pass, data.GetBool(PropertiesConsts.KeyValue));                            //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         private bool _CheckingValue = false;                                                           //__SILP__
         private bool _UpdatingValue = false;                                                           //__SILP__
                                                                                                        //__SILP__
-        public override bool SetValue(bool newVal) {                                                   //__SILP__
+        public override bool SetValue(Object pass, bool newVal) {                                      //__SILP__
             if (_CheckingValue) return false;                                                          //__SILP__
             if (_UpdatingValue) return false;                                                          //__SILP__
                                                                                                        //__SILP__
@@ -138,7 +144,7 @@ namespace angeldnd.dap {
                 }                                                                                      //__SILP__
                 _UpdatingValue = true;                                                                 //__SILP__
                 bool lastVal = Value;                                                                  //__SILP__
-                if (!base.SetValue(newVal)) {                                                          //__SILP__
+                if (!base.SetValue(pass, newVal)) {                                                    //__SILP__
                     _UpdatingValue = false;                                                            //__SILP__
                     return false;                                                                      //__SILP__
                 }                                                                                      //__SILP__
@@ -208,15 +214,14 @@ namespace angeldnd.dap {
             return data.SetInt(PropertiesConsts.KeyValue, Value);                                    //__SILP__
         }                                                                                            //__SILP__
                                                                                                      //__SILP__
-        protected override bool DoDecode(Data data) {                                                //__SILP__
-            SetValue(data.GetInt(PropertiesConsts.KeyValue));                                        //__SILP__
-            return true;                                                                             //__SILP__
+        public override bool DoDecode(Object pass, Data data) {                                      //__SILP__
+            return SetValue(pass, data.GetInt(PropertiesConsts.KeyValue));                           //__SILP__
         }                                                                                            //__SILP__
                                                                                                      //__SILP__
         private bool _CheckingValue = false;                                                         //__SILP__
         private bool _UpdatingValue = false;                                                         //__SILP__
                                                                                                      //__SILP__
-        public override bool SetValue(int newVal) {                                                  //__SILP__
+        public override bool SetValue(Object pass, int newVal) {                                     //__SILP__
             if (_CheckingValue) return false;                                                        //__SILP__
             if (_UpdatingValue) return false;                                                        //__SILP__
                                                                                                      //__SILP__
@@ -233,7 +238,7 @@ namespace angeldnd.dap {
                 }                                                                                    //__SILP__
                 _UpdatingValue = true;                                                               //__SILP__
                 int lastVal = Value;                                                                 //__SILP__
-                if (!base.SetValue(newVal)) {                                                        //__SILP__
+                if (!base.SetValue(pass, newVal)) {                                                  //__SILP__
                     _UpdatingValue = false;                                                          //__SILP__
                     return false;                                                                    //__SILP__
                 }                                                                                    //__SILP__
@@ -303,15 +308,14 @@ namespace angeldnd.dap {
             return data.SetLong(PropertiesConsts.KeyValue, Value);                                     //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
-        protected override bool DoDecode(Data data) {                                                  //__SILP__
-            SetValue(data.GetLong(PropertiesConsts.KeyValue));                                         //__SILP__
-            return true;                                                                               //__SILP__
+        public override bool DoDecode(Object pass, Data data) {                                        //__SILP__
+            return SetValue(pass, data.GetLong(PropertiesConsts.KeyValue));                            //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         private bool _CheckingValue = false;                                                           //__SILP__
         private bool _UpdatingValue = false;                                                           //__SILP__
                                                                                                        //__SILP__
-        public override bool SetValue(long newVal) {                                                   //__SILP__
+        public override bool SetValue(Object pass, long newVal) {                                      //__SILP__
             if (_CheckingValue) return false;                                                          //__SILP__
             if (_UpdatingValue) return false;                                                          //__SILP__
                                                                                                        //__SILP__
@@ -328,7 +332,7 @@ namespace angeldnd.dap {
                 }                                                                                      //__SILP__
                 _UpdatingValue = true;                                                                 //__SILP__
                 long lastVal = Value;                                                                  //__SILP__
-                if (!base.SetValue(newVal)) {                                                          //__SILP__
+                if (!base.SetValue(pass, newVal)) {                                                    //__SILP__
                     _UpdatingValue = false;                                                            //__SILP__
                     return false;                                                                      //__SILP__
                 }                                                                                      //__SILP__
@@ -398,15 +402,14 @@ namespace angeldnd.dap {
             return data.SetFloat(PropertiesConsts.KeyValue, Value);                                      //__SILP__
         }                                                                                                //__SILP__
                                                                                                          //__SILP__
-        protected override bool DoDecode(Data data) {                                                    //__SILP__
-            SetValue(data.GetFloat(PropertiesConsts.KeyValue));                                          //__SILP__
-            return true;                                                                                 //__SILP__
+        public override bool DoDecode(Object pass, Data data) {                                          //__SILP__
+            return SetValue(pass, data.GetFloat(PropertiesConsts.KeyValue));                             //__SILP__
         }                                                                                                //__SILP__
                                                                                                          //__SILP__
         private bool _CheckingValue = false;                                                             //__SILP__
         private bool _UpdatingValue = false;                                                             //__SILP__
                                                                                                          //__SILP__
-        public override bool SetValue(float newVal) {                                                    //__SILP__
+        public override bool SetValue(Object pass, float newVal) {                                       //__SILP__
             if (_CheckingValue) return false;                                                            //__SILP__
             if (_UpdatingValue) return false;                                                            //__SILP__
                                                                                                          //__SILP__
@@ -423,7 +426,7 @@ namespace angeldnd.dap {
                 }                                                                                        //__SILP__
                 _UpdatingValue = true;                                                                   //__SILP__
                 float lastVal = Value;                                                                   //__SILP__
-                if (!base.SetValue(newVal)) {                                                            //__SILP__
+                if (!base.SetValue(pass, newVal)) {                                                      //__SILP__
                     _UpdatingValue = false;                                                              //__SILP__
                     return false;                                                                        //__SILP__
                 }                                                                                        //__SILP__
@@ -493,15 +496,14 @@ namespace angeldnd.dap {
             return data.SetDouble(PropertiesConsts.KeyValue, Value);                                       //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
-        protected override bool DoDecode(Data data) {                                                      //__SILP__
-            SetValue(data.GetDouble(PropertiesConsts.KeyValue));                                           //__SILP__
-            return true;                                                                                   //__SILP__
+        public override bool DoDecode(Object pass, Data data) {                                            //__SILP__
+            return SetValue(pass, data.GetDouble(PropertiesConsts.KeyValue));                              //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
         private bool _CheckingValue = false;                                                               //__SILP__
         private bool _UpdatingValue = false;                                                               //__SILP__
                                                                                                            //__SILP__
-        public override bool SetValue(double newVal) {                                                     //__SILP__
+        public override bool SetValue(Object pass, double newVal) {                                        //__SILP__
             if (_CheckingValue) return false;                                                              //__SILP__
             if (_UpdatingValue) return false;                                                              //__SILP__
                                                                                                            //__SILP__
@@ -518,7 +520,7 @@ namespace angeldnd.dap {
                 }                                                                                          //__SILP__
                 _UpdatingValue = true;                                                                     //__SILP__
                 double lastVal = Value;                                                                    //__SILP__
-                if (!base.SetValue(newVal)) {                                                              //__SILP__
+                if (!base.SetValue(pass, newVal)) {                                                        //__SILP__
                     _UpdatingValue = false;                                                                //__SILP__
                     return false;                                                                          //__SILP__
                 }                                                                                          //__SILP__
@@ -588,15 +590,14 @@ namespace angeldnd.dap {
             return data.SetString(PropertiesConsts.KeyValue, Value);                                       //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
-        protected override bool DoDecode(Data data) {                                                      //__SILP__
-            SetValue(data.GetString(PropertiesConsts.KeyValue));                                           //__SILP__
-            return true;                                                                                   //__SILP__
+        public override bool DoDecode(Object pass, Data data) {                                            //__SILP__
+            return SetValue(pass, data.GetString(PropertiesConsts.KeyValue));                              //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
         private bool _CheckingValue = false;                                                               //__SILP__
         private bool _UpdatingValue = false;                                                               //__SILP__
                                                                                                            //__SILP__
-        public override bool SetValue(string newVal) {                                                     //__SILP__
+        public override bool SetValue(Object pass, string newVal) {                                        //__SILP__
             if (_CheckingValue) return false;                                                              //__SILP__
             if (_UpdatingValue) return false;                                                              //__SILP__
                                                                                                            //__SILP__
@@ -613,7 +614,7 @@ namespace angeldnd.dap {
                 }                                                                                          //__SILP__
                 _UpdatingValue = true;                                                                     //__SILP__
                 string lastVal = Value;                                                                    //__SILP__
-                if (!base.SetValue(newVal)) {                                                              //__SILP__
+                if (!base.SetValue(pass, newVal)) {                                                        //__SILP__
                     _UpdatingValue = false;                                                                //__SILP__
                     return false;                                                                          //__SILP__
                 }                                                                                          //__SILP__
@@ -683,15 +684,14 @@ namespace angeldnd.dap {
             return data.SetData(PropertiesConsts.KeyValue, Value);                                     //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
-        protected override bool DoDecode(Data data) {                                                  //__SILP__
-            SetValue(data.GetData(PropertiesConsts.KeyValue));                                         //__SILP__
-            return true;                                                                               //__SILP__
+        public override bool DoDecode(Object pass, Data data) {                                        //__SILP__
+            return SetValue(pass, data.GetData(PropertiesConsts.KeyValue));                            //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
         private bool _CheckingValue = false;                                                           //__SILP__
         private bool _UpdatingValue = false;                                                           //__SILP__
                                                                                                        //__SILP__
-        public override bool SetValue(Data newVal) {                                                   //__SILP__
+        public override bool SetValue(Object pass, Data newVal) {                                      //__SILP__
             if (_CheckingValue) return false;                                                          //__SILP__
             if (_UpdatingValue) return false;                                                          //__SILP__
                                                                                                        //__SILP__
@@ -708,7 +708,7 @@ namespace angeldnd.dap {
                 }                                                                                      //__SILP__
                 _UpdatingValue = true;                                                                 //__SILP__
                 Data lastVal = Value;                                                                  //__SILP__
-                if (!base.SetValue(newVal)) {                                                          //__SILP__
+                if (!base.SetValue(pass, newVal)) {                                                    //__SILP__
                     _UpdatingValue = false;                                                            //__SILP__
                     return false;                                                                      //__SILP__
                 }                                                                                      //__SILP__

@@ -235,15 +235,14 @@ public class ${type}Property : Property<${cs_type}> {
         return data.Set${type}(PropertiesConsts.KeyValue, Value);
     }
 
-    protected override bool DoDecode(Data data) {
-        SetValue(data.Get${type}(PropertiesConsts.KeyValue));
-        return true;
+    public override bool DoDecode(Object pass, Data data) {
+        return SetValue(pass, data.Get${type}(PropertiesConsts.KeyValue));
     }
 
     private bool _CheckingValue = false;
     private bool _UpdatingValue = false;
 
-    public override bool SetValue(${cs_type} newVal) {
+    public override bool SetValue(Object pass, ${cs_type} newVal) {
         if (_CheckingValue) return false;
         if (_UpdatingValue) return false;
 
@@ -260,7 +259,7 @@ public class ${type}Property : Property<${cs_type}> {
             }
             _UpdatingValue = true;
             ${cs_type} lastVal = Value;
-            if (!base.SetValue(newVal)) {
+            if (!base.SetValue(pass, newVal)) {
                 _UpdatingValue = false;
                 return false;
             }

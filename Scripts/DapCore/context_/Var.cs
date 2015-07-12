@@ -7,6 +7,7 @@ namespace angeldnd.dap {
     }
 
     public interface Var : Aspect {
+        bool SetPass(Object pass);
         Object GetValue();
         bool AddVarWatcher(VarWatcher watcher);
         bool RemoveVarWatcher(VarWatcher watcher);
@@ -21,13 +22,27 @@ namespace angeldnd.dap {
         private bool _Setup = false;
         private Object _Pass = null;
 
+        public bool SetPass(Object pass) {
+            if (!_Setup && _Pass == null) {
+                _Pass = pass;
+                return true;
+            }
+            Error("SetPass Failed: {0}, {1} -> {2}", _Setup, _Pass, pass);
+            return false;
+        }
+
         public virtual bool Setup(Object pass, T defaultValue) {
             if (!_Setup) {
-                _Pass = pass;
-                _Value = defaultValue;
-                _Setup = true;
-                AdvanceRevision();
-                return true;
+                if (_Pass == null || _Pass == pass) {
+                    _Pass = pass;
+                    _Value = defaultValue;
+                    _Setup = true;
+                    AdvanceRevision();
+                    return true;
+                } else {
+                    Error("Setup Access Denied: _Pass = {0}, pass = {1} -> {2}", _Pass, pass, defaultValue);
+                    return false;
+                }
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
                 return false;
@@ -35,11 +50,11 @@ namespace angeldnd.dap {
         }
 
         public virtual bool Setup(T defaultValue) {
-            return Setup(null, defaultValue);
+            return Setup(_Pass, defaultValue);
         }
 
         public virtual bool Setup() {
-            return Setup(null, default(T));
+            return Setup(_Pass, default(T));
         }
 
         //SILP: DECLARE_LIST(VarWatcher, watcher, VarWatcher, _VarWatchers)
@@ -71,10 +86,12 @@ namespace angeldnd.dap {
             return false;                                                     //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
-        public bool SetValue(Object pass, T newValue) {
+        public virtual bool SetValue(Object pass, T newValue) {
             if (!_Setup) {
                 Setup();
-            } else if (_Pass != null && _Pass != pass && !_Pass.Equals(pass)) {
+            }
+
+            if (_Pass != null && _Pass != pass && !_Pass.Equals(pass)) {
                 Error("Access Denied: _Pass = {0}, pass = {1}: {2} -> {3}", _Pass, pass, _Value, newValue);
                 return false;
             }
@@ -90,7 +107,7 @@ namespace angeldnd.dap {
             return true;
         }
 
-        public virtual bool SetValue(T newValue) {
+        public bool SetValue(T newValue) {
             return SetValue(null, newValue);
         }
 

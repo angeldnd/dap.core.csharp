@@ -76,8 +76,7 @@ namespace angeldnd.dap {
                     } else if (!aspect.Decode(aspectData)) {
                         Error("Failed to Decode Aspect: {0}, {1}", path, aspectData);
                     } else {
-                        AddAspect(aspect);
-                        succeed = true;
+                        succeed = AddAspect(aspect);
                     }
                 }
             }
@@ -203,6 +202,20 @@ namespace angeldnd.dap {
             }
             AdvanceRevision();
             return true;
+        }
+
+        public Aspect Add(string path, string type) {
+            if (!Has(path)) {
+                Aspect aspect = FactoryAspect(this, path, type);
+                if (aspect == null) {
+                    Error("Failed to Factory Aspect: {0}, {1}", path, type);
+                } else {
+                    if (AddAspect(aspect)) {
+                        return aspect;
+                    }
+                }
+            }
+            return null;
         }
 
         public T Add<T>(string path) where T : class, Aspect {
