@@ -113,6 +113,5 @@ namespace angeldnd.dap {
             AdvanceRevision();
             return true;
         }
-
     }
 }

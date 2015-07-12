@@ -12,6 +12,8 @@ namespace angeldnd.dap {
 
     public interface Property : Var {
         Object GetValue();
+
+        bool AddToSpec(Data spec);
     }
 
     public abstract class Property<T>: Var<T>, Property {
@@ -73,6 +75,9 @@ namespace angeldnd.dap {
             return false;                                                    //__SILP__
         }                                                                    //__SILP__
                                                                              //__SILP__
+        public bool AddToSpec(Data spec) {
+            return DoEncode(spec);
+        }
     }
 
     //SILP: PROPERTY_CLASS(Bool, bool)
