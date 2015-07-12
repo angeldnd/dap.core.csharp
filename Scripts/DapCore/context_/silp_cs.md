@@ -64,7 +64,7 @@ public bool Remove${name}(${cs_type} ${var_name}) {
     return false;
 }
 
-``` 
+```
 
 # ADD_REMOVE_HELPER(name, a_path, a_var, a_type, l_name, l_var, l_type) #
 ```C#
@@ -230,7 +230,7 @@ public class ${type}Property : Property<${cs_type}> {
     public override string Type {
         get { return PropertiesConsts.Type${type}Property; }
     }
-        
+
     protected override bool DoEncode(Data data) {
         return data.Set${type}(PropertiesConsts.KeyValue, Value);
     }
@@ -240,9 +240,13 @@ public class ${type}Property : Property<${cs_type}> {
         return true;
     }
 
+    public bool AddToSpec(Data spec) {
+        return data.Set${type}(Path, Value);
+    }
+
     private bool _CheckingValue = false;
     private bool _UpdatingValue = false;
-    
+
     public override bool SetValue(${cs_type} newVal) {
         if (_CheckingValue) return false;
         if (_UpdatingValue) return false;
