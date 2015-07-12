@@ -240,7 +240,7 @@ public class ${type}Property : Property<${cs_type}> {
         return true;
     }
 
-    public bool AddToSpec(Data spec) {
+    public override bool AddToSpec(Data spec) {
         return data.Set${type}(Path, Value);
     }
 

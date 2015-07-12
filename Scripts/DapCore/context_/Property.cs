@@ -17,6 +17,8 @@ namespace angeldnd.dap {
     }
 
     public abstract class Property<T>: Var<T>, Property {
+        public abstract AddToSpec(Data spec);
+
         //SILP: DECLARE_LIST(ValueChecker, checker, ValueChecker<T>, _Checkers)
         protected List<ValueChecker<T>> _Checkers = null;                    //__SILP__
                                                                              //__SILP__
@@ -120,7 +122,7 @@ namespace angeldnd.dap {
             return true;                                                                               //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
-        public bool AddToSpec(Data spec) {                                                             //__SILP__
+        public override bool AddToSpec(Data spec) {                                                    //__SILP__
             return data.SetBool(Path, Value);                                                          //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
@@ -219,7 +221,7 @@ namespace angeldnd.dap {
             return true;                                                                             //__SILP__
         }                                                                                            //__SILP__
                                                                                                      //__SILP__
-        public bool AddToSpec(Data spec) {                                                           //__SILP__
+        public override bool AddToSpec(Data spec) {                                                  //__SILP__
             return data.SetInt(Path, Value);                                                         //__SILP__
         }                                                                                            //__SILP__
                                                                                                      //__SILP__
@@ -318,7 +320,7 @@ namespace angeldnd.dap {
             return true;                                                                               //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
-        public bool AddToSpec(Data spec) {                                                             //__SILP__
+        public override bool AddToSpec(Data spec) {                                                    //__SILP__
             return data.SetLong(Path, Value);                                                          //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
@@ -417,7 +419,7 @@ namespace angeldnd.dap {
             return true;                                                                                 //__SILP__
         }                                                                                                //__SILP__
                                                                                                          //__SILP__
-        public bool AddToSpec(Data spec) {                                                               //__SILP__
+        public override bool AddToSpec(Data spec) {                                                      //__SILP__
             return data.SetFloat(Path, Value);                                                           //__SILP__
         }                                                                                                //__SILP__
                                                                                                          //__SILP__
@@ -516,7 +518,7 @@ namespace angeldnd.dap {
             return true;                                                                                   //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
-        public bool AddToSpec(Data spec) {                                                                 //__SILP__
+        public override bool AddToSpec(Data spec) {                                                        //__SILP__
             return data.SetDouble(Path, Value);                                                            //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
@@ -615,7 +617,7 @@ namespace angeldnd.dap {
             return true;                                                                                   //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
-        public bool AddToSpec(Data spec) {                                                                 //__SILP__
+        public override bool AddToSpec(Data spec) {                                                        //__SILP__
             return data.SetString(Path, Value);                                                            //__SILP__
         }                                                                                                  //__SILP__
                                                                                                            //__SILP__
@@ -714,7 +716,7 @@ namespace angeldnd.dap {
             return true;                                                                               //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
-        public bool AddToSpec(Data spec) {                                                             //__SILP__
+        public override bool AddToSpec(Data spec) {                                                    //__SILP__
             return data.SetData(Path, Value);                                                          //__SILP__
         }                                                                                              //__SILP__
                                                                                                        //__SILP__
