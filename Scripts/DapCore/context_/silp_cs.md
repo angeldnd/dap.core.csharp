@@ -240,10 +240,6 @@ public class ${type}Property : Property<${cs_type}> {
         return true;
     }
 
-    public override bool AddToSpec(Data spec) {
-        return spec.Set${type}(Path, Value);
-    }
-
     private bool _CheckingValue = false;
     private bool _UpdatingValue = false;
 
