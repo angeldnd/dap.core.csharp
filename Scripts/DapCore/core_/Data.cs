@@ -11,6 +11,13 @@ namespace angeldnd.dap {
     public enum DataType : byte {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
     public sealed class Data {
+        public static string ToString(Data data) {
+            if (data == null) {
+                return "null";
+            }
+            return data.ToString();
+        }
+
         public static string ToFullString(Data data) {
             if (data == null) {
                 return "null";

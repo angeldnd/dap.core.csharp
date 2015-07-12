@@ -73,8 +73,6 @@ namespace angeldnd.dap {
                     aspect = FactoryAspect(this, path, type);
                     if (aspect == null) {
                         Error("Failed to Factory Aspect: {0}, {1}", path, aspectData);
-                    } else if (!aspect.Init(this, path)) {
-                        Error("Failed to Init Aspect: {0}, {1}", path, aspectData);
                     } else if (!aspect.Decode(aspectData)) {
                         Error("Failed to Decode Aspect: {0}, {1}", path, aspectData);
                     } else {

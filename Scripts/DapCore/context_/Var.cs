@@ -38,6 +38,10 @@ namespace angeldnd.dap {
             return Setup(null, defaultValue);
         }
 
+        public virtual bool Setup() {
+            return Setup(null, default(T));
+        }
+
         //SILP: DECLARE_LIST(VarWatcher, watcher, VarWatcher, _VarWatchers)
         protected List<VarWatcher> _VarWatchers = null;                       //__SILP__
                                                                               //__SILP__
@@ -69,21 +73,21 @@ namespace angeldnd.dap {
                                                                               //__SILP__
         public bool SetValue(Object pass, T newValue) {
             if (!_Setup) {
-                Error("Not Setup: {0} -> {1}", _Value, newValue);
+                Setup();
             } else if (_Pass != null && _Pass != pass && !_Pass.Equals(pass)) {
                 Error("Access Denied: _Pass = {0}, pass = {1}: {2} -> {3}", _Pass, pass, _Value, newValue);
-            } else {
-                _Value = newValue;
-                AdvanceRevision();
-
-                if (_VarWatchers != null) {
-                    for (int i = 0; i < _VarWatchers.Count; i++) {
-                        _VarWatchers[i].OnVarChanged(this);
-                    }
-                }
-                return true;
+                return false;
             }
-            return false;
+
+            _Value = newValue;
+            AdvanceRevision();
+
+            if (_VarWatchers != null) {
+                for (int i = 0; i < _VarWatchers.Count; i++) {
+                    _VarWatchers[i].OnVarChanged(this);
+                }
+            }
+            return true;
         }
 
         public virtual bool SetValue(T newValue) {
