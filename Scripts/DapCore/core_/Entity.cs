@@ -20,6 +20,10 @@ namespace angeldnd.dap {
 
         private Dictionary<string, Aspect> _Aspects = new Dictionary<string, Aspect>();
 
+        public int Count {
+            get { return _Aspects.Count; }
+        }
+
         public Dictionary<string, Aspect>.KeyCollection AllPathes {
             get {
                 return _Aspects.Keys;

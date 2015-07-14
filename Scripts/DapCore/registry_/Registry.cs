@@ -37,18 +37,10 @@ namespace angeldnd.dap {
 
         public readonly Factory Factory;
 
-        private Object _TickPass = new Pass();
-
-        public Object TakeTickPass() {
-            Object pass = _TickPass;
-            _TickPass = null;
-            return pass;
-        }
-
         public Registry() {
             Factory = Factory.NewBuiltinFactory();
 
-            AddChannel(RegistryConsts.ChannelTick, _TickPass);
+            AddChannel(RegistryConsts.ChannelTick, DepositChannelPass(RegistryConsts.ChannelTick, new Pass()));
         }
 
         private static void SetupLogging() {

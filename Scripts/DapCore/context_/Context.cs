@@ -5,10 +5,14 @@ namespace angeldnd.dap {
     public struct ContextConsts {
         public const string TypeContext = "Context";
 
-        public const string PathVars = "_vars";
-        public const string PathProperties = "_properties";
-        public const string PathChannels = "_channels";
-        public const string PathHandlers = "_handlers";
+        public const string AspectVars = "_vars";
+        public const string AspectProperties = "_properties";
+        public const string AspectChannels = "_channels";
+        public const string AspectHandlers = "_handlers";
+
+        public const string VarsPropertyPasses = "_property_passes";
+        public const string VarsChannelPasses = "_channel_passes";
+        public const string VarsHandlerPasses = "_handler_passes";
 
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";
@@ -38,10 +42,10 @@ namespace angeldnd.dap {
         public readonly Handlers Handlers;
 
         public Context() {
-            Vars = Add<Vars>(ContextConsts.PathVars, _Pass);
-            Properties = Add<Properties>(ContextConsts.PathProperties, _Pass);
-            Channels = Add<Channels>(ContextConsts.PathChannels, _Pass);
-            Handlers = Add<Handlers>(ContextConsts.PathHandlers, _Pass);
+            Vars = Add<Vars>(ContextConsts.AspectVars, _Pass);
+            Properties = Add<Properties>(ContextConsts.AspectProperties, _Pass);
+            Channels = Add<Channels>(ContextConsts.AspectChannels, _Pass);
+            Handlers = Add<Handlers>(ContextConsts.AspectHandlers, _Pass);
         }
 
         public Data Dump() {
@@ -120,6 +124,24 @@ namespace angeldnd.dap {
             return GetVarValue<T>(varPath, default(T));
         }
 
+        public T TakeVarValue<T>(string varPath, Object pass, T defaultValue) {
+            if (Vars.HasVar<T>(varPath)) {
+                T result = Vars.GetValue<T>(varPath, defaultValue);
+                Vars.RemoveVar<T>(varPath, pass);
+                return result;
+            } else {
+                return defaultValue;
+            }
+        }
+
+        public T TakeVarValue<T>(string varPath, T defaultValue) {
+            return TakeVarValue<T>(varPath, null, defaultValue);
+        }
+
+        public T TakeVarValue<T>(string varPath) {
+            return TakeVarValue<T>(varPath, null, default(T));
+        }
+
         public bool HasVarsVar(string varsPath, string varPath) {
             Vars vars = Get<Vars>(varsPath);
             if (vars == null) {
@@ -158,6 +180,70 @@ namespace angeldnd.dap {
         public T GetVarsVarValue<T>(string varsPath, string varPath) {
             return GetVarsVarValue<T>(varsPath, varPath, default(T));
         }
+
+        public T TakeVarsVarValue<T>(string varsPath, string varPath, Object pass, T defaultValue) {
+            Vars vars = Get<Vars>(varsPath);
+            if (vars != null) {
+                if (vars.HasVar<T>(varPath)) {
+                    T result = vars.GetValue<T>(varPath, defaultValue);
+                    vars.RemoveVar<T>(varPath, pass);
+                    if (vars.Count == 0) {
+                        Remove<Vars>(varsPath, _Pass);
+                    }
+                    return result;
+                } else {
+                    Error("Var Not Exist: {0}, {1}", varsPath, varPath);
+                }
+            } else {
+                Error("Vars Not Exist: {0}, {1}", varsPath, varPath);
+            }
+            return defaultValue;
+        }
+
+        public T TakeVarsVarValue<T>(string varsPath, string varPath, T defaultValue) {
+            return TakeVarsVarValue<T>(varsPath, varPath, null, defaultValue);
+        }
+
+        public T TakeVarsVarValue<T>(string varsPath, string varPath) {
+            return TakeVarsVarValue<T>(varsPath, varPath, null, default(T));
+        }
+
+        //SILP:CONTEXT_DEPOSIT_WITHDRAW(PropertyPass, Object, ContextConsts.VarsPropertyPasses, pass)
+        public Object DepositPropertyPass(string key, Object pass) {                      //__SILP__
+            if (!SetVarsVarValue<Object>(ContextConsts.VarsPropertyPasses, key, pass)) {  //__SILP__
+                Error("DepositPropertyPass Failed {0}", key);                             //__SILP__
+            }                                                                             //__SILP__
+            return pass;                                                                  //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public Object WithdrawPropertyPass(string key) {                                  //__SILP__
+            return TakeVarsVarValue<Object>(ContextConsts.VarsPropertyPasses, key);       //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        //SILP:CONTEXT_DEPOSIT_WITHDRAW(ChannelPass, Object, ContextConsts.VarsChannelPasses, pass)
+        public Object DepositChannelPass(string key, Object pass) {                      //__SILP__
+            if (!SetVarsVarValue<Object>(ContextConsts.VarsChannelPasses, key, pass)) {  //__SILP__
+                Error("DepositChannelPass Failed {0}", key);                             //__SILP__
+            }                                                                            //__SILP__
+            return pass;                                                                 //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public Object WithdrawChannelPass(string key) {                                  //__SILP__
+            return TakeVarsVarValue<Object>(ContextConsts.VarsChannelPasses, key);       //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        //SILP:CONTEXT_DEPOSIT_WITHDRAW(HandlerPass, Object, ContextConsts.VarsHandlerPasses, pass)
+        public Object DepositHandlerPass(string key, Object pass) {                      //__SILP__
+            if (!SetVarsVarValue<Object>(ContextConsts.VarsHandlerPasses, key, pass)) {  //__SILP__
+                Error("DepositHandlerPass Failed {0}", key);                             //__SILP__
+            }                                                                            //__SILP__
+            return pass;                                                                 //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public Object WithdrawHandlerPass(string key) {                                  //__SILP__
+            return TakeVarsVarValue<Object>(ContextConsts.VarsHandlerPasses, key);       //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
 
         //SILP: CONTEXT_PROPERTIES_HELPER(Bool, bool)
         public BoolProperty AddBool(string path, Object pass, bool val) {  //__SILP__

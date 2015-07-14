@@ -20,6 +20,10 @@ namespace angeldnd.dap {
             return Remove<Var<T>>(path);
         }
 
+        public Var<T> RemoveVar<T>(string path, Object pass) {
+            return Remove<Var<T>>(path, pass);
+        }
+
         public bool HasVar<T>(string path) {
             return Get<Var<T>>(path) != null;
         }
