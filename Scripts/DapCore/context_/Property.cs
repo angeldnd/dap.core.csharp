@@ -11,8 +11,9 @@ namespace angeldnd.dap {
     }
 
     public interface Property : Var {
-        Object GetValue();
         bool DoDecode(Object pass, Data data);
+        int ValueCheckerCount { get; }
+        int ValueWatcherCount { get; }
     }
 
     public abstract class Property<T>: Var<T>, Property {
@@ -34,7 +35,7 @@ namespace angeldnd.dap {
             }                                                                //__SILP__
         }                                                                    //__SILP__
                                                                              //__SILP__
-        public bool AddValueChecker(ValueChecker<T> checker) {               //__SILP__
+        public virtual bool AddValueChecker(ValueChecker<T> checker) {       //__SILP__
             if (_Checkers == null) _Checkers = new List<ValueChecker<T>>();  //__SILP__
             if (!_Checkers.Contains(checker)) {                              //__SILP__
                 _Checkers.Add(checker);                                      //__SILP__
@@ -43,7 +44,7 @@ namespace angeldnd.dap {
             return false;                                                    //__SILP__
         }                                                                    //__SILP__
                                                                              //__SILP__
-        public bool RemoveValueChecker(ValueChecker<T> checker) {            //__SILP__
+        public virtual bool RemoveValueChecker(ValueChecker<T> checker) {    //__SILP__
             if (_Checkers != null && _Checkers.Contains(checker)) {          //__SILP__
                 _Checkers.Remove(checker);                                   //__SILP__
                 return true;                                                 //__SILP__
@@ -63,7 +64,7 @@ namespace angeldnd.dap {
             }                                                                //__SILP__
         }                                                                    //__SILP__
                                                                              //__SILP__
-        public bool AddValueWatcher(ValueWatcher<T> watcher) {               //__SILP__
+        public virtual bool AddValueWatcher(ValueWatcher<T> watcher) {       //__SILP__
             if (_Watchers == null) _Watchers = new List<ValueWatcher<T>>();  //__SILP__
             if (!_Watchers.Contains(watcher)) {                              //__SILP__
                 _Watchers.Add(watcher);                                      //__SILP__
@@ -72,7 +73,7 @@ namespace angeldnd.dap {
             return false;                                                    //__SILP__
         }                                                                    //__SILP__
                                                                              //__SILP__
-        public bool RemoveValueWatcher(ValueWatcher<T> watcher) {            //__SILP__
+        public virtual bool RemoveValueWatcher(ValueWatcher<T> watcher) {    //__SILP__
             if (_Watchers != null && _Watchers.Contains(watcher)) {          //__SILP__
                 _Watchers.Remove(watcher);                                   //__SILP__
                 return true;                                                 //__SILP__

@@ -238,9 +238,9 @@ public void Debug(string format, params object[] values) {
 
 ```
 
-# ASPECT_LOG_MIXIN() #
+# ASPECT_LOG_MIXIN(virtualOrOverride) #
 ```C#
-public virtual string GetLogPrefix() {
+public ${virtualOrOverride} string GetLogPrefix() {
     if (_Entity != null) {
         return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);
     } else {
@@ -297,9 +297,5 @@ public void Debug(string format, params object[] values) {
     }
 }
 
-```
-
-# ENTITY_ASPECT_LOG_MIXIN() #
-```
 ```
 

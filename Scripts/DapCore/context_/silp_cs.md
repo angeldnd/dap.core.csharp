@@ -47,7 +47,7 @@ public int ${name}Count {
     }
 }
 
-public bool Add${name}(${cs_type} ${var_name}) {
+public virtual bool Add${name}(${cs_type} ${var_name}) {
     if (${list_name} == null) ${list_name} = new List<${cs_type}>();
     if (!${list_name}.Contains(${var_name})) {
         ${list_name}.Add(${var_name});
@@ -56,7 +56,7 @@ public bool Add${name}(${cs_type} ${var_name}) {
     return false;
 }
 
-public bool Remove${name}(${cs_type} ${var_name}) {
+public virtual bool Remove${name}(${cs_type} ${var_name}) {
     if (${list_name} != null && ${list_name}.Contains(${var_name})) {
         ${list_name}.Remove(${var_name});
         return true;

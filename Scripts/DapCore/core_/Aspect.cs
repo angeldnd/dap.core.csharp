@@ -104,7 +104,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
 
-        //SILP: ASPECT_LOG_MIXIN()
+        //SILP: ASPECT_LOG_MIXIN(virtual)
         public virtual string GetLogPrefix() {                                                             //__SILP__
             if (_Entity != null) {                                                                         //__SILP__
                 return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
@@ -234,8 +234,8 @@ namespace angeldnd.dap {
             return true;                                              //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        //SILP: ASPECT_LOG_MIXIN()
-        public virtual string GetLogPrefix() {                                                             //__SILP__
+        //SILP: ASPECT_LOG_MIXIN(override)
+        public override string GetLogPrefix() {                                                            //__SILP__
             if (_Entity != null) {                                                                         //__SILP__
                 return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
             } else {                                                                                       //__SILP__

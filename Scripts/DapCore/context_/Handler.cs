@@ -102,7 +102,7 @@ namespace angeldnd.dap {
             }                                                                             //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public bool AddRequestChecker(RequestChecker checker) {                           //__SILP__
+        public virtual bool AddRequestChecker(RequestChecker checker) {                   //__SILP__
             if (_RequestCheckers == null) _RequestCheckers = new List<RequestChecker>();  //__SILP__
             if (!_RequestCheckers.Contains(checker)) {                                    //__SILP__
                 _RequestCheckers.Add(checker);                                            //__SILP__
@@ -111,7 +111,7 @@ namespace angeldnd.dap {
             return false;                                                                 //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public bool RemoveRequestChecker(RequestChecker checker) {                        //__SILP__
+        public virtual bool RemoveRequestChecker(RequestChecker checker) {                //__SILP__
             if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {         //__SILP__
                 _RequestCheckers.Remove(checker);                                         //__SILP__
                 return true;                                                              //__SILP__
@@ -131,7 +131,7 @@ namespace angeldnd.dap {
             }                                                                                //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
-        public bool AddRequestListener(RequestListener listener) {                           //__SILP__
+        public virtual bool AddRequestListener(RequestListener listener) {                   //__SILP__
             if (_RequestListeners == null) _RequestListeners = new List<RequestListener>();  //__SILP__
             if (!_RequestListeners.Contains(listener)) {                                     //__SILP__
                 _RequestListeners.Add(listener);                                             //__SILP__
@@ -140,7 +140,7 @@ namespace angeldnd.dap {
             return false;                                                                    //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
-        public bool RemoveRequestListener(RequestListener listener) {                        //__SILP__
+        public virtual bool RemoveRequestListener(RequestListener listener) {                //__SILP__
             if (_RequestListeners != null && _RequestListeners.Contains(listener)) {         //__SILP__
                 _RequestListeners.Remove(listener);                                          //__SILP__
                 return true;                                                                 //__SILP__
@@ -160,7 +160,7 @@ namespace angeldnd.dap {
             }                                                                                   //__SILP__
         }                                                                                       //__SILP__
                                                                                                 //__SILP__
-        public bool AddResponseListener(ResponseListener listener) {                            //__SILP__
+        public virtual bool AddResponseListener(ResponseListener listener) {                    //__SILP__
             if (_ResponseListeners == null) _ResponseListeners = new List<ResponseListener>();  //__SILP__
             if (!_ResponseListeners.Contains(listener)) {                                       //__SILP__
                 _ResponseListeners.Add(listener);                                               //__SILP__
@@ -169,7 +169,7 @@ namespace angeldnd.dap {
             return false;                                                                       //__SILP__
         }                                                                                       //__SILP__
                                                                                                 //__SILP__
-        public bool RemoveResponseListener(ResponseListener listener) {                         //__SILP__
+        public virtual bool RemoveResponseListener(ResponseListener listener) {                 //__SILP__
             if (_ResponseListeners != null && _ResponseListeners.Contains(listener)) {          //__SILP__
                 _ResponseListeners.Remove(listener);                                            //__SILP__
                 return true;                                                                    //__SILP__

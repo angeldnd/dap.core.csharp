@@ -7,6 +7,7 @@ namespace angeldnd.dap {
     }
 
     public interface Var : Aspect {
+        bool Secured { get; }
         bool SetPass(Object pass);
         Object GetValue();
         bool AddVarWatcher(VarWatcher watcher);
@@ -21,6 +22,10 @@ namespace angeldnd.dap {
 
         private bool _Setup = false;
         private Object _Pass = null;
+
+        public bool Secured {
+            get { return _Pass != null; }
+        }
 
         public bool SetPass(Object pass) {
             if (!_Setup && _Pass == null) {
@@ -69,7 +74,7 @@ namespace angeldnd.dap {
             }                                                                 //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
-        public bool AddVarWatcher(VarWatcher watcher) {                       //__SILP__
+        public virtual bool AddVarWatcher(VarWatcher watcher) {               //__SILP__
             if (_VarWatchers == null) _VarWatchers = new List<VarWatcher>();  //__SILP__
             if (!_VarWatchers.Contains(watcher)) {                            //__SILP__
                 _VarWatchers.Add(watcher);                                    //__SILP__
@@ -78,7 +83,7 @@ namespace angeldnd.dap {
             return false;                                                     //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
-        public bool RemoveVarWatcher(VarWatcher watcher) {                    //__SILP__
+        public virtual bool RemoveVarWatcher(VarWatcher watcher) {            //__SILP__
             if (_VarWatchers != null && _VarWatchers.Contains(watcher)) {     //__SILP__
                 _VarWatchers.Remove(watcher);                                 //__SILP__
                 return true;                                                  //__SILP__

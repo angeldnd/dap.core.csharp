@@ -51,7 +51,7 @@ namespace angeldnd.dap {
             }                                                                       //__SILP__
         }                                                                           //__SILP__
                                                                                     //__SILP__
-        public bool AddEventChecker(EventChecker listener) {                        //__SILP__
+        public virtual bool AddEventChecker(EventChecker listener) {                //__SILP__
             if (_EventCheckers == null) _EventCheckers = new List<EventChecker>();  //__SILP__
             if (!_EventCheckers.Contains(listener)) {                               //__SILP__
                 _EventCheckers.Add(listener);                                       //__SILP__
@@ -60,7 +60,7 @@ namespace angeldnd.dap {
             return false;                                                           //__SILP__
         }                                                                           //__SILP__
                                                                                     //__SILP__
-        public bool RemoveEventChecker(EventChecker listener) {                     //__SILP__
+        public virtual bool RemoveEventChecker(EventChecker listener) {             //__SILP__
             if (_EventCheckers != null && _EventCheckers.Contains(listener)) {      //__SILP__
                 _EventCheckers.Remove(listener);                                    //__SILP__
                 return true;                                                        //__SILP__
@@ -80,7 +80,7 @@ namespace angeldnd.dap {
             }                                                                          //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
-        public bool AddEventListener(EventListener listener) {                         //__SILP__
+        public virtual bool AddEventListener(EventListener listener) {                 //__SILP__
             if (_EventListeners == null) _EventListeners = new List<EventListener>();  //__SILP__
             if (!_EventListeners.Contains(listener)) {                                 //__SILP__
                 _EventListeners.Add(listener);                                         //__SILP__
@@ -89,7 +89,7 @@ namespace angeldnd.dap {
             return false;                                                              //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
-        public bool RemoveEventListener(EventListener listener) {                      //__SILP__
+        public virtual bool RemoveEventListener(EventListener listener) {              //__SILP__
             if (_EventListeners != null && _EventListeners.Contains(listener)) {       //__SILP__
                 _EventListeners.Remove(listener);                                      //__SILP__
                 return true;                                                           //__SILP__
