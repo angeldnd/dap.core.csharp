@@ -197,7 +197,7 @@ namespace angeldnd.dap {
                 return true;
             } else if (_Pass == pass) {
                 return true;
-            } else if (OPEN_PASS.Equas(_Pass) && (pass == null)) {
+            } else if (OPEN_PASS.Equals(_Pass) && (pass == null)) {
                 return true;
             } else if (_Pass.Equals(pass)) {
                 return true;
