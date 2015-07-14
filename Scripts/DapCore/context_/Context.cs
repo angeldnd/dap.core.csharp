@@ -55,8 +55,8 @@ namespace angeldnd.dap {
             return Channels.FireEvent(channelPath, evt);
         }
 
-        public bool FireEvent(Object pass, string channelPath, Data evt) {
-            return Channels.FireEvent(pass, channelPath, evt);
+        public bool FireEvent(string channelPath, Object pass, Data evt) {
+            return Channels.FireEvent(channelPath, pass, evt);
         }
 
         public Channel GetChannel(string channelPath) {
@@ -75,8 +75,8 @@ namespace angeldnd.dap {
             return Handlers.HandleRequest(handlerPath, req);
         }
 
-        public Data HandleRequest(Object pass, string handlerPath, Data req) {
-            return Handlers.HandleRequest(pass, handlerPath, req);
+        public Data HandleRequest(string handlerPath, Object pass, Data req) {
+            return Handlers.HandleRequest(handlerPath, pass, req);
         }
 
         public Handler GetHandler(string handlerPath) {

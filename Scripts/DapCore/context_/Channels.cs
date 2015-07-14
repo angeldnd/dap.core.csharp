@@ -19,7 +19,7 @@ namespace angeldnd.dap {
             return AddChannel(channelPath, null);
         }
 
-        public bool FireEvent(Object pass, string channelPath, Data evt) {
+        public bool FireEvent(string channelPath, Object pass, Data evt) {
             Channel channel = Get<Channel>(channelPath);
             if (channel != null) {
                 return channel.FireEvent(pass, evt);
@@ -28,7 +28,7 @@ namespace angeldnd.dap {
         }
 
         public bool FireEvent(string channelPath, Data evt) {
-            return FireEvent(null, channelPath, evt);
+            return FireEvent(channelPath, null, evt);
         }
 
         //SILP: ADD_REMOVE_HELPER(EventChecker, channelPath, channel, Channel, EventChecker, checker, EventChecker)
