@@ -167,9 +167,15 @@ namespace angeldnd.dap {
     }
 
     public class Pass {
+        private int _HashCode = Guid.NewGuid().GetHashCode();
+
         /* Only exact same refrence is equal */
         public override bool Equals(object obj) {
             return this == obj;
+        }
+
+        public override int GetHashCode() {
+            return _HashCode;
         }
     }
 
