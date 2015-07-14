@@ -166,8 +166,15 @@ namespace angeldnd.dap {
                                                                                                       //__SILP__
     }
 
+    public class Pass {
+        /* Only exact same refrence is equal */
+        public override bool Equals(object obj) {
+            return this == obj;
+        }
+    }
+
     public abstract class BaseSecurableAspect : BaseAspect, SecurableAspect {
-        private static readonly Guid OPEN_PASS = Guid.NewGuid();
+        private static readonly Pass OPEN_PASS = new Pass();
 
         private Object _Pass = null;
         protected Object Pass {
@@ -177,7 +184,7 @@ namespace angeldnd.dap {
         public bool Secured {
             get {
                 if (_Pass == null) return false;
-                if (OPEN_PASS.Equals(_Pass)) return false;
+                if (OPEN_PASS == _Pass) return false;
                 return true;
             }
         }
@@ -197,7 +204,7 @@ namespace angeldnd.dap {
                 return true;
             } else if (_Pass == pass) {
                 return true;
-            } else if (OPEN_PASS.Equals(_Pass) && (pass == null)) {
+            } else if (OPEN_PASS == _Pass && pass == null) {
                 return true;
             } else if (_Pass.Equals(pass)) {
                 return true;
@@ -209,7 +216,7 @@ namespace angeldnd.dap {
         protected bool CheckPass(Object pass) {
             if (_Pass == null) return true;
             if (_Pass == pass) return true;
-            if (OPEN_PASS.Equals(_Pass)) return true;
+            if (OPEN_PASS == _Pass) return true;
             if (_Pass.Equals(pass)) return true;
 
             Error("Invalid Pass: _Pass = {0}, pass = {1}", _Pass, pass);

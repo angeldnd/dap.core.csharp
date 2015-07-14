@@ -11,8 +11,10 @@ namespace angeldnd.dap {
             get { return TickItemConsts.TypeTickItem; }
         }
 
+        private Pass _TickPass = new Pass();
+
         public TickItem() {
-            AddChannel(RegistryConsts.ChannelTick);
+            AddChannel(RegistryConsts.ChannelTick, _TickPass);
         }
 
         public override void OnAdded() {
@@ -31,7 +33,7 @@ namespace angeldnd.dap {
 
         public void OnEvent(string channelPath, Data evt) {
             if (channelPath == RegistryConsts.ChannelTick) {
-                FireEvent(RegistryConsts.ChannelTick, evt);
+                FireEvent(RegistryConsts.ChannelTick, _TickPass, evt);
             }
         }
     }
