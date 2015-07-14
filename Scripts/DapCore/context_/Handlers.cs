@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public class Handlers : EntityAspect {
+    public class Handlers : SecurableEntityAspect {
         public Handler GetHandler(string handlerPath) {
             return Get<Handler>(handlerPath);
         }

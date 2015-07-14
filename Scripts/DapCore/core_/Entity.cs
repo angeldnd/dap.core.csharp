@@ -229,9 +229,31 @@ namespace angeldnd.dap {
             return null;
         }
 
+        public T Add<T>(string path, Object pass) where T : class, SecurableAspect {
+            T aspect = Add<T>(path);
+            if (aspect != null) {
+                if (!aspect.SetPass(pass)) {
+                    Remove<T>(path);
+                    aspect = null;
+                }
+            }
+            return aspect;
+        }
+
         public T Remove<T>(string path) where T : class, Aspect {
+            return Remove<T>(path, null);
+        }
+
+        public T Remove<T>(string path, Object pass) where T : class, Aspect {
             T aspect = Get<T>(path);
             if (aspect != null) {
+                if (aspect is SecurableAspect) {
+                    var sa = aspect as SecurableAspect;
+                    if (!sa.CheckPass(pass)) {
+                        return null;
+                    }
+                }
+
                 aspect.OnRemoved();
                 _Aspects.Remove(path);
                 AdvanceRevision();
@@ -245,12 +267,16 @@ namespace angeldnd.dap {
         }
 
         public List<T> RemoveByChecker<T>(CheckAspect<T> checker) where T : class, Aspect {
+            return RemoveByChecker<T>(checker, null);
+        }
+
+        public List<T> RemoveByChecker<T>(CheckAspect<T> checker, Object pass) where T : class, Aspect {
             List<T> removed = null;
             List<T> matched = All<T>();
             if (matched != null) {
                 foreach (T aspect in matched) {
                     if (checker(aspect)) {
-                        T _aspect = Remove<T>(aspect.Path);
+                        T _aspect = Remove<T>(aspect.Path, pass);
                         if (_aspect != null) {
                             if (removed == null) {
                                 removed = new List<T>();

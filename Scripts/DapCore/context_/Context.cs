@@ -27,16 +27,21 @@ namespace angeldnd.dap {
             get { return ContextConsts.TypeContext; }
         }
 
+        private Object _Pass = new Pass();
+        protected Object Pass {
+            get { return _Pass; }
+        }
+
         public readonly Vars Vars;
         public readonly Properties Properties;
         public readonly Channels Channels;
         public readonly Handlers Handlers;
 
         public Context() {
-            Vars = Add<Vars>(ContextConsts.PathVars);
-            Properties = Add<Properties>(ContextConsts.PathProperties);
-            Channels = Add<Channels>(ContextConsts.PathChannels);
-            Handlers = Add<Handlers>(ContextConsts.PathHandlers);
+            Vars = Add<Vars>(ContextConsts.PathVars, _Pass);
+            Properties = Add<Properties>(ContextConsts.PathProperties, _Pass);
+            Channels = Add<Channels>(ContextConsts.PathChannels, _Pass);
+            Handlers = Add<Handlers>(ContextConsts.PathHandlers, _Pass);
         }
 
         public Data Dump() {
@@ -130,7 +135,7 @@ namespace angeldnd.dap {
         public bool SetVarsVarValue<T>(string varsPath, string varPath, Object pass, T v) {
             Vars vars = Get<Vars>(varsPath);
             if (vars == null) {
-                vars = Add<Vars>(varsPath);
+                vars = Add<Vars>(varsPath, _Pass);
             }
             if (vars != null) {
                 if (vars.HasVar<T>(varPath)) {
@@ -167,6 +172,10 @@ namespace angeldnd.dap {
             return Properties.RemoveBool(path);                            //__SILP__
         }                                                                  //__SILP__
                                                                            //__SILP__
+        public BoolProperty RemoveBool(string path, Object pass) {         //__SILP__
+            return Properties.RemoveBool(path, pass);                      //__SILP__
+        }                                                                  //__SILP__
+                                                                           //__SILP__
         public bool IsBool(string path) {                                  //__SILP__
             return Properties.IsBool(path);                                //__SILP__
         }                                                                  //__SILP__
@@ -199,6 +208,10 @@ namespace angeldnd.dap {
                                                                         //__SILP__
         public IntProperty RemoveInt(string path) {                     //__SILP__
             return Properties.RemoveInt(path);                          //__SILP__
+        }                                                               //__SILP__
+                                                                        //__SILP__
+        public IntProperty RemoveInt(string path, Object pass) {        //__SILP__
+            return Properties.RemoveInt(path, pass);                    //__SILP__
         }                                                               //__SILP__
                                                                         //__SILP__
         public bool IsInt(string path) {                                //__SILP__
@@ -234,6 +247,10 @@ namespace angeldnd.dap {
             return Properties.RemoveLong(path);                            //__SILP__
         }                                                                  //__SILP__
                                                                            //__SILP__
+        public LongProperty RemoveLong(string path, Object pass) {         //__SILP__
+            return Properties.RemoveLong(path, pass);                      //__SILP__
+        }                                                                  //__SILP__
+                                                                           //__SILP__
         public bool IsLong(string path) {                                  //__SILP__
             return Properties.IsLong(path);                                //__SILP__
         }                                                                  //__SILP__
@@ -265,6 +282,10 @@ namespace angeldnd.dap {
                                                                               //__SILP__
         public FloatProperty RemoveFloat(string path) {                       //__SILP__
             return Properties.RemoveFloat(path);                              //__SILP__
+        }                                                                     //__SILP__
+                                                                              //__SILP__
+        public FloatProperty RemoveFloat(string path, Object pass) {          //__SILP__
+            return Properties.RemoveFloat(path, pass);                        //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
         public bool IsFloat(string path) {                                    //__SILP__
@@ -300,6 +321,10 @@ namespace angeldnd.dap {
             return Properties.RemoveDouble(path);                                //__SILP__
         }                                                                        //__SILP__
                                                                                  //__SILP__
+        public DoubleProperty RemoveDouble(string path, Object pass) {           //__SILP__
+            return Properties.RemoveDouble(path, pass);                          //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
         public bool IsDouble(string path) {                                      //__SILP__
             return Properties.IsDouble(path);                                    //__SILP__
         }                                                                        //__SILP__
@@ -333,6 +358,10 @@ namespace angeldnd.dap {
             return Properties.RemoveString(path);                                //__SILP__
         }                                                                        //__SILP__
                                                                                  //__SILP__
+        public StringProperty RemoveString(string path, Object pass) {           //__SILP__
+            return Properties.RemoveString(path, pass);                          //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
         public bool IsString(string path) {                                      //__SILP__
             return Properties.IsString(path);                                    //__SILP__
         }                                                                        //__SILP__
@@ -364,6 +393,10 @@ namespace angeldnd.dap {
                                                                            //__SILP__
         public DataProperty RemoveData(string path) {                      //__SILP__
             return Properties.RemoveData(path);                            //__SILP__
+        }                                                                  //__SILP__
+                                                                           //__SILP__
+        public DataProperty RemoveData(string path, Object pass) {         //__SILP__
+            return Properties.RemoveData(path, pass);                      //__SILP__
         }                                                                  //__SILP__
                                                                            //__SILP__
         public bool IsData(string path) {                                  //__SILP__

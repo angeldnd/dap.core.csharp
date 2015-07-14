@@ -16,6 +16,7 @@ namespace angeldnd.dap {
     public interface SecurableAspect : Aspect {
         bool Secured { get; }
         bool SetPass(Object pass);
+        bool CheckPass(Object pass);
     }
 
     public abstract class BaseAspect : Aspect {
@@ -169,6 +170,10 @@ namespace angeldnd.dap {
     public class Pass {
         private int _HashCode = Guid.NewGuid().GetHashCode();
 
+        public override string ToString() {
+            return string.Format("[Pass:{0}]", _HashCode);
+        }
+
         /* Only exact same refrence is equal */
         public override bool Equals(object obj) {
             return this == obj;
@@ -180,54 +185,55 @@ namespace angeldnd.dap {
     }
 
     public abstract class BaseSecurableAspect : BaseAspect, SecurableAspect {
-        private static readonly Pass OPEN_PASS = new Pass();
-
-        private Object _Pass = null;
-        protected Object Pass {
-            get { return _Pass; }
-        }
-
-        public bool Secured {
-            get {
-                if (_Pass == null) return false;
-                if (OPEN_PASS == _Pass) return false;
-                return true;
-            }
-        }
-
-        public bool SetPass(Object pass) {
-            /*
-             * The OPEN_PASS trick is to set the pass, so it can't
-             * be set in the future, but it's "open", any pass can
-             * pass the check.
-             */
-            if (_Pass == null) {
-                if (pass == null) {
-                    _Pass = OPEN_PASS;
-                } else {
-                    _Pass = pass;
-                }
-                return true;
-            } else if (_Pass == pass) {
-                return true;
-            } else if (OPEN_PASS == _Pass && pass == null) {
-                return true;
-            } else if (_Pass.Equals(pass)) {
-                return true;
-            }
-            Error("SetPass Failed: {0} -> {1}", _Pass, pass);
-            return false;
-        }
-
-        protected bool CheckPass(Object pass) {
-            if (_Pass == null) return true;
-            if (_Pass == pass) return true;
-            if (OPEN_PASS == _Pass) return true;
-            if (_Pass.Equals(pass)) return true;
-
-            Error("Invalid Pass: _Pass = {0}, pass = {1}", _Pass, pass);
-            return false;
-        }
+        //SILP:SECURABLE_ASPECT_MIXIN()
+        private static readonly Pass OPEN_PASS = new Pass();              //__SILP__
+                                                                          //__SILP__
+        private Object _Pass = null;                                      //__SILP__
+        protected Object Pass {                                           //__SILP__
+            get { return _Pass; }                                         //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
+        public bool Secured {                                             //__SILP__
+            get {                                                         //__SILP__
+                if (_Pass == null) return false;                          //__SILP__
+                if (OPEN_PASS == _Pass) return false;                     //__SILP__
+                return true;                                              //__SILP__
+            }                                                             //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
+        public bool SetPass(Object pass) {                                //__SILP__
+            /*                                                            //__SILP__
+                * The OPEN_PASS trick is to set the pass, so it can't     //__SILP__
+                * be set in the future, but it's "open", any pass can     //__SILP__
+                * pass the check.                                         //__SILP__
+                */                                                        //__SILP__
+            if (_Pass == null) {                                          //__SILP__
+                if (pass == null) {                                       //__SILP__
+                    _Pass = OPEN_PASS;                                    //__SILP__
+                } else {                                                  //__SILP__
+                    _Pass = pass;                                         //__SILP__
+                }                                                         //__SILP__
+                return true;                                              //__SILP__
+            } else if (_Pass == pass) {                                   //__SILP__
+                return true;                                              //__SILP__
+            } else if (OPEN_PASS == _Pass && pass == null) {              //__SILP__
+                return true;                                              //__SILP__
+            } else if (_Pass.Equals(pass)) {                              //__SILP__
+                return true;                                              //__SILP__
+            }                                                             //__SILP__
+            Error("SetPass Failed: {0} -> {1}", _Pass, pass);             //__SILP__
+            return false;                                                 //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
+        public bool CheckPass(Object pass) {                              //__SILP__
+            if (_Pass == null) return true;                               //__SILP__
+            if (_Pass == pass) return true;                               //__SILP__
+            if (OPEN_PASS == _Pass) return true;                          //__SILP__
+            if (_Pass.Equals(pass)) return true;                          //__SILP__
+                                                                          //__SILP__
+            Error("Invalid Pass: _Pass = {0}, pass = {1}", _Pass, pass);  //__SILP__
+            return false;                                                 //__SILP__
+        }                                                                 //__SILP__
     }
 
     public abstract class EntityAspect : Entity, Aspect {
@@ -314,5 +320,57 @@ namespace angeldnd.dap {
         //SILP: ASPECT_EVENTS_MIXIN()
         public virtual void OnAdded() {}                              //__SILP__
         public virtual void OnRemoved() {}                            //__SILP__
+    }
+
+    public abstract class SecurableEntityAspect : EntityAspect, SecurableAspect {
+        //SILP:SECURABLE_ASPECT_MIXIN()
+        private static readonly Pass OPEN_PASS = new Pass();              //__SILP__
+                                                                          //__SILP__
+        private Object _Pass = null;                                      //__SILP__
+        protected Object Pass {                                           //__SILP__
+            get { return _Pass; }                                         //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
+        public bool Secured {                                             //__SILP__
+            get {                                                         //__SILP__
+                if (_Pass == null) return false;                          //__SILP__
+                if (OPEN_PASS == _Pass) return false;                     //__SILP__
+                return true;                                              //__SILP__
+            }                                                             //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
+        public bool SetPass(Object pass) {                                //__SILP__
+            /*                                                            //__SILP__
+                * The OPEN_PASS trick is to set the pass, so it can't     //__SILP__
+                * be set in the future, but it's "open", any pass can     //__SILP__
+                * pass the check.                                         //__SILP__
+                */                                                        //__SILP__
+            if (_Pass == null) {                                          //__SILP__
+                if (pass == null) {                                       //__SILP__
+                    _Pass = OPEN_PASS;                                    //__SILP__
+                } else {                                                  //__SILP__
+                    _Pass = pass;                                         //__SILP__
+                }                                                         //__SILP__
+                return true;                                              //__SILP__
+            } else if (_Pass == pass) {                                   //__SILP__
+                return true;                                              //__SILP__
+            } else if (OPEN_PASS == _Pass && pass == null) {              //__SILP__
+                return true;                                              //__SILP__
+            } else if (_Pass.Equals(pass)) {                              //__SILP__
+                return true;                                              //__SILP__
+            }                                                             //__SILP__
+            Error("SetPass Failed: {0} -> {1}", _Pass, pass);             //__SILP__
+            return false;                                                 //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
+        public bool CheckPass(Object pass) {                              //__SILP__
+            if (_Pass == null) return true;                               //__SILP__
+            if (_Pass == pass) return true;                               //__SILP__
+            if (OPEN_PASS == _Pass) return true;                          //__SILP__
+            if (_Pass.Equals(pass)) return true;                          //__SILP__
+                                                                          //__SILP__
+            Error("Invalid Pass: _Pass = {0}, pass = {1}", _Pass, pass);  //__SILP__
+            return false;                                                 //__SILP__
+        }                                                                 //__SILP__
     }
 }

@@ -299,3 +299,55 @@ public void Debug(string format, params object[] values) {
 
 ```
 
+# SECURABLE_ASPECT_MIXIN() #
+```C#
+private static readonly Pass OPEN_PASS = new Pass();
+
+private Object _Pass = null;
+protected Object Pass {
+    get { return _Pass; }
+}
+
+public bool Secured {
+    get {
+        if (_Pass == null) return false;
+        if (OPEN_PASS == _Pass) return false;
+        return true;
+    }
+}
+
+public bool SetPass(Object pass) {
+    /*
+        * The OPEN_PASS trick is to set the pass, so it can't
+        * be set in the future, but it's "open", any pass can
+        * pass the check.
+        */
+    if (_Pass == null) {
+        if (pass == null) {
+            _Pass = OPEN_PASS;
+        } else {
+            _Pass = pass;
+        }
+        return true;
+    } else if (_Pass == pass) {
+        return true;
+    } else if (OPEN_PASS == _Pass && pass == null) {
+        return true;
+    } else if (_Pass.Equals(pass)) {
+        return true;
+    }
+    Error("SetPass Failed: {0} -> {1}", _Pass, pass);
+    return false;
+}
+
+public bool CheckPass(Object pass) {
+    if (_Pass == null) return true;
+    if (_Pass == pass) return true;
+    if (OPEN_PASS == _Pass) return true;
+    if (_Pass.Equals(pass)) return true;
+
+    Error("Invalid Pass: _Pass = {0}, pass = {1}", _Pass, pass);
+    return false;
+}
+```
+

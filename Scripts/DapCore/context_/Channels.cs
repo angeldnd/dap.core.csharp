@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public class Channels : EntityAspect {
+    public class Channels : SecurableEntityAspect {
         public Channel GetChannel(string channelPath) {
             return Get<Channel>(channelPath);
         }

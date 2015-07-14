@@ -12,6 +12,10 @@ public ${type}Property Remove${type}(string path) {
     return Properties.Remove${type}(path);
 }
 
+public ${type}Property Remove${type}(string path, Object pass) {
+    return Properties.Remove${type}(path, pass);
+}
+
 public bool Is${type}(string path) {
     return Properties.Is${type}(path);
 }
@@ -103,6 +107,10 @@ public ${type}Property Add${type}(string path, Object pass, ${cs_type} val) {
 
 public ${type}Property Add${type}(string path, ${cs_type} val) {
     return Add${type}(path, null, val);
+}
+
+public ${type}Property Remove${type}(string path, Object pass) {
+    return Remove<${type}Property>(path, pass);
 }
 
 public ${type}Property Remove${type}(string path) {

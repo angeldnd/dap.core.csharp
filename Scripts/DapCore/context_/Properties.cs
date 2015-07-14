@@ -16,7 +16,7 @@ namespace angeldnd.dap {
         public const string KeyValue = "v";
     }
 
-    public class Properties : EntityAspect {
+    public class Properties : SecurableEntityAspect {
         public override string Type {
             get { return PropertiesConsts.TypeProperties; }
         }
@@ -33,6 +33,10 @@ namespace angeldnd.dap {
                                                                                                                         //__SILP__
         public BoolProperty AddBool(string path, bool val) {                                                            //__SILP__
             return AddBool(path, null, val);                                                                            //__SILP__
+        }                                                                                                               //__SILP__
+                                                                                                                        //__SILP__
+        public BoolProperty RemoveBool(string path, Object pass) {                                                      //__SILP__
+            return Remove<BoolProperty>(path, pass);                                                                    //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
         public BoolProperty RemoveBool(string path) {                                                                   //__SILP__
@@ -138,6 +142,10 @@ namespace angeldnd.dap {
             return AddInt(path, null, val);                                                                          //__SILP__
         }                                                                                                            //__SILP__
                                                                                                                      //__SILP__
+        public IntProperty RemoveInt(string path, Object pass) {                                                     //__SILP__
+            return Remove<IntProperty>(path, pass);                                                                  //__SILP__
+        }                                                                                                            //__SILP__
+                                                                                                                     //__SILP__
         public IntProperty RemoveInt(string path) {                                                                  //__SILP__
             return Remove<IntProperty>(path);                                                                        //__SILP__
         }                                                                                                            //__SILP__
@@ -239,6 +247,10 @@ namespace angeldnd.dap {
                                                                                                                         //__SILP__
         public LongProperty AddLong(string path, long val) {                                                            //__SILP__
             return AddLong(path, null, val);                                                                            //__SILP__
+        }                                                                                                               //__SILP__
+                                                                                                                        //__SILP__
+        public LongProperty RemoveLong(string path, Object pass) {                                                      //__SILP__
+            return Remove<LongProperty>(path, pass);                                                                    //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
         public LongProperty RemoveLong(string path) {                                                                   //__SILP__
@@ -344,6 +356,10 @@ namespace angeldnd.dap {
             return AddFloat(path, null, val);                                                                              //__SILP__
         }                                                                                                                  //__SILP__
                                                                                                                            //__SILP__
+        public FloatProperty RemoveFloat(string path, Object pass) {                                                       //__SILP__
+            return Remove<FloatProperty>(path, pass);                                                                      //__SILP__
+        }                                                                                                                  //__SILP__
+                                                                                                                           //__SILP__
         public FloatProperty RemoveFloat(string path) {                                                                    //__SILP__
             return Remove<FloatProperty>(path);                                                                            //__SILP__
         }                                                                                                                  //__SILP__
@@ -445,6 +461,10 @@ namespace angeldnd.dap {
                                                                                                                               //__SILP__
         public DoubleProperty AddDouble(string path, double val) {                                                            //__SILP__
             return AddDouble(path, null, val);                                                                                //__SILP__
+        }                                                                                                                     //__SILP__
+                                                                                                                              //__SILP__
+        public DoubleProperty RemoveDouble(string path, Object pass) {                                                        //__SILP__
+            return Remove<DoubleProperty>(path, pass);                                                                        //__SILP__
         }                                                                                                                     //__SILP__
                                                                                                                               //__SILP__
         public DoubleProperty RemoveDouble(string path) {                                                                     //__SILP__
@@ -550,6 +570,10 @@ namespace angeldnd.dap {
             return AddString(path, null, val);                                                                                //__SILP__
         }                                                                                                                     //__SILP__
                                                                                                                               //__SILP__
+        public StringProperty RemoveString(string path, Object pass) {                                                        //__SILP__
+            return Remove<StringProperty>(path, pass);                                                                        //__SILP__
+        }                                                                                                                     //__SILP__
+                                                                                                                              //__SILP__
         public StringProperty RemoveString(string path) {                                                                     //__SILP__
             return Remove<StringProperty>(path);                                                                              //__SILP__
         }                                                                                                                     //__SILP__
@@ -651,6 +675,10 @@ namespace angeldnd.dap {
                                                                                                                         //__SILP__
         public DataProperty AddData(string path, Data val) {                                                            //__SILP__
             return AddData(path, null, val);                                                                            //__SILP__
+        }                                                                                                               //__SILP__
+                                                                                                                        //__SILP__
+        public DataProperty RemoveData(string path, Object pass) {                                                      //__SILP__
+            return Remove<DataProperty>(path, pass);                                                                    //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
         public DataProperty RemoveData(string path) {                                                                   //__SILP__
