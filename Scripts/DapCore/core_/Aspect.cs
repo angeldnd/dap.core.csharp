@@ -13,6 +13,11 @@ namespace angeldnd.dap {
         void OnRemoved();
     }
 
+    public interface SecurableAspect : Aspect {
+        bool Secured { get; }
+        bool SetPass(Object pass);
+    }
+
     public abstract class BaseAspect : Aspect {
         //SILP: DAPOBJECT_MIXIN()
         public virtual string Type {                                  //__SILP__
@@ -159,6 +164,57 @@ namespace angeldnd.dap {
             }                                                                                         //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
+    }
+
+    public abstract class BaseSecurableAspect : BaseAspect, SecurableAspect {
+        private static readonly Guid OPEN_PASS = Guid.NewGuid();
+
+        private Object _Pass = null;
+        protected Object Pass {
+            get { return _Pass; }
+        }
+
+        public bool Secured {
+            get {
+                if (_Pass == null) return false;
+                if (OPEN_PASS.Equals(_Pass)) return false;
+                return true;
+            }
+        }
+
+        public bool SetPass(Object pass) {
+            /*
+             * The OPEN_PASS trick is to set the pass, so it can't
+             * be set in the future, but it's "open", any pass can
+             * pass the check.
+             */
+            if (_Pass == null) {
+                if (pass == null) {
+                    _Pass = OPEN_PASS;
+                } else {
+                    _Pass = pass;
+                }
+                return true;
+            } else if (_Pass == pass) {
+                return true;
+            } else if (OPEN_PASS.Equas(_Pass) && (pass == null)) {
+                return true;
+            } else if (_Pass.Equals(pass)) {
+                return true;
+            }
+            Error("SetPass Failed: {0} -> {1}", _Pass, pass);
+            return false;
+        }
+
+        protected bool CheckPass(Object pass) {
+            if (_Pass == null) return true;
+            if (_Pass == pass) return true;
+            if (OPEN_PASS.Equals(_Pass)) return true;
+            if (_Pass.Equals(pass)) return true;
+
+            Error("Invalid Pass: _Pass = {0}, pass = {1}", _Pass, pass);
+            return false;
+        }
     }
 
     public abstract class EntityAspect : Entity, Aspect {

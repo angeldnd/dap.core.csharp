@@ -74,20 +74,25 @@ namespace angeldnd.dap {
         }
     }
 
-    public class Handler : BaseAspect {
+    public class Handler : BaseSecurableAspect {
         private RequestHandler _Handler = null;
 
         public bool IsEmpty {
             get { return _Handler == null; }
         }
 
-        public bool Setup(RequestHandler handler) {
+        public bool Setup(Object pass, RequestHandler handler) {
             if (_Handler == null) {
+                if (!SetPass(pass)) return false;
                 _Handler = handler;
                 return true;
             }
             Error("Alread Setup: {0} -> {1}", _Handler, handler);
             return false;
+        }
+
+        public bool Setup(RequestHandler handler) {
+            return Setup(Pass, handler);
         }
 
         //SILP: DECLARE_LIST(RequestChecker, checker, RequestChecker, _RequestCheckers)
@@ -177,7 +182,9 @@ namespace angeldnd.dap {
             return false;                                                                       //__SILP__
         }                                                                                       //__SILP__
                                                                                                 //__SILP__
-        public Data HandleRequest(Data req) {
+        public Data HandleRequest(Object pass, Data req) {
+            if (!CheckPass(pass)) return null;
+
             if (_Handler == null) return null;
             if (_RequestCheckers != null) {
                 for (int i = 0; i < _RequestCheckers.Count; i++) {
@@ -201,6 +208,10 @@ namespace angeldnd.dap {
                 }
             }
             return res;
+        }
+
+        public Data HandleRequest(Data req) {
+            return HandleRequest(null, req);
         }
     }
 }

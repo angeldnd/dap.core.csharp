@@ -55,6 +55,10 @@ namespace angeldnd.dap {
             return Channels.FireEvent(channelPath, evt);
         }
 
+        public bool FireEvent(Object pass, string channelPath, Data evt) {
+            return Channels.FireEvent(pass, channelPath, evt);
+        }
+
         public Channel GetChannel(string channelPath) {
             return Channels.GetChannel(channelPath);
         }
@@ -63,8 +67,16 @@ namespace angeldnd.dap {
             return Channels.AddChannel(channelPath);
         }
 
+        public Channel AddChannel(string channelPath, Object pass) {
+            return Channels.AddChannel(channelPath, pass);
+        }
+
         public Data HandleRequest(string handlerPath, Data req) {
             return Handlers.HandleRequest(handlerPath, req);
+        }
+
+        public Data HandleRequest(Object pass, string handlerPath, Data req) {
+            return Handlers.HandleRequest(pass, handlerPath, req);
         }
 
         public Handler GetHandler(string handlerPath) {
@@ -73,6 +85,10 @@ namespace angeldnd.dap {
 
         public Handler AddHandler(string handlerPath) {
             return Handlers.AddHandler(handlerPath);
+        }
+
+        public Handler AddHandler(string handlerPath, Object pass) {
+            return Handlers.AddHandler(handlerPath, pass);
         }
 
         public bool HasVar(string varPath) {

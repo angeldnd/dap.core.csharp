@@ -7,8 +7,28 @@ namespace angeldnd.dap {
             return Get<Handler>(handlerPath);
         }
 
+        public Handler AddHandler(string handlerPath, Object pass) {
+            Handler handler = Add<Handler>(handlerPath);
+            if (handler != null) {
+                handler.SetPass(pass);
+            }
+            return handler;
+        }
+
         public Handler AddHandler(string handlerPath) {
-            return Add<Handler>(handlerPath);
+            return AddHandler(handlerPath, null);
+        }
+
+        public Data HandleRequest(Object pass, string handlerPath, Data req) {
+            Handler handler = Get<Handler>(handlerPath);
+            if (handler != null) {
+                return handler.HandleRequest(pass, req);
+            }
+            return null;
+        }
+
+        public Data HandleRequest(string handlerPath, Data req) {
+            return HandleRequest(null, handlerPath, req);
         }
 
         //SILP: ADD_REMOVE_HELPER(RequestChecker, handlerPath, handler, Handler, RequestChecker, checker, RequestChecker)
@@ -74,13 +94,5 @@ namespace angeldnd.dap {
             return false;                                                                    //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
-
-        public Data HandleRequest(string handlerPath, Data req) {
-            Handler handler = Get<Handler>(handlerPath);
-            if (handler != null) {
-                return handler.HandleRequest(req);
-            }
-            return null;
-        }
     }
 }

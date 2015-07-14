@@ -38,7 +38,7 @@ namespace angeldnd.dap {
         }
     }
 
-    public class Channel : BaseAspect {
+    public class Channel : BaseSecurableAspect {
         //SILP: DECLARE_LIST(EventChecker, listener, EventChecker, _EventCheckers)
         protected List<EventChecker> _EventCheckers = null;                         //__SILP__
                                                                                     //__SILP__
@@ -97,7 +97,9 @@ namespace angeldnd.dap {
             return false;                                                              //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
-        public bool FireEvent(Data evt) {
+        public bool FireEvent(Object pass, Data evt) {
+            if (!CheckPass(pass)) return false;
+
             if (_EventCheckers != null) {
                 for (int i = 0; i < _EventCheckers.Count; i++) {
                     if (!_EventCheckers[i].IsValidEvent(Path, evt)) {
@@ -112,6 +114,10 @@ namespace angeldnd.dap {
             }
             AdvanceRevision();
             return true;
+        }
+
+        public bool FireEvent(Data evt) {
+            return FireEvent(null, evt);
         }
     }
 }
