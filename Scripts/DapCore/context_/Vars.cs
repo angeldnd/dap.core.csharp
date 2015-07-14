@@ -4,8 +4,12 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public class Vars : EntityAspect {
         public Var<T> AddVar<T>(string path, T val) {
+            return AddVar<T>(path, null, val);
+        }
+
+        public Var<T> AddVar<T>(string path, Object pass, T val) {
             Var<T> result = Add<Var<T>>(path);
-            if (result != null && !result.Setup(val)) {
+            if (result != null && !result.Setup(pass, val)) {
                 Remove<Var<T>>(path);
                 result = null;
             }
@@ -41,9 +45,13 @@ namespace angeldnd.dap {
         }
 
         public bool SetValue<T>(string path, T val) {
+            return SetValue<T>(path, null, val);
+        }
+
+        public bool SetValue<T>(string path, Object pass, T val) {
             Var<T> v = GetVar<T>(path);
             if (v != null) {
-                return v.SetValue(val);
+                return v.SetValue(pass, val);
             }
             return false;
         }

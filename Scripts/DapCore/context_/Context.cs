@@ -96,10 +96,14 @@ namespace angeldnd.dap {
         }
 
         public bool SetVarValue<T>(string varPath, T v) {
+            return SetVarValue<T>(varPath, null, v);
+        }
+
+        public bool SetVarValue<T>(string varPath, Object pass, T v) {
             if (Vars.HasVar<T>(varPath)) {
-                return Vars.SetValue<T>(varPath, v);
+                return Vars.SetValue<T>(varPath, pass, v);
             } else {
-                return Vars.AddVar<T>(varPath, v) != null;
+                return Vars.AddVar<T>(varPath, pass, v) != null;
             }
         }
 
@@ -111,7 +115,7 @@ namespace angeldnd.dap {
             return GetVarValue<T>(varPath, default(T));
         }
 
-        public bool HasVar(string varsPath, string varPath) {
+        public bool HasVarsVar(string varsPath, string varPath) {
             Vars vars = Get<Vars>(varsPath);
             if (vars == null) {
                 return vars.Has(varPath);
@@ -119,27 +123,35 @@ namespace angeldnd.dap {
             return false;
         }
 
-        public bool SetVarValue<T>(string varsPath, string varPath, T v) {
+        public bool SetVarsVarValue<T>(string varsPath, string varPath, T v) {
+            return SetVarsVarValue<T>(varsPath, varPath, null, v);
+        }
+
+        public bool SetVarsVarValue<T>(string varsPath, string varPath, Object pass, T v) {
             Vars vars = Get<Vars>(varsPath);
             if (vars == null) {
                 vars = Add<Vars>(varsPath);
             }
             if (vars != null) {
                 if (vars.HasVar<T>(varPath)) {
-                    return vars.SetValue<T>(varPath, v);
+                    return vars.SetValue<T>(varPath, pass, v);
                 } else {
-                    return vars.AddVar<T>(varPath, v) != null;
+                    return vars.AddVar<T>(varPath, pass, v) != null;
                 }
             }
             return false;
         }
 
-        public T GetVarValue<T>(string varsPath, string varPath, T defaultValue) {
+        public T GetVarsVarValue<T>(string varsPath, string varPath, T defaultValue) {
             Vars vars = Get<Vars>(varsPath);
             if (vars != null) {
                 return vars.GetValue<T>(varPath, defaultValue);
             }
             return defaultValue;
+        }
+
+        public T GetVarsVarValue<T>(string varsPath, string varPath) {
+            return GetVarsVarValue<T>(varsPath, varPath, default(T));
         }
 
         //SILP: CONTEXT_PROPERTIES_HELPER(Bool, bool)
