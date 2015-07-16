@@ -357,6 +357,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Critical(string format, params object[] values) {                                 //__SILP__
+            Log.Source = this;                                                                        //__SILP__
             if (DebugMode) {                                                                          //__SILP__
                 _DebugLogger.Critical(                                                                //__SILP__
                     _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));      //__SILP__
@@ -366,6 +367,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Error(string format, params object[] values) {                                    //__SILP__
+            Log.Source = this;                                                                        //__SILP__
             if (DebugMode) {                                                                          //__SILP__
                 _DebugLogger.Error(                                                                   //__SILP__
                     _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));      //__SILP__
@@ -375,6 +377,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Info(string format, params object[] values) {                                     //__SILP__
+            Log.Source = this;                                                                        //__SILP__
             if (DebugMode) {                                                                          //__SILP__
                 _DebugLogger.LogWithPatterns(LoggerConsts.INFO, DebugPatterns,                        //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
@@ -384,6 +387,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Debug(string format, params object[] values) {                                    //__SILP__
+            Log.Source = this;                                                                        //__SILP__
             if (DebugMode) {                                                                          //__SILP__
                 _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, DebugPatterns,                       //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__

@@ -24,7 +24,7 @@ namespace angeldnd.dap {
      * The one with highest priority will be selected.
      * The reason to use this trick is to have a working log provider at all time
      *
-    [DapPriority(1)]
+    [DapPriority(2)]
     public class TestLogProvider : FileLogProvider {
         public static bool SetupLogging() {
             Log.Provider = new TestLogProvider("dap", "init", -1, true);
@@ -38,6 +38,8 @@ namespace angeldnd.dap {
     }
 
     public class Log {
+        public static object Source = null;
+
         public static LogProvider Provider = null;
 
         public static void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {

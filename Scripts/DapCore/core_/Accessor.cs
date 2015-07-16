@@ -1,8 +1,21 @@
 using System;
 
 namespace angeldnd.dap {
-    public abstract class Accessor : Logger {
+    public interface Accessor : Logger {
+        Entity Entity { get; }
+    }
+
+    public abstract class BaseAccessor : Accessor {
         public abstract Entity Entity { get; }
+        protected Object _Source;
+
+        public BaseAccessor() {
+            _Source = this;
+        }
+
+        protected BaseAccessor(Object source) {
+            _Source = source;
+        }
 
         public virtual string GetLogPrefix() {
             if (Entity != null) {
@@ -12,7 +25,7 @@ namespace angeldnd.dap {
             }
         }
 
-        //SILP: ACCESSOR_LOG_MIXIN()
+        //SILP: ACCESSOR_LOG_MIXIN(_Source, Entity)
         private DebugLogger _DebugLogger = DebugLogger.Instance;                                      //__SILP__
                                                                                                       //__SILP__
         public bool DebugMode {                                                                       //__SILP__
@@ -24,6 +37,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Critical(string format, params object[] values) {                                 //__SILP__
+            Log.Source = _Source;                                                                     //__SILP__
             if (DebugMode) {                                                                          //__SILP__
                 _DebugLogger.Critical(                                                                //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
@@ -33,6 +47,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Error(string format, params object[] values) {                                    //__SILP__
+            Log.Source = _Source;                                                                     //__SILP__
             if (DebugMode) {                                                                          //__SILP__
                 _DebugLogger.Error(                                                                   //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
@@ -42,6 +57,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Info(string format, params object[] values) {                                     //__SILP__
+            Log.Source = _Source;                                                                     //__SILP__
             if (DebugMode) {                                                                          //__SILP__
                 _DebugLogger.LogWithPatterns(LoggerConsts.INFO, Entity.DebugPatterns,                 //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
@@ -51,6 +67,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Debug(string format, params object[] values) {                                    //__SILP__
+            Log.Source = _Source;                                                                     //__SILP__
             if (DebugMode) {                                                                          //__SILP__
                 _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, Entity.DebugPatterns,                //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
@@ -61,33 +78,40 @@ namespace angeldnd.dap {
                                                                                                       //__SILP__
     }
 
-    public class Accessor<T> : Accessor where T : Entity {
-        private T _Target = null;
-        public T Target {
-            get { return _Target; }
+    public class ProxyAccessor<T> : BaseAccessor where T : Entity {
+        private readonly bool _Sticky;
+
+        public ProxyAccessor(bool sticky) {
+            _Sticky = sticky;
         }
 
         public override Entity Entity {
             get { return _Target; }
         }
 
-        private bool _Inited = false;
-        public bool Inited {
-            get { return _Inited; }
+        public Object Source {
+            get { return _Source; }
         }
 
-        public bool Init(T target) {
-            if (_Inited) {
-                Error("Already Inited: {0}, {1}", _Target, target);
-                return false;
+        private T _Target = null;
+        public T Target {
+            get { return _Target; }
+        }
+
+        public bool Init(Object source, T target) {
+            if (_Target == null && target != null) {
+                _Source = source;
+                _Target = target;
+                return true;
+            } else if (!_Sticky) {
+                _Source = source;
+                _Target = target;
+                return true;
+            } else {
+                Error("Init: _Sticky = {0}, _Source = {1}, _Target = {2}, source = {3}, target = {4}",
+                        _Sticky, _Source, _Target, source, target);
             }
-            if (target == null) {
-                Error("Invalid target: {0}", target);
-                return false;
-            }
-            _Target = target;
-            _Inited = true;
-            return true;
+            return false;
         }
     }
 }

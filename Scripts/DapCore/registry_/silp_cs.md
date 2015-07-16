@@ -16,21 +16,38 @@ public string RevPath {
     }
 }
 
-private bool _Inited = false;
 public bool Inited {
-    get { return _Inited; }
+    get { return _Entity != null; }
 }
 
 public bool Init(Entity entity, string path) {
-    if (_Inited) return false;
-    if (entity == null || string.IsNullOrEmpty(path)) return false;
+    if (_Entity != null) {
+        Error("Already Inited: {0} -> {1}, {2}", _Entity, entity, path);
+        return false;
+    }
+    if (entity == null) {
+        Error("Invalid Entity: {0}, {1}", entity, path);
+        return false;
+    }
+    if (string.IsNullOrEmpty(path)) {
+        Error("Invalid Path: {0}, {1}", entity, path);
+        return false;
+    }
 
     _Entity = entity;
     _Path = path;
-    _Inited = true;
     return true;
 }
 
 ```
 
-
+# ASPECT_LOG_MIXIN(virtualOrOverride) #
+```C#
+public ${virtualOrOverride} string GetLogPrefix() {
+    if (_Entity != null) {
+        return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);
+    } else {
+        return string.Format("[] [{0}] [{1}] ", GetType().Name, RevPath);
+    }
+}
+```
