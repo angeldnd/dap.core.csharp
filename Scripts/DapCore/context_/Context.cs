@@ -31,8 +31,8 @@ namespace angeldnd.dap {
             get { return ContextConsts.TypeContext; }
         }
 
-        private Object _Pass = new Pass();
-        protected Object Pass {
+        private Pass _Pass = new Pass();
+        protected Pass Pass {
             get { return _Pass; }
         }
 
@@ -208,42 +208,42 @@ namespace angeldnd.dap {
             return TakeVarsVarValue<T>(varsPath, varPath, null, default(T));
         }
 
-        //SILP:CONTEXT_DEPOSIT_WITHDRAW(PropertyPass, Object, ContextConsts.VarsPropertyPasses, passValue)
-        public Object DepositPropertyPass(string key, Pass passValue) {                      //__SILP__
-            if (!SetVarsVarValue<Object>(ContextConsts.VarsPropertyPasses, key, passValue)) {  //__SILP__
-                Error("DepositPropertyPass Failed {0}", key);                                  //__SILP__
-            }                                                                                  //__SILP__
-            return passValue;                                                                  //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        public Object WithdrawPropertyPass(string key) {                                       //__SILP__
-            return TakeVarsVarValue<Object>(ContextConsts.VarsPropertyPasses, key);            //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        //SILP:CONTEXT_DEPOSIT_WITHDRAW(ChannelPass, Object, ContextConsts.VarsChannelPasses, passValue)
-        public Object DepositChannelPass(string key, Pass passValue) {                      //__SILP__
-            if (!SetVarsVarValue<Object>(ContextConsts.VarsChannelPasses, key, passValue)) {  //__SILP__
-                Error("DepositChannelPass Failed {0}", key);                                  //__SILP__
-            }                                                                                 //__SILP__
-            return passValue;                                                                 //__SILP__
-        }                                                                                     //__SILP__
-                                                                                              //__SILP__
-        public Object WithdrawChannelPass(string key) {                                       //__SILP__
-            return TakeVarsVarValue<Object>(ContextConsts.VarsChannelPasses, key);            //__SILP__
-        }                                                                                     //__SILP__
-                                                                                              //__SILP__
-        //SILP:CONTEXT_DEPOSIT_WITHDRAW(HandlerPass, Object, ContextConsts.VarsHandlerPasses, passValue)
-        public Object DepositHandlerPass(string key, Pass passValue) {                      //__SILP__
-            if (!SetVarsVarValue<Object>(ContextConsts.VarsHandlerPasses, key, passValue)) {  //__SILP__
-                Error("DepositHandlerPass Failed {0}", key);                                  //__SILP__
-            }                                                                                 //__SILP__
-            return passValue;                                                                 //__SILP__
-        }                                                                                     //__SILP__
-                                                                                              //__SILP__
-        public Object WithdrawHandlerPass(string key) {                                       //__SILP__
-            return TakeVarsVarValue<Object>(ContextConsts.VarsHandlerPasses, key);            //__SILP__
-        }                                                                                     //__SILP__
-                                                                                              //__SILP__
+        //SILP:CONTEXT_DEPOSIT_WITHDRAW(PropertyPass, Pass, ContextConsts.VarsPropertyPasses, passValue)
+        public Pass DepositPropertyPass(string key, Pass passValue) {                        //__SILP__
+            if (!SetVarsVarValue<Pass>(ContextConsts.VarsPropertyPasses, key, passValue)) {  //__SILP__
+                Error("DepositPropertyPass Failed {0}", key);                                //__SILP__
+            }                                                                                //__SILP__
+            return passValue;                                                                //__SILP__
+        }                                                                                    //__SILP__
+                                                                                             //__SILP__
+        public Pass WithdrawPropertyPass(string key) {                                       //__SILP__
+            return TakeVarsVarValue<Pass>(ContextConsts.VarsPropertyPasses, key);            //__SILP__
+        }                                                                                    //__SILP__
+                                                                                             //__SILP__
+        //SILP:CONTEXT_DEPOSIT_WITHDRAW(ChannelPass, Pass, ContextConsts.VarsChannelPasses, passValue)
+        public Pass DepositChannelPass(string key, Pass passValue) {                        //__SILP__
+            if (!SetVarsVarValue<Pass>(ContextConsts.VarsChannelPasses, key, passValue)) {  //__SILP__
+                Error("DepositChannelPass Failed {0}", key);                                //__SILP__
+            }                                                                               //__SILP__
+            return passValue;                                                               //__SILP__
+        }                                                                                   //__SILP__
+                                                                                            //__SILP__
+        public Pass WithdrawChannelPass(string key) {                                       //__SILP__
+            return TakeVarsVarValue<Pass>(ContextConsts.VarsChannelPasses, key);            //__SILP__
+        }                                                                                   //__SILP__
+                                                                                            //__SILP__
+        //SILP:CONTEXT_DEPOSIT_WITHDRAW(HandlerPass, Pass, ContextConsts.VarsHandlerPasses, passValue)
+        public Pass DepositHandlerPass(string key, Pass passValue) {                        //__SILP__
+            if (!SetVarsVarValue<Pass>(ContextConsts.VarsHandlerPasses, key, passValue)) {  //__SILP__
+                Error("DepositHandlerPass Failed {0}", key);                                //__SILP__
+            }                                                                               //__SILP__
+            return passValue;                                                               //__SILP__
+        }                                                                                   //__SILP__
+                                                                                            //__SILP__
+        public Pass WithdrawHandlerPass(string key) {                                       //__SILP__
+            return TakeVarsVarValue<Pass>(ContextConsts.VarsHandlerPasses, key);            //__SILP__
+        }                                                                                   //__SILP__
+                                                                                            //__SILP__
 
         //SILP: CONTEXT_PROPERTIES_HELPER(Bool, bool)
         public BoolProperty AddBool(string path, Pass pass, bool val) {  //__SILP__
