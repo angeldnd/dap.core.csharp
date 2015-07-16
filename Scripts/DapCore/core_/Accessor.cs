@@ -60,4 +60,34 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
     }
+
+    public class Accessor<T> : Accessor where T : Entity {
+        private T _Target = null;
+        public T Target {
+            get { return _Target; }
+        }
+
+        public override Entity Entity {
+            get { return _Target; }
+        }
+
+        private bool _Inited = false;
+        public bool Inited {
+            get { return _Inited; }
+        }
+
+        public bool Init(T target) {
+            if (_Inited) {
+                Error("Already Inited: {0}, {1}", _Target, target);
+                return false;
+            }
+            if (target == null) {
+                Error("Invalid target: {0}", target);
+                return false;
+            }
+            _Target = target;
+            _Inited = true;
+            return true;
+        }
+    }
 }
