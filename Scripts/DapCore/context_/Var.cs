@@ -21,7 +21,7 @@ namespace angeldnd.dap {
 
         private bool _Setup = false;
 
-        public virtual bool Setup(Object pass, T defaultValue) {
+        public virtual bool Setup(Pass pass, T defaultValue) {
             if (!_Setup) {
                 if (!SetPass(pass)) return false;
                 _Setup = true;
@@ -71,7 +71,7 @@ namespace angeldnd.dap {
             return false;                                                     //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
-        public virtual bool SetValue(Object pass, T newValue) {
+        public virtual bool SetValue(Pass pass, T newValue) {
             if (!_Setup) Setup();
             if (!CheckPass(pass)) return false;
 

@@ -7,7 +7,7 @@ namespace angeldnd.dap {
             return Get<Handler>(handlerPath);
         }
 
-        public Handler AddHandler(string handlerPath, Object pass) {
+        public Handler AddHandler(string handlerPath, Pass pass) {
             Handler handler = Add<Handler>(handlerPath);
             if (handler != null) {
                 handler.SetPass(pass);
@@ -19,7 +19,7 @@ namespace angeldnd.dap {
             return AddHandler(handlerPath, null);
         }
 
-        public Data HandleRequest(string handlerPath, Object pass, Data req) {
+        public Data HandleRequest(string handlerPath, Pass pass, Data req) {
             Handler handler = Get<Handler>(handlerPath);
             if (handler != null) {
                 return handler.HandleRequest(pass, req);

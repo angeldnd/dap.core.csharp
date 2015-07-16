@@ -7,7 +7,7 @@ namespace angeldnd.dap {
             return AddVar<T>(path, null, val);
         }
 
-        public Var<T> AddVar<T>(string path, Object pass, T val) {
+        public Var<T> AddVar<T>(string path, Pass pass, T val) {
             Var<T> result = Add<Var<T>>(path);
             if (result != null && !result.Setup(pass, val)) {
                 Remove<Var<T>>(path);
@@ -20,7 +20,7 @@ namespace angeldnd.dap {
             return Remove<Var<T>>(path);
         }
 
-        public Var<T> RemoveVar<T>(string path, Object pass) {
+        public Var<T> RemoveVar<T>(string path, Pass pass) {
             return Remove<Var<T>>(path, pass);
         }
 
@@ -52,7 +52,7 @@ namespace angeldnd.dap {
             return SetValue<T>(path, null, val);
         }
 
-        public bool SetValue<T>(string path, Object pass, T val) {
+        public bool SetValue<T>(string path, Pass pass, T val) {
             Var<T> v = GetVar<T>(path);
             if (v != null) {
                 return v.SetValue(pass, val);

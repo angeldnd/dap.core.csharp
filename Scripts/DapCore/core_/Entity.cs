@@ -233,7 +233,7 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public T Add<T>(string path, Object pass) where T : class, SecurableAspect {
+        public T Add<T>(string path, Pass pass) where T : class, SecurableAspect {
             T aspect = Add<T>(path);
             if (aspect != null) {
                 if (!aspect.SetPass(pass)) {
@@ -248,7 +248,7 @@ namespace angeldnd.dap {
             return Remove<T>(path, null);
         }
 
-        public T Remove<T>(string path, Object pass) where T : class, Aspect {
+        public T Remove<T>(string path, Pass pass) where T : class, Aspect {
             T aspect = Get<T>(path);
             if (aspect != null) {
                 if (aspect is SecurableAspect) {
@@ -274,7 +274,7 @@ namespace angeldnd.dap {
             return RemoveByChecker<T>(checker, null);
         }
 
-        public List<T> RemoveByChecker<T>(CheckAspect<T> checker, Object pass) where T : class, Aspect {
+        public List<T> RemoveByChecker<T>(CheckAspect<T> checker, Pass pass) where T : class, Aspect {
             List<T> removed = null;
             List<T> matched = All<T>();
             if (matched != null) {

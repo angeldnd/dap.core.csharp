@@ -1,6 +1,6 @@
 # CONTEXT_PROPERTIES_HELPER(type, cs_type) #
 ```C#
-public ${type}Property Add${type}(string path, Object pass, ${cs_type} val) {
+public ${type}Property Add${type}(string path, Pass pass, ${cs_type} val) {
     return Properties.Add${type}(path, pass, val);
 }
 
@@ -8,12 +8,12 @@ public ${type}Property Add${type}(string path, ${cs_type} val) {
     return Properties.Add${type}(path, val);
 }
 
-public ${type}Property Remove${type}(string path) {
-    return Properties.Remove${type}(path);
+public ${type}Property Remove${type}(string path, Pass pass) {
+    return Properties.Remove${type}(path, pass);
 }
 
-public ${type}Property Remove${type}(string path, Object pass) {
-    return Properties.Remove${type}(path, pass);
+public ${type}Property Remove${type}(string path) {
+    return Properties.Remove${type}(path);
 }
 
 public bool Is${type}(string path) {
@@ -28,12 +28,12 @@ public ${cs_type} Get${type}(string path, ${cs_type} defaultValue) {
     return Properties.Get${type}(path, defaultValue);
 }
 
-public bool Set${type}(string path, ${cs_type} value) {
-    return Properties.Set${type}(path, value);
+public bool Set${type}(string path, Pass pass, ${cs_type} value) {
+    return Properties.Set${type}(path, pass, value);
 }
 
-public bool Set${type}(string path, Object pass, ${cs_type} value) {
-    return Properties.Set${type}(path, pass, value);
+public bool Set${type}(string path, ${cs_type} value) {
+    return Properties.Set${type}(path, value);
 }
 
 ```
@@ -83,7 +83,7 @@ public int ${name}Count {
     }
 }
 
-public virtual bool Add${name}(Object pass, ${cs_type} ${var_name}) {
+public virtual bool Add${name}(Pass pass, ${cs_type} ${var_name}) {
     if (!CheckPass(pass)) return false;
     if (${list_name} == null) ${list_name} = new List<${cs_type}>();
     if (!${list_name}.Contains(${var_name})) {
@@ -97,7 +97,7 @@ public bool Add${name}(${cs_type} ${var_name}) {
     return Add${name}(null, ${var_name});
 }
 
-public virtual bool Remove${name}(Object pass, ${cs_type} ${var_name}) {
+public virtual bool Remove${name}(Pass pass, ${cs_type} ${var_name}) {
     if (!CheckPass(pass)) return false;
     if (${list_name} != null && ${list_name}.Contains(${var_name})) {
         ${list_name}.Remove(${var_name});
@@ -138,7 +138,7 @@ public bool Remove${name}(string ${a_path}, ${l_type} ${l_var}) {
 
 # PROPERTIES_HELPER(type, cs_type) #
 ```C#
-public ${type}Property Add${type}(string path, Object pass, ${cs_type} val) {
+public ${type}Property Add${type}(string path, Pass pass, ${cs_type} val) {
     ${type}Property v = Add<${type}Property>(path);
     if (v != null && !v.Setup(pass, val)) {
         Remove<${type}Property>(path);
@@ -151,7 +151,7 @@ public ${type}Property Add${type}(string path, ${cs_type} val) {
     return Add${type}(path, null, val);
 }
 
-public ${type}Property Remove${type}(string path, Object pass) {
+public ${type}Property Remove${type}(string path, Pass pass) {
     return Remove<${type}Property>(path, pass);
 }
 
@@ -159,28 +159,40 @@ public ${type}Property Remove${type}(string path) {
     return Remove<${type}Property>(path);
 }
 
-public bool Add${type}ValueChecker(string path, ValueChecker<${cs_type}> checker) {
+public bool Add${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_type}> checker) {
      ${type}Property p = Get<${type}Property>(path);
      if (p != null) {
-        return p.AddValueChecker(checker);
+        return p.AddValueChecker(pass, checker);
      }
      return false;
 }
 
-public bool Remove${type}ValueChecker(string path, ValueChecker<${cs_type}> checker) {
+public bool Add${type}ValueChecker(string path, ValueChecker<${cs_type}> checker) {
+    return Add${type}ValueChecker(path, checker);
+}
+
+public bool Remove${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_type}> checker) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
-        return p.RemoveValueChecker(checker);
+        return p.RemoveValueChecker(pass, checker);
     }
     return false;
 }
 
-public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, ${type}BlockValueChecker.CheckerBlock block) {
+public bool Remove${type}ValueChecker(string path, ValueChecker<${cs_type}> checker) {
+    return Remove${type}ValueChecker(path, checker);
+}
+
+public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, Pass pass, ${type}BlockValueChecker.CheckerBlock block) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
-        return p.AddBlockValueChecker(block);
+        return p.AddBlockValueChecker(pass, block);
     }
     return null;
+}
+
+public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, ${type}BlockValueChecker.CheckerBlock block) {
+    return Add${type}BlockValueChecker(path, block);
 }
 
 public bool Add${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watcher) {
@@ -236,7 +248,7 @@ public bool Set${type}(string path, ${cs_type} val) {
     return false;
 }
 
-public bool Set${type}(string path, Object pass, ${cs_type} val) {
+public bool Set${type}(string path, Pass pass, ${cs_type} val) {
     ${type}Property v = Get<${type}Property>(path);
     if (v != null) {
         return v.SetValue(pass, val);
@@ -285,14 +297,14 @@ public class ${type}Property : Property<${cs_type}> {
         return data.Set${type}(PropertiesConsts.KeyValue, Value);
     }
 
-    public override bool DoDecode(Object pass, Data data) {
+    public override bool DoDecode(Pass pass, Data data) {
         return SetValue(pass, data.Get${type}(PropertiesConsts.KeyValue));
     }
 
     private bool _CheckingValue = false;
     private bool _UpdatingValue = false;
 
-    public override bool SetValue(Object pass, ${cs_type} newVal) {
+    public override bool SetValue(Pass pass, ${cs_type} newVal) {
         if (_CheckingValue) return false;
         if (_UpdatingValue) return false;
 
@@ -324,7 +336,7 @@ public class ${type}Property : Property<${cs_type}> {
         return false;
     }
 
-    public ${type}BlockValueChecker AddBlockValueChecker(Object pass, ${type}BlockValueChecker.CheckerBlock block) {
+    public ${type}BlockValueChecker AddBlockValueChecker(Pass pass, ${type}BlockValueChecker.CheckerBlock block) {
         ${type}BlockValueChecker checker = new ${type}BlockValueChecker(block);
         if (AddValueChecker(pass, checker)) {
             return checker;

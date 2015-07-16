@@ -81,7 +81,7 @@ namespace angeldnd.dap {
             get { return _Handler == null; }
         }
 
-        public bool Setup(Object pass, RequestHandler handler) {
+        public bool Setup(Pass pass, RequestHandler handler) {
             if (_Handler == null) {
                 if (!SetPass(pass)) return false;
                 _Handler = handler;
@@ -107,7 +107,7 @@ namespace angeldnd.dap {
             }                                                                             //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public virtual bool AddRequestChecker(Object pass, RequestChecker checker) {      //__SILP__
+        public virtual bool AddRequestChecker(Pass pass, RequestChecker checker) {        //__SILP__
             if (!CheckPass(pass)) return false;                                           //__SILP__
             if (_RequestCheckers == null) _RequestCheckers = new List<RequestChecker>();  //__SILP__
             if (!_RequestCheckers.Contains(checker)) {                                    //__SILP__
@@ -121,7 +121,7 @@ namespace angeldnd.dap {
             return AddRequestChecker(null, checker);                                      //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public virtual bool RemoveRequestChecker(Object pass, RequestChecker checker) {   //__SILP__
+        public virtual bool RemoveRequestChecker(Pass pass, RequestChecker checker) {     //__SILP__
             if (!CheckPass(pass)) return false;                                           //__SILP__
             if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {         //__SILP__
                 _RequestCheckers.Remove(checker);                                         //__SILP__
@@ -192,7 +192,7 @@ namespace angeldnd.dap {
             return false;                                                                       //__SILP__
         }                                                                                       //__SILP__
                                                                                                 //__SILP__
-        public Data HandleRequest(Object pass, Data req) {
+        public Data HandleRequest(Pass pass, Data req) {
             if (!CheckPass(pass)) return null;
 
             if (_Handler == null) return null;

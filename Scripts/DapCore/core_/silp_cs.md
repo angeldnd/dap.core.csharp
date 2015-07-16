@@ -303,8 +303,8 @@ public void Debug(string format, params object[] values) {
 ```C#
 private static readonly Pass OPEN_PASS = new Pass();
 
-private Object _Pass = null;
-protected Object Pass {
+private Pass _Pass = null;
+protected Pass Pass {
     get { return _Pass; }
 }
 
@@ -316,7 +316,7 @@ public bool Secured {
     }
 }
 
-public bool SetPass(Object pass) {
+public bool SetPass(Pass pass) {
     /*
         * The OPEN_PASS trick is to set the pass, so it can't
         * be set in the future, but it's "open", any pass can
@@ -340,7 +340,7 @@ public bool SetPass(Object pass) {
     return false;
 }
 
-public bool CheckPass(Object pass) {
+public bool CheckPass(Pass pass) {
     if (_Pass == null) return true;
     if (_Pass == pass) return true;
     if (OPEN_PASS == _Pass) return true;

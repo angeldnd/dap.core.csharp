@@ -7,7 +7,7 @@ namespace angeldnd.dap {
             return Get<Channel>(channelPath);
         }
 
-        public Channel AddChannel(string channelPath, Object pass) {
+        public Channel AddChannel(string channelPath, Pass pass) {
             Channel channel = Add<Channel>(channelPath);
             if (channel != null) {
                 channel.SetPass(pass);
@@ -19,7 +19,7 @@ namespace angeldnd.dap {
             return AddChannel(channelPath, null);
         }
 
-        public bool FireEvent(string channelPath, Object pass, Data evt) {
+        public bool FireEvent(string channelPath, Pass pass, Data evt) {
             Channel channel = Get<Channel>(channelPath);
             if (channel != null) {
                 return channel.FireEvent(pass, evt);
