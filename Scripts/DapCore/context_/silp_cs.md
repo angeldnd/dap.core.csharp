@@ -70,6 +70,48 @@ public virtual bool Remove${name}(${cs_type} ${var_name}) {
 
 ```
 
+# DECLARE_SECURE_LIST(name, var_name, cs_type, list_name) #
+```C#
+protected List<${cs_type}> ${list_name} = null;
+
+public int ${name}Count {
+    get {
+        if (${list_name} == null) {
+            return 0;
+        }
+        return ${list_name}.Count;
+    }
+}
+
+public virtual bool Add${name}(Object pass, ${cs_type} ${var_name}) {
+    if (!CheckPass(pass)) return false;
+    if (${list_name} == null) ${list_name} = new List<${cs_type}>();
+    if (!${list_name}.Contains(${var_name})) {
+        ${list_name}.Add(${var_name});
+        return true;
+    }
+    return false;
+}
+
+public bool Add${name}(${cs_type} ${var_name}) {
+    return Add${name}(null, ${var_name});
+}
+
+public virtual bool Remove${name}(Object pass, ${cs_type} ${var_name}) {
+    if (!CheckPass(pass)) return false;
+    if (${list_name} != null && ${list_name}.Contains(${var_name})) {
+        ${list_name}.Remove(${var_name});
+        return true;
+    }
+    return false;
+}
+
+public bool Remove${name}(${cs_type} ${var_name}) {
+    return Remove${name}(null, ${var_name});
+}
+
+```
+
 # ADD_REMOVE_HELPER(name, a_path, a_var, a_type, l_name, l_var, l_type) #
 ```C#
 public bool Add${name}(string ${a_path}, ${l_type} ${l_var}) {
@@ -282,12 +324,16 @@ public class ${type}Property : Property<${cs_type}> {
         return false;
     }
 
-    public ${type}BlockValueChecker AddBlockValueChecker(${type}BlockValueChecker.CheckerBlock block) {
+    public ${type}BlockValueChecker AddBlockValueChecker(Object pass, ${type}BlockValueChecker.CheckerBlock block) {
         ${type}BlockValueChecker checker = new ${type}BlockValueChecker(block);
-        if (AddValueChecker(checker)) {
+        if (AddValueChecker(pass, checker)) {
             return checker;
         }
         return null;
+    }
+
+    public ${type}BlockValueChecker AddBlockValueChecker(${type}BlockValueChecker.CheckerBlock block) {
+        return AddBlockValueChecker(null, block);
     }
 
     public ${type}BlockValueWatcher AddBlockValueWatcher(${type}BlockValueWatcher.WatcherBlock block) {

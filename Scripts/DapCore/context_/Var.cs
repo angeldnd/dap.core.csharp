@@ -8,6 +8,7 @@ namespace angeldnd.dap {
 
     public interface Var : SecurableAspect {
         Object GetValue();
+        int VarWatcherCount { get; }
         bool AddVarWatcher(VarWatcher watcher);
         bool RemoveVarWatcher(VarWatcher watcher);
     }

@@ -95,7 +95,7 @@ namespace angeldnd.dap {
             return Setup(Pass, handler);
         }
 
-        //SILP: DECLARE_LIST(RequestChecker, checker, RequestChecker, _RequestCheckers)
+        //SILP: DECLARE_SECURE_LIST(RequestChecker, checker, RequestChecker, _RequestCheckers)
         protected List<RequestChecker> _RequestCheckers = null;                           //__SILP__
                                                                                           //__SILP__
         public int RequestCheckerCount {                                                  //__SILP__
@@ -107,7 +107,8 @@ namespace angeldnd.dap {
             }                                                                             //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public virtual bool AddRequestChecker(RequestChecker checker) {                   //__SILP__
+        public virtual bool AddRequestChecker(Object pass, RequestChecker checker) {      //__SILP__
+            if (!CheckPass(pass)) return false;                                           //__SILP__
             if (_RequestCheckers == null) _RequestCheckers = new List<RequestChecker>();  //__SILP__
             if (!_RequestCheckers.Contains(checker)) {                                    //__SILP__
                 _RequestCheckers.Add(checker);                                            //__SILP__
@@ -116,12 +117,21 @@ namespace angeldnd.dap {
             return false;                                                                 //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public virtual bool RemoveRequestChecker(RequestChecker checker) {                //__SILP__
+        public bool AddRequestChecker(RequestChecker checker) {                           //__SILP__
+            return AddRequestChecker(null, checker);                                      //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public virtual bool RemoveRequestChecker(Object pass, RequestChecker checker) {   //__SILP__
+            if (!CheckPass(pass)) return false;                                           //__SILP__
             if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {         //__SILP__
                 _RequestCheckers.Remove(checker);                                         //__SILP__
                 return true;                                                              //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public bool RemoveRequestChecker(RequestChecker checker) {                        //__SILP__
+            return RemoveRequestChecker(null, checker);                                   //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         //SILP: DECLARE_LIST(RequestListener, listener, RequestListener, _RequestListeners)

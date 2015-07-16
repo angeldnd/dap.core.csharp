@@ -39,35 +39,45 @@ namespace angeldnd.dap {
     }
 
     public class Channel : BaseSecurableAspect {
-        //SILP: DECLARE_LIST(EventChecker, listener, EventChecker, _EventCheckers)
-        protected List<EventChecker> _EventCheckers = null;                         //__SILP__
-                                                                                    //__SILP__
-        public int EventCheckerCount {                                              //__SILP__
-            get {                                                                   //__SILP__
-                if (_EventCheckers == null) {                                       //__SILP__
-                    return 0;                                                       //__SILP__
-                }                                                                   //__SILP__
-                return _EventCheckers.Count;                                        //__SILP__
-            }                                                                       //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public virtual bool AddEventChecker(EventChecker listener) {                //__SILP__
-            if (_EventCheckers == null) _EventCheckers = new List<EventChecker>();  //__SILP__
-            if (!_EventCheckers.Contains(listener)) {                               //__SILP__
-                _EventCheckers.Add(listener);                                       //__SILP__
-                return true;                                                        //__SILP__
-            }                                                                       //__SILP__
-            return false;                                                           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public virtual bool RemoveEventChecker(EventChecker listener) {             //__SILP__
-            if (_EventCheckers != null && _EventCheckers.Contains(listener)) {      //__SILP__
-                _EventCheckers.Remove(listener);                                    //__SILP__
-                return true;                                                        //__SILP__
-            }                                                                       //__SILP__
-            return false;                                                           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
+        //SILP: DECLARE_SECURE_LIST(EventChecker, listener, EventChecker, _EventCheckers)
+        protected List<EventChecker> _EventCheckers = null;                           //__SILP__
+                                                                                      //__SILP__
+        public int EventCheckerCount {                                                //__SILP__
+            get {                                                                     //__SILP__
+                if (_EventCheckers == null) {                                         //__SILP__
+                    return 0;                                                         //__SILP__
+                }                                                                     //__SILP__
+                return _EventCheckers.Count;                                          //__SILP__
+            }                                                                         //__SILP__
+        }                                                                             //__SILP__
+                                                                                      //__SILP__
+        public virtual bool AddEventChecker(Object pass, EventChecker listener) {     //__SILP__
+            if (!CheckPass(pass)) return false;                                       //__SILP__
+            if (_EventCheckers == null) _EventCheckers = new List<EventChecker>();    //__SILP__
+            if (!_EventCheckers.Contains(listener)) {                                 //__SILP__
+                _EventCheckers.Add(listener);                                         //__SILP__
+                return true;                                                          //__SILP__
+            }                                                                         //__SILP__
+            return false;                                                             //__SILP__
+        }                                                                             //__SILP__
+                                                                                      //__SILP__
+        public bool AddEventChecker(EventChecker listener) {                          //__SILP__
+            return AddEventChecker(null, listener);                                   //__SILP__
+        }                                                                             //__SILP__
+                                                                                      //__SILP__
+        public virtual bool RemoveEventChecker(Object pass, EventChecker listener) {  //__SILP__
+            if (!CheckPass(pass)) return false;                                       //__SILP__
+            if (_EventCheckers != null && _EventCheckers.Contains(listener)) {        //__SILP__
+                _EventCheckers.Remove(listener);                                      //__SILP__
+                return true;                                                          //__SILP__
+            }                                                                         //__SILP__
+            return false;                                                             //__SILP__
+        }                                                                             //__SILP__
+                                                                                      //__SILP__
+        public bool RemoveEventChecker(EventChecker listener) {                       //__SILP__
+            return RemoveEventChecker(null, listener);                                //__SILP__
+        }                                                                             //__SILP__
+                                                                                      //__SILP__
         //SILP: DECLARE_LIST(EventListener, listener, EventListener, _EventListeners)
         protected List<EventListener> _EventListeners = null;                          //__SILP__
                                                                                        //__SILP__
