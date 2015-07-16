@@ -244,9 +244,9 @@ public void Debug(string format, params object[] values) {
 ```C#
 public ${virtualOrOverride} string GetLogPrefix() {
     if (_Entity != null) {
-        return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);
+        return string.Format("{0}[{1}] {2} ", _Entity.GetLogPrefix(), GetType().Name, RevPath);
     } else {
-        return string.Format("[] [{0}] [{1}] ", GetType().Name, RevPath);
+        return string.Format("[] [{0}] {1} ", GetType().Name, RevPath);
     }
 }
 ```

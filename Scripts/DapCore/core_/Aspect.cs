@@ -102,13 +102,13 @@ namespace angeldnd.dap {
                                                                       //__SILP__
 
         //SILP: ASPECT_LOG_MIXIN(virtual)
-        public virtual string GetLogPrefix() {                                                             //__SILP__
-            if (_Entity != null) {                                                                         //__SILP__
-                return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
-            } else {                                                                                       //__SILP__
-                return string.Format("[] [{0}] [{1}] ", GetType().Name, RevPath);                          //__SILP__
-            }                                                                                              //__SILP__
-        }                                                                                                  //__SILP__
+        public virtual string GetLogPrefix() {                                                           //__SILP__
+            if (_Entity != null) {                                                                       //__SILP__
+                return string.Format("{0}[{1}] {2} ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
+            } else {                                                                                     //__SILP__
+                return string.Format("[] [{0}] {1} ", GetType().Name, RevPath);                          //__SILP__
+            }                                                                                            //__SILP__
+        }                                                                                                //__SILP__
         //SILP: ACCESSOR_LOG_MIXIN(this, _Entity)
         private DebugLogger _DebugLogger = DebugLogger.Instance;                                      //__SILP__
                                                                                                       //__SILP__
@@ -234,13 +234,13 @@ namespace angeldnd.dap {
         }                                                                         //__SILP__
                                                                                   //__SILP__
         //SILP: ASPECT_LOG_MIXIN(override)
-        public override string GetLogPrefix() {                                                            //__SILP__
-            if (_Entity != null) {                                                                         //__SILP__
-                return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
-            } else {                                                                                       //__SILP__
-                return string.Format("[] [{0}] [{1}] ", GetType().Name, RevPath);                          //__SILP__
-            }                                                                                              //__SILP__
-        }                                                                                                  //__SILP__
+        public override string GetLogPrefix() {                                                          //__SILP__
+            if (_Entity != null) {                                                                       //__SILP__
+                return string.Format("{0}[{1}] {2} ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
+            } else {                                                                                     //__SILP__
+                return string.Format("[] [{0}] {1} ", GetType().Name, RevPath);                          //__SILP__
+            }                                                                                            //__SILP__
+        }                                                                                                //__SILP__
         //SILP: ASPECT_EVENTS_MIXIN()
         public virtual void OnAdded() {}                              //__SILP__
         public virtual void OnRemoved() {}                            //__SILP__

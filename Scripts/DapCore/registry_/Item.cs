@@ -17,13 +17,13 @@ namespace angeldnd.dap {
         }
 
         //SILP: ASPECT_LOG_MIXIN(override)
-        public override string GetLogPrefix() {                                                            //__SILP__
-            if (_Entity != null) {                                                                         //__SILP__
-                return string.Format("{0}[{1}] [{2}] ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
-            } else {                                                                                       //__SILP__
-                return string.Format("[] [{0}] [{1}] ", GetType().Name, RevPath);                          //__SILP__
-            }                                                                                              //__SILP__
-        }                                                                                                  //__SILP__
+        public override string GetLogPrefix() {                                                          //__SILP__
+            if (_Entity != null) {                                                                       //__SILP__
+                return string.Format("{0}[{1}] {2} ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
+            } else {                                                                                     //__SILP__
+                return string.Format("[] [{0}] {1} ", GetType().Name, RevPath);                          //__SILP__
+            }                                                                                            //__SILP__
+        }                                                                                                //__SILP__
 
         //SILP: ASPECT_MIXIN()
         private Entity _Entity = null;                                            //__SILP__
