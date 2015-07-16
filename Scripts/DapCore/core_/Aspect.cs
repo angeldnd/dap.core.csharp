@@ -109,7 +109,7 @@ namespace angeldnd.dap {
                 return string.Format("[] [{0}] {1} ", GetType().Name, RevPath);                          //__SILP__
             }                                                                                            //__SILP__
         }                                                                                                //__SILP__
-        //SILP: ACCESSOR_LOG_MIXIN(this, _Entity)
+        //SILP: ACCESSOR_LOG_MIXIN(this, _Entity, _Entity)
         private DebugLogger _DebugLogger = DebugLogger.Instance;                                      //__SILP__
                                                                                                       //__SILP__
         public bool DebugMode {                                                                       //__SILP__
@@ -143,7 +143,7 @@ namespace angeldnd.dap {
         public void Info(string format, params object[] values) {                                     //__SILP__
             Log.Source = this;                                                                        //__SILP__
             if (DebugMode) {                                                                          //__SILP__
-                _DebugLogger.LogWithPatterns(LoggerConsts.INFO, Entity.DebugPatterns,                 //__SILP__
+                _DebugLogger.LogWithPatterns(LoggerConsts.INFO, _Entity.DebugPatterns,                //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
             } else {                                                                                  //__SILP__
                 Log.Info(GetLogPrefix() + string.Format(format, values));                             //__SILP__
@@ -153,7 +153,7 @@ namespace angeldnd.dap {
         public void Debug(string format, params object[] values) {                                    //__SILP__
             Log.Source = this;                                                                        //__SILP__
             if (DebugMode) {                                                                          //__SILP__
-                _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, Entity.DebugPatterns,                //__SILP__
+                _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, _Entity.DebugPatterns,               //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
             } else {                                                                                  //__SILP__
                 Log.Debug(GetLogPrefix() + string.Format(format, values));                            //__SILP__

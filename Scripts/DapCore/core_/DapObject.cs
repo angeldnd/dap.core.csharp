@@ -7,6 +7,9 @@ namespace angeldnd.dap {
 
         Data Encode();
         bool Decode(Data data);
+
+        bool DebugMode { get; }
+        string GetLogPrefix();
     }
 
     public struct DapObjectConsts {

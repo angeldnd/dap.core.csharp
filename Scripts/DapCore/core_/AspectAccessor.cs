@@ -1,39 +1,39 @@
 using System;
 
 namespace angeldnd.dap {
-    public interface Accessor : Logger {
-        Entity Entity { get; }
+    public interface AspectAccessor : Logger {
+        Aspect Aspect { get; }
     }
 
-    public abstract class BaseAccessor : Accessor {
-        public abstract Entity Entity { get; }
+    public abstract class BaseAspectAccessor : AspectAccessor {
+        public abstract Aspect Aspect { get; }
         protected Object _Source;
 
-        public BaseAccessor() {
+        public BaseAspectAccessor() {
             _Source = this;
         }
 
-        protected BaseAccessor(Object source) {
+        protected BaseAspectAccessor(Object source) {
             _Source = source;
         }
 
         public virtual string GetLogPrefix() {
-            if (Entity != null) {
-                return string.Format("{0}[{1}]", Entity.GetLogPrefix(), GetType().Name);
+            if (Aspect != null) {
+                return string.Format("{0}[{1}]", Aspect.GetLogPrefix(), GetType().Name);
             } else {
                 return string.Format("[] [{0}]", GetType().Name);
             }
         }
 
-        //SILP: ACCESSOR_LOG_MIXIN(_Source, Entity, Entity)
+        //SILP: ACCESSOR_LOG_MIXIN(_Source, Aspect, Aspect.Entity)
         private DebugLogger _DebugLogger = DebugLogger.Instance;                                      //__SILP__
                                                                                                       //__SILP__
         public bool DebugMode {                                                                       //__SILP__
-            get { return Entity != null && Entity.DebugMode; }                                        //__SILP__
+            get { return Aspect != null && Aspect.DebugMode; }                                        //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public bool LogDebug {                                                                        //__SILP__
-            get { return (Entity != null && Entity.LogDebug) || Log.LogDebug; }                       //__SILP__
+            get { return (Aspect != null && Aspect.LogDebug) || Log.LogDebug; }                       //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public void Critical(string format, params object[] values) {                                 //__SILP__
@@ -59,7 +59,7 @@ namespace angeldnd.dap {
         public void Info(string format, params object[] values) {                                     //__SILP__
             Log.Source = _Source;                                                                     //__SILP__
             if (DebugMode) {                                                                          //__SILP__
-                _DebugLogger.LogWithPatterns(LoggerConsts.INFO, Entity.DebugPatterns,                 //__SILP__
+                _DebugLogger.LogWithPatterns(LoggerConsts.INFO, Aspect.Entity.DebugPatterns,          //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
             } else {                                                                                  //__SILP__
                 Log.Info(GetLogPrefix() + string.Format(format, values));                             //__SILP__
@@ -69,7 +69,7 @@ namespace angeldnd.dap {
         public void Debug(string format, params object[] values) {                                    //__SILP__
             Log.Source = _Source;                                                                     //__SILP__
             if (DebugMode) {                                                                          //__SILP__
-                _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, Entity.DebugPatterns,                //__SILP__
+                _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, Aspect.Entity.DebugPatterns,         //__SILP__
                         _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
             } else {                                                                                  //__SILP__
                 Log.Debug(GetLogPrefix() + string.Format(format, values));                            //__SILP__
@@ -78,14 +78,14 @@ namespace angeldnd.dap {
                                                                                                       //__SILP__
     }
 
-    public class ProxyAccessor<T> : BaseAccessor where T : Entity {
+    public class ProxyAspectAccessor<T> : BaseAspectAccessor where T : class, Aspect {
         private readonly bool _Sticky;
 
-        public ProxyAccessor(bool sticky) {
+        public ProxyAspectAccessor(bool sticky) {
             _Sticky = sticky;
         }
 
-        public override Entity Entity {
+        public override Aspect Aspect {
             get { return _Target; }
         }
 

@@ -251,7 +251,7 @@ public ${virtualOrOverride} string GetLogPrefix() {
 }
 ```
 
-# ACCESSOR_LOG_MIXIN(source, target) #
+# ACCESSOR_LOG_MIXIN(source, target, entity) #
 ```C#
 private DebugLogger _DebugLogger = DebugLogger.Instance;
 
@@ -286,7 +286,7 @@ public void Error(string format, params object[] values) {
 public void Info(string format, params object[] values) {
     Log.Source = ${source};
     if (DebugMode) {
-        _DebugLogger.LogWithPatterns(LoggerConsts.INFO, Entity.DebugPatterns,
+        _DebugLogger.LogWithPatterns(LoggerConsts.INFO, ${entity}.DebugPatterns,
                 _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Info(GetLogPrefix() + string.Format(format, values));
@@ -296,7 +296,7 @@ public void Info(string format, params object[] values) {
 public void Debug(string format, params object[] values) {
     Log.Source = ${source};
     if (DebugMode) {
-        _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, Entity.DebugPatterns,
+        _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, ${entity}.DebugPatterns,
                 _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
     } else {
         Log.Debug(GetLogPrefix() + string.Format(format, values));
