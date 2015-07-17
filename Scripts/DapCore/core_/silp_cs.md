@@ -321,7 +321,7 @@ public bool AdminSecured {
 public bool WriteSecured {
     get {
         if (_Pass == null) return false;
-        if (_Pass is OpenPass) return false;
+        if (_Pass.Writable) return false;
         return true;
     }
 }

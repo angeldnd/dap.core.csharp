@@ -1,28 +1,43 @@
 using System;
 
 namespace angeldnd.dap {
-    public abstract class Pass {
+    public sealed class Pass {
+        private readonly bool _Writable;
         private readonly int _HashCode;
 
+        public bool Writable {
+            get { return _Writable; }
+        }
+
         public Pass() {
+            _Writable = false;
             _HashCode = Guid.NewGuid().GetHashCode();
         }
 
-        public Pass(int hashCode) {
+        public Pass(bool writable, int hashCode) {
+            _Writable = writable;
             _HashCode = hashCode;
         }
 
-        public Pass(object obj) {
-            _HashCode = obj.GetHashCode();
+        private Pass _Open = null;
+        public Pass Open {
+            get {
+                if (_Writable) return this;
+                if (_Open == null) {
+                    _Open = new Pass(true, _HashCode);
+                }
+                return _Open;
+            }
         }
 
         public override string ToString() {
-            return string.Format("[{0}:{1}]", GetType().Name, _HashCode);
+            return string.Format("[{0}:{1}{2}]", GetType().Name,
+                            _Writable ? "^" : "@",
+                            _HashCode);
         }
 
         public override bool Equals(object obj) {
             if (this == obj) return true;
-            if (obj.GetType() != this.GetType()) return false;
             if (_HashCode == obj.GetHashCode()) return true;
             return false;
         }
@@ -34,22 +49,14 @@ namespace angeldnd.dap {
         public bool CheckAdminPass(Pass pass) {
             if (this == pass) return true;
             if (this.Equals(pass)) return true;
+            return false;
         }
 
-        public virtual bool CheckWritePass(Pass pass) {
+        public bool CheckWritePass(Pass pass) {
+            if (_AllowWrite) {
+                return true;
+            }
             return CheckAdminPass(pass);
-        }
-    }
-
-    public class OpenPass {
-        public OpenPass(int hashCode) : base(hashCode) {
-        }
-
-        public OpenPass(object obj) : base(obj) {
-        }
-
-        public override bool CheckWritePass(Pass pass) {
-            return true;
         }
     }
 }
