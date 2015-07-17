@@ -84,7 +84,7 @@ public int ${name}Count {
 }
 
 public virtual bool Add${name}(Pass pass, ${cs_type} ${var_name}) {
-    if (!CheckPass(pass)) return false;
+    if (!CheckAdminPass(pass)) return false;
     if (${list_name} == null) ${list_name} = new List<${cs_type}>();
     if (!${list_name}.Contains(${var_name})) {
         ${list_name}.Add(${var_name});
@@ -98,7 +98,7 @@ public bool Add${name}(${cs_type} ${var_name}) {
 }
 
 public virtual bool Remove${name}(Pass pass, ${cs_type} ${var_name}) {
-    if (!CheckPass(pass)) return false;
+    if (!CheckAdminPass(pass)) return false;
     if (${list_name} != null && ${list_name}.Contains(${var_name})) {
         ${list_name}.Remove(${var_name});
         return true;

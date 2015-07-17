@@ -52,7 +52,7 @@ namespace angeldnd.dap {
         }                                                                           //__SILP__
                                                                                     //__SILP__
         public virtual bool AddEventChecker(Pass pass, EventChecker listener) {     //__SILP__
-            if (!CheckPass(pass)) return false;                                     //__SILP__
+            if (!CheckAdminPass(pass)) return false;                                //__SILP__
             if (_EventCheckers == null) _EventCheckers = new List<EventChecker>();  //__SILP__
             if (!_EventCheckers.Contains(listener)) {                               //__SILP__
                 _EventCheckers.Add(listener);                                       //__SILP__
@@ -66,7 +66,7 @@ namespace angeldnd.dap {
         }                                                                           //__SILP__
                                                                                     //__SILP__
         public virtual bool RemoveEventChecker(Pass pass, EventChecker listener) {  //__SILP__
-            if (!CheckPass(pass)) return false;                                     //__SILP__
+            if (!CheckAdminPass(pass)) return false;                                //__SILP__
             if (_EventCheckers != null && _EventCheckers.Contains(listener)) {      //__SILP__
                 _EventCheckers.Remove(listener);                                    //__SILP__
                 return true;                                                        //__SILP__
@@ -108,7 +108,7 @@ namespace angeldnd.dap {
         }                                                                              //__SILP__
                                                                                        //__SILP__
         public bool FireEvent(Pass pass, Data evt) {
-            if (!CheckPass(pass)) return false;
+            if (!CheckWritePass(pass)) return false;
 
             if (_EventCheckers != null) {
                 for (int i = 0; i < _EventCheckers.Count; i++) {

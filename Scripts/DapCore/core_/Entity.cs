@@ -253,7 +253,7 @@ namespace angeldnd.dap {
             if (aspect != null) {
                 if (aspect is SecurableAspect) {
                     var sa = aspect as SecurableAspect;
-                    if (!sa.CheckPass(pass)) {
+                    if (!sa.CheckAdminPass(pass)) {
                         return null;
                     }
                 }

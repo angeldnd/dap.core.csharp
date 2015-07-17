@@ -307,37 +307,30 @@ public void Debug(string format, params object[] values) {
 
 # SECURABLE_ASPECT_MIXIN() #
 ```C#
-private static readonly Pass OPEN_PASS = new Pass();
-
 private Pass _Pass = null;
 protected Pass Pass {
     get { return _Pass; }
 }
 
-public bool Secured {
+public bool IsSecured {
     get {
-        if (_Pass == null) return false;
-        if (OPEN_PASS == _Pass) return false;
-        return true;
+        return _Pass != null;
+    }
+}
+
+public bool IsPublic {
+    get {
+        if (_Pass == null) return true;
+        if (_Pass is OpenPass) return true;
+        return false;
     }
 }
 
 public bool SetPass(Pass pass) {
-    /*
-        * The OPEN_PASS trick is to set the pass, so it can't
-        * be set in the future, but it's "open", any pass can
-        * pass the check.
-        */
-    if (_Pass == null) {
-        if (pass == null) {
-            _Pass = OPEN_PASS;
-        } else {
-            _Pass = pass;
-        }
+    if (_Pass == pass) {
         return true;
-    } else if (_Pass == pass) {
-        return true;
-    } else if (OPEN_PASS == _Pass && pass == null) {
+    } else if (_Pass == null) {
+        _Pass = pass;
         return true;
     } else if (_Pass.Equals(pass)) {
         return true;
@@ -346,14 +339,21 @@ public bool SetPass(Pass pass) {
     return false;
 }
 
-public bool CheckPass(Pass pass) {
+public bool CheckAdminPass(Pass pass) {
     if (_Pass == null) return true;
-    if (_Pass == pass) return true;
-    if (OPEN_PASS == _Pass) return true;
-    if (_Pass.Equals(pass)) return true;
+    if (_Pass.CheckAdminPass(pass)) return true;
 
-    Error("Invalid Pass: _Pass = {0}, pass = {1}", _Pass, pass);
+    Error("Invalid Admin Pass: _Pass = {0}, pass = {1}", _Pass, pass);
     return false;
 }
+
+public bool CheckWritePass(Pass pass) {
+    if (_Pass == null) return true;
+    if (_Pass.CheckWritePass(pass)) return true;
+
+    Error("Invalid Write Pass: _Pass = {0}, pass = {1}", _Pass, pass);
+    return false;
+}
+
 ```
 

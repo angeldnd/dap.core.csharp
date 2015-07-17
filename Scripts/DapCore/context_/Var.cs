@@ -73,7 +73,7 @@ namespace angeldnd.dap {
                                                                               //__SILP__
         public virtual bool SetValue(Pass pass, T newValue) {
             if (!_Setup) Setup();
-            if (!CheckPass(pass)) return false;
+            if (!CheckWritePass(pass)) return false;
 
             _Value = newValue;
             AdvanceRevision();

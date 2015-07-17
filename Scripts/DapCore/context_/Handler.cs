@@ -108,7 +108,7 @@ namespace angeldnd.dap {
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         public virtual bool AddRequestChecker(Pass pass, RequestChecker checker) {        //__SILP__
-            if (!CheckPass(pass)) return false;                                           //__SILP__
+            if (!CheckAdminPass(pass)) return false;                                      //__SILP__
             if (_RequestCheckers == null) _RequestCheckers = new List<RequestChecker>();  //__SILP__
             if (!_RequestCheckers.Contains(checker)) {                                    //__SILP__
                 _RequestCheckers.Add(checker);                                            //__SILP__
@@ -122,7 +122,7 @@ namespace angeldnd.dap {
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         public virtual bool RemoveRequestChecker(Pass pass, RequestChecker checker) {     //__SILP__
-            if (!CheckPass(pass)) return false;                                           //__SILP__
+            if (!CheckAdminPass(pass)) return false;                                      //__SILP__
             if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {         //__SILP__
                 _RequestCheckers.Remove(checker);                                         //__SILP__
                 return true;                                                              //__SILP__
@@ -193,7 +193,7 @@ namespace angeldnd.dap {
         }                                                                                       //__SILP__
                                                                                                 //__SILP__
         public Data HandleRequest(Pass pass, Data req) {
-            if (!CheckPass(pass)) return null;
+            if (!CheckWritePass(pass)) return null;
 
             if (_Handler == null) return null;
             if (_RequestCheckers != null) {

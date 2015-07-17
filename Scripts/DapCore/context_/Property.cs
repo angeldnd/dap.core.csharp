@@ -36,7 +36,7 @@ namespace angeldnd.dap {
         }                                                                             //__SILP__
                                                                                       //__SILP__
         public virtual bool AddValueChecker(Pass pass, ValueChecker<T> checker) {     //__SILP__
-            if (!CheckPass(pass)) return false;                                       //__SILP__
+            if (!CheckAdminPass(pass)) return false;                                  //__SILP__
             if (_Checkers == null) _Checkers = new List<ValueChecker<T>>();           //__SILP__
             if (!_Checkers.Contains(checker)) {                                       //__SILP__
                 _Checkers.Add(checker);                                               //__SILP__
@@ -50,7 +50,7 @@ namespace angeldnd.dap {
         }                                                                             //__SILP__
                                                                                       //__SILP__
         public virtual bool RemoveValueChecker(Pass pass, ValueChecker<T> checker) {  //__SILP__
-            if (!CheckPass(pass)) return false;                                       //__SILP__
+            if (!CheckAdminPass(pass)) return false;                                  //__SILP__
             if (_Checkers != null && _Checkers.Contains(checker)) {                   //__SILP__
                 _Checkers.Remove(checker);                                            //__SILP__
                 return true;                                                          //__SILP__
