@@ -2,8 +2,9 @@ using System;
 
 namespace angeldnd.dap {
     public interface SecurableAspect : Aspect {
-        bool Secured { get; }
         bool SetPass(Pass pass);
+        bool AdminSecured { get; }
+        bool WriteSecured { get; }
         bool CheckAdminPass(Pass pass);
         bool CheckWritePass(Pass pass);
     }
@@ -15,13 +16,13 @@ namespace angeldnd.dap {
             get { return _Pass; }                                               //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
-        public bool IsSecured {                                                 //__SILP__
+        public bool AdminSecured {                                              //__SILP__
             get {                                                               //__SILP__
                 return _Pass != null;                                           //__SILP__
             }                                                                   //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
-        public bool IsPublic {                                                  //__SILP__
+        public bool WriteSecured {                                              //__SILP__
             get {                                                               //__SILP__
                 if (_Pass == null) return true;                                 //__SILP__
                 if (_Pass is OpenPass) return true;                             //__SILP__
@@ -67,13 +68,13 @@ namespace angeldnd.dap {
             get { return _Pass; }                                               //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
-        public bool IsSecured {                                                 //__SILP__
+        public bool AdminSecured {                                              //__SILP__
             get {                                                               //__SILP__
                 return _Pass != null;                                           //__SILP__
             }                                                                   //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
-        public bool IsPublic {                                                  //__SILP__
+        public bool WriteSecured {                                              //__SILP__
             get {                                                               //__SILP__
                 if (_Pass == null) return true;                                 //__SILP__
                 if (_Pass is OpenPass) return true;                             //__SILP__

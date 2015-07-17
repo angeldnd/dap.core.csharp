@@ -312,13 +312,13 @@ protected Pass Pass {
     get { return _Pass; }
 }
 
-public bool IsSecured {
+public bool AdminSecured {
     get {
         return _Pass != null;
     }
 }
 
-public bool IsPublic {
+public bool WriteSecured {
     get {
         if (_Pass == null) return true;
         if (_Pass is OpenPass) return true;

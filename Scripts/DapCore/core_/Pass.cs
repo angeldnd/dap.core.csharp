@@ -1,7 +1,7 @@
 using System;
 
 namespace angeldnd.dap {
-    public class Pass {
+    public abstract class Pass {
         private readonly int _HashCode;
 
         public Pass() {
