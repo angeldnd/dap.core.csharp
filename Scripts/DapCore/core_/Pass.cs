@@ -53,7 +53,7 @@ namespace angeldnd.dap {
         }
 
         public bool CheckWritePass(Pass pass) {
-            if (_AllowWrite) {
+            if (_Writable) {
                 return true;
             }
             return CheckAdminPass(pass);
