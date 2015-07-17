@@ -20,13 +20,15 @@ namespace angeldnd.dap {
         }
 
         private bool _Setup = false;
+        protected bool NeedSetup {
+            get { return !_Setup; }
+        }
 
         public virtual bool Setup(Pass pass, T defaultValue) {
             if (!_Setup) {
                 if (!SetPass(pass)) return false;
                 _Setup = true;
-                _Value = defaultValue;
-                AdvanceRevision();
+                UpdateValue(defaultValue);
                 return true;
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
@@ -71,10 +73,8 @@ namespace angeldnd.dap {
             return false;                                                     //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
-        public virtual bool SetValue(Pass pass, T newValue) {
-            if (!_Setup) Setup();
-            if (!CheckWritePass(pass)) return false;
 
+        private void UpdateValue(T newValue) {
             _Value = newValue;
             AdvanceRevision();
 
@@ -83,6 +83,13 @@ namespace angeldnd.dap {
                     _VarWatchers[i].OnVarChanged(this);
                 }
             }
+        }
+
+        public virtual bool SetValue(Pass pass, T newValue) {
+            if (!_Setup) Setup();
+            if (!CheckWritePass(pass)) return false;
+
+            UpdateValue(newValue);
             return true;
         }
 

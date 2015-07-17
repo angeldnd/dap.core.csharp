@@ -41,12 +41,54 @@ namespace angeldnd.dap {
             string type = data.GetString(DapObjectConsts.KeyType);
             if (type == Type) {
                 return DoDecode(pass, data);
+            } else {
+                Error("Mismatched Type: {0}, {1}", Type, type);
             }
             return false;
         }
 
         protected abstract bool DoEncode(Data data);
         protected abstract bool DoDecode(Pass pass, Data data);
+        protected abstract bool NeedUpdate(T newVal);
+
+        private bool _CheckingValue = false;
+        private bool _UpdatingValue = false;
+
+        public override bool SetValue(Pass pass, T newVal) {
+            if (!CheckWritePass(pass)) return false;
+
+            if (_CheckingValue) return false;
+            if (_UpdatingValue) return false;
+
+            if (NeedUpdate(newVal)) {
+                if (_Checkers != null) {
+                    _CheckingValue = true;
+                    for (int i = 0; i < _Checkers.Count; i++) {
+                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {
+                            _CheckingValue = false;
+                            return false;
+                        }
+                    }
+                    _CheckingValue = false;
+                }
+                _UpdatingValue = true;
+                T lastVal = Value;
+                if (!base.SetValue(pass, newVal)) {
+                    _UpdatingValue = false;
+                    return false;
+                }
+                if (_Watchers != null) {
+                    for (int i = 0; i < _Watchers.Count; i++) {
+                        _Watchers[i].OnChanged(Path, lastVal, Value);
+                    }
+                }
+                _UpdatingValue = false;
+                return true;
+            } else {
+                Error("No Need to Update Value: {0}, {1} -> {2}", NeedSetup, Value, newVal);
+            }
+            return false;
+        }
 
         //SILP: DECLARE_SECURE_LIST(ValueChecker, checker, ValueChecker<T>, _Checkers)
         protected List<ValueChecker<T>> _Checkers = null;                             //__SILP__
@@ -160,39 +202,8 @@ namespace angeldnd.dap {
             return SetValue(pass, data.GetBool(PropertiesConsts.KeyValue));                                       //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
-        private bool _CheckingValue = false;                                                                      //__SILP__
-        private bool _UpdatingValue = false;                                                                      //__SILP__
-                                                                                                                  //__SILP__
-        public override bool SetValue(Pass pass, bool newVal) {                                                   //__SILP__
-            if (_CheckingValue) return false;                                                                     //__SILP__
-            if (_UpdatingValue) return false;                                                                     //__SILP__
-                                                                                                                  //__SILP__
-            if (Value != newVal) {                                                                                //__SILP__
-                if (_Checkers != null) {                                                                          //__SILP__
-                    _CheckingValue = true;                                                                        //__SILP__
-                    for (int i = 0; i < _Checkers.Count; i++) {                                                   //__SILP__
-                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {                                         //__SILP__
-                            _CheckingValue = false;                                                               //__SILP__
-                            return false;                                                                         //__SILP__
-                        }                                                                                         //__SILP__
-                    }                                                                                             //__SILP__
-                    _CheckingValue = false;                                                                       //__SILP__
-                }                                                                                                 //__SILP__
-                _UpdatingValue = true;                                                                            //__SILP__
-                bool lastVal = Value;                                                                             //__SILP__
-                if (!base.SetValue(pass, newVal)) {                                                               //__SILP__
-                    _UpdatingValue = false;                                                                       //__SILP__
-                    return false;                                                                                 //__SILP__
-                }                                                                                                 //__SILP__
-                if (_Watchers != null) {                                                                          //__SILP__
-                    for (int i = 0; i < _Watchers.Count; i++) {                                                   //__SILP__
-                        _Watchers[i].OnChanged(Path, lastVal, Value);                                             //__SILP__
-                    }                                                                                             //__SILP__
-                }                                                                                                 //__SILP__
-                _UpdatingValue = false;                                                                           //__SILP__
-                return true;                                                                                      //__SILP__
-            }                                                                                                     //__SILP__
-            return false;                                                                                         //__SILP__
+        protected override bool NeedUpdate(bool newVal) {                                                         //__SILP__
+            return NeedSetup || (Value != newVal);                                                                //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
         public BoolBlockValueChecker AddBlockValueChecker(Pass pass, BoolBlockValueChecker.CheckerBlock block) {  //__SILP__
@@ -258,39 +269,8 @@ namespace angeldnd.dap {
             return SetValue(pass, data.GetInt(PropertiesConsts.KeyValue));                                      //__SILP__
         }                                                                                                       //__SILP__
                                                                                                                 //__SILP__
-        private bool _CheckingValue = false;                                                                    //__SILP__
-        private bool _UpdatingValue = false;                                                                    //__SILP__
-                                                                                                                //__SILP__
-        public override bool SetValue(Pass pass, int newVal) {                                                  //__SILP__
-            if (_CheckingValue) return false;                                                                   //__SILP__
-            if (_UpdatingValue) return false;                                                                   //__SILP__
-                                                                                                                //__SILP__
-            if (Value != newVal) {                                                                              //__SILP__
-                if (_Checkers != null) {                                                                        //__SILP__
-                    _CheckingValue = true;                                                                      //__SILP__
-                    for (int i = 0; i < _Checkers.Count; i++) {                                                 //__SILP__
-                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {                                       //__SILP__
-                            _CheckingValue = false;                                                             //__SILP__
-                            return false;                                                                       //__SILP__
-                        }                                                                                       //__SILP__
-                    }                                                                                           //__SILP__
-                    _CheckingValue = false;                                                                     //__SILP__
-                }                                                                                               //__SILP__
-                _UpdatingValue = true;                                                                          //__SILP__
-                int lastVal = Value;                                                                            //__SILP__
-                if (!base.SetValue(pass, newVal)) {                                                             //__SILP__
-                    _UpdatingValue = false;                                                                     //__SILP__
-                    return false;                                                                               //__SILP__
-                }                                                                                               //__SILP__
-                if (_Watchers != null) {                                                                        //__SILP__
-                    for (int i = 0; i < _Watchers.Count; i++) {                                                 //__SILP__
-                        _Watchers[i].OnChanged(Path, lastVal, Value);                                           //__SILP__
-                    }                                                                                           //__SILP__
-                }                                                                                               //__SILP__
-                _UpdatingValue = false;                                                                         //__SILP__
-                return true;                                                                                    //__SILP__
-            }                                                                                                   //__SILP__
-            return false;                                                                                       //__SILP__
+        protected override bool NeedUpdate(int newVal) {                                                        //__SILP__
+            return NeedSetup || (Value != newVal);                                                              //__SILP__
         }                                                                                                       //__SILP__
                                                                                                                 //__SILP__
         public IntBlockValueChecker AddBlockValueChecker(Pass pass, IntBlockValueChecker.CheckerBlock block) {  //__SILP__
@@ -356,39 +336,8 @@ namespace angeldnd.dap {
             return SetValue(pass, data.GetLong(PropertiesConsts.KeyValue));                                       //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
-        private bool _CheckingValue = false;                                                                      //__SILP__
-        private bool _UpdatingValue = false;                                                                      //__SILP__
-                                                                                                                  //__SILP__
-        public override bool SetValue(Pass pass, long newVal) {                                                   //__SILP__
-            if (_CheckingValue) return false;                                                                     //__SILP__
-            if (_UpdatingValue) return false;                                                                     //__SILP__
-                                                                                                                  //__SILP__
-            if (Value != newVal) {                                                                                //__SILP__
-                if (_Checkers != null) {                                                                          //__SILP__
-                    _CheckingValue = true;                                                                        //__SILP__
-                    for (int i = 0; i < _Checkers.Count; i++) {                                                   //__SILP__
-                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {                                         //__SILP__
-                            _CheckingValue = false;                                                               //__SILP__
-                            return false;                                                                         //__SILP__
-                        }                                                                                         //__SILP__
-                    }                                                                                             //__SILP__
-                    _CheckingValue = false;                                                                       //__SILP__
-                }                                                                                                 //__SILP__
-                _UpdatingValue = true;                                                                            //__SILP__
-                long lastVal = Value;                                                                             //__SILP__
-                if (!base.SetValue(pass, newVal)) {                                                               //__SILP__
-                    _UpdatingValue = false;                                                                       //__SILP__
-                    return false;                                                                                 //__SILP__
-                }                                                                                                 //__SILP__
-                if (_Watchers != null) {                                                                          //__SILP__
-                    for (int i = 0; i < _Watchers.Count; i++) {                                                   //__SILP__
-                        _Watchers[i].OnChanged(Path, lastVal, Value);                                             //__SILP__
-                    }                                                                                             //__SILP__
-                }                                                                                                 //__SILP__
-                _UpdatingValue = false;                                                                           //__SILP__
-                return true;                                                                                      //__SILP__
-            }                                                                                                     //__SILP__
-            return false;                                                                                         //__SILP__
+        protected override bool NeedUpdate(long newVal) {                                                         //__SILP__
+            return NeedSetup || (Value != newVal);                                                                //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
         public LongBlockValueChecker AddBlockValueChecker(Pass pass, LongBlockValueChecker.CheckerBlock block) {  //__SILP__
@@ -454,39 +403,8 @@ namespace angeldnd.dap {
             return SetValue(pass, data.GetFloat(PropertiesConsts.KeyValue));                                        //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
-        private bool _CheckingValue = false;                                                                        //__SILP__
-        private bool _UpdatingValue = false;                                                                        //__SILP__
-                                                                                                                    //__SILP__
-        public override bool SetValue(Pass pass, float newVal) {                                                    //__SILP__
-            if (_CheckingValue) return false;                                                                       //__SILP__
-            if (_UpdatingValue) return false;                                                                       //__SILP__
-                                                                                                                    //__SILP__
-            if (Value != newVal) {                                                                                  //__SILP__
-                if (_Checkers != null) {                                                                            //__SILP__
-                    _CheckingValue = true;                                                                          //__SILP__
-                    for (int i = 0; i < _Checkers.Count; i++) {                                                     //__SILP__
-                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {                                           //__SILP__
-                            _CheckingValue = false;                                                                 //__SILP__
-                            return false;                                                                           //__SILP__
-                        }                                                                                           //__SILP__
-                    }                                                                                               //__SILP__
-                    _CheckingValue = false;                                                                         //__SILP__
-                }                                                                                                   //__SILP__
-                _UpdatingValue = true;                                                                              //__SILP__
-                float lastVal = Value;                                                                              //__SILP__
-                if (!base.SetValue(pass, newVal)) {                                                                 //__SILP__
-                    _UpdatingValue = false;                                                                         //__SILP__
-                    return false;                                                                                   //__SILP__
-                }                                                                                                   //__SILP__
-                if (_Watchers != null) {                                                                            //__SILP__
-                    for (int i = 0; i < _Watchers.Count; i++) {                                                     //__SILP__
-                        _Watchers[i].OnChanged(Path, lastVal, Value);                                               //__SILP__
-                    }                                                                                               //__SILP__
-                }                                                                                                   //__SILP__
-                _UpdatingValue = false;                                                                             //__SILP__
-                return true;                                                                                        //__SILP__
-            }                                                                                                       //__SILP__
-            return false;                                                                                           //__SILP__
+        protected override bool NeedUpdate(float newVal) {                                                          //__SILP__
+            return NeedSetup || (Value != newVal);                                                                  //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
         public FloatBlockValueChecker AddBlockValueChecker(Pass pass, FloatBlockValueChecker.CheckerBlock block) {  //__SILP__
@@ -552,39 +470,8 @@ namespace angeldnd.dap {
             return SetValue(pass, data.GetDouble(PropertiesConsts.KeyValue));                                         //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
-        private bool _CheckingValue = false;                                                                          //__SILP__
-        private bool _UpdatingValue = false;                                                                          //__SILP__
-                                                                                                                      //__SILP__
-        public override bool SetValue(Pass pass, double newVal) {                                                     //__SILP__
-            if (_CheckingValue) return false;                                                                         //__SILP__
-            if (_UpdatingValue) return false;                                                                         //__SILP__
-                                                                                                                      //__SILP__
-            if (Value != newVal) {                                                                                    //__SILP__
-                if (_Checkers != null) {                                                                              //__SILP__
-                    _CheckingValue = true;                                                                            //__SILP__
-                    for (int i = 0; i < _Checkers.Count; i++) {                                                       //__SILP__
-                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {                                             //__SILP__
-                            _CheckingValue = false;                                                                   //__SILP__
-                            return false;                                                                             //__SILP__
-                        }                                                                                             //__SILP__
-                    }                                                                                                 //__SILP__
-                    _CheckingValue = false;                                                                           //__SILP__
-                }                                                                                                     //__SILP__
-                _UpdatingValue = true;                                                                                //__SILP__
-                double lastVal = Value;                                                                               //__SILP__
-                if (!base.SetValue(pass, newVal)) {                                                                   //__SILP__
-                    _UpdatingValue = false;                                                                           //__SILP__
-                    return false;                                                                                     //__SILP__
-                }                                                                                                     //__SILP__
-                if (_Watchers != null) {                                                                              //__SILP__
-                    for (int i = 0; i < _Watchers.Count; i++) {                                                       //__SILP__
-                        _Watchers[i].OnChanged(Path, lastVal, Value);                                                 //__SILP__
-                    }                                                                                                 //__SILP__
-                }                                                                                                     //__SILP__
-                _UpdatingValue = false;                                                                               //__SILP__
-                return true;                                                                                          //__SILP__
-            }                                                                                                         //__SILP__
-            return false;                                                                                             //__SILP__
+        protected override bool NeedUpdate(double newVal) {                                                           //__SILP__
+            return NeedSetup || (Value != newVal);                                                                    //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
         public DoubleBlockValueChecker AddBlockValueChecker(Pass pass, DoubleBlockValueChecker.CheckerBlock block) {  //__SILP__
@@ -650,39 +537,8 @@ namespace angeldnd.dap {
             return SetValue(pass, data.GetString(PropertiesConsts.KeyValue));                                         //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
-        private bool _CheckingValue = false;                                                                          //__SILP__
-        private bool _UpdatingValue = false;                                                                          //__SILP__
-                                                                                                                      //__SILP__
-        public override bool SetValue(Pass pass, string newVal) {                                                     //__SILP__
-            if (_CheckingValue) return false;                                                                         //__SILP__
-            if (_UpdatingValue) return false;                                                                         //__SILP__
-                                                                                                                      //__SILP__
-            if (Value != newVal) {                                                                                    //__SILP__
-                if (_Checkers != null) {                                                                              //__SILP__
-                    _CheckingValue = true;                                                                            //__SILP__
-                    for (int i = 0; i < _Checkers.Count; i++) {                                                       //__SILP__
-                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {                                             //__SILP__
-                            _CheckingValue = false;                                                                   //__SILP__
-                            return false;                                                                             //__SILP__
-                        }                                                                                             //__SILP__
-                    }                                                                                                 //__SILP__
-                    _CheckingValue = false;                                                                           //__SILP__
-                }                                                                                                     //__SILP__
-                _UpdatingValue = true;                                                                                //__SILP__
-                string lastVal = Value;                                                                               //__SILP__
-                if (!base.SetValue(pass, newVal)) {                                                                   //__SILP__
-                    _UpdatingValue = false;                                                                           //__SILP__
-                    return false;                                                                                     //__SILP__
-                }                                                                                                     //__SILP__
-                if (_Watchers != null) {                                                                              //__SILP__
-                    for (int i = 0; i < _Watchers.Count; i++) {                                                       //__SILP__
-                        _Watchers[i].OnChanged(Path, lastVal, Value);                                                 //__SILP__
-                    }                                                                                                 //__SILP__
-                }                                                                                                     //__SILP__
-                _UpdatingValue = false;                                                                               //__SILP__
-                return true;                                                                                          //__SILP__
-            }                                                                                                         //__SILP__
-            return false;                                                                                             //__SILP__
+        protected override bool NeedUpdate(string newVal) {                                                           //__SILP__
+            return NeedSetup || (Value != newVal);                                                                    //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
         public StringBlockValueChecker AddBlockValueChecker(Pass pass, StringBlockValueChecker.CheckerBlock block) {  //__SILP__
@@ -748,39 +604,8 @@ namespace angeldnd.dap {
             return SetValue(pass, data.GetData(PropertiesConsts.KeyValue));                                       //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
-        private bool _CheckingValue = false;                                                                      //__SILP__
-        private bool _UpdatingValue = false;                                                                      //__SILP__
-                                                                                                                  //__SILP__
-        public override bool SetValue(Pass pass, Data newVal) {                                                   //__SILP__
-            if (_CheckingValue) return false;                                                                     //__SILP__
-            if (_UpdatingValue) return false;                                                                     //__SILP__
-                                                                                                                  //__SILP__
-            if (Value != newVal) {                                                                                //__SILP__
-                if (_Checkers != null) {                                                                          //__SILP__
-                    _CheckingValue = true;                                                                        //__SILP__
-                    for (int i = 0; i < _Checkers.Count; i++) {                                                   //__SILP__
-                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {                                         //__SILP__
-                            _CheckingValue = false;                                                               //__SILP__
-                            return false;                                                                         //__SILP__
-                        }                                                                                         //__SILP__
-                    }                                                                                             //__SILP__
-                    _CheckingValue = false;                                                                       //__SILP__
-                }                                                                                                 //__SILP__
-                _UpdatingValue = true;                                                                            //__SILP__
-                Data lastVal = Value;                                                                             //__SILP__
-                if (!base.SetValue(pass, newVal)) {                                                               //__SILP__
-                    _UpdatingValue = false;                                                                       //__SILP__
-                    return false;                                                                                 //__SILP__
-                }                                                                                                 //__SILP__
-                if (_Watchers != null) {                                                                          //__SILP__
-                    for (int i = 0; i < _Watchers.Count; i++) {                                                   //__SILP__
-                        _Watchers[i].OnChanged(Path, lastVal, Value);                                             //__SILP__
-                    }                                                                                             //__SILP__
-                }                                                                                                 //__SILP__
-                _UpdatingValue = false;                                                                           //__SILP__
-                return true;                                                                                      //__SILP__
-            }                                                                                                     //__SILP__
-            return false;                                                                                         //__SILP__
+        protected override bool NeedUpdate(Data newVal) {                                                         //__SILP__
+            return NeedSetup || (Value != newVal);                                                                //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
         public DataBlockValueChecker AddBlockValueChecker(Pass pass, DataBlockValueChecker.CheckerBlock block) {  //__SILP__

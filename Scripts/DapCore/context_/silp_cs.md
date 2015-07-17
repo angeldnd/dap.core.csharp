@@ -301,39 +301,8 @@ public class ${type}Property : Property<${cs_type}> {
         return SetValue(pass, data.Get${type}(PropertiesConsts.KeyValue));
     }
 
-    private bool _CheckingValue = false;
-    private bool _UpdatingValue = false;
-
-    public override bool SetValue(Pass pass, ${cs_type} newVal) {
-        if (_CheckingValue) return false;
-        if (_UpdatingValue) return false;
-
-        if (Value != newVal) {
-            if (_Checkers != null) {
-                _CheckingValue = true;
-                for (int i = 0; i < _Checkers.Count; i++) {
-                    if (!_Checkers[i].IsValid(Path, Value, newVal)) {
-                        _CheckingValue = false;
-                        return false;
-                    }
-                }
-                _CheckingValue = false;
-            }
-            _UpdatingValue = true;
-            ${cs_type} lastVal = Value;
-            if (!base.SetValue(pass, newVal)) {
-                _UpdatingValue = false;
-                return false;
-            }
-            if (_Watchers != null) {
-                for (int i = 0; i < _Watchers.Count; i++) {
-                    _Watchers[i].OnChanged(Path, lastVal, Value);
-                }
-            }
-            _UpdatingValue = false;
-            return true;
-        }
-        return false;
+    protected override bool NeedUpdate(${cs_type} newVal) {
+        return NeedSetup || (Value != newVal);
     }
 
     public ${type}BlockValueChecker AddBlockValueChecker(Pass pass, ${type}BlockValueChecker.CheckerBlock block) {
