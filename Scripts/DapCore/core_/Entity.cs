@@ -271,10 +271,10 @@ namespace angeldnd.dap {
         }
 
         public List<T> RemoveByChecker<T>(CheckAspect<T> checker) where T : class, Aspect {
-            return RemoveByChecker<T>(checker, null);
+            return RemoveByChecker<T>(null, checker);
         }
 
-        public List<T> RemoveByChecker<T>(CheckAspect<T> checker, Pass pass) where T : class, Aspect {
+        public List<T> RemoveByChecker<T>(Pass pass, CheckAspect<T> checker) where T : class, Aspect {
             List<T> removed = null;
             List<T> matched = All<T>();
             if (matched != null) {
