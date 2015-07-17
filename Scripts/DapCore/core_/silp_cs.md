@@ -320,9 +320,9 @@ public bool AdminSecured {
 
 public bool WriteSecured {
     get {
-        if (_Pass == null) return true;
-        if (_Pass is OpenPass) return true;
-        return false;
+        if (_Pass == null) return false;
+        if (_Pass is OpenPass) return false;
+        return true;
     }
 }
 

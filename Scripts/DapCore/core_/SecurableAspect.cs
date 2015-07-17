@@ -24,9 +24,9 @@ namespace angeldnd.dap {
                                                                                 //__SILP__
         public bool WriteSecured {                                              //__SILP__
             get {                                                               //__SILP__
-                if (_Pass == null) return true;                                 //__SILP__
-                if (_Pass is OpenPass) return true;                             //__SILP__
-                return false;                                                   //__SILP__
+                if (_Pass == null) return false;                                //__SILP__
+                if (_Pass is OpenPass) return false;                            //__SILP__
+                return true;                                                    //__SILP__
             }                                                                   //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
@@ -76,9 +76,9 @@ namespace angeldnd.dap {
                                                                                 //__SILP__
         public bool WriteSecured {                                              //__SILP__
             get {                                                               //__SILP__
-                if (_Pass == null) return true;                                 //__SILP__
-                if (_Pass is OpenPass) return true;                             //__SILP__
-                return false;                                                   //__SILP__
+                if (_Pass == null) return false;                                //__SILP__
+                if (_Pass is OpenPass) return false;                            //__SILP__
+                return true;                                                    //__SILP__
             }                                                                   //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
