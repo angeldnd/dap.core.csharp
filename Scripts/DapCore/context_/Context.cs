@@ -48,18 +48,6 @@ namespace angeldnd.dap {
             Handlers = Add<Handlers>(ContextConsts.AspectHandlers, _Pass);
         }
 
-        public Data Dump() {
-            Data data = Properties.Encode();
-            if (data != null) {
-                return data.GetData(EntityConsts.KeyAspects);
-            }
-            return null;
-        }
-
-        public bool Load(Data data) {
-            return Properties.DecodeAspects(data) > 0;
-        }
-
         public bool FireEvent(string channelPath, Data evt) {
             return Channels.FireEvent(channelPath, evt);
         }

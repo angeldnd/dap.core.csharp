@@ -38,6 +38,7 @@ namespace angeldnd.dap {
 
         public override bool Equals(object obj) {
             if (this == obj) return true;
+            if (obj == null) return false;
             if (_HashCode == obj.GetHashCode()) return true;
             return false;
         }

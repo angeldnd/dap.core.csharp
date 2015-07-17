@@ -11,17 +11,42 @@ namespace angeldnd.dap {
     }
 
     public interface Property : Var {
-        bool DoDecode(Pass pass, Data data);
+        Data Encode();
+        bool Decode(Data data);
+        bool Decode(Pass pass, Data data);
+
         int ValueCheckerCount { get; }
         int ValueWatcherCount { get; }
     }
 
     public abstract class Property<T>: Var<T>, Property {
-        protected override bool DoDecode(Data data) {
-            return DoDecode(null, data);
+        public Data Encode() {
+            if (!string.IsNullOrEmpty(Type)) {
+                Data data = new Data();
+                if (data.SetString(DapObjectConsts.KeyType, Type)) {
+                    if (DoEncode(data)) {
+                        return data;
+                    }
+                }
+            }
+            if (LogDebug) Debug("Not Encodable!");
+            return null;
         }
 
-        public abstract bool DoDecode(Pass pass, Data data);
+        public bool Decode(Data data) {
+            return Decode(null, data);
+        }
+
+        public bool Decode(Pass pass, Data data) {
+            string type = data.GetString(DapObjectConsts.KeyType);
+            if (type == Type) {
+                return DoDecode(pass, data);
+            }
+            return false;
+        }
+
+        protected abstract bool DoEncode(Data data);
+        protected abstract bool DoDecode(Pass pass, Data data);
 
         //SILP: DECLARE_SECURE_LIST(ValueChecker, checker, ValueChecker<T>, _Checkers)
         protected List<ValueChecker<T>> _Checkers = null;                             //__SILP__
@@ -131,7 +156,7 @@ namespace angeldnd.dap {
             return data.SetBool(PropertiesConsts.KeyValue, Value);                                                //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
-        public override bool DoDecode(Pass pass, Data data) {                                                     //__SILP__
+        protected override bool DoDecode(Pass pass, Data data) {                                                  //__SILP__
             return SetValue(pass, data.GetBool(PropertiesConsts.KeyValue));                                       //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
@@ -229,7 +254,7 @@ namespace angeldnd.dap {
             return data.SetInt(PropertiesConsts.KeyValue, Value);                                               //__SILP__
         }                                                                                                       //__SILP__
                                                                                                                 //__SILP__
-        public override bool DoDecode(Pass pass, Data data) {                                                   //__SILP__
+        protected override bool DoDecode(Pass pass, Data data) {                                                //__SILP__
             return SetValue(pass, data.GetInt(PropertiesConsts.KeyValue));                                      //__SILP__
         }                                                                                                       //__SILP__
                                                                                                                 //__SILP__
@@ -327,7 +352,7 @@ namespace angeldnd.dap {
             return data.SetLong(PropertiesConsts.KeyValue, Value);                                                //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
-        public override bool DoDecode(Pass pass, Data data) {                                                     //__SILP__
+        protected override bool DoDecode(Pass pass, Data data) {                                                  //__SILP__
             return SetValue(pass, data.GetLong(PropertiesConsts.KeyValue));                                       //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
@@ -425,7 +450,7 @@ namespace angeldnd.dap {
             return data.SetFloat(PropertiesConsts.KeyValue, Value);                                                 //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
-        public override bool DoDecode(Pass pass, Data data) {                                                       //__SILP__
+        protected override bool DoDecode(Pass pass, Data data) {                                                    //__SILP__
             return SetValue(pass, data.GetFloat(PropertiesConsts.KeyValue));                                        //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
@@ -523,7 +548,7 @@ namespace angeldnd.dap {
             return data.SetDouble(PropertiesConsts.KeyValue, Value);                                                  //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
-        public override bool DoDecode(Pass pass, Data data) {                                                         //__SILP__
+        protected override bool DoDecode(Pass pass, Data data) {                                                      //__SILP__
             return SetValue(pass, data.GetDouble(PropertiesConsts.KeyValue));                                         //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
@@ -621,7 +646,7 @@ namespace angeldnd.dap {
             return data.SetString(PropertiesConsts.KeyValue, Value);                                                  //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
-        public override bool DoDecode(Pass pass, Data data) {                                                         //__SILP__
+        protected override bool DoDecode(Pass pass, Data data) {                                                      //__SILP__
             return SetValue(pass, data.GetString(PropertiesConsts.KeyValue));                                         //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
@@ -719,7 +744,7 @@ namespace angeldnd.dap {
             return data.SetData(PropertiesConsts.KeyValue, Value);                                                //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
-        public override bool DoDecode(Pass pass, Data data) {                                                     //__SILP__
+        protected override bool DoDecode(Pass pass, Data data) {                                                  //__SILP__
             return SetValue(pass, data.GetData(PropertiesConsts.KeyValue));                                       //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__

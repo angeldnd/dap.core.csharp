@@ -42,72 +42,6 @@ namespace angeldnd.dap {
 
         public delegate bool CheckAspect<T>(T aspect) where T : class, Aspect;
 
-        /*
-         * For some really strange unknown reason, if try to add a constructor here
-         * and add an aspect in it, will cause infinite loop, which will crash unity
-         * editor, somehow the stack was corrupted in Has(), might related to the _Aspects
-         * init value, not sure why, if don't add any aspect here, will be fine.
-         */
-
-        protected virtual bool DoEncode(Data data) {
-            Data aspectsData = new Data();
-            foreach (var pair in _Aspects) {
-                Data aspectData = pair.Value.Encode();
-                aspectsData.SetData(pair.Key, aspectData);
-            }
-            return data.SetData(EntityConsts.KeyAspects, aspectsData);
-        }
-
-        protected virtual bool DoDecode(Data data) {
-            Data aspectsData = data.GetData(EntityConsts.KeyAspects);
-            if (aspectsData != null) {
-                return DecodeAspects(aspectsData) > 0;
-            }
-            return false;
-        }
-
-        public bool DecodeAspect(string path, Data aspectData) {
-            bool succeed = false;
-            Aspect aspect = GetAspect(path);
-            if (aspect != null) {
-                succeed = aspect.Decode(aspectData);
-            } else {
-                string type = aspectData.GetString(DapObjectConsts.KeyType);
-                if (!string.IsNullOrEmpty(type)) {
-                    aspect = FactoryAspect(this, path, type);
-                    if (aspect == null) {
-                        Error("Failed to Factory Aspect: {0}, {1}", path, aspectData);
-                    } else if (!aspect.Decode(aspectData)) {
-                        Error("Failed to Decode Aspect: {0}, {1}", path, aspectData);
-                    } else {
-                        succeed = AddAspect(aspect);
-                    }
-                }
-            }
-            return succeed;
-        }
-
-        public int DecodeAspects(Data aspectsData) {
-            int succeedCount = 0;
-            int failedCount = 0;
-            foreach (var path in aspectsData.Keys) {
-                bool succeed = false;
-                Data aspectData = aspectsData.GetData(path);
-                if (aspectData != null) {
-                    succeed = DecodeAspect(path, aspectData);
-                }
-                if (succeed) {
-                    succeedCount++;
-                } else {
-                    failedCount++;
-                }
-            }
-            if (failedCount > 0) {
-                Error("DecodeAspects: succeedCount = {0}, failedCount = {1}", succeedCount, failedCount);
-            }
-            return succeedCount;
-        }
-
         public virtual Aspect FactoryAspect(Entity entity, string path, string type) {
             return null;
         }
@@ -209,39 +143,54 @@ namespace angeldnd.dap {
         }
 
         public Aspect Add(string path, string type) {
+            return Add(path, type, null);
+        }
+
+        public Aspect Add(string path, string type, Pass pass) {
             if (!Has(path)) {
                 Aspect aspect = FactoryAspect(this, path, type);
-                if (aspect == null) {
-                    Error("Failed to Factory Aspect: {0}, {1}", path, type);
-                } else {
-                    if (AddAspect(aspect)) {
+                if (aspect != null) {
+                    if (InitAddAspect(aspect, path, pass)) {
                         return aspect;
                     }
+                } else {
+                    Error("Failed to Factory Aspect: {0}, {1}", path, type);
                 }
             }
             return null;
+        }
+
+        private bool InitAddAspect(Aspect aspect, string path, Pass pass) {
+            if (aspect != null) {
+                if (pass != null && aspect is SecurableAspect) {
+                    var sa = aspect as SecurableAspect;
+                    if (!sa.SetPass(pass)) {
+                        return false;
+                    }
+                }
+                if (aspect.Init(this, path)) {
+                    return AddAspect(aspect);
+                }
+            }
+            return false;
         }
 
         public T Add<T>(string path) where T : class, Aspect {
-            if (!Has(path)) {
-                T aspect = Activator.CreateInstance(typeof(T)) as T;
-                if (aspect != null && aspect.Init(this, path)) {
-                    AddAspect(aspect);
-                }
-                return aspect;
-            }
-            return null;
+            return Add<T>(path, null);
         }
 
-        public T Add<T>(string path, Pass pass) where T : class, SecurableAspect {
-            T aspect = Add<T>(path);
-            if (aspect != null) {
-                if (!aspect.SetPass(pass)) {
-                    Remove<T>(path);
-                    aspect = null;
+        public T Add<T>(string path, Pass pass) where T : class, Aspect {
+            if (!Has(path)) {
+                T aspect = Activator.CreateInstance(typeof(T)) as T;
+                if (aspect != null) {
+                    if (InitAddAspect(aspect, path, pass)) {
+                        return aspect;
+                    }
+                } else {
+                    Error("Failed to Create Aspect: {0}, {1}", path, typeof(T));
                 }
             }
-            return aspect;
+            return null;
         }
 
         public T Remove<T>(string path) where T : class, Aspect {
@@ -305,27 +254,6 @@ namespace angeldnd.dap {
                                                                       //__SILP__
         protected virtual void AdvanceRevision() {                    //__SILP__
             _Revision += 1;                                           //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public Data Encode() {                                        //__SILP__
-            if (!string.IsNullOrEmpty(Type)) {                        //__SILP__
-                Data data = new Data();                               //__SILP__
-                if (data.SetString(DapObjectConsts.KeyType, Type)) {  //__SILP__
-                    if (DoEncode(data)) {                             //__SILP__
-                        return data;                                  //__SILP__
-                    }                                                 //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            if (LogDebug) Debug("Not Encodable!");                    //__SILP__
-            return null;                                              //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool Decode(Data data) {                               //__SILP__
-            string type = data.GetString(DapObjectConsts.KeyType);    //__SILP__
-            if (type == Type) {                                       //__SILP__
-                return DoDecode(data);                                //__SILP__
-            }                                                         //__SILP__
-            return false;                                             //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
 

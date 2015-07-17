@@ -54,10 +54,7 @@ namespace angeldnd.dap {
         public bool RegisterAspect<T>(string type) where T : class, Aspect {
             return RegisterAspect(type, (Entity entity, string path) => {
                 T aspect = Activator.CreateInstance(typeof(T)) as T;
-                if (aspect.Init(entity, path)) {
-                    return aspect;
-                }
-                return null;
+                return aspect;
             });
         }
 

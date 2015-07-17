@@ -27,27 +27,6 @@ namespace angeldnd.dap {
             _Revision += 1;                                           //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public Data Encode() {                                        //__SILP__
-            if (!string.IsNullOrEmpty(Type)) {                        //__SILP__
-                Data data = new Data();                               //__SILP__
-                if (data.SetString(DapObjectConsts.KeyType, Type)) {  //__SILP__
-                    if (DoEncode(data)) {                             //__SILP__
-                        return data;                                  //__SILP__
-                    }                                                 //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            if (LogDebug) Debug("Not Encodable!");                    //__SILP__
-            return null;                                              //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool Decode(Data data) {                               //__SILP__
-            string type = data.GetString(DapObjectConsts.KeyType);    //__SILP__
-            if (type == Type) {                                       //__SILP__
-                return DoDecode(data);                                //__SILP__
-            }                                                         //__SILP__
-            return false;                                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
         //SILP: ASPECT_MIXIN()
         private Entity _Entity = null;                                            //__SILP__
         public Entity Entity {                                                    //__SILP__
@@ -91,15 +70,6 @@ namespace angeldnd.dap {
         //SILP: ASPECT_EVENTS_MIXIN()
         public virtual void OnAdded() {}                              //__SILP__
         public virtual void OnRemoved() {}                            //__SILP__
-        //SILP: ASPECT_ENCODE_DECODE_MIXIN()
-        protected virtual bool DoEncode(Data data) {                  //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected virtual bool DoDecode(Data data) {                  //__SILP__
-            return true;                                              //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
 
         //SILP: ASPECT_LOG_MIXIN(virtual)
         public virtual string GetLogPrefix() {                                                           //__SILP__

@@ -5,9 +5,6 @@ namespace angeldnd.dap {
         string Type { get; }
         int Revision { get; } //Mainly For Debugging
 
-        Data Encode();
-        bool Decode(Data data);
-
         bool DebugMode { get; }
         string GetLogPrefix();
     }

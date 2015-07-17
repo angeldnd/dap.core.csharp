@@ -120,18 +120,6 @@ public virtual void OnAdded() {}
 public virtual void OnRemoved() {}
 ```
 
-# ASPECT_ENCODE_DECODE_MIXIN() #
-```
-protected virtual bool DoEncode(Data data) {
-    return true;
-}
-
-protected virtual bool DoDecode(Data data) {
-    return true;
-}
-
-```
-
 # DAPOBJECT_MIXIN() #
 ```
 public virtual string Type {
@@ -145,27 +133,6 @@ public int Revision {
 
 protected virtual void AdvanceRevision() {
     _Revision += 1;
-}
-
-public Data Encode() {
-    if (!string.IsNullOrEmpty(Type)) {
-        Data data = new Data();
-        if (data.SetString(DapObjectConsts.KeyType, Type)) {
-            if (DoEncode(data)) {
-                return data;
-            }
-        }
-    }
-    if (LogDebug) Debug("Not Encodable!");
-    return null;
-}
-
-public bool Decode(Data data) {
-    string type = data.GetString(DapObjectConsts.KeyType);
-    if (type == Type) {
-        return DoDecode(data);
-    }
-    return false;
 }
 
 ```

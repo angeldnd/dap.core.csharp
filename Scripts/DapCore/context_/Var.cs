@@ -93,13 +93,5 @@ namespace angeldnd.dap {
         public virtual Object GetValue() {
             return _Value;
         }
-
-        protected override bool DoEncode(Data data) {
-            return false;
-        }
-
-        protected override bool DoDecode(Data data) {
-            return false;
-        }
     }
 }

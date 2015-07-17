@@ -297,7 +297,7 @@ public class ${type}Property : Property<${cs_type}> {
         return data.Set${type}(PropertiesConsts.KeyValue, Value);
     }
 
-    public override bool DoDecode(Pass pass, Data data) {
+    protected override bool DoDecode(Pass pass, Data data) {
         return SetValue(pass, data.Get${type}(PropertiesConsts.KeyValue));
     }
 
