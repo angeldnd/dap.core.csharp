@@ -156,6 +156,8 @@ namespace angeldnd.dap {
                 } else {
                     Error("Failed to Factory Aspect: {0}, {1}", path, type);
                 }
+            } else {
+                Error("Aspect Already Exist: {0}, {1}", path, type);
             }
             return null;
         }
@@ -189,6 +191,8 @@ namespace angeldnd.dap {
                 } else {
                     Error("Failed to Create Aspect: {0}, {1}", path, typeof(T));
                 }
+            } else {
+                Error("Aspect Already Exist: {0}, {1}", path, typeof(T));
             }
             return null;
         }
@@ -215,6 +219,8 @@ namespace angeldnd.dap {
                     _Watchers[i].OnAspectRemoved(this, aspect);
                 }
                 return aspect;
+            } else {
+                Error("Aspect Not Exist: {0}, {1}", path, typeof(T));
             }
             return null;
         }
