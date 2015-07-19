@@ -293,16 +293,11 @@ public bool WriteSecured {
     }
 }
 
-public bool SetPass(Pass pass) {
-    if (_Pass == pass) {
-        return true;
-    } else if (_Pass == null) {
+public bool Init(Entity entity, string path, Pass pass) {
+    if (base.Init(entity, path)) {
         _Pass = pass;
         return true;
-    } else if (_Pass.Equals(pass)) {
-        return true;
     }
-    Error("SetPass Failed: {0} -> {1}", _Pass, pass);
     return false;
 }
 

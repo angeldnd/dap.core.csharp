@@ -82,8 +82,8 @@ namespace angeldnd.dap {
         }
 
         public bool Setup(Pass pass, RequestHandler handler) {
+            if (!CheckAdminPass(pass)) return false;
             if (_Handler == null) {
-                if (!SetPass(pass)) return false;
                 _Handler = handler;
                 return true;
             }
@@ -92,7 +92,7 @@ namespace angeldnd.dap {
         }
 
         public bool Setup(RequestHandler handler) {
-            return Setup(Pass, handler);
+            return Setup(null, handler);
         }
 
         //SILP: DECLARE_SECURE_LIST(RequestChecker, checker, RequestChecker, _RequestCheckers)

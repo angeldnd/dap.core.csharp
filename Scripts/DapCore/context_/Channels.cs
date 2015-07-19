@@ -8,11 +8,7 @@ namespace angeldnd.dap {
         }
 
         public Channel AddChannel(string channelPath, Pass pass) {
-            Channel channel = Add<Channel>(channelPath);
-            if (channel != null) {
-                channel.SetPass(pass);
-            }
-            return channel;
+            return Add<Channel>(channelPath, pass);
         }
 
         public Channel AddChannel(string channelPath) {

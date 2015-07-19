@@ -8,11 +8,7 @@ namespace angeldnd.dap {
         }
 
         public Handler AddHandler(string handlerPath, Pass pass) {
-            Handler handler = Add<Handler>(handlerPath);
-            if (handler != null) {
-                handler.SetPass(pass);
-            }
-            return handler;
+            return Add<Handler>(handlerPath, pass);
         }
 
         public Handler AddHandler(string handlerPath) {

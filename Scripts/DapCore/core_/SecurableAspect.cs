@@ -2,7 +2,8 @@ using System;
 
 namespace angeldnd.dap {
     public interface SecurableAspect : Aspect {
-        bool SetPass(Pass pass);
+        bool Init(Entity entity, string path, Pass pass);
+
         bool AdminSecured { get; }
         bool WriteSecured { get; }
         bool CheckAdminPass(Pass pass);
@@ -30,16 +31,11 @@ namespace angeldnd.dap {
             }                                                                   //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
-        public bool SetPass(Pass pass) {                                        //__SILP__
-            if (_Pass == pass) {                                                //__SILP__
-                return true;                                                    //__SILP__
-            } else if (_Pass == null) {                                         //__SILP__
+        public bool Init(Entity entity, string path, Pass pass) {               //__SILP__
+            if (base.Init(entity, path)) {                                      //__SILP__
                 _Pass = pass;                                                   //__SILP__
                 return true;                                                    //__SILP__
-            } else if (_Pass.Equals(pass)) {                                    //__SILP__
-                return true;                                                    //__SILP__
             }                                                                   //__SILP__
-            Error("SetPass Failed: {0} -> {1}", _Pass, pass);                   //__SILP__
             return false;                                                       //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
@@ -82,16 +78,11 @@ namespace angeldnd.dap {
             }                                                                   //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
-        public bool SetPass(Pass pass) {                                        //__SILP__
-            if (_Pass == pass) {                                                //__SILP__
-                return true;                                                    //__SILP__
-            } else if (_Pass == null) {                                         //__SILP__
+        public bool Init(Entity entity, string path, Pass pass) {               //__SILP__
+            if (base.Init(entity, path)) {                                      //__SILP__
                 _Pass = pass;                                                   //__SILP__
                 return true;                                                    //__SILP__
-            } else if (_Pass.Equals(pass)) {                                    //__SILP__
-                return true;                                                    //__SILP__
             }                                                                   //__SILP__
-            Error("SetPass Failed: {0} -> {1}", _Pass, pass);                   //__SILP__
             return false;                                                       //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__

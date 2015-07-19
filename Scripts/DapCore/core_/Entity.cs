@@ -164,14 +164,13 @@ namespace angeldnd.dap {
 
         private bool InitAddAspect(Aspect aspect, string path, Pass pass) {
             if (aspect != null) {
-                if (pass != null && aspect is SecurableAspect) {
+                if (aspect is SecurableAspect) {
                     var sa = aspect as SecurableAspect;
-                    if (!sa.SetPass(pass)) {
-                        return false;
-                    }
-                }
-                if (aspect.Init(this, path)) {
-                    return AddAspect(aspect);
+                    return sa.Init(this, path, pass) && AddAspect(sa);
+                } else if (pass == null) {
+                    return aspect.Init(this, path) && AddAspect(aspect);
+                } else {
+                    Error("Aspect Is Not Securable: {0}, {1} -> {2}", path, pass, aspect);
                 }
             }
             return false;

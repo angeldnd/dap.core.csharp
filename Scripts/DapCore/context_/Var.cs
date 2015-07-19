@@ -24,9 +24,9 @@ namespace angeldnd.dap {
             get { return !_Setup; }
         }
 
-        public virtual bool Setup(Pass pass, T defaultValue) {
+        public bool Setup(Pass pass, T defaultValue) {
+            if (!CheckAdminPass(pass)) return false;
             if (!_Setup) {
-                if (!SetPass(pass)) return false;
                 _Setup = true;
                 UpdateValue(defaultValue);
                 return true;
@@ -36,12 +36,12 @@ namespace angeldnd.dap {
             }
         }
 
-        public virtual bool Setup(T defaultValue) {
-            return Setup(Pass, defaultValue);
+        public bool Setup(T defaultValue) {
+            return Setup(null, defaultValue);
         }
 
-        public virtual bool Setup() {
-            return Setup(Pass, default(T));
+        protected virtual T GetDefaultValue() {
+            return default(T);
         }
 
         //SILP: DECLARE_LIST(VarWatcher, watcher, VarWatcher, _VarWatchers)
@@ -86,8 +86,8 @@ namespace angeldnd.dap {
         }
 
         public virtual bool SetValue(Pass pass, T newValue) {
-            if (!_Setup) Setup();
             if (!CheckWritePass(pass)) return false;
+            if (!_Setup) Setup(pass, GetDefaultValue());
 
             UpdateValue(newValue);
             return true;
