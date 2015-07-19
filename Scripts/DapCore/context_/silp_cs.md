@@ -139,7 +139,7 @@ public bool Remove${name}(string ${a_path}, ${l_type} ${l_var}) {
 # PROPERTIES_HELPER(type, cs_type) #
 ```C#
 public ${type}Property Add${type}(string path, Pass pass, ${cs_type} val) {
-    ${type}Property v = Add<${type}Property>(path);
+    ${type}Property v = Add<${type}Property>(path, pass);
     if (v != null && !v.Setup(pass, val)) {
         Remove<${type}Property>(path);
         v = null;

@@ -23,7 +23,7 @@ namespace angeldnd.dap {
 
         //SILP: PROPERTIES_HELPER(Bool, bool)
         public BoolProperty AddBool(string path, Pass pass, bool val) {                                                            //__SILP__
-            BoolProperty v = Add<BoolProperty>(path);                                                                              //__SILP__
+            BoolProperty v = Add<BoolProperty>(path, pass);                                                                        //__SILP__
             if (v != null && !v.Setup(pass, val)) {                                                                                //__SILP__
                 Remove<BoolProperty>(path);                                                                                        //__SILP__
                 v = null;                                                                                                          //__SILP__
@@ -142,7 +142,7 @@ namespace angeldnd.dap {
                                                                                                                                    //__SILP__
         //SILP: PROPERTIES_HELPER(Int, int)
         public IntProperty AddInt(string path, Pass pass, int val) {                                                            //__SILP__
-            IntProperty v = Add<IntProperty>(path);                                                                             //__SILP__
+            IntProperty v = Add<IntProperty>(path, pass);                                                                       //__SILP__
             if (v != null && !v.Setup(pass, val)) {                                                                             //__SILP__
                 Remove<IntProperty>(path);                                                                                      //__SILP__
                 v = null;                                                                                                       //__SILP__
@@ -261,7 +261,7 @@ namespace angeldnd.dap {
                                                                                                                                 //__SILP__
         //SILP: PROPERTIES_HELPER(Long, long)
         public LongProperty AddLong(string path, Pass pass, long val) {                                                            //__SILP__
-            LongProperty v = Add<LongProperty>(path);                                                                              //__SILP__
+            LongProperty v = Add<LongProperty>(path, pass);                                                                        //__SILP__
             if (v != null && !v.Setup(pass, val)) {                                                                                //__SILP__
                 Remove<LongProperty>(path);                                                                                        //__SILP__
                 v = null;                                                                                                          //__SILP__
@@ -380,7 +380,7 @@ namespace angeldnd.dap {
                                                                                                                                    //__SILP__
         //SILP: PROPERTIES_HELPER(Float, float)
         public FloatProperty AddFloat(string path, Pass pass, float val) {                                                            //__SILP__
-            FloatProperty v = Add<FloatProperty>(path);                                                                               //__SILP__
+            FloatProperty v = Add<FloatProperty>(path, pass);                                                                         //__SILP__
             if (v != null && !v.Setup(pass, val)) {                                                                                   //__SILP__
                 Remove<FloatProperty>(path);                                                                                          //__SILP__
                 v = null;                                                                                                             //__SILP__
@@ -499,7 +499,7 @@ namespace angeldnd.dap {
                                                                                                                                       //__SILP__
         //SILP: PROPERTIES_HELPER(Double, double)
         public DoubleProperty AddDouble(string path, Pass pass, double val) {                                                            //__SILP__
-            DoubleProperty v = Add<DoubleProperty>(path);                                                                                //__SILP__
+            DoubleProperty v = Add<DoubleProperty>(path, pass);                                                                          //__SILP__
             if (v != null && !v.Setup(pass, val)) {                                                                                      //__SILP__
                 Remove<DoubleProperty>(path);                                                                                            //__SILP__
                 v = null;                                                                                                                //__SILP__
@@ -618,7 +618,7 @@ namespace angeldnd.dap {
                                                                                                                                          //__SILP__
         //SILP: PROPERTIES_HELPER(String, string)
         public StringProperty AddString(string path, Pass pass, string val) {                                                            //__SILP__
-            StringProperty v = Add<StringProperty>(path);                                                                                //__SILP__
+            StringProperty v = Add<StringProperty>(path, pass);                                                                          //__SILP__
             if (v != null && !v.Setup(pass, val)) {                                                                                      //__SILP__
                 Remove<StringProperty>(path);                                                                                            //__SILP__
                 v = null;                                                                                                                //__SILP__
@@ -737,7 +737,7 @@ namespace angeldnd.dap {
                                                                                                                                          //__SILP__
         //SILP: PROPERTIES_HELPER(Data, Data)
         public DataProperty AddData(string path, Pass pass, Data val) {                                                            //__SILP__
-            DataProperty v = Add<DataProperty>(path);                                                                              //__SILP__
+            DataProperty v = Add<DataProperty>(path, pass);                                                                        //__SILP__
             if (v != null && !v.Setup(pass, val)) {                                                                                //__SILP__
                 Remove<DataProperty>(path);                                                                                        //__SILP__
                 v = null;                                                                                                          //__SILP__
