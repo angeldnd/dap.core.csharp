@@ -8,7 +8,7 @@ namespace angeldnd.dap {
         }
 
         public Var<T> AddVar<T>(string path, Pass pass, T val) {
-            Var<T> result = Add<Var<T>>(path);
+            Var<T> result = Add<Var<T>>(path, pass);
             if (result != null && !result.Setup(pass, val)) {
                 Remove<Var<T>>(path);
                 result = null;
