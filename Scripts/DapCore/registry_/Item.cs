@@ -77,20 +77,28 @@ namespace angeldnd.dap {
             _Registry = null;
         }
 
+        public ItemAspect TypeAspect {
+            get { return Get<ItemAspect>(ItemConsts.AspectType); }
+        }
+
         public bool Setup(string itemType) {
-            if (HasString(ItemConsts.PropType)) {
+            if (IsString(ItemConsts.PropType)) {
                 Error("Already Setup: {0} -> {1}, {2}", GetString(ItemConsts.PropType), itemType);
                 return false;
             }
-            if (itemType == ItemConst.TypeItem || string.IsNullOrEmpty(itemType)) {
+            if (itemType == ItemConsts.TypeItem || string.IsNullOrEmpty(itemType)) {
                 SetString(ItemConsts.PropType, ItemConsts.TypeItem);
                 return true;
             }
 
             Aspect aspect = Add(ItemConsts.AspectType, itemType, Pass);
             if (aspect != null) {
-                SetString(ItemConsts.PropType, itemType);
-                return true;
+                if (aspect is ItemAspect) {
+                    SetString(ItemConsts.PropType, itemType);
+                    return true;
+                } else {
+                    Error("Invalid Type: {0} -> {1}", itemType, aspect.GetType());
+                }
             }
             SetString(ItemConsts.PropType, ItemConsts.TypeItem);
             return false;

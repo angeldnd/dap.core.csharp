@@ -145,6 +145,14 @@ namespace angeldnd.dap {
             return Get<Item>(absPath);
         }
 
+        public T GetDescendant<T>(string path, string relativePath) where T : ItemAspect {
+            Item item = GetDescendant(path, relativePath);
+            if (item != null) {
+                return item.TypeAspect as T;
+            }
+            return null;
+        }
+
         public T GetDescendantAspect<T>(string path, string relativePath, string aspectPath) where T : class, Aspect {
             string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
             return GetItemAspect<T>(absPath, aspectPath);
@@ -164,16 +172,16 @@ namespace angeldnd.dap {
             return Get<Item>(parentPath.ToString());
         }
 
-        public Item GetAncestorWithAspect<T>(string path, string aspectPath) where T : class, Aspect {
-            Item parent = GetParent<Item>(path);
+        public T GetAncestor<T>(string path) where T : ItemAspect {
+            Item parent = GetParent(path);
             if (parent == null) {
                 return null;
             } else {
-                T aspect = item.Get<T>(aspectPath);
+                T aspect = parent.TypeAspect as T;
                 if (aspect != null) {
                     return aspect;
                 } else {
-                    return GetAncestorWithAspect<T>(parent.Path, aspectPath);
+                    return GetAncestor<T>(parent.Path);
                 }
             }
         }
