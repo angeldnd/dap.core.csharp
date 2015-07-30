@@ -160,11 +160,13 @@ public ${type}Property Remove${type}(string path) {
 }
 
 public bool Add${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_type}> checker) {
-     ${type}Property p = Get<${type}Property>(path);
-     if (p != null) {
+    ${type}Property p = Get<${type}Property>(path);
+    if (p != null) {
         return p.AddValueChecker(pass, checker);
-     }
-     return false;
+    } else {
+        Error("Property Not Exist: {0}", path);
+    }
+    return false;
 }
 
 public bool Add${type}ValueChecker(string path, ValueChecker<${cs_type}> checker) {
@@ -175,6 +177,8 @@ public bool Remove${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.RemoveValueChecker(pass, checker);
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return false;
 }
@@ -187,6 +191,8 @@ public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, Pass pa
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.AddBlockValueChecker(pass, block);
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return null;
 }
@@ -199,6 +205,8 @@ public bool Add${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watcher
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.AddValueWatcher(watcher);
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return false;
 }
@@ -207,6 +215,8 @@ public bool Remove${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watc
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.RemoveValueWatcher(watcher);
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return false;
 }
@@ -215,6 +225,8 @@ public ${type}BlockValueWatcher Add${type}BlockValueWatcher(string path, ${type}
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.AddBlockValueWatcher(block);
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return null;
 }
@@ -227,6 +239,8 @@ public ${cs_type} Get${type}(string path) {
     ${type}Property v = Get<${type}Property>(path);
     if (v != null) {
         return v.Value;
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return default(${cs_type});
 }
@@ -235,6 +249,8 @@ public ${cs_type} Get${type}(string path, ${cs_type} defaultValue) {
     ${type}Property v = Get<${type}Property>(path);
     if (v != null) {
         return v.Value;
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return defaultValue;
 }
@@ -244,6 +260,8 @@ public bool Set${type}(string path, ${cs_type} val) {
     ${type}Property v = Get<${type}Property>(path);
     if (v != null) {
         return v.SetValue(val);
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return false;
 }
@@ -252,6 +270,8 @@ public bool Set${type}(string path, Pass pass, ${cs_type} val) {
     ${type}Property v = Get<${type}Property>(path);
     if (v != null) {
         return v.SetValue(pass, val);
+    } else {
+        Error("Property Not Exist: {0}", path);
     }
     return false;
 }

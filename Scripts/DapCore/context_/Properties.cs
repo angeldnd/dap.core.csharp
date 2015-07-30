@@ -44,11 +44,13 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddBoolValueChecker(string path, Pass pass, ValueChecker<bool> checker) {                                      //__SILP__
-             BoolProperty p = Get<BoolProperty>(path);                                                                             //__SILP__
-             if (p != null) {                                                                                                      //__SILP__
+            BoolProperty p = Get<BoolProperty>(path);                                                                              //__SILP__
+            if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                           //__SILP__
-             }                                                                                                                     //__SILP__
-             return false;                                                                                                         //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
+            }                                                                                                                      //__SILP__
+            return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddBoolValueChecker(string path, ValueChecker<bool> checker) {                                                 //__SILP__
@@ -59,6 +61,8 @@ namespace angeldnd.dap {
             BoolProperty p = Get<BoolProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                        //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -71,6 +75,8 @@ namespace angeldnd.dap {
             BoolProperty p = Get<BoolProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddBlockValueChecker(pass, block);                                                                        //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return null;                                                                                                           //__SILP__
         }                                                                                                                          //__SILP__
@@ -83,6 +89,8 @@ namespace angeldnd.dap {
             BoolProperty p = Get<BoolProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueWatcher(watcher);                                                                                 //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -91,6 +99,8 @@ namespace angeldnd.dap {
             BoolProperty p = Get<BoolProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                              //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -99,6 +109,8 @@ namespace angeldnd.dap {
             BoolProperty p = Get<BoolProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddBlockValueWatcher(block);                                                                              //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return null;                                                                                                           //__SILP__
         }                                                                                                                          //__SILP__
@@ -111,6 +123,8 @@ namespace angeldnd.dap {
             BoolProperty v = Get<BoolProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.Value;                                                                                                    //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return default(bool);                                                                                                  //__SILP__
         }                                                                                                                          //__SILP__
@@ -119,6 +133,8 @@ namespace angeldnd.dap {
             BoolProperty v = Get<BoolProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.Value;                                                                                                    //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return defaultValue;                                                                                                   //__SILP__
         }                                                                                                                          //__SILP__
@@ -128,6 +144,8 @@ namespace angeldnd.dap {
             BoolProperty v = Get<BoolProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.SetValue(val);                                                                                            //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -136,6 +154,8 @@ namespace angeldnd.dap {
             BoolProperty v = Get<BoolProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.SetValue(pass, val);                                                                                      //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -163,11 +183,13 @@ namespace angeldnd.dap {
         }                                                                                                                       //__SILP__
                                                                                                                                 //__SILP__
         public bool AddIntValueChecker(string path, Pass pass, ValueChecker<int> checker) {                                     //__SILP__
-             IntProperty p = Get<IntProperty>(path);                                                                            //__SILP__
-             if (p != null) {                                                                                                   //__SILP__
+            IntProperty p = Get<IntProperty>(path);                                                                             //__SILP__
+            if (p != null) {                                                                                                    //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                        //__SILP__
-             }                                                                                                                  //__SILP__
-             return false;                                                                                                      //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
+            }                                                                                                                   //__SILP__
+            return false;                                                                                                       //__SILP__
         }                                                                                                                       //__SILP__
                                                                                                                                 //__SILP__
         public bool AddIntValueChecker(string path, ValueChecker<int> checker) {                                                //__SILP__
@@ -178,6 +200,8 @@ namespace angeldnd.dap {
             IntProperty p = Get<IntProperty>(path);                                                                             //__SILP__
             if (p != null) {                                                                                                    //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                     //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return false;                                                                                                       //__SILP__
         }                                                                                                                       //__SILP__
@@ -190,6 +214,8 @@ namespace angeldnd.dap {
             IntProperty p = Get<IntProperty>(path);                                                                             //__SILP__
             if (p != null) {                                                                                                    //__SILP__
                 return p.AddBlockValueChecker(pass, block);                                                                     //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return null;                                                                                                        //__SILP__
         }                                                                                                                       //__SILP__
@@ -202,6 +228,8 @@ namespace angeldnd.dap {
             IntProperty p = Get<IntProperty>(path);                                                                             //__SILP__
             if (p != null) {                                                                                                    //__SILP__
                 return p.AddValueWatcher(watcher);                                                                              //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return false;                                                                                                       //__SILP__
         }                                                                                                                       //__SILP__
@@ -210,6 +238,8 @@ namespace angeldnd.dap {
             IntProperty p = Get<IntProperty>(path);                                                                             //__SILP__
             if (p != null) {                                                                                                    //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                           //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return false;                                                                                                       //__SILP__
         }                                                                                                                       //__SILP__
@@ -218,6 +248,8 @@ namespace angeldnd.dap {
             IntProperty p = Get<IntProperty>(path);                                                                             //__SILP__
             if (p != null) {                                                                                                    //__SILP__
                 return p.AddBlockValueWatcher(block);                                                                           //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return null;                                                                                                        //__SILP__
         }                                                                                                                       //__SILP__
@@ -230,6 +262,8 @@ namespace angeldnd.dap {
             IntProperty v = Get<IntProperty>(path);                                                                             //__SILP__
             if (v != null) {                                                                                                    //__SILP__
                 return v.Value;                                                                                                 //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return default(int);                                                                                                //__SILP__
         }                                                                                                                       //__SILP__
@@ -238,6 +272,8 @@ namespace angeldnd.dap {
             IntProperty v = Get<IntProperty>(path);                                                                             //__SILP__
             if (v != null) {                                                                                                    //__SILP__
                 return v.Value;                                                                                                 //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return defaultValue;                                                                                                //__SILP__
         }                                                                                                                       //__SILP__
@@ -247,6 +283,8 @@ namespace angeldnd.dap {
             IntProperty v = Get<IntProperty>(path);                                                                             //__SILP__
             if (v != null) {                                                                                                    //__SILP__
                 return v.SetValue(val);                                                                                         //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return false;                                                                                                       //__SILP__
         }                                                                                                                       //__SILP__
@@ -255,6 +293,8 @@ namespace angeldnd.dap {
             IntProperty v = Get<IntProperty>(path);                                                                             //__SILP__
             if (v != null) {                                                                                                    //__SILP__
                 return v.SetValue(pass, val);                                                                                   //__SILP__
+            } else {                                                                                                            //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                         //__SILP__
             }                                                                                                                   //__SILP__
             return false;                                                                                                       //__SILP__
         }                                                                                                                       //__SILP__
@@ -282,11 +322,13 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddLongValueChecker(string path, Pass pass, ValueChecker<long> checker) {                                      //__SILP__
-             LongProperty p = Get<LongProperty>(path);                                                                             //__SILP__
-             if (p != null) {                                                                                                      //__SILP__
+            LongProperty p = Get<LongProperty>(path);                                                                              //__SILP__
+            if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                           //__SILP__
-             }                                                                                                                     //__SILP__
-             return false;                                                                                                         //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
+            }                                                                                                                      //__SILP__
+            return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddLongValueChecker(string path, ValueChecker<long> checker) {                                                 //__SILP__
@@ -297,6 +339,8 @@ namespace angeldnd.dap {
             LongProperty p = Get<LongProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                        //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -309,6 +353,8 @@ namespace angeldnd.dap {
             LongProperty p = Get<LongProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddBlockValueChecker(pass, block);                                                                        //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return null;                                                                                                           //__SILP__
         }                                                                                                                          //__SILP__
@@ -321,6 +367,8 @@ namespace angeldnd.dap {
             LongProperty p = Get<LongProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueWatcher(watcher);                                                                                 //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -329,6 +377,8 @@ namespace angeldnd.dap {
             LongProperty p = Get<LongProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                              //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -337,6 +387,8 @@ namespace angeldnd.dap {
             LongProperty p = Get<LongProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddBlockValueWatcher(block);                                                                              //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return null;                                                                                                           //__SILP__
         }                                                                                                                          //__SILP__
@@ -349,6 +401,8 @@ namespace angeldnd.dap {
             LongProperty v = Get<LongProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.Value;                                                                                                    //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return default(long);                                                                                                  //__SILP__
         }                                                                                                                          //__SILP__
@@ -357,6 +411,8 @@ namespace angeldnd.dap {
             LongProperty v = Get<LongProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.Value;                                                                                                    //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return defaultValue;                                                                                                   //__SILP__
         }                                                                                                                          //__SILP__
@@ -366,6 +422,8 @@ namespace angeldnd.dap {
             LongProperty v = Get<LongProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.SetValue(val);                                                                                            //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -374,6 +432,8 @@ namespace angeldnd.dap {
             LongProperty v = Get<LongProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.SetValue(pass, val);                                                                                      //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -401,11 +461,13 @@ namespace angeldnd.dap {
         }                                                                                                                             //__SILP__
                                                                                                                                       //__SILP__
         public bool AddFloatValueChecker(string path, Pass pass, ValueChecker<float> checker) {                                       //__SILP__
-             FloatProperty p = Get<FloatProperty>(path);                                                                              //__SILP__
-             if (p != null) {                                                                                                         //__SILP__
+            FloatProperty p = Get<FloatProperty>(path);                                                                               //__SILP__
+            if (p != null) {                                                                                                          //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                              //__SILP__
-             }                                                                                                                        //__SILP__
-             return false;                                                                                                            //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
+            }                                                                                                                         //__SILP__
+            return false;                                                                                                             //__SILP__
         }                                                                                                                             //__SILP__
                                                                                                                                       //__SILP__
         public bool AddFloatValueChecker(string path, ValueChecker<float> checker) {                                                  //__SILP__
@@ -416,6 +478,8 @@ namespace angeldnd.dap {
             FloatProperty p = Get<FloatProperty>(path);                                                                               //__SILP__
             if (p != null) {                                                                                                          //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                           //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return false;                                                                                                             //__SILP__
         }                                                                                                                             //__SILP__
@@ -428,6 +492,8 @@ namespace angeldnd.dap {
             FloatProperty p = Get<FloatProperty>(path);                                                                               //__SILP__
             if (p != null) {                                                                                                          //__SILP__
                 return p.AddBlockValueChecker(pass, block);                                                                           //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return null;                                                                                                              //__SILP__
         }                                                                                                                             //__SILP__
@@ -440,6 +506,8 @@ namespace angeldnd.dap {
             FloatProperty p = Get<FloatProperty>(path);                                                                               //__SILP__
             if (p != null) {                                                                                                          //__SILP__
                 return p.AddValueWatcher(watcher);                                                                                    //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return false;                                                                                                             //__SILP__
         }                                                                                                                             //__SILP__
@@ -448,6 +516,8 @@ namespace angeldnd.dap {
             FloatProperty p = Get<FloatProperty>(path);                                                                               //__SILP__
             if (p != null) {                                                                                                          //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                                 //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return false;                                                                                                             //__SILP__
         }                                                                                                                             //__SILP__
@@ -456,6 +526,8 @@ namespace angeldnd.dap {
             FloatProperty p = Get<FloatProperty>(path);                                                                               //__SILP__
             if (p != null) {                                                                                                          //__SILP__
                 return p.AddBlockValueWatcher(block);                                                                                 //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return null;                                                                                                              //__SILP__
         }                                                                                                                             //__SILP__
@@ -468,6 +540,8 @@ namespace angeldnd.dap {
             FloatProperty v = Get<FloatProperty>(path);                                                                               //__SILP__
             if (v != null) {                                                                                                          //__SILP__
                 return v.Value;                                                                                                       //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return default(float);                                                                                                    //__SILP__
         }                                                                                                                             //__SILP__
@@ -476,6 +550,8 @@ namespace angeldnd.dap {
             FloatProperty v = Get<FloatProperty>(path);                                                                               //__SILP__
             if (v != null) {                                                                                                          //__SILP__
                 return v.Value;                                                                                                       //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return defaultValue;                                                                                                      //__SILP__
         }                                                                                                                             //__SILP__
@@ -485,6 +561,8 @@ namespace angeldnd.dap {
             FloatProperty v = Get<FloatProperty>(path);                                                                               //__SILP__
             if (v != null) {                                                                                                          //__SILP__
                 return v.SetValue(val);                                                                                               //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return false;                                                                                                             //__SILP__
         }                                                                                                                             //__SILP__
@@ -493,6 +571,8 @@ namespace angeldnd.dap {
             FloatProperty v = Get<FloatProperty>(path);                                                                               //__SILP__
             if (v != null) {                                                                                                          //__SILP__
                 return v.SetValue(pass, val);                                                                                         //__SILP__
+            } else {                                                                                                                  //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                               //__SILP__
             }                                                                                                                         //__SILP__
             return false;                                                                                                             //__SILP__
         }                                                                                                                             //__SILP__
@@ -520,11 +600,13 @@ namespace angeldnd.dap {
         }                                                                                                                                //__SILP__
                                                                                                                                          //__SILP__
         public bool AddDoubleValueChecker(string path, Pass pass, ValueChecker<double> checker) {                                        //__SILP__
-             DoubleProperty p = Get<DoubleProperty>(path);                                                                               //__SILP__
-             if (p != null) {                                                                                                            //__SILP__
+            DoubleProperty p = Get<DoubleProperty>(path);                                                                                //__SILP__
+            if (p != null) {                                                                                                             //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                                 //__SILP__
-             }                                                                                                                           //__SILP__
-             return false;                                                                                                               //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
+            }                                                                                                                            //__SILP__
+            return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
                                                                                                                                          //__SILP__
         public bool AddDoubleValueChecker(string path, ValueChecker<double> checker) {                                                   //__SILP__
@@ -535,6 +617,8 @@ namespace angeldnd.dap {
             DoubleProperty p = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                              //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -547,6 +631,8 @@ namespace angeldnd.dap {
             DoubleProperty p = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.AddBlockValueChecker(pass, block);                                                                              //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return null;                                                                                                                 //__SILP__
         }                                                                                                                                //__SILP__
@@ -559,6 +645,8 @@ namespace angeldnd.dap {
             DoubleProperty p = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.AddValueWatcher(watcher);                                                                                       //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -567,6 +655,8 @@ namespace angeldnd.dap {
             DoubleProperty p = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                                    //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -575,6 +665,8 @@ namespace angeldnd.dap {
             DoubleProperty p = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.AddBlockValueWatcher(block);                                                                                    //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return null;                                                                                                                 //__SILP__
         }                                                                                                                                //__SILP__
@@ -587,6 +679,8 @@ namespace angeldnd.dap {
             DoubleProperty v = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (v != null) {                                                                                                             //__SILP__
                 return v.Value;                                                                                                          //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return default(double);                                                                                                      //__SILP__
         }                                                                                                                                //__SILP__
@@ -595,6 +689,8 @@ namespace angeldnd.dap {
             DoubleProperty v = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (v != null) {                                                                                                             //__SILP__
                 return v.Value;                                                                                                          //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return defaultValue;                                                                                                         //__SILP__
         }                                                                                                                                //__SILP__
@@ -604,6 +700,8 @@ namespace angeldnd.dap {
             DoubleProperty v = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (v != null) {                                                                                                             //__SILP__
                 return v.SetValue(val);                                                                                                  //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -612,6 +710,8 @@ namespace angeldnd.dap {
             DoubleProperty v = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (v != null) {                                                                                                             //__SILP__
                 return v.SetValue(pass, val);                                                                                            //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -639,11 +739,13 @@ namespace angeldnd.dap {
         }                                                                                                                                //__SILP__
                                                                                                                                          //__SILP__
         public bool AddStringValueChecker(string path, Pass pass, ValueChecker<string> checker) {                                        //__SILP__
-             StringProperty p = Get<StringProperty>(path);                                                                               //__SILP__
-             if (p != null) {                                                                                                            //__SILP__
+            StringProperty p = Get<StringProperty>(path);                                                                                //__SILP__
+            if (p != null) {                                                                                                             //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                                 //__SILP__
-             }                                                                                                                           //__SILP__
-             return false;                                                                                                               //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
+            }                                                                                                                            //__SILP__
+            return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
                                                                                                                                          //__SILP__
         public bool AddStringValueChecker(string path, ValueChecker<string> checker) {                                                   //__SILP__
@@ -654,6 +756,8 @@ namespace angeldnd.dap {
             StringProperty p = Get<StringProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                              //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -666,6 +770,8 @@ namespace angeldnd.dap {
             StringProperty p = Get<StringProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.AddBlockValueChecker(pass, block);                                                                              //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return null;                                                                                                                 //__SILP__
         }                                                                                                                                //__SILP__
@@ -678,6 +784,8 @@ namespace angeldnd.dap {
             StringProperty p = Get<StringProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.AddValueWatcher(watcher);                                                                                       //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -686,6 +794,8 @@ namespace angeldnd.dap {
             StringProperty p = Get<StringProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                                    //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -694,6 +804,8 @@ namespace angeldnd.dap {
             StringProperty p = Get<StringProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.AddBlockValueWatcher(block);                                                                                    //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return null;                                                                                                                 //__SILP__
         }                                                                                                                                //__SILP__
@@ -706,6 +818,8 @@ namespace angeldnd.dap {
             StringProperty v = Get<StringProperty>(path);                                                                                //__SILP__
             if (v != null) {                                                                                                             //__SILP__
                 return v.Value;                                                                                                          //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return default(string);                                                                                                      //__SILP__
         }                                                                                                                                //__SILP__
@@ -714,6 +828,8 @@ namespace angeldnd.dap {
             StringProperty v = Get<StringProperty>(path);                                                                                //__SILP__
             if (v != null) {                                                                                                             //__SILP__
                 return v.Value;                                                                                                          //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return defaultValue;                                                                                                         //__SILP__
         }                                                                                                                                //__SILP__
@@ -723,6 +839,8 @@ namespace angeldnd.dap {
             StringProperty v = Get<StringProperty>(path);                                                                                //__SILP__
             if (v != null) {                                                                                                             //__SILP__
                 return v.SetValue(val);                                                                                                  //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -731,6 +849,8 @@ namespace angeldnd.dap {
             StringProperty v = Get<StringProperty>(path);                                                                                //__SILP__
             if (v != null) {                                                                                                             //__SILP__
                 return v.SetValue(pass, val);                                                                                            //__SILP__
+            } else {                                                                                                                     //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                                  //__SILP__
             }                                                                                                                            //__SILP__
             return false;                                                                                                                //__SILP__
         }                                                                                                                                //__SILP__
@@ -758,11 +878,13 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddDataValueChecker(string path, Pass pass, ValueChecker<Data> checker) {                                      //__SILP__
-             DataProperty p = Get<DataProperty>(path);                                                                             //__SILP__
-             if (p != null) {                                                                                                      //__SILP__
+            DataProperty p = Get<DataProperty>(path);                                                                              //__SILP__
+            if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                           //__SILP__
-             }                                                                                                                     //__SILP__
-             return false;                                                                                                         //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
+            }                                                                                                                      //__SILP__
+            return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddDataValueChecker(string path, ValueChecker<Data> checker) {                                                 //__SILP__
@@ -773,6 +895,8 @@ namespace angeldnd.dap {
             DataProperty p = Get<DataProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                        //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -785,6 +909,8 @@ namespace angeldnd.dap {
             DataProperty p = Get<DataProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddBlockValueChecker(pass, block);                                                                        //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return null;                                                                                                           //__SILP__
         }                                                                                                                          //__SILP__
@@ -797,6 +923,8 @@ namespace angeldnd.dap {
             DataProperty p = Get<DataProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueWatcher(watcher);                                                                                 //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -805,6 +933,8 @@ namespace angeldnd.dap {
             DataProperty p = Get<DataProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                              //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -813,6 +943,8 @@ namespace angeldnd.dap {
             DataProperty p = Get<DataProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddBlockValueWatcher(block);                                                                              //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return null;                                                                                                           //__SILP__
         }                                                                                                                          //__SILP__
@@ -825,6 +957,8 @@ namespace angeldnd.dap {
             DataProperty v = Get<DataProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.Value;                                                                                                    //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return default(Data);                                                                                                  //__SILP__
         }                                                                                                                          //__SILP__
@@ -833,6 +967,8 @@ namespace angeldnd.dap {
             DataProperty v = Get<DataProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.Value;                                                                                                    //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return defaultValue;                                                                                                   //__SILP__
         }                                                                                                                          //__SILP__
@@ -842,6 +978,8 @@ namespace angeldnd.dap {
             DataProperty v = Get<DataProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.SetValue(val);                                                                                            //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
@@ -850,6 +988,8 @@ namespace angeldnd.dap {
             DataProperty v = Get<DataProperty>(path);                                                                              //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.SetValue(pass, val);                                                                                      //__SILP__
+            } else {                                                                                                               //__SILP__
+                Error("Property Not Exist: {0}", path);                                                                            //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__

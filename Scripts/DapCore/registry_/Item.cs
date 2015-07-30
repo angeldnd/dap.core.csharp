@@ -87,20 +87,20 @@ namespace angeldnd.dap {
                 return false;
             }
             if (itemType == ItemConsts.TypeItem || string.IsNullOrEmpty(itemType)) {
-                SetString(ItemConsts.PropType, ItemConsts.TypeItem);
+                AddString(ItemConsts.PropType, ItemConsts.TypeItem);
                 return true;
             }
 
             Aspect aspect = Add(ItemConsts.AspectType, itemType, Pass);
             if (aspect != null) {
                 if (aspect is ItemAspect) {
-                    SetString(ItemConsts.PropType, itemType);
+                    AddString(ItemConsts.PropType, itemType);
                     return true;
                 } else {
                     Error("Invalid Type: {0} -> {1}", itemType, aspect.GetType());
                 }
             }
-            SetString(ItemConsts.PropType, ItemConsts.TypeItem);
+            AddString(ItemConsts.PropType, ItemConsts.TypeItem);
             return false;
         }
 
