@@ -90,6 +90,8 @@ namespace angeldnd.dap {
             string prefix = ancestorPath + RegistryConsts.Separator;
             if (descendantPath.StartsWith(prefix)) {
                 return descendantPath.Replace(prefix, "");
+            } else {
+                Log.Error("Is Not Desecendant: {0}, {1}", ancestorPath, descendantPath);
             }
             return null;
         }
@@ -112,12 +114,24 @@ namespace angeldnd.dap {
             return aspect;
         }
 
+        public T GetItemAspect<T>(ItemAspect a, string aspectPath) where T : class, Aspect {
+            return GetItemAspect<T>(a.Item.Path, aspectPath);
+        }
+
         public List<Item> GetChildren(string path) {
             return Filter<Item>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegment);
         }
 
+        public List<Item> GetChildren(ItemAspect a) {
+            return GetChildren(a.Item.Path);
+        }
+
         public List<Item> GetDescendants(string path) {
             return Filter<Item>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments);
+        }
+
+        public List<Item> GetDescendants(ItemAspect a) {
+            return GetDescendants(a.Item.Path);
         }
 
         public void FilterDescendantWithAspects<T>(string path, string aspectPath,
@@ -131,6 +145,11 @@ namespace angeldnd.dap {
             });
         }
 
+        public void FilterDescendantWithAspects<T>(ItemAspect a, string aspectPath,
+                                                    OnAspect<T> callback) where T : class, Aspect {
+            FilterDescendantWithAspects<T>(a.Item.Path, aspectPath, callback);
+        }
+
         public List<T> GetDescendantWithAspects<T>(string path, string aspectPath) where T : class, Aspect {
             List<T> result = null;
             FilterDescendantWithAspects(path, aspectPath, (T aspect) => {
@@ -140,22 +159,48 @@ namespace angeldnd.dap {
             return result;
         }
 
+        public List<T> GetDescendantWithAspects<T>(ItemAspect a, string aspectPath) where T : class, Aspect {
+            return GetDescendantWithAspects<T>(a.Item.Path, aspectPath);
+        }
+
         public Item GetDescendant(string path, string relativePath) {
             string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
-            return Get<Item>(absPath);
+            Item result =  Get<Item>(absPath);
+            if (result == null) {
+                Error("Descendant Not Found: {0}", absPath);
+            }
+            return result;
+        }
+
+        public Item GetDescendant(ItemAspect a, string relativePath) {
+            return GetDescendant(a.Item.Path, relativePath);
         }
 
         public T GetDescendant<T>(string path, string relativePath) where T : ItemAspect {
             Item item = GetDescendant(path, relativePath);
             if (item != null) {
-                return item.TypeAspect as T;
+                ItemAspect typeAspect = item.TypeAspect;
+                if (typeAspect != null && typeAspect is T) {
+                    return typeAspect as T;
+                } else {
+                    Error("Descendant Not Matched: {0} -> {1}", typeof(T),
+                            typeAspect == null ? "null" : typeAspect.GetType().ToString());
+                }
             }
             return null;
+        }
+
+        public T GetDescendant<T>(ItemAspect a, string relativePath) where T : ItemAspect {
+            return GetDescendant<T>(a.Item.Path, relativePath);
         }
 
         public T GetDescendantAspect<T>(string path, string relativePath, string aspectPath) where T : class, Aspect {
             string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
             return GetItemAspect<T>(absPath, aspectPath);
+        }
+
+        public T GetDescendantAspect<T>(ItemAspect a, string relativePath, string aspectPath) where T : class, Aspect {
+            return GetDescendantAspect<T>(a.Item.Path, relativePath, aspectPath);
         }
 
         public Item GetParent(string path) {
@@ -172,6 +217,10 @@ namespace angeldnd.dap {
             return Get<Item>(parentPath.ToString());
         }
 
+        public Item GetParent(ItemAspect a) {
+            return GetParent(a.Item.Path);
+        }
+
         public T GetAncestor<T>(string path) where T : ItemAspect {
             Item parent = GetParent(path);
             if (parent == null) {
@@ -184,6 +233,10 @@ namespace angeldnd.dap {
                     return GetAncestor<T>(parent.Path);
                 }
             }
+        }
+
+        public T GetAncestor<T>(ItemAspect a) where T : ItemAspect {
+            retun GetAncestor<T>(a.Item.Path);
         }
 
         public Item AddItem(string path, string itemType) {

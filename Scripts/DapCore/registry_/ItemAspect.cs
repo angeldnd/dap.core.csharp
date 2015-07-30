@@ -8,6 +8,10 @@ namespace angeldnd.dap {
             get { return _Item; }
         }
 
+        public Registry Registry {
+            get { return _Item == null ? null : _Item.Registry; }
+        }
+
         public override bool Init(Entity entity, string path, Pass pass) {
             if (!base.Init(entity, path, pass)) {
                 return false;
@@ -18,6 +22,10 @@ namespace angeldnd.dap {
             }
             _Item = entity as Item;
             return true;
+        }
+
+        public string GetDescendantPath(string relativePath) {
+            return Item.GetDescendantPath(relativePath);
         }
     }
 }
