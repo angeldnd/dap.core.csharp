@@ -86,6 +86,10 @@ namespace angeldnd.dap {
             return string.Format("{0}{1}{2}", ancestorPath, RegistryConsts.Separator, relativePath);
         }
 
+        public static string GetAbsolutePath(ItemAspect ancestorAspect, string relativePath) {
+            return GetAbsolutePath(ancestorAspect.Item.Path, relativePath);
+        }
+
         public static string GetRelativePath(string ancestorPath, string descendantPath) {
             string prefix = ancestorPath + RegistryConsts.Separator;
             if (descendantPath.StartsWith(prefix)) {
@@ -94,6 +98,10 @@ namespace angeldnd.dap {
                 Log.Error("Is Not Desecendant: {0}, {1}", ancestorPath, descendantPath);
             }
             return null;
+        }
+
+        public static string GetRelativePath(ItemAspect ancestorAspect, string descendantPath) {
+            return GetRelativePath(ancestorAspect.Item.Path, descendantPath);
         }
 
         public Item GetItem(string path) {
@@ -236,7 +244,7 @@ namespace angeldnd.dap {
         }
 
         public T GetAncestor<T>(ItemAspect a) where T : ItemAspect {
-            retun GetAncestor<T>(a.Item.Path);
+            return GetAncestor<T>(a.Item.Path);
         }
 
         public Item AddItem(string path, string itemType) {
