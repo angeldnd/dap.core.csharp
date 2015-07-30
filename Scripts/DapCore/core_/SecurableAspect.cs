@@ -31,12 +31,12 @@ namespace angeldnd.dap {
             }                                                                   //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
-        public bool Init(Entity entity, string path, Pass pass) {               //__SILP__
-            if (base.Init(entity, path)) {                                      //__SILP__
-                _Pass = pass;                                                   //__SILP__
-                return true;                                                    //__SILP__
+        public virtual bool Init(Entity entity, string path, Pass pass) {       //__SILP__
+            if (!base.Init(entity, path)) {                                     //__SILP__
+                return false;                                                   //__SILP__
             }                                                                   //__SILP__
-            return false;                                                       //__SILP__
+            _Pass = pass;                                                       //__SILP__
+            return true;                                                        //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
         public bool CheckAdminPass(Pass pass) {                                 //__SILP__
@@ -78,12 +78,12 @@ namespace angeldnd.dap {
             }                                                                   //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
-        public bool Init(Entity entity, string path, Pass pass) {               //__SILP__
-            if (base.Init(entity, path)) {                                      //__SILP__
-                _Pass = pass;                                                   //__SILP__
-                return true;                                                    //__SILP__
+        public virtual bool Init(Entity entity, string path, Pass pass) {       //__SILP__
+            if (!base.Init(entity, path)) {                                     //__SILP__
+                return false;                                                   //__SILP__
             }                                                                   //__SILP__
-            return false;                                                       //__SILP__
+            _Pass = pass;                                                       //__SILP__
+            return true;                                                        //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
         public bool CheckAdminPass(Pass pass) {                                 //__SILP__

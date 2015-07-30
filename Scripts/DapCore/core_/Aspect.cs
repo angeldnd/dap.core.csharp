@@ -48,7 +48,7 @@ namespace angeldnd.dap {
             get { return _Entity != null; }                                       //__SILP__
         }                                                                         //__SILP__
                                                                                   //__SILP__
-        public bool Init(Entity entity, string path) {                            //__SILP__
+        public virtual bool Init(Entity entity, string path) {                    //__SILP__
             if (_Entity != null) {                                                //__SILP__
                 Error("Already Inited: {0} -> {1}, {2}", _Entity, entity, path);  //__SILP__
                 return false;                                                     //__SILP__
@@ -184,7 +184,7 @@ namespace angeldnd.dap {
             get { return _Entity != null; }                                       //__SILP__
         }                                                                         //__SILP__
                                                                                   //__SILP__
-        public bool Init(Entity entity, string path) {                            //__SILP__
+        public virtual bool Init(Entity entity, string path) {                    //__SILP__
             if (_Entity != null) {                                                //__SILP__
                 Error("Already Inited: {0} -> {1}, {2}", _Entity, entity, path);  //__SILP__
                 return false;                                                     //__SILP__

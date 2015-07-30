@@ -16,7 +16,6 @@ namespace angeldnd.dap {
 
             //Aspects
             result.RegisterAspect<Item>(ItemConsts.TypeItem);
-            result.RegisterAspect<TickItem>(TickItemConsts.TypeTickItem);
             result.RegisterAspect<Properties>(PropertiesConsts.TypeProperties);
             result.RegisterAspect<BoolProperty>(PropertiesConsts.TypeBoolProperty);
             result.RegisterAspect<IntProperty>(PropertiesConsts.TypeIntProperty);
@@ -25,6 +24,8 @@ namespace angeldnd.dap {
             result.RegisterAspect<DoubleProperty>(PropertiesConsts.TypeDoubleProperty);
             result.RegisterAspect<StringProperty>(PropertiesConsts.TypeStringProperty);
             result.RegisterAspect<DataProperty>(PropertiesConsts.TypeDataProperty);
+
+            result.RegisterAspect<Tickable>(TickableConsts.TypeTickable);
 
             return result;
         }

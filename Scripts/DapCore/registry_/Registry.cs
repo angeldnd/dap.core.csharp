@@ -15,7 +15,7 @@ namespace angeldnd.dap {
         public const bool DefaultLogDebug = true;
     }
 
-    public class Registry : Context {
+    public sealed class Registry : Context {
         public override char Separator {
             get { return RegistryConsts.Separator; }
         }
@@ -112,12 +112,12 @@ namespace angeldnd.dap {
             return aspect;
         }
 
-        public List<T> GetChildren<T>(string path) where T : Item {
-            return Filter<T>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegment);
+        public List<Item> GetChildren(string path) {
+            return Filter<Item>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegment);
         }
 
-        public List<T> GetDescendants<T>(string path) where T : Item {
-            return Filter<T>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments);
+        public List<Item> GetDescendants(string path) {
+            return Filter<Item>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments);
         }
 
         public void FilterDescendantWithAspects<T>(string path, string aspectPath,
@@ -140,9 +140,9 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public T GetDescendant<T>(string path, string relativePath) where T : Item {
+        public Item GetDescendant(string path, string relativePath) {
             string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
-            return Get<T>(absPath);
+            return Get<Item>(absPath);
         }
 
         public T GetDescendantAspect<T>(string path, string relativePath, string aspectPath) where T : class, Aspect {
@@ -150,7 +150,7 @@ namespace angeldnd.dap {
             return GetItemAspect<T>(absPath, aspectPath);
         }
 
-        public T GetParent<T>(string path) where T : Item {
+        public Item GetParent(string path) {
             string[] segments = path.Split(RegistryConsts.Separator);
             if (segments.Length <= 1) return null;
 
@@ -161,30 +161,37 @@ namespace angeldnd.dap {
                     parentPath.Append(RegistryConsts.Separator);
                 }
             }
-            return Get<T>(parentPath.ToString());
+            return Get<Item>(parentPath.ToString());
         }
 
-        public T GetAncestor<T>(string path) where T : Item {
+        public Item GetAncestorWithAspect<T>(string path, string aspectPath) where T : class, Aspect {
             Item parent = GetParent<Item>(path);
             if (parent == null) {
                 return null;
-            } else if (parent is T) {
-                return (T)parent;
             } else {
-                return GetAncestor<T>(parent.Path);
+                T aspect = item.Get<T>(aspectPath);
+                if (aspect != null) {
+                    return aspect;
+                } else {
+                    return GetAncestorWithAspect<T>(parent.Path, aspectPath);
+                }
             }
         }
 
-        public Item AddItem(string path, string type) {
-            Aspect aspect = Add(path, type);
-            if (aspect != null) {
-                if (aspect is Item) {
-                    return aspect as Item;
-                } else {
-                    Remove<Aspect>(path);
-                }
+        public Item AddItem(string path, string itemType) {
+            Item item = Add<Item>(path);
+            if (item == null) {
+                return null;
             }
-            return null;
+            if (!item.Setup(itemType)) {
+                Remove<Item>(path);
+                return null;
+            }
+            return item;
+        }
+
+        public Item AddItem(string path) {
+            return AddItem(path, ItemConsts.TypeItem);
         }
 
         public override Aspect FactoryAspect(Entity entity, string path, string type) {

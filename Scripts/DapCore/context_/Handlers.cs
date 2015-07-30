@@ -27,6 +27,10 @@ namespace angeldnd.dap {
             return HandleRequest(handlerPath, null, req);
         }
 
+        public Data HandleRequest(string handlerPath) {
+            return HandleRequest(handlerPath, null, null);
+        }
+
         //SILP: ADD_REMOVE_HELPER(RequestChecker, handlerPath, handler, Handler, RequestChecker, checker, RequestChecker)
         public bool AddRequestChecker(string handlerPath, RequestChecker checker) {     //__SILP__
             Handler handler = Get<Handler>(handlerPath);                                //__SILP__

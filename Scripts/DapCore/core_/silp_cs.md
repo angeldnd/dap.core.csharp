@@ -93,7 +93,7 @@ public bool Inited {
     get { return _Entity != null; }
 }
 
-public bool Init(Entity entity, string path) {
+public virtual bool Init(Entity entity, string path) {
     if (_Entity != null) {
         Error("Already Inited: {0} -> {1}, {2}", _Entity, entity, path);
         return false;
@@ -293,12 +293,12 @@ public bool WriteSecured {
     }
 }
 
-public bool Init(Entity entity, string path, Pass pass) {
-    if (base.Init(entity, path)) {
-        _Pass = pass;
-        return true;
+public virtual bool Init(Entity entity, string path, Pass pass) {
+    if (!base.Init(entity, path)) {
+        return false;
     }
-    return false;
+    _Pass = pass;
+    return true;
 }
 
 public bool CheckAdminPass(Pass pass) {

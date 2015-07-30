@@ -27,6 +27,10 @@ namespace angeldnd.dap {
             return FireEvent(channelPath, null, evt);
         }
 
+        public bool FireEvent(string channelPath) {
+            return FireEvent(channelPath, null, null);
+        }
+
         //SILP: ADD_REMOVE_HELPER(EventChecker, channelPath, channel, Channel, EventChecker, checker, EventChecker)
         public bool AddEventChecker(string channelPath, EventChecker checker) {     //__SILP__
             Channel channel = Get<Channel>(channelPath);                            //__SILP__

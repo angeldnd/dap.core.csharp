@@ -4,9 +4,12 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public struct ItemConsts {
         public const string TypeItem = "Item";
+        public const string AspectType = "_type";
+
+        public const string PropType = "_type";
     }
 
-    public class Item : Context, Aspect {
+    public sealed class Item : Context, Aspect {
         public override string Type {
             get { return ItemConsts.TypeItem; }
         }
@@ -66,14 +69,32 @@ namespace angeldnd.dap {
         }                                                                         //__SILP__
                                                                                   //__SILP__
 
-        public virtual void OnAdded() {
+        public void OnAdded() {
             _Registry = FindRegistry(_Entity);
         }
 
-        public virtual void OnRemoved() {
+        public void OnRemoved() {
             _Registry = null;
         }
 
+        public bool Setup(string itemType) {
+            if (HasString(ItemConsts.PropType)) {
+                Error("Already Setup: {0} -> {1}, {2}", GetString(ItemConsts.PropType), itemType);
+                return false;
+            }
+            if (itemType == ItemConst.TypeItem || string.IsNullOrEmpty(itemType)) {
+                SetString(ItemConsts.PropType, ItemConsts.TypeItem);
+                return true;
+            }
+
+            Aspect aspect = Add(ItemConsts.AspectType, itemType, Pass);
+            if (aspect != null) {
+                SetString(ItemConsts.PropType, itemType);
+                return true;
+            }
+            SetString(ItemConsts.PropType, ItemConsts.TypeItem);
+            return false;
+        }
 
         private Registry FindRegistry(Entity entity) {
             if (entity is Registry) {
