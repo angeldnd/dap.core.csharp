@@ -142,7 +142,7 @@ namespace angeldnd.dap {
             return GetDescendants(a.Item.Path);
         }
 
-        public void FilterDescendantWithAspects<T>(string path, string aspectPath,
+        public void FilterDescendantsWithAspect<T>(string path, string aspectPath,
                                                     OnAspect<T> callback) where T : class, Aspect {
             string pattern = path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments;
             Filter<Item>(pattern, (Item item) => {
@@ -153,22 +153,38 @@ namespace angeldnd.dap {
             });
         }
 
-        public void FilterDescendantWithAspects<T>(ItemAspect a, string aspectPath,
+        public void FilterDescendantsWithAspect<T>(ItemAspect a, string aspectPath,
                                                     OnAspect<T> callback) where T : class, Aspect {
-            FilterDescendantWithAspects<T>(a.Item.Path, aspectPath, callback);
+            FilterDescendantsWithAspect<T>(a.Item.Path, aspectPath, callback);
         }
 
-        public List<T> GetDescendantWithAspects<T>(string path, string aspectPath) where T : class, Aspect {
+        public List<T> GetDescendantsWithAspect<T>(string path, string aspectPath) where T : class, Aspect {
             List<T> result = null;
-            FilterDescendantWithAspects(path, aspectPath, (T aspect) => {
+            FilterDescendantsWithAspect(path, aspectPath, (T aspect) => {
                 if (result == null) result = new List<T>();
                 result.Add(aspect);
             });
             return result;
         }
 
-        public List<T> GetDescendantWithAspects<T>(ItemAspect a, string aspectPath) where T : class, Aspect {
-            return GetDescendantWithAspects<T>(a.Item.Path, aspectPath);
+        public List<T> GetDescendantsWithAspect<T>(ItemAspect a, string aspectPath) where T : class, Aspect {
+            return GetDescendantsWithAspect<T>(a.Item.Path, aspectPath);
+        }
+
+        public void FilterDescendants<T>(string path, OnAspect<T> callback) where T : ItemAspect {
+            FilterDescendantsWithAspect<T>(path, ItemConsts.AspectType, callback);
+        }
+
+        public void FilterDescendants<T>(ItemAspect a, OnAspect<T> callback) where T : ItemAspect {
+            FilterDescendantsWithAspect<T>(a.Item.Path, ItemConsts.AspectType, callback);
+        }
+
+        public List<T> GetDescendants<T>(string path) where T : ItemAspect {
+            return GetDescendantsWithAspect<T>(path, ItemConsts.AspectType);
+        }
+
+        public List<T> GetDescendants<T>(ItemAspect a) where T : ItemAspect {
+            return GetDescendantsWithAspect<T>(a.Item.Path, ItemConsts.AspectType);
         }
 
         public Item GetDescendant(string path, string relativePath) {
