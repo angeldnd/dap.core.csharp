@@ -78,6 +78,26 @@ namespace angeldnd.dap {
             }
         }
 
+        public static int GetDepth(string path) {
+            if (string.IsNullOrEmpty(path)) return 0;
+            int depth = 1;
+            foreach (char ch in path) {
+                if (ch == RegistryConsts.Separator) {
+                    depth++;
+                }
+            }
+            return depth;
+        }
+
+        public static string GetName(string path) {
+            if (string.IsNullOrEmpty(path)) return null;
+            int pos = path.LastIndexOf(RegistryConsts.Separator);
+            if (pos >= 0) {
+                return path.Substring(pos + 1);
+            }
+            return path;
+        }
+
         public static string GetParentPath(string path) {
             if (string.IsNullOrEmpty(path)) return null;
 
