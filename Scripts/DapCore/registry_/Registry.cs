@@ -78,6 +78,44 @@ namespace angeldnd.dap {
             }
         }
 
+        public static string GetParentPath(string path) {
+            if (string.IsNullOrEmpty(path)) return null;
+
+            string[] segments = path.Split(RegistryConsts.Separator);
+            if (segments.Length <= 1) return null;
+
+            StringBuilder parentPath = new StringBuilder();
+            for (int i = 0; i < segments.Length - 1; i++) {
+                parentPath.Append(segments[i]);
+                if (i < segments.Length - 2) {
+                    parentPath.Append(RegistryConsts.Separator);
+                }
+            }
+            return parentPath.ToString();
+        }
+
+        public static string GetAbsolutePath(string ancestorPath, string relativePath) {
+            return string.Format("{0}{1}{2}", ancestorPath, RegistryConsts.Separator, relativePath);
+        }
+
+        public static string GetAbsolutePath(ItemAspect ancestorAspect, string relativePath) {
+            return GetAbsolutePath(ancestorAspect.Item.Path, relativePath);
+        }
+
+        public static string GetRelativePath(string ancestorPath, string descendantPath) {
+            string prefix = ancestorPath + RegistryConsts.Separator;
+            if (descendantPath.StartsWith(prefix)) {
+                return descendantPath.Replace(prefix, "");
+            } else {
+                Log.Error("Is Not Desecendant: {0}, {1}", ancestorPath, descendantPath);
+            }
+            return null;
+        }
+
+        public static string GetRelativePath(ItemAspect ancestorAspect, string descendantPath) {
+            return GetRelativePath(ancestorAspect.Item.Path, descendantPath);
+        }
+
         public readonly Factory Factory;
 
         private List<RegistryWatcher> _Watchers = new List<RegistryWatcher>();
@@ -119,28 +157,6 @@ namespace angeldnd.dap {
             } else {
                 return path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegment;
             }
-        }
-
-        public static string GetAbsolutePath(string ancestorPath, string relativePath) {
-            return string.Format("{0}{1}{2}", ancestorPath, RegistryConsts.Separator, relativePath);
-        }
-
-        public static string GetAbsolutePath(ItemAspect ancestorAspect, string relativePath) {
-            return GetAbsolutePath(ancestorAspect.Item.Path, relativePath);
-        }
-
-        public static string GetRelativePath(string ancestorPath, string descendantPath) {
-            string prefix = ancestorPath + RegistryConsts.Separator;
-            if (descendantPath.StartsWith(prefix)) {
-                return descendantPath.Replace(prefix, "");
-            } else {
-                Log.Error("Is Not Desecendant: {0}, {1}", ancestorPath, descendantPath);
-            }
-            return null;
-        }
-
-        public static string GetRelativePath(ItemAspect ancestorAspect, string descendantPath) {
-            return GetRelativePath(ancestorAspect.Item.Path, descendantPath);
         }
 
         public Item GetItem(string path) {
@@ -266,17 +282,7 @@ namespace angeldnd.dap {
         }
 
         public Item GetParent(string path) {
-            string[] segments = path.Split(RegistryConsts.Separator);
-            if (segments.Length <= 1) return null;
-
-            StringBuilder parentPath = new StringBuilder();
-            for (int i = 0; i < segments.Length - 1; i++) {
-                parentPath.Append(segments[i]);
-                if (i < segments.Length - 2) {
-                    parentPath.Append(RegistryConsts.Separator);
-                }
-            }
-            return Get<Item>(parentPath.ToString());
+            return Get<Item>(GetParentPath(path));
         }
 
         public Item GetParent(ItemAspect a) {
