@@ -15,6 +15,10 @@ namespace angeldnd.dap {
         public const bool DefaultLogDebug = true;
     }
 
+    public interface RegistryWatcher {
+        void OnItemSetup(Registry registry, Item item);
+    }
+
     public sealed class Registry : Context {
         public override char Separator {
             get { return RegistryConsts.Separator; }
@@ -33,14 +37,6 @@ namespace angeldnd.dap {
                 SetupLogging();
                 BootstrapAutoBootstrappers();
             }
-        }
-
-        public readonly Factory Factory;
-
-        public Registry() {
-            Factory = Factory.NewBuiltinFactory();
-
-            AddChannel(RegistryConsts.ChannelTick, DepositChannelPass(RegistryConsts.ChannelTick, new Pass()));
         }
 
         private static void SetupLogging() {
@@ -81,6 +77,33 @@ namespace angeldnd.dap {
                 }
             }
         }
+
+        public readonly Factory Factory;
+
+        private List<RegistryWatcher> _Watchers = new List<RegistryWatcher>();
+
+        public Registry() {
+            Factory = Factory.NewBuiltinFactory();
+
+            AddChannel(RegistryConsts.ChannelTick, DepositChannelPass(RegistryConsts.ChannelTick, new Pass()));
+        }
+
+        public bool AddRegistryWatcher(RegistryWatcher watcher) {
+            if (!_Watchers.Contains(watcher)) {
+                _Watchers.Add(watcher);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveRegistryWatcher(RegistryWatcher watcher) {
+            if (_Watchers.Contains(watcher)) {
+                _Watchers.Remove(watcher);
+                return true;
+            }
+            return false;
+        }
+
 
         public string GetDescendantsPattern(string path) {
             if (string.IsNullOrEmpty(path)) {
@@ -283,7 +306,11 @@ namespace angeldnd.dap {
             if (item == null) {
                 return null;
             }
-            if (!item.Setup(itemType)) {
+            if (item.Setup(itemType)) {
+                for (int i = 0; i < _Watchers.Count; i++) {
+                    _Watchers[i].OnItemSetup(this, item);
+                }
+            } else {
                 Remove<Item>(path);
                 return null;
             }

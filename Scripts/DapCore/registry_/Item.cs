@@ -81,7 +81,8 @@ namespace angeldnd.dap {
             get { return Get<ItemAspect>(ItemConsts.AspectType); }
         }
 
-        public bool Setup(string itemType) {
+        //Only Registry supposed to call this method.
+        internal bool Setup(string itemType) {
             if (IsString(ItemConsts.PropType)) {
                 Error("Already Setup: {0} -> {1}, {2}", GetString(ItemConsts.PropType), itemType);
                 return false;
