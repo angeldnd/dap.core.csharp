@@ -82,6 +82,22 @@ namespace angeldnd.dap {
             }
         }
 
+        public string GetDescendantsPattern(string path) {
+            if (string.IsNullOrEmpty(path)) {
+                return PatternMatcherConsts.WildcastSegments;
+            } else {
+                return path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments;
+            }
+        }
+
+        public string GetChildrenPattern(string path) {
+            if (string.IsNullOrEmpty(path)) {
+                return PatternMatcherConsts.WildcastSegment;
+            } else {
+                return path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegment;
+            }
+        }
+
         public static string GetAbsolutePath(string ancestorPath, string relativePath) {
             return string.Format("{0}{1}{2}", ancestorPath, RegistryConsts.Separator, relativePath);
         }
@@ -127,7 +143,7 @@ namespace angeldnd.dap {
         }
 
         public List<Item> GetChildren(string path) {
-            return Filter<Item>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegment);
+            return Filter<Item>(GetChildrenPattern(path));
         }
 
         public List<Item> GetChildren(ItemAspect a) {
@@ -135,7 +151,7 @@ namespace angeldnd.dap {
         }
 
         public List<Item> GetDescendants(string path) {
-            return Filter<Item>(path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments);
+            return Filter<Item>(GetDescendantsPattern(path));
         }
 
         public List<Item> GetDescendants(ItemAspect a) {
@@ -144,11 +160,10 @@ namespace angeldnd.dap {
 
         public void FilterDescendantsWithAspect<T>(string path, string aspectPath,
                                                     OnAspect<T> callback) where T : class, Aspect {
-            string pattern = path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments;
-            Filter<Item>(pattern, (Item item) => {
-                T aspect = item.Get<T>(aspectPath);
-                if (aspect != null) {
-                    callback(aspect);
+            Filter<Item>(GetDescendantsPattern(path), (Item item) => {
+                Aspect aspect = item.Get<Aspect>(aspectPath);
+                if (aspect != null && aspect is T) {
+                    callback(aspect as T);
                 }
             });
         }
