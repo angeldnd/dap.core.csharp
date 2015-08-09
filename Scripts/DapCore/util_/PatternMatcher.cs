@@ -34,33 +34,31 @@ namespace angeldnd.dap {
         }
 
         private bool IsMatched(int patternIndex, int pathIndex, string[] pathSegments) {
-            if (patternIndex >= Segments.Length || pathIndex >= pathSegments.Length) return false;
+            if (patternIndex >= Segments.Length || pathIndex >= pathSegments.Length) {
+                return false;
+            }
             bool result = false;
 
-            if (pathIndex == pathSegments.Length - 1) {
-                // If it's the last segment of path, can be matched only when it's
-                // also the last segment of pattern
-                if (patternIndex == Segments.Length - 1) {
-                    result = IsMatchedSegment(Segments[patternIndex], pathSegments[pathIndex]);
-                }
-            } else {
+            if (IsMatchedSegment(Segments[patternIndex], pathSegments[pathIndex])) {
                 bool isWildcastSegments = Segments[patternIndex] == PatternMatcherConsts.WildcastSegments;
 
-                if (IsMatchedSegment(Segments[patternIndex], pathSegments[pathIndex])) {
+                if (pathIndex == pathSegments.Length - 1) {
                     if (patternIndex == Segments.Length - 1) {
-                        if (isWildcastSegments) {
-                            return true;
-                        }
+                        result = true;
                     } else if (isWildcastSegments) {
-                        // If ** is not the last segment, then need to try matching the next one for a better match
-                        if (IsMatchedSegment(Segments[patternIndex + 1], pathSegments[pathIndex])) {
-                            return IsMatched(patternIndex + 2, pathIndex + 1, pathSegments);
-                        } else {
-                            return IsMatched(patternIndex, pathIndex + 1, pathSegments);
-                        }
-                    } else {
-                        return IsMatched(patternIndex + 1, pathIndex + 1, pathSegments);
+                        result = IsMatched(patternIndex + 1, pathIndex, pathSegments);
                     }
+                } else if (patternIndex == Segments.Length - 1) {
+                    result = isWildcastSegments;
+                } else if (isWildcastSegments) {
+                    // If ** is not the last segment, then need to try matching the next one for a better match
+                    if (IsMatchedSegment(Segments[patternIndex + 1], pathSegments[pathIndex])) {
+                        result = IsMatched(patternIndex + 2, pathIndex + 1, pathSegments);
+                    } else {
+                        result = IsMatched(patternIndex, pathIndex + 1, pathSegments);
+                    }
+                } else {
+                    result = IsMatched(patternIndex + 1, pathIndex + 1, pathSegments);
                 }
             }
             return result;
@@ -72,7 +70,8 @@ namespace angeldnd.dap {
             }
 
             string[] pathSegments = path.Split(Separator);
-            return IsMatched(0, 0, pathSegments);
+            bool result = IsMatched(0, 0, pathSegments);
+            return result;
         }
     }
 }
