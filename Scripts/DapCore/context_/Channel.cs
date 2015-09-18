@@ -129,5 +129,9 @@ namespace angeldnd.dap {
         public bool FireEvent(Data evt) {
             return FireEvent(null, evt);
         }
+
+        public bool FireEvent() {
+            return FireEvent(null, null);
+        }
     }
 }

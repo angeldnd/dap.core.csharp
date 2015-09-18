@@ -19,6 +19,8 @@ namespace angeldnd.dap {
             Channel channel = Get<Channel>(channelPath);
             if (channel != null) {
                 return channel.FireEvent(pass, evt);
+            } else {
+                Error("Invalid Channel Path: {0}", channelPath);
             }
             return false;
         }
