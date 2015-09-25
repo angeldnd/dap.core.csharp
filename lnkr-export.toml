@@ -1,0 +1,7 @@
+dap-root = "Assets/Standard Assets/_Dap"
+dap-editor-root = "Assets/Standard Assets/Editor/_Dap"
+
+[dap-core]
+[[dap-core.folders]]
+from = "Scripts/DapCore"
+to = "${dap-root}/_DapCore"
