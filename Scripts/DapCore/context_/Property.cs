@@ -190,6 +190,8 @@ namespace angeldnd.dap {
     }                                                                                                             //__SILP__
                                                                                                                   //__SILP__
     public class BoolProperty : Property<bool> {                                                                  //__SILP__
+        public delegate bool GetterBlock();                                                                       //__SILP__
+                                                                                                                  //__SILP__
         public override string Type {                                                                             //__SILP__
             get { return PropertiesConsts.TypeBoolProperty; }                                                     //__SILP__
         }                                                                                                         //__SILP__
@@ -257,6 +259,8 @@ namespace angeldnd.dap {
     }                                                                                                           //__SILP__
                                                                                                                 //__SILP__
     public class IntProperty : Property<int> {                                                                  //__SILP__
+        public delegate int GetterBlock();                                                                      //__SILP__
+                                                                                                                //__SILP__
         public override string Type {                                                                           //__SILP__
             get { return PropertiesConsts.TypeIntProperty; }                                                    //__SILP__
         }                                                                                                       //__SILP__
@@ -324,6 +328,8 @@ namespace angeldnd.dap {
     }                                                                                                             //__SILP__
                                                                                                                   //__SILP__
     public class LongProperty : Property<long> {                                                                  //__SILP__
+        public delegate long GetterBlock();                                                                       //__SILP__
+                                                                                                                  //__SILP__
         public override string Type {                                                                             //__SILP__
             get { return PropertiesConsts.TypeLongProperty; }                                                     //__SILP__
         }                                                                                                         //__SILP__
@@ -391,6 +397,8 @@ namespace angeldnd.dap {
     }                                                                                                               //__SILP__
                                                                                                                     //__SILP__
     public class FloatProperty : Property<float> {                                                                  //__SILP__
+        public delegate float GetterBlock();                                                                        //__SILP__
+                                                                                                                    //__SILP__
         public override string Type {                                                                               //__SILP__
             get { return PropertiesConsts.TypeFloatProperty; }                                                      //__SILP__
         }                                                                                                           //__SILP__
@@ -458,6 +466,8 @@ namespace angeldnd.dap {
     }                                                                                                                 //__SILP__
                                                                                                                       //__SILP__
     public class DoubleProperty : Property<double> {                                                                  //__SILP__
+        public delegate double GetterBlock();                                                                         //__SILP__
+                                                                                                                      //__SILP__
         public override string Type {                                                                                 //__SILP__
             get { return PropertiesConsts.TypeDoubleProperty; }                                                       //__SILP__
         }                                                                                                             //__SILP__
@@ -525,6 +535,8 @@ namespace angeldnd.dap {
     }                                                                                                                 //__SILP__
                                                                                                                       //__SILP__
     public class StringProperty : Property<string> {                                                                  //__SILP__
+        public delegate string GetterBlock();                                                                         //__SILP__
+                                                                                                                      //__SILP__
         public override string Type {                                                                                 //__SILP__
             get { return PropertiesConsts.TypeStringProperty; }                                                       //__SILP__
         }                                                                                                             //__SILP__
@@ -592,6 +604,8 @@ namespace angeldnd.dap {
     }                                                                                                             //__SILP__
                                                                                                                   //__SILP__
     public class DataProperty : Property<Data> {                                                                  //__SILP__
+        public delegate Data GetterBlock();                                                                       //__SILP__
+                                                                                                                  //__SILP__
         public override string Type {                                                                             //__SILP__
             get { return PropertiesConsts.TypeDataProperty; }                                                     //__SILP__
         }                                                                                                         //__SILP__
