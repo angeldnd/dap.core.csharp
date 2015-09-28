@@ -14,6 +14,8 @@ namespace angeldnd.dap {
     }
 
     public class Var<T> : BaseSecurableAspect, Var {
+        public delegate T GetterBlock();
+
         private T _Value;
         public T Value {
             get { return _Value; }

@@ -309,8 +309,6 @@ public sealed class ${type}BlockValueWatcher : ValueWatcher<${cs_type}> {
 }
 
 public class ${type}Property : Property<${cs_type}> {
-    public delegate ${cs_type} GetterBlock();
-
     public override string Type {
         get { return PropertiesConsts.Type${type}Property; }
     }
