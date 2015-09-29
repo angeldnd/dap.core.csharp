@@ -36,16 +36,33 @@ namespace angeldnd.dap {
             get { return _Pass; }
         }
 
-        public readonly Vars Vars;
         public readonly Properties Properties;
         public readonly Channels Channels;
         public readonly Handlers Handlers;
+        public readonly Vars Vars;
 
         public Context() {
-            Vars = Add<Vars>(ContextConsts.AspectVars, _Pass);
             Properties = Add<Properties>(ContextConsts.AspectProperties, _Pass);
             Channels = Add<Channels>(ContextConsts.AspectChannels, _Pass);
             Handlers = Add<Handlers>(ContextConsts.AspectHandlers, _Pass);
+            Vars = Add<Vars>(ContextConsts.AspectVars, _Pass);
+        }
+
+        public void OtherAspects<T>(OnAspect<T> callback) where T : class, Aspect {
+            Filter<T>(PatternMatcherConsts.WildcastSegments, (T aspect) => {
+                if (aspect != Vars && aspect != Properties && aspect != Channels && aspect != Handlers) {
+                    callback(aspect);
+                }
+            });
+        }
+
+        public List<T> OtherAspects<T>() where T : class, Aspect {
+            List<T> result = null;
+            OtherAspects<T>((T aspect) => {
+                if (result == null) result = new List<T>();
+                result.Add(aspect);
+            });
+            return result;
         }
 
         public bool FireEvent(string channelPath, Pass pass, Data evt) {
