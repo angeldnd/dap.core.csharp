@@ -5,6 +5,20 @@ using System.IO;
 
 namespace angeldnd.dap {
     public class AspectHelper {
+        public static Entity GetRootEntity(Aspect aspect) {
+            if (aspect == null) return null;
+            Entity result = aspect.Entity;
+            while (result != null && result is Aspect) {
+                Entity upper = (result as Aspect).Entity;
+                if (upper == null) {
+                    break;
+                } else {
+                    result = upper;
+                }
+            }
+            return result;
+        }
+
         public static int CompareAspect(Aspect aspectA, Aspect aspectB) {
             if (aspectA == null && aspectB == null) return 0;
             if (aspectA == null) return -1;

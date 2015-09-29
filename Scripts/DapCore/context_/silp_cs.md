@@ -351,14 +351,16 @@ public class ${type}Property : Property<${cs_type}> {
 # CONTEXT_DEPOSIT_WITHDRAW(name, type, vars, var) #
 ```C#
 public ${type} Deposit${name}(string key, ${type} ${var}) {
-    if (!SetVarsVarValue<${type}>(${vars}, key, ${var})) {
-        Error("Deposit${name} Failed {0}", key);
+    string varPath = ContextConsts.GetVarPath(${vars}, key);
+    if (!SetVarValue<${type}>(varPath, ${var})) {
+        Error("Deposit${name} Failed {0}", varPath);
     }
     return ${var};
 }
 
 public ${type} Withdraw${name}(string key) {
-    return TakeVarsVarValue<${type}>(${vars}, key);
+    string varPath = ContextConsts.GetVarPath(${vars}, key);
+    return TakeVarValue<${type}>(varPath);
 }
 
 ```
