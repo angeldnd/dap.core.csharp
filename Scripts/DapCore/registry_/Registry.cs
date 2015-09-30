@@ -99,19 +99,7 @@ namespace angeldnd.dap {
         }
 
         public static string GetParentPath(string path) {
-            if (string.IsNullOrEmpty(path)) return null;
-
-            string[] segments = path.Split(RegistryConsts.Separator);
-            if (segments.Length <= 1) return null;
-
-            StringBuilder parentPath = new StringBuilder();
-            for (int i = 0; i < segments.Length - 1; i++) {
-                parentPath.Append(segments[i]);
-                if (i < segments.Length - 2) {
-                    parentPath.Append(RegistryConsts.Separator);
-                }
-            }
-            return parentPath.ToString();
+            return AspectHelper.GetParentPath(path, RegistryConsts.Separator);
         }
 
         public static string GetAbsolutePath(string ancestorPath, string relativePath) {

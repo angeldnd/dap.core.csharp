@@ -1,10 +1,31 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 //using System.Text.RegularExpressions;
 
 namespace angeldnd.dap {
     public class AspectHelper {
+        public static string GetParentPath(string path) {
+            return GetParentPath(path, EntityConsts.Separator);
+        }
+
+        public static string GetParentPath(string path, char separator) {
+            if (string.IsNullOrEmpty(path)) return null;
+
+            string[] segments = path.Split(separator);
+            if (segments.Length <= 1) return null;
+
+            StringBuilder parentPath = new StringBuilder();
+            for (int i = 0; i < segments.Length - 1; i++) {
+                parentPath.Append(segments[i]);
+                if (i < segments.Length - 2) {
+                    parentPath.Append(separator);
+                }
+            }
+            return parentPath.ToString();
+        }
+
         public static Entity GetRootEntity(Aspect aspect) {
             if (aspect == null) return null;
             Entity result = aspect.Entity;

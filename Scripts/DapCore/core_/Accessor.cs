@@ -19,9 +19,9 @@ namespace angeldnd.dap {
 
         public virtual string GetLogPrefix() {
             if (Entity != null) {
-                return string.Format("{0}[{1}]", Entity.GetLogPrefix(), GetType().Name);
+                return string.Format("{0}[{1}] ", Entity.GetLogPrefix(), GetType().Name);
             } else {
-                return string.Format("[] [{0}]", GetType().Name);
+                return string.Format("[] [{0}] ", GetType().Name);
             }
         }
 
@@ -78,7 +78,22 @@ namespace angeldnd.dap {
                                                                                                       //__SILP__
     }
 
-    public class ProxyAccessor<T> : BaseAccessor where T : Entity {
+    public abstract class ProxyAccessor : BaseAccessor {
+        public Object Source {
+            get { return _Source; }
+        }
+
+        public override string GetLogPrefix() {
+            string typeName = _Source != null ? _Source.GetType().Name : GetType().Name;
+            if (Entity != null) {
+                return string.Format("{0}[{1}] ", Entity.GetLogPrefix(), typeName);
+            } else {
+                return string.Format("[] [{0}] ", typeName);
+            }
+        }
+    }
+
+    public sealed class ProxyAccessor<T> : ProxyAccessor where T : Entity {
         private readonly bool _Sticky;
 
         public ProxyAccessor(bool sticky) {
@@ -87,10 +102,6 @@ namespace angeldnd.dap {
 
         public override Entity Entity {
             get { return _Target; }
-        }
-
-        public Object Source {
-            get { return _Source; }
         }
 
         private T _Target = null;
