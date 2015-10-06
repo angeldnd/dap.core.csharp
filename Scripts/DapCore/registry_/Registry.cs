@@ -63,10 +63,20 @@ namespace angeldnd.dap {
         }
 
         private static void BootstrapAutoBootstrappers() {
-            Assembly asm = Assembly.GetAssembly(typeof(Bootstrapper));
+            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly asm in asms) {
+                BootstrapAutoBootstrappers(asm);
+            }
+            //Assembly asm = Assembly.GetAssembly(typeof(Bootstrapper));
+        }
+
+        private static void BootstrapAutoBootstrappers(Assembly asm) {
+            Type bootstrapType = typeof(Bootstrapper);
             Type[] types = asm.GetTypes();
 
             foreach (Type type in types) {
+                if (!type.IsSubclassOf(bootstrapType)) continue;
+
                 System.Object[] attribs = type.GetCustomAttributes(false);
                 foreach (System.Object attr in attribs) {
                     AutoBootstrap autoBootstrap = attr as AutoBootstrap;

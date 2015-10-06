@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1A154D42-AABD-4AFB-BA13-95FCFB6EBC94}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DapCore</RootNamespace>
+    <AssemblyName>DapCore</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DapCore\context_\Channel.cs" />
+    <Compile Include="DapCore\context_\Channels.cs" />
+    <Compile Include="DapCore\context_\Context.cs" />
+    <Compile Include="DapCore\context_\Handler.cs" />
+    <Compile Include="DapCore\context_\Handlers.cs" />
+    <Compile Include="DapCore\context_\Properties.cs" />
+    <Compile Include="DapCore\context_\Property.cs" />
+    <Compile Include="DapCore\context_\Var.cs" />
+    <Compile Include="DapCore\context_\Vars.cs" />
+    <Compile Include="DapCore\core_\Accessor.cs" />
+    <Compile Include="DapCore\core_\Aspect.cs" />
+    <Compile Include="DapCore\core_\AspectAccessor.cs" />
+    <Compile Include="DapCore\core_\DapObject.cs" />
+    <Compile Include="DapCore\core_\Data.cs" />
+    <Compile Include="DapCore\core_\Entity.cs" />
+    <Compile Include="DapCore\core_\Pass.cs" />
+    <Compile Include="DapCore\core_\SecurableAspect.cs" />
+    <Compile Include="DapCore\core_\Spec.cs" />
+    <Compile Include="DapCore\registry_\Bootstrapper.cs" />
+    <Compile Include="DapCore\registry_\Factory.cs" />
+    <Compile Include="DapCore\registry_\Item.cs" />
+    <Compile Include="DapCore\registry_\ItemAspect.cs" />
+    <Compile Include="DapCore\registry_\Registry.cs" />
+    <Compile Include="DapCore\registry_\Tickable.cs" />
+    <Compile Include="DapCore\util_\AspectHelper.cs" />
+    <Compile Include="DapCore\util_\DapAttributes.cs" />
+    <Compile Include="DapCore\util_\FileLogProvider.cs" />
+    <Compile Include="DapCore\util_\Logger.cs" />
+    <Compile Include="DapCore\util_\PatternMatcher.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="DapCore\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DapCore\context_\silp_cs.md" />
+    <None Include="DapCore\core_\silp_cs.md" />
+    <None Include="DapCore\registry_\silp_cs.md" />
+  </ItemGroup>
+</Project>

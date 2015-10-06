@@ -1,7 +1,15 @@
 dap-root = "Assets/Standard Assets/_Dap"
 dap-editor-root = "Assets/Standard Assets/Editor/_Dap"
+dap-version = "Latest"
 
 [dap-core]
-[[dap-core.folders]]
+[[dap-core.files]]
+from = "Releases/${dap-version}"
+to = "${dap-root}"
+include = "DapCore.*"
+
+[dap-core-src]
+[[dap-core-src.folders]]
 from = "Scripts/DapCore"
 to = "${dap-root}/_DapCore"
+
