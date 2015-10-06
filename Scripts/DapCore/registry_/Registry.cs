@@ -40,13 +40,22 @@ namespace angeldnd.dap {
         }
 
         private static void SetupLogging() {
-            Assembly asm = Assembly.GetAssembly(typeof(LogProvider));
+            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly asm in asms) {
+                SetupLogging(asm);
+            }
+        }
+
+        private static void SetupLogging(Assembly asm) {
+            Type LogProviderType = typeof(LogProvider);
             Type[] types = asm.GetTypes();
 
             int maxPriority = -1;
             Type logType = null;
 
             foreach (Type type in types) {
+                if (!type.IsSubclassOf(LogProviderType)) continue;
+
                 System.Object[] attribs = type.GetCustomAttributes(false);
                 foreach (System.Object attr in attribs) {
                     DapPriority priority = attr as DapPriority;
@@ -67,7 +76,6 @@ namespace angeldnd.dap {
             foreach (Assembly asm in asms) {
                 BootstrapAutoBootstrappers(asm);
             }
-            //Assembly asm = Assembly.GetAssembly(typeof(Bootstrapper));
         }
 
         private static void BootstrapAutoBootstrappers(Assembly asm) {
