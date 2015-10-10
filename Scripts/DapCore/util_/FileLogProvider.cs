@@ -80,7 +80,7 @@ namespace angeldnd.dap {
             SetupLogWriter();
         }
 
-        public void Flush() {
+        public override void Flush() {
             if (!_LogAutoFlush && _LogWriter != null) {
                 _LogWriter.Flush();
             }
@@ -143,7 +143,7 @@ namespace angeldnd.dap {
             }
         }
 
-        public void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
+        public override void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
             var now = System.DateTime.UtcNow;
 
             string msg = format;

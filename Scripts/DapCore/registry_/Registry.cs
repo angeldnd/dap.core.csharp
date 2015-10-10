@@ -40,31 +40,30 @@ namespace angeldnd.dap {
         }
 
         private static void SetupLogging() {
-            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly asm in asms) {
-                SetupLogging(asm);
-            }
-        }
-
-        private static void SetupLogging(Assembly asm) {
-            Type LogProviderType = typeof(LogProvider);
-            Type[] types = asm.GetTypes();
-
             int maxPriority = -1;
             Type logType = null;
+            Type LogProviderType = typeof(LogProvider);
 
-            foreach (Type type in types) {
-                if (!type.IsSubclassOf(LogProviderType)) continue;
+            Assembly a = Assembly.GetAssembly(typeof(Bootstrapper));
 
-                System.Object[] attribs = type.GetCustomAttributes(false);
-                foreach (System.Object attr in attribs) {
-                    DapPriority priority = attr as DapPriority;
-                    if (priority != null && priority.Priority > maxPriority) {
-                        maxPriority = priority.Priority;
-                        logType = type;
+            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly asm in asms) {
+                Type[] types = asm.GetTypes();
+
+                foreach (Type type in types) {
+                    if (!type.IsSubclassOf(LogProviderType)) continue;
+
+                    System.Object[] attribs = type.GetCustomAttributes(false);
+                    foreach (System.Object attr in attribs) {
+                        DapPriority priority = attr as DapPriority;
+                        if (priority != null && priority.Priority > maxPriority) {
+                            maxPriority = priority.Priority;
+                            logType = type;
+                        }
                     }
                 }
             }
+
             if (logType != null) {
                 Object result = logType.GetMethod("SetupLogging", BindingFlags.Public | BindingFlags.Static).Invoke(null, null);
                 Log.Info("SetupLogging: {0} [{1}] -> {2}", logType.Name, maxPriority, result);

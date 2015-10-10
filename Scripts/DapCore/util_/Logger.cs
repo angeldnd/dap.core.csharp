@@ -32,9 +32,9 @@ namespace angeldnd.dap {
         }
     }
     */
-    public interface LogProvider {
-        void AddLog(string type, StackTrace stackTrace, string format, params object[] values);
-        void Flush();
+    public abstract class LogProvider {
+        public abstract void AddLog(string type, StackTrace stackTrace, string format, params object[] values);
+        public abstract void Flush();
     }
 
     public class Log {
@@ -55,28 +55,33 @@ namespace angeldnd.dap {
         public static bool LogDebug;
 
         public static void Critical(string format, params object[] values) {
+            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             StackTrace stackTrace = new StackTrace(1, true);
             Provider.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
         }
 
         public static void Error(string format, params object[] values) {
+            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             StackTrace stackTrace = new StackTrace(1, true);
             Provider.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
         }
 
         public static void Info(string format, params object[] values) {
+            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             Provider.AddLog(LoggerConsts.INFO, null, format, values);
         }
 
         public static void Debug(string format, params object[] values) {
+            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             if (LogDebug) Provider.AddLog(LoggerConsts.DEBUG, null, format, values);
         }
 
         public static void Custom(string type, string format, params object[] values) {
+            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             Provider.AddLog(type, null, format, values);
         }
