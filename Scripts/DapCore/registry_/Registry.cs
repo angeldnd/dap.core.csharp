@@ -24,7 +24,15 @@ namespace angeldnd.dap {
             get { return RegistryConsts.Separator; }
         }
 
-        public static readonly Registry Global = new Registry();
+        private static Registry _Global = null;
+        public static Registry Global {
+            get {
+                if (_Global == null) {
+                    Bootstrap();
+                }
+                return _Global;
+            }
+        }
 
         private static bool _Bootstrapped = false;
         public static bool Bootstrapped {
@@ -34,6 +42,7 @@ namespace angeldnd.dap {
         public static void Bootstrap() {
             if (!_Bootstrapped) {
                 _Bootstrapped = true;
+                _Global = new Registry();
                 SetupLogging();
                 BootstrapAutoBootstrappers();
             }
