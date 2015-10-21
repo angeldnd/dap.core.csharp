@@ -13,6 +13,10 @@ namespace angeldnd.dap {
         public const string DefaultLogDir = "dap";
         public const string DefaultLogName = "init";
         public const bool DefaultLogDebug = true;
+
+        public static string GetItemPath(params string[] segments) {
+            return string.Join("/", segments);
+        }
     }
 
     public interface RegistryWatcher {
