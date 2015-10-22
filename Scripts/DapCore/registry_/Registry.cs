@@ -161,6 +161,8 @@ namespace angeldnd.dap {
         public Registry() {
             Factory = Factory.NewBuiltinFactory();
 
+            //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
+            //FixedUpdate(), or other timer on other platform.
             AddChannel(RegistryConsts.ChannelTick, DepositChannelPass(RegistryConsts.ChannelTick, new Pass()));
         }
 

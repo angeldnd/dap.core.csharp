@@ -352,15 +352,12 @@ public class ${type}Property : Property<${cs_type}> {
 ```C#
 public ${type} Deposit${name}(string key, ${type} ${var}) {
     string varPath = ContextConsts.GetVarPath(${vars}, key);
-    if (!SetVarValue<${type}>(varPath, ${var})) {
-        Error("Deposit${name} Failed {0}", varPath);
-    }
-    return ${var};
+    return Vars.DepositValue<${type}>(varPath, null, ${var});
 }
 
 public ${type} Withdraw${name}(string key) {
     string varPath = ContextConsts.GetVarPath(${vars}, key);
-    return TakeVarValue<${type}>(varPath);
+    return Vars.WithdrawValue<${type}>(varPath);
 }
 
 ```

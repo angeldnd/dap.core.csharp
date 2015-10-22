@@ -148,16 +148,12 @@ namespace angeldnd.dap {
             return Vars.Has(varPath);
         }
 
-        public bool SetVarValue<T>(string varPath, T v) {
-            return SetVarValue<T>(varPath, null, v);
+        public bool SetVarValue<T>(string varPath, Pass pass, T val) {
+            return Vars.SetValue<T>(varPath, pass, val);
         }
 
-        public bool SetVarValue<T>(string varPath, Pass pass, T v) {
-            if (Vars.HasVar<T>(varPath)) {
-                return Vars.SetValue<T>(varPath, pass, v);
-            } else {
-                return Vars.AddVar<T>(varPath, pass, v) != null;
-            }
+        public bool SetVarValue<T>(string varPath, T val) {
+            return Vars.SetValue<T>(varPath, null, val);
         }
 
         public T GetVarValue<T>(string varPath, T defaultValue) {
@@ -165,67 +161,64 @@ namespace angeldnd.dap {
         }
 
         public T GetVarValue<T>(string varPath) {
-            return GetVarValue<T>(varPath, default(T));
+            return Vars.GetValue<T>(varPath, default(T));
         }
 
-        public T TakeVarValue<T>(string varPath, Pass pass, T defaultValue) {
-            if (Vars.HasVar<T>(varPath)) {
-                T result = Vars.GetValue<T>(varPath, defaultValue);
-                Vars.RemoveVar<T>(varPath, pass);
-                return result;
-            } else {
-                return defaultValue;
-            }
+        public T DepositVarValue<T>(string varPath, Pass pass, T val) {
+            return Vars.DepositValue<T>(varPath, pass, val);
         }
 
-        public T TakeVarValue<T>(string varPath, T defaultValue) {
-            return TakeVarValue<T>(varPath, null, defaultValue);
+        public T DepositVarValue<T>(string varPath, T val) {
+            return Vars.DepositValue<T>(varPath, val);
         }
 
-        public T TakeVarValue<T>(string varPath) {
-            return TakeVarValue<T>(varPath, null, default(T));
+        public T WithdrawVarValue<T>(string varPath, Pass pass, T defaultValue) {
+            return Vars.WithdrawValue<T>(varPath, pass, defaultValue);
+        }
+
+        public T WithdrawVarValue<T>(string varPath, T defaultValue) {
+            return Vars.WithdrawValue<T>(varPath, defaultValue);
+        }
+
+        public T WithdrawVarValue<T>(string varPath, Pass pass) {
+            return Vars.WithdrawValue<T>(varPath, pass);
+        }
+
+        public T WithdrawVarValue<T>(string varPath) {
+            return Vars.WithdrawValue<T>(varPath);
         }
 
         //SILP:CONTEXT_DEPOSIT_WITHDRAW(PropertyPass, Pass, ContextConsts.VarsPropertyPasses, passValue)
         public Pass DepositPropertyPass(string key, Pass passValue) {                          //__SILP__
             string varPath = ContextConsts.GetVarPath(ContextConsts.VarsPropertyPasses, key);  //__SILP__
-            if (!SetVarValue<Pass>(varPath, passValue)) {                                      //__SILP__
-                Error("DepositPropertyPass Failed {0}", varPath);                              //__SILP__
-            }                                                                                  //__SILP__
-            return passValue;                                                                  //__SILP__
+            return Vars.DepositValue<Pass>(varPath, null, passValue);                          //__SILP__
         }                                                                                      //__SILP__
                                                                                                //__SILP__
         public Pass WithdrawPropertyPass(string key) {                                         //__SILP__
             string varPath = ContextConsts.GetVarPath(ContextConsts.VarsPropertyPasses, key);  //__SILP__
-            return TakeVarValue<Pass>(varPath);                                                //__SILP__
+            return Vars.WithdrawValue<Pass>(varPath);                                          //__SILP__
         }                                                                                      //__SILP__
                                                                                                //__SILP__
         //SILP:CONTEXT_DEPOSIT_WITHDRAW(ChannelPass, Pass, ContextConsts.VarsChannelPasses, passValue)
         public Pass DepositChannelPass(string key, Pass passValue) {                          //__SILP__
             string varPath = ContextConsts.GetVarPath(ContextConsts.VarsChannelPasses, key);  //__SILP__
-            if (!SetVarValue<Pass>(varPath, passValue)) {                                     //__SILP__
-                Error("DepositChannelPass Failed {0}", varPath);                              //__SILP__
-            }                                                                                 //__SILP__
-            return passValue;                                                                 //__SILP__
+            return Vars.DepositValue<Pass>(varPath, null, passValue);                         //__SILP__
         }                                                                                     //__SILP__
                                                                                               //__SILP__
         public Pass WithdrawChannelPass(string key) {                                         //__SILP__
             string varPath = ContextConsts.GetVarPath(ContextConsts.VarsChannelPasses, key);  //__SILP__
-            return TakeVarValue<Pass>(varPath);                                               //__SILP__
+            return Vars.WithdrawValue<Pass>(varPath);                                         //__SILP__
         }                                                                                     //__SILP__
                                                                                               //__SILP__
         //SILP:CONTEXT_DEPOSIT_WITHDRAW(HandlerPass, Pass, ContextConsts.VarsHandlerPasses, passValue)
         public Pass DepositHandlerPass(string key, Pass passValue) {                          //__SILP__
             string varPath = ContextConsts.GetVarPath(ContextConsts.VarsHandlerPasses, key);  //__SILP__
-            if (!SetVarValue<Pass>(varPath, passValue)) {                                     //__SILP__
-                Error("DepositHandlerPass Failed {0}", varPath);                              //__SILP__
-            }                                                                                 //__SILP__
-            return passValue;                                                                 //__SILP__
+            return Vars.DepositValue<Pass>(varPath, null, passValue);                         //__SILP__
         }                                                                                     //__SILP__
                                                                                               //__SILP__
         public Pass WithdrawHandlerPass(string key) {                                         //__SILP__
             string varPath = ContextConsts.GetVarPath(ContextConsts.VarsHandlerPasses, key);  //__SILP__
-            return TakeVarValue<Pass>(varPath);                                               //__SILP__
+            return Vars.WithdrawValue<Pass>(varPath);                                         //__SILP__
         }                                                                                     //__SILP__
                                                                                               //__SILP__
 
