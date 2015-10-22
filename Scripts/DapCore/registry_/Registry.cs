@@ -240,7 +240,7 @@ namespace angeldnd.dap {
         public void FilterDescendantsWithAspect<T>(string path, string aspectPath,
                                                     OnAspect<T> callback) where T : class, Aspect {
             Filter<Item>(GetDescendantsPattern(path), (Item item) => {
-                if (item.HasAspect(aspectPath)) {
+                if (item.Has(aspectPath)) {
                     Aspect aspect = item.Get<Aspect>(aspectPath);
                     if (aspect != null && aspect is T) {
                         callback(aspect as T);
