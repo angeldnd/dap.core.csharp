@@ -33,35 +33,36 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DapCore\context_\Channel.cs" />
-    <Compile Include="DapCore\context_\Channels.cs" />
-    <Compile Include="DapCore\context_\Context.cs" />
-    <Compile Include="DapCore\context_\Handler.cs" />
-    <Compile Include="DapCore\context_\Handlers.cs" />
-    <Compile Include="DapCore\context_\Properties.cs" />
-    <Compile Include="DapCore\context_\Property.cs" />
-    <Compile Include="DapCore\context_\Var.cs" />
-    <Compile Include="DapCore\context_\Vars.cs" />
-    <Compile Include="DapCore\core_\Accessor.cs" />
-    <Compile Include="DapCore\core_\Aspect.cs" />
-    <Compile Include="DapCore\core_\AspectAccessor.cs" />
-    <Compile Include="DapCore\core_\DapObject.cs" />
-    <Compile Include="DapCore\core_\Data.cs" />
-    <Compile Include="DapCore\core_\Entity.cs" />
-    <Compile Include="DapCore\core_\Pass.cs" />
-    <Compile Include="DapCore\core_\SecurableAspect.cs" />
-    <Compile Include="DapCore\core_\Spec.cs" />
-    <Compile Include="DapCore\registry_\Bootstrapper.cs" />
-    <Compile Include="DapCore\registry_\Factory.cs" />
-    <Compile Include="DapCore\registry_\Item.cs" />
-    <Compile Include="DapCore\registry_\ItemAspect.cs" />
-    <Compile Include="DapCore\registry_\Registry.cs" />
-    <Compile Include="DapCore\registry_\Tickable.cs" />
-    <Compile Include="DapCore\util_\AspectHelper.cs" />
-    <Compile Include="DapCore\util_\DapAttributes.cs" />
-    <Compile Include="DapCore\util_\FileLogProvider.cs" />
-    <Compile Include="DapCore\util_\Logger.cs" />
-    <Compile Include="DapCore\util_\PatternMatcher.cs" />
+    <!--SILP:csproj:compile_include(DapCore) -->
+    <Compile Include="DapCore\context_\Channel.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\context_\Channels.cs" />           <!--__SILP__-->
+    <Compile Include="DapCore\context_\Context.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\context_\Handler.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\context_\Handlers.cs" />           <!--__SILP__-->
+    <Compile Include="DapCore\context_\Properties.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\context_\Property.cs" />           <!--__SILP__-->
+    <Compile Include="DapCore\context_\Var.cs" />                <!--__SILP__-->
+    <Compile Include="DapCore\context_\Vars.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\core_\Accessor.cs" />              <!--__SILP__-->
+    <Compile Include="DapCore\core_\Aspect.cs" />                <!--__SILP__-->
+    <Compile Include="DapCore\core_\AspectAccessor.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\core_\DapObject.cs" />             <!--__SILP__-->
+    <Compile Include="DapCore\core_\Data.cs" />                  <!--__SILP__-->
+    <Compile Include="DapCore\core_\Entity.cs" />                <!--__SILP__-->
+    <Compile Include="DapCore\core_\Pass.cs" />                  <!--__SILP__-->
+    <Compile Include="DapCore\core_\SecurableAspect.cs" />       <!--__SILP__-->
+    <Compile Include="DapCore\core_\Spec.cs" />                  <!--__SILP__-->
+    <Compile Include="DapCore\registry_\Bootstrapper.cs" />      <!--__SILP__-->
+    <Compile Include="DapCore\registry_\Factory.cs" />           <!--__SILP__-->
+    <Compile Include="DapCore\registry_\Item.cs" />              <!--__SILP__-->
+    <Compile Include="DapCore\registry_\ItemAspect.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\registry_\Registry.cs" />          <!--__SILP__-->
+    <Compile Include="DapCore\registry_\Tickable.cs" />          <!--__SILP__-->
+    <Compile Include="DapCore\util_\AspectHelper.cs" />          <!--__SILP__-->
+    <Compile Include="DapCore\util_\DapAttributes.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\util_\FileLogProvider.cs" />       <!--__SILP__-->
+    <Compile Include="DapCore\util_\Logger.cs" />                <!--__SILP__-->
+    <Compile Include="DapCore\util_\PatternMatcher.cs" />        <!--__SILP__-->
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
