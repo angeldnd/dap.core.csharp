@@ -20,9 +20,9 @@ namespace angeldnd.dap {
     }
 
     /*
-     * To setup logging properly, need to create a LogProvider Class like this
-     * The one with highest priority will be selected.
-     * The reason to use this trick is to have a working log provider at all time
+     * Check Bootstrapper.cs for detail of the bootstrap, if there is no specific
+     * config. then the AutoBootstrapper will check all LogProvider subclasses,
+     * the one with highest priority will be selected.
      *
     [DapPriority(2)]
     public class TestLogProvider : FileLogProvider {
@@ -55,33 +55,28 @@ namespace angeldnd.dap {
         public static bool LogDebug;
 
         public static void Critical(string format, params object[] values) {
-            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             StackTrace stackTrace = new StackTrace(1, true);
             Provider.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
         }
 
         public static void Error(string format, params object[] values) {
-            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             StackTrace stackTrace = new StackTrace(1, true);
             Provider.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
         }
 
         public static void Info(string format, params object[] values) {
-            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             Provider.AddLog(LoggerConsts.INFO, null, format, values);
         }
 
         public static void Debug(string format, params object[] values) {
-            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             if (LogDebug) Provider.AddLog(LoggerConsts.DEBUG, null, format, values);
         }
 
         public static void Custom(string type, string format, params object[] values) {
-            if (Provider == null) Registry.Bootstrap();
             if (Provider == null) return;
             Provider.AddLog(type, null, format, values);
         }

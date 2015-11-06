@@ -70,7 +70,7 @@ namespace angeldnd.dap {
             Aspect aspect = null;
             if (_Aspects.TryGetValue(path, out aspect)) {
                 if (aspect is T) {
-                    return aspect as T;
+                    return (T)aspect;
                 } else {
                     Error("Get<{0}>({1}): Type Mismatch: {2}", typeof(T).Name, path, aspect.GetType().Name);
                 }
@@ -92,7 +92,7 @@ namespace angeldnd.dap {
                 }
                 */
                 if (pair.Value is T && matcher.IsMatched(pair.Key)) {
-                    callback(pair.Value as T);
+                    callback((T)pair.Value);
                 }
             }
         }

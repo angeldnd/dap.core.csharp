@@ -12,14 +12,6 @@ namespace angeldnd.dap {
         public const long FLUSH_DURATION = 10 * 1000 * 60; // flush every minute
         public const string TIMESTAMP_FORMAT = "HH:mm:ss.fff";    //http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 
-        public static bool SetupLogging() {
-            Log.Provider = new FileLogProvider(RegistryConsts.DefaultLogDir,
-                                               RegistryConsts.DefaultLogName,
-                                               -1, RegistryConsts.DefaultLogDebug);
-            Log.Provider = new FileLogProvider("dap", "init", -1, true);
-            return true;
-        }
-
         private string _LogRoot = "";
         private string _LogDir = "";
         private string _LogName = "";
@@ -35,6 +27,11 @@ namespace angeldnd.dap {
             get {
                 return _LogDebug;
             }
+        }
+
+        public FileLogProvider() : this(RegistryConsts.DefaultLogDir,
+                                               RegistryConsts.DefaultLogName,
+                                               -1, RegistryConsts.DefaultLogDebug) {
         }
 
         public FileLogProvider(string logDir, string logName, int runID, bool logDebug) {

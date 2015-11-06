@@ -2,13 +2,18 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface ValueChecker<T> {
+    public interface ValueChecker {
+    }
+
+    public interface ValueChecker<T> : ValueChecker {
         bool IsValid(string path, T val, T newVal);
     }
 
     public interface ValueWatcher<T> {
         void OnChanged(string path, T lastVal, T val);
     }
+
+    public delegate void OnValueChecker<T1>(T1 checker) where T1 : ValueChecker;
 
     public interface Property : Var {
         Data Encode();
@@ -17,6 +22,8 @@ namespace angeldnd.dap {
 
         int ValueCheckerCount { get; }
         int ValueWatcherCount { get; }
+
+        void AllValueCheckers<T1>(OnValueChecker<T1> callback) where T1 : ValueChecker;
     }
 
     public abstract class Property<T>: Var<T>, Property {
@@ -88,6 +95,14 @@ namespace angeldnd.dap {
                 Error("No Need to Update Value: {0}, {1} -> {2}", NeedSetup, Value, newVal);
             }
             return false;
+        }
+
+        public void AllValueCheckers<T1>(OnValueChecker<T1> callback) where T1 : ValueChecker {
+            foreach (var checker in _Checkers) {
+                if (checker is T1) {
+                    callback((T1)checker);
+                }
+            }
         }
 
         //SILP: DECLARE_SECURE_LIST(ValueChecker, checker, ValueChecker<T>, _Checkers)

@@ -28,81 +28,25 @@ namespace angeldnd.dap {
             get { return RegistryConsts.Separator; }
         }
 
-        private static Registry _Global = null;
+        private static Registry _Global = new Registry();
         public static Registry Global {
             get {
-                if (_Global == null) {
-                    Bootstrap();
-                }
                 return _Global;
             }
         }
 
-        private static bool _Bootstrapped = false;
-        public static bool Bootstrapped {
-            get { return _Bootstrapped; }
-        }
-
-        public static void Bootstrap() {
-            if (!_Bootstrapped) {
-                _Bootstrapped = true;
-                _Global = new Registry();
-                SetupLogging();
-                BootstrapAutoBootstrappers();
-            }
-        }
-
-        private static void SetupLogging() {
-            int maxPriority = -1;
-            Type logType = null;
-            Type LogProviderType = typeof(LogProvider);
-
-            Assembly a = Assembly.GetAssembly(typeof(Bootstrapper));
-
-            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly asm in asms) {
-                Type[] types = asm.GetTypes();
-
-                foreach (Type type in types) {
-                    if (!type.IsSubclassOf(LogProviderType)) continue;
-
-                    System.Object[] attribs = type.GetCustomAttributes(false);
-                    foreach (System.Object attr in attribs) {
-                        DapPriority priority = attr as DapPriority;
-                        if (priority != null && priority.Priority > maxPriority) {
-                            maxPriority = priority.Priority;
-                            logType = type;
-                        }
-                    }
-                }
-            }
-
-            if (logType != null) {
-                Object result = logType.GetMethod("SetupLogging", BindingFlags.Public | BindingFlags.Static).Invoke(null, null);
-                Log.Info("SetupLogging: {0} [{1}] -> {2}", logType.Name, maxPriority, result);
-            }
-        }
-
-        private static void BootstrapAutoBootstrappers() {
-            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly asm in asms) {
-                BootstrapAutoBootstrappers(asm);
-            }
-        }
-
-        private static void BootstrapAutoBootstrappers(Assembly asm) {
-            Type bootstrapType = typeof(Bootstrapper);
-            Type[] types = asm.GetTypes();
-
-            foreach (Type type in types) {
-                if (!type.IsSubclassOf(bootstrapType)) continue;
-
-                System.Object[] attribs = type.GetCustomAttributes(false);
-                foreach (System.Object attr in attribs) {
-                    AutoBootstrap autoBootstrap = attr as AutoBootstrap;
-                    if (autoBootstrap != null) {
-                        Object result = type.GetMethod("Bootstrap", BindingFlags.Public | BindingFlags.Static).Invoke(null, null);
-                        Log.Info("Bootstrap: {0} -> {1}", type.Name, result);
+        static Registry() {
+            Environment env = Bootstrapper.Bootstrap();
+            if (env != null) {
+                _Global.Info("DAP Environment Bootstrapped");
+                _Global.Info("Bootstrapper: {0}", env.Bootstrapper);
+                _Global.Info("Log Provider: {0}", env.LogProvider.GetType().FullName);
+                foreach (Plugin plugin in env.Plugins) {
+                    bool ok = plugin.Init();
+                    if (ok) {
+                        _Global.Info("Plugin Init Succeed: {0}", plugin.GetType().FullName);
+                    } else {
+                        _Global.Error("Plugin Init Failed: {0}", plugin.GetType().FullName);
                     }
                 }
             }

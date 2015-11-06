@@ -69,22 +69,23 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public Property AddProperty(string path, Pass pass, bool open, Data spec) {
-            if (spec == null) return null;
+        public Property AddProperty(string path, Pass pass, bool open, Data data) {
+            if (data == null) return null;
 
-            string type = spec.GetString(DapObjectConsts.KeyType);
+            string type = data.GetString(DapObjectConsts.KeyType);
             if (string.IsNullOrEmpty(type)) {
-                Error("Invalid Property Spec: {0}, {1}", path, spec);
+                Error("Invalid Property data: {0}, {1}", path, data);
                 return null;
             }
             Property prop = Properties.Add(path, type, open ? pass.Open : pass) as Property;
             if (prop == null) {
-                Error("Failed to Add Property: {0}, {1}", path, spec);
+                Error("Failed to Add Property: {0}, {1}", path, data);
                 return null;
             }
-            if (!prop.Decode(pass, spec)) {
-                Error("Failed to Decode Property: {0}, {1} -> {2}", path, spec, prop);
+            if (!prop.Decode(pass, data)) {
+                Error("Failed to Decode Property: {0}, {1} -> {2}", path, data, prop);
             }
+
             return prop;
         }
 

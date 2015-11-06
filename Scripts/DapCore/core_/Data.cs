@@ -87,6 +87,29 @@ namespace angeldnd.dap {
             return DataType.Invalid;
         }
 
+        public Object GetValue(string key) {
+            DataType valueType = GetValueType(key);
+            if (valueType == DataType.Invalid) return null;
+
+            switch (valueType) {
+                case DataType.Bool:
+                    return GetBool(key);
+                case DataType.Int:
+                    return GetInt(key);
+                case DataType.Long:
+                    return GetLong(key);
+                case DataType.Float:
+                    return GetFloat(key);
+                case DataType.Double:
+                    return GetDouble(key);
+                case DataType.String:
+                    return GetString(key);
+                case DataType.Data:
+                    return GetData(key);
+            }
+            return null;
+        }
+
         public string ToFullString(bool oneLine) {
             System.Text.StringBuilder builder = new System.Text.StringBuilder();
             AppendData(builder, oneLine, "", this);
