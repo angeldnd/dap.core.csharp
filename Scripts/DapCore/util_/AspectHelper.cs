@@ -5,7 +5,7 @@ using System.Text;
 //using System.Text.RegularExpressions;
 
 namespace angeldnd.dap {
-    public class AspectHelper {
+    public static class AspectHelper {
         public static string GetParentPath(string path) {
             return GetParentPath(path, EntityConsts.Separator);
         }

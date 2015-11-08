@@ -6,7 +6,7 @@ namespace angeldnd.dap {
         public const string TypeTickable = "Tickable";
     }
 
-    public class Tickable : ItemAspect, EventListener {
+    public class Tickable : ItemType, EventListener {
         public override string Type {
             get { return TickableConsts.TypeTickable; }
         }

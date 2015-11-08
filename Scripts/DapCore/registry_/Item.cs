@@ -77,8 +77,8 @@ namespace angeldnd.dap {
             _Registry = null;
         }
 
-        public ItemAspect TypeAspect {
-            get { return Get<ItemAspect>(ItemConsts.AspectType); }
+        public ItemType ItemType {
+            get { return Get<ItemType>(ItemConsts.AspectType); }
         }
 
         //Only Registry supposed to call this method.
@@ -94,7 +94,7 @@ namespace angeldnd.dap {
 
             Aspect aspect = Add(ItemConsts.AspectType, itemType, Pass);
             if (aspect != null) {
-                if (aspect is ItemAspect) {
+                if (aspect is ItemType) {
                     AddString(ItemConsts.PropType, Pass, itemType);
                     return true;
                 } else {

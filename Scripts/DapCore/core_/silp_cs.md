@@ -49,6 +49,7 @@ public ${cs_type} Get${type}(string key, ${cs_type} defaultValue) {
 }
 
 public bool Set${type}(string key, ${cs_type} val) {
+    if (_Sealed) return false;
     if (!_ValueTypes.ContainsKey(key)) {
         _ValueTypes[key] = DataType.${type};
         if (_${type}Values == null) {

@@ -58,30 +58,26 @@ namespace angeldnd.dap {
         protected abstract bool DoDecode(Pass pass, Data data);
         protected abstract bool NeedUpdate(T newVal);
 
-        private bool _CheckingValue = false;
-        private bool _UpdatingValue = false;
+        public bool CheckNewValue(T newVal) {
+            if (_Checkers != null) {
+                for (int i = 0; i < _Checkers.Count; i++) {
+                    if (!_Checkers[i].IsValid(Path, Value, newVal)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
         public override bool SetValue(Pass pass, T newVal) {
             if (!CheckWritePass(pass)) return false;
 
-            if (_CheckingValue) return false;
-            if (_UpdatingValue) return false;
-
             if (NeedUpdate(newVal)) {
-                if (_Checkers != null) {
-                    _CheckingValue = true;
-                    for (int i = 0; i < _Checkers.Count; i++) {
-                        if (!_Checkers[i].IsValid(Path, Value, newVal)) {
-                            _CheckingValue = false;
-                            return false;
-                        }
-                    }
-                    _CheckingValue = false;
+                if (!CheckNewValue(newVal)) {
+                    return false;
                 }
-                _UpdatingValue = true;
                 T lastVal = Value;
                 if (!base.SetValue(pass, newVal)) {
-                    _UpdatingValue = false;
                     return false;
                 }
                 if (_Watchers != null) {
@@ -89,15 +85,15 @@ namespace angeldnd.dap {
                         _Watchers[i].OnChanged(Path, lastVal, Value);
                     }
                 }
-                _UpdatingValue = false;
                 return true;
             } else {
-                Error("No Need to Update Value: {0}, {1} -> {2}", NeedSetup, Value, newVal);
+                return true;
             }
-            return false;
         }
 
         public void AllValueCheckers<T1>(OnValueChecker<T1> callback) where T1 : ValueChecker {
+            if (_Checkers == null) return;
+
             foreach (var checker in _Checkers) {
                 if (checker is T1) {
                     callback((T1)checker);

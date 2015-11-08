@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
+    /*
+     * Any Item can have only one ItemType aspect, which is used to
+     * identify it's main type, though it may have multiple ItemAspect
+     */
     public abstract class ItemAspect : BaseSecurableAspect {
         private Item _Item = null;
         public Item Item {
@@ -27,5 +31,8 @@ namespace angeldnd.dap {
         public string GetDescendantPath(string relativePath) {
             return Item.GetDescendantPath(relativePath);
         }
+    }
+
+    public abstract class ItemType : ItemAspect {
     }
 }
