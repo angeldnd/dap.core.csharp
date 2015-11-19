@@ -7,13 +7,14 @@ using System.Runtime.InteropServices;
 
 namespace angeldnd.dap {
     public abstract class Bootstrapper {
+        /*
+         * Note: if more than one valid env assembly are provided, the actual one
+         * used is not determined.
+         */
         public const string DAP_ENV_ASSEMBLY = "DapEnv.dll";
         public const string DAP_UNITY_ASSEMBLY = "Assembly-CSharp.dll";
 
         public const string DAP_BOOTSTRAPPER = "DapBootstrapper";
-
-        [DllImport("DapEnv.dll")]
-        public static extern string GetBootstrapper();
 
         private static bool IsDapEnvAssembly(Assembly asm) {
             string fileName = System.IO.Path.GetFileName(asm.Location);
@@ -30,6 +31,9 @@ namespace angeldnd.dap {
                     Type type = asm.GetType(DAP_BOOTSTRAPPER);
                     if (type != null && type.IsSubclassOf(BootstrapperType)) {
                         bootstrapper = (Bootstrapper)Activator.CreateInstance(type);
+                        if (bootstrapper != null) {
+                            break;
+                        }
                     }
                 }
             }
