@@ -34,12 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <!--SILP:csproj:compile_include(DapCore) -->
-    <Compile Include="DapCore\bundle_\BinEntry.cs" />            <!--__SILP__-->
-    <Compile Include="DapCore\bundle_\Bundle.cs" />              <!--__SILP__-->
-    <Compile Include="DapCore\bundle_\BundleLoader.cs" />        <!--__SILP__-->
-    <Compile Include="DapCore\bundle_\DataEntry.cs" />           <!--__SILP__-->
-    <Compile Include="DapCore\bundle_\Entry.cs" />               <!--__SILP__-->
-    <Compile Include="DapCore\bundle_\TextEntry.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\config_\Config.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\context_\Channel.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\Channels.cs" />           <!--__SILP__-->
