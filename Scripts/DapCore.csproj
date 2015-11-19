@@ -34,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <!--SILP:csproj:compile_include(DapCore) -->
-    <Compile Include="DapCore\config_\Config.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\context_\Channel.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\Channels.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\context_\Context.cs" />            <!--__SILP__-->
