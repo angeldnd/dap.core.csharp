@@ -38,6 +38,9 @@ namespace angeldnd.dap {
         static Registry() {
             Environment env = Bootstrapper.Bootstrap();
             if (env != null) {
+                if (Log.Provider == null) {
+                    Log.SetProvider(env.LogProvider);
+                }
                 _Global.Info("DAP Environment Bootstrapped");
                 _Global.Info("Bootstrapper: {0}", env.Bootstrapper);
                 _Global.Info("Log Provider: {0}", env.LogProvider.GetType().FullName);
@@ -105,7 +108,7 @@ namespace angeldnd.dap {
 
         private List<RegistryWatcher> _Watchers = new List<RegistryWatcher>();
 
-        public Registry() {
+        private Registry() {
             Factory = Factory.NewBuiltinFactory();
 
             //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
@@ -148,6 +151,14 @@ namespace angeldnd.dap {
 
         public Item GetItem(string path) {
             return Get<Item>(path);
+        }
+
+        public T GetItem<T>(string path) where T : ItemType {
+            Item item = GetItem(path);
+            if (item != null) {
+                return item.GetItemType<T>();
+            }
+            return null;
         }
 
         public T GetItemAspect<T>(string path, string aspectPath) where T : ItemAspect {
@@ -314,6 +325,22 @@ namespace angeldnd.dap {
 
         public Item AddItem(string path) {
             return AddItem(path, ItemConsts.TypeItem);
+        }
+
+        public T AddItem<T>(string path) where T : ItemType {
+            Item item = Add<Item>(path);
+            if (item == null) {
+                return null;
+            }
+            if (item.Setup<T>()) {
+                for (int i = 0; i < _Watchers.Count; i++) {
+                    _Watchers[i].OnItemSetup(this, item);
+                }
+            } else {
+                Remove<Item>(path);
+                return null;
+            }
+            return item.ItemType as T;
         }
 
         public override Aspect FactoryAspect(Entity entity, string path, string type) {

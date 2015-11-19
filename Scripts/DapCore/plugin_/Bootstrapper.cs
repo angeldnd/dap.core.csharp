@@ -45,7 +45,6 @@ namespace angeldnd.dap {
 
             if (env != null) {
                 env.Bootstrapper = bootstrapper.GetType().AssemblyQualifiedName;
-                Log.Provider = env.LogProvider;
             }
             return env;
         }

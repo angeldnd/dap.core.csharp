@@ -49,7 +49,9 @@ public ${cs_type} Get${type}(string key, ${cs_type} defaultValue) {
 }
 
 public bool Set${type}(string key, ${cs_type} val) {
-    if (_Sealed) return false;
+    if (_Sealed && !key.StartsWith(VarPrefix)) {
+        return false;
+    }
     if (!_ValueTypes.ContainsKey(key)) {
         _ValueTypes[key] = DataType.${type};
         if (_${type}Values == null) {
@@ -304,7 +306,7 @@ public virtual bool Init(Entity entity, string path, Pass pass) {
 
 public bool CheckAdminPass(Pass pass) {
     if (_Pass == null) return true;
-    if (_Pass.CheckAdminPass(pass)) return true;
+    if (_Pass.CheckAdminPass(this, pass)) return true;
 
     Error("Invalid Admin Pass: _Pass = {0}, pass = {1}", _Pass, pass);
     return false;
@@ -312,7 +314,7 @@ public bool CheckAdminPass(Pass pass) {
 
 public bool CheckWritePass(Pass pass) {
     if (_Pass == null) return true;
-    if (_Pass.CheckWritePass(pass)) return true;
+    if (_Pass.CheckWritePass(this, pass)) return true;
 
     Error("Invalid Write Pass: _Pass = {0}, pass = {1}", _Pass, pass);
     return false;

@@ -34,6 +34,10 @@
   </ItemGroup>
   <ItemGroup>
     <!--SILP:csproj:compile_include(DapCore) -->
+    <Compile Include="DapCore\bundle_\Bundle.cs" />              <!--__SILP__-->
+    <Compile Include="DapCore\bundle_\BundleLoader.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\bundle_\Entry.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\config_\Config.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\context_\Channel.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\Channels.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\context_\Context.cs" />            <!--__SILP__-->
@@ -51,13 +55,17 @@
     <Compile Include="DapCore\core_\Entity.cs" />                <!--__SILP__-->
     <Compile Include="DapCore\core_\Pass.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\core_\SecurableAspect.cs" />       <!--__SILP__-->
-    <Compile Include="DapCore\core_\Spec.cs" />                  <!--__SILP__-->
-    <Compile Include="DapCore\registry_\Bootstrapper.cs" />      <!--__SILP__-->
+    <Compile Include="DapCore\plugin_\Bootstrapper.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\plugin_\Environment.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\plugin_\Plugin.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\registry_\Factory.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\registry_\Item.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\registry_\ItemAspect.cs" />        <!--__SILP__-->
     <Compile Include="DapCore\registry_\Registry.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\registry_\Tickable.cs" />          <!--__SILP__-->
+    <Compile Include="DapCore\spec_\PropertySpec.cs" />          <!--__SILP__-->
+    <Compile Include="DapCore\spec_\Spec.cs" />                  <!--__SILP__-->
+    <Compile Include="DapCore\spec_\SpecHelper.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\util_\AspectHelper.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\util_\DapAttributes.cs" />         <!--__SILP__-->
     <Compile Include="DapCore\util_\FileLogProvider.cs" />       <!--__SILP__-->

@@ -35,6 +35,11 @@ namespace angeldnd.dap {
 
             result.RegisterAspect<Tickable>(TickableConsts.TypeTickable);
 
+            result.RegisterAspect<Bundle>(BundleConsts.TypeBundle);
+            result.RegisterAspect<DataEntry>(BundleConsts.TypeDataEntry);
+            result.RegisterAspect<TextEntry>(BundleConsts.TypeTextEntry);
+            result.RegisterAspect<BinEntry>(BundleConsts.TypeBinEntry);
+
             return result;
         }
 

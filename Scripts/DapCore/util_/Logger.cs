@@ -38,9 +38,19 @@ namespace angeldnd.dap {
     }
 
     public class Log {
-        public static object Source = null;
+        private static LogProvider _Provider = null;
+        public static LogProvider Provider {
+            get { return _Provider; }
+        }
+        public static bool SetProvider(LogProvider provider) {
+            if (_Provider == null) {
+                _Provider = provider;
+                return true;
+            }
+            return false;
+        }
 
-        public static LogProvider Provider = null;
+        public static object Source = null;
 
         public static void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
             if (Provider == null) return;

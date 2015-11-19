@@ -22,7 +22,7 @@ namespace angeldnd.dap {
         }
     }
 
-    [System.AttributeUsage(System.AttributeTargets.All, Inherited = true, AllowMultiple = false)]
+    [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapOrder: System.Attribute {
         public static int GetOrder(Type type) {
             Object[] attribs = type.GetCustomAttributes(false);

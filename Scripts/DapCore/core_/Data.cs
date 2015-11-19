@@ -10,6 +10,11 @@ namespace angeldnd.dap {
     public enum DataType : byte {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
     public sealed class Data {
+        public const string VarPrefix = "$";
+        public static string GetVarKey(string key) {
+            return VarPrefix + key;
+        }
+
         public static string ToString(Data data) {
             if (data == null) {
                 return "null";
@@ -22,6 +27,12 @@ namespace angeldnd.dap {
                 return "null";
             }
             return data.ToFullString(true);
+        }
+
+        public static Data Clone(Data data) {
+            if (data == null) return new Data();
+
+            return data.Clone();
         }
 
         private bool _Sealed = false;
@@ -47,6 +58,28 @@ namespace angeldnd.dap {
                 return ToFullString(true);
             }
             return string.Format("[Data:{0}]", Count);
+        }
+
+        public Data Clone() {
+            Data clone = new Data();
+            clone._ValueTypes = CloneDictionary<DataType>(_ValueTypes);
+            clone._BoolValues = CloneDictionary<bool>(_BoolValues);
+            clone._IntValues = CloneDictionary<int>(_IntValues);
+            clone._LongValues = CloneDictionary<long>(_LongValues);
+            clone._FloatValues = CloneDictionary<float>(_FloatValues);
+            clone._DoubleValues = CloneDictionary<double>(_DoubleValues);
+            clone._StringValues = CloneDictionary<string>(_StringValues);
+            clone._DataValues = CloneDictionary<Data>(_DataValues);
+            return clone;
+        }
+
+        private Dictionary<string, T> CloneDictionary<T>(Dictionary<string, T> src) {
+            if (src == null) return null;
+            Dictionary<string, T> clone = new Dictionary<string, T>();
+            foreach (var kv in src) {
+                clone[kv.Key] = kv.Value;
+            }
+            return clone;
         }
 
         public int Count {
@@ -200,7 +233,9 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetBool(string key, bool val) {                   //__SILP__
-            if (_Sealed) return false;                                //__SILP__
+            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+                return false;                                         //__SILP__
+            }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Bool;                     //__SILP__
                 if (_BoolValues == null) {                            //__SILP__
@@ -239,7 +274,9 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetInt(string key, int val) {                     //__SILP__
-            if (_Sealed) return false;                                //__SILP__
+            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+                return false;                                         //__SILP__
+            }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Int;                      //__SILP__
                 if (_IntValues == null) {                             //__SILP__
@@ -278,7 +315,9 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetLong(string key, long val) {                   //__SILP__
-            if (_Sealed) return false;                                //__SILP__
+            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+                return false;                                         //__SILP__
+            }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Long;                     //__SILP__
                 if (_LongValues == null) {                            //__SILP__
@@ -317,7 +356,9 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetFloat(string key, float val) {                 //__SILP__
-            if (_Sealed) return false;                                //__SILP__
+            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+                return false;                                         //__SILP__
+            }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Float;                    //__SILP__
                 if (_FloatValues == null) {                           //__SILP__
@@ -356,7 +397,9 @@ namespace angeldnd.dap {
         }                                                              //__SILP__
                                                                        //__SILP__
         public bool SetDouble(string key, double val) {                //__SILP__
-            if (_Sealed) return false;                                 //__SILP__
+            if (_Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
+                return false;                                          //__SILP__
+            }                                                          //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                       //__SILP__
                 _ValueTypes[key] = DataType.Double;                    //__SILP__
                 if (_DoubleValues == null) {                           //__SILP__
@@ -395,7 +438,9 @@ namespace angeldnd.dap {
         }                                                              //__SILP__
                                                                        //__SILP__
         public bool SetString(string key, string val) {                //__SILP__
-            if (_Sealed) return false;                                 //__SILP__
+            if (_Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
+                return false;                                          //__SILP__
+            }                                                          //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                       //__SILP__
                 _ValueTypes[key] = DataType.String;                    //__SILP__
                 if (_StringValues == null) {                           //__SILP__
@@ -434,7 +479,9 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetData(string key, Data val) {                   //__SILP__
-            if (_Sealed) return false;                                //__SILP__
+            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+                return false;                                         //__SILP__
+            }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Data;                     //__SILP__
                 if (_DataValues == null) {                            //__SILP__

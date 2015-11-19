@@ -81,10 +81,18 @@ namespace angeldnd.dap {
             get { return Get<ItemType>(ItemConsts.AspectType); }
         }
 
+        public T GetItemType<T>() where T : ItemType {
+            ItemType itemType = ItemType;
+            if (itemType != null) {
+                return itemType as T;
+            }
+            return null;
+        }
+
         //Only Registry supposed to call this method.
         internal bool Setup(string itemType) {
             if (IsString(ItemConsts.PropType)) {
-                Error("Already Setup: {0} -> {1}, {2}", GetString(ItemConsts.PropType), itemType);
+                Error("Already Setup: {0} -> {1}", GetString(ItemConsts.PropType), itemType);
                 return false;
             }
             if (itemType == ItemConsts.TypeItem || string.IsNullOrEmpty(itemType)) {
@@ -100,6 +108,21 @@ namespace angeldnd.dap {
                 } else {
                     Error("Invalid Type: {0} -> {1}", itemType, aspect.GetType());
                 }
+            }
+            AddString(ItemConsts.PropType, Pass, ItemConsts.TypeItem);
+            return false;
+        }
+
+        //Only Registry supposed to call this method.
+        internal bool Setup<T>() where T : ItemType {
+            if (IsString(ItemConsts.PropType)) {
+                Error("Already Setup: {0} -> {1}", GetString(ItemConsts.PropType), typeof(T));
+                return false;
+            }
+            T itemType = Add<T>(ItemConsts.AspectType, Pass);
+            if (itemType != null) {
+                AddString(ItemConsts.PropType, Pass, itemType.Type);
+                return true;
             }
             AddString(ItemConsts.PropType, Pass, ItemConsts.TypeItem);
             return false;
@@ -124,6 +147,14 @@ namespace angeldnd.dap {
 
         public string GetDescendantPath(string relativePath) {
             return Registry.GetAbsolutePath(Path, relativePath);
+        }
+
+        public Item GetDescendant(string relativePath) {
+            return Registry.GetDescendant(Path, relativePath);
+        }
+
+        public T GetDescendant<T>(string relativePath) where T : ItemType {
+            return Registry.GetDescendant<T>(Path, relativePath);
         }
     }
 }
