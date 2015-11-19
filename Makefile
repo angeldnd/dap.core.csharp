@@ -1,3 +1,3 @@
 build:
 	xbuild Scripts/DapCore.sln
-	cp -v Scripts/bin/Debug/* Releases/Latest/
+	cp -v Scripts/bin/Debug/Dap* Releases/Latest/
