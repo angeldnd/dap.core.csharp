@@ -23,7 +23,7 @@ namespace angeldnd.dap {
         private StreamWriter _LogWriter = null;
         private DateTime _LastFlushTime;
 
-        public bool LogDebug {
+        public override bool LogDebug {
             get {
                 return _LogDebug;
             }

@@ -33,6 +33,8 @@ namespace angeldnd.dap {
     }
     */
     public abstract class LogProvider {
+        public abstract bool LogDebug { get; }
+
         public abstract void AddLog(string type, StackTrace stackTrace, string format, params object[] values);
         public abstract void Flush();
     }
@@ -53,42 +55,47 @@ namespace angeldnd.dap {
         public static object Source = null;
 
         public static void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
-            if (Provider == null) return;
-            Provider.AddLog(type, stackTrace, format, values);
+            if (_Provider == null) return;
+            _Provider.AddLog(type, stackTrace, format, values);
         }
 
         public static void Flush() {
-            if (Provider == null) return;
-            Provider.Flush();
+            if (_Provider == null) return;
+            _Provider.Flush();
         }
 
-        public static bool LogDebug;
+        public static bool LogDebug {
+            get {
+                if (_Provider == null) return false;
+                return _Provider.LogDebug;
+            }
+        }
 
         public static void Critical(string format, params object[] values) {
-            if (Provider == null) return;
+            if (_Provider == null) return;
             StackTrace stackTrace = new StackTrace(1, true);
-            Provider.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
+            _Provider.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
         }
 
         public static void Error(string format, params object[] values) {
-            if (Provider == null) return;
+            if (_Provider == null) return;
             StackTrace stackTrace = new StackTrace(1, true);
-            Provider.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
+            _Provider.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
         }
 
         public static void Info(string format, params object[] values) {
-            if (Provider == null) return;
-            Provider.AddLog(LoggerConsts.INFO, null, format, values);
+            if (_Provider == null) return;
+            _Provider.AddLog(LoggerConsts.INFO, null, format, values);
         }
 
         public static void Debug(string format, params object[] values) {
-            if (Provider == null) return;
-            if (LogDebug) Provider.AddLog(LoggerConsts.DEBUG, null, format, values);
+            if (_Provider == null) return;
+            if (_Provider.LogDebug) _Provider.AddLog(LoggerConsts.DEBUG, null, format, values);
         }
 
         public static void Custom(string type, string format, params object[] values) {
-            if (Provider == null) return;
-            Provider.AddLog(type, null, format, values);
+            if (_Provider == null) return;
+            _Provider.AddLog(type, null, format, values);
         }
     }
 
