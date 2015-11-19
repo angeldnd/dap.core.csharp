@@ -38,7 +38,7 @@ public class Sub${type}SpecValueChecker${checker_kind}<T> : SpecValueChecker<T> 
 
 public class Data${type}SpecValueChecker${checker_kind} : Sub${type}SpecValueChecker${checker_kind}<Data> {
     public Data${type}SpecValueChecker${checker_kind}(string subKey, ${cs_type} ${value_var}Value) 
-            : base(subKey, ${value_var}Value, (Data val) => val.Get${type}(SubKey)) {
+            : base(subKey, ${value_var}Value, (Data val) => val.Get${type}(subKey)) {
     }
 }
 
@@ -108,7 +108,7 @@ public class Sub${type}SpecValueChecker${checker_kind}<T> : SpecValueChecker<T> 
 
 public class Data${type}SpecValueChecker${checker_kind} : Sub${type}SpecValueChecker${checker_kind}<Data> {
     public Data${type}SpecValueChecker${checker_kind}(string subKey, ${cs_type}[] values)
-            : base(subKey, values, (Data val) => val.Get${type}(SubKey)) {
+            : base(subKey, values, (Data val) => val.Get${type}(subKey)) {
     }
 }
 

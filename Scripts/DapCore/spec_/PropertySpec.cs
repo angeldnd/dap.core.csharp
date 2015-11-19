@@ -54,7 +54,7 @@ namespace angeldnd.dap {
                                                                                                             //__SILP__
     public class DataIntSpecValueCheckerBigger : SubIntSpecValueCheckerBigger<Data> {                       //__SILP__
         public DataIntSpecValueCheckerBigger(string subKey, int minValue)                                   //__SILP__
-                : base(subKey, minValue, (Data val) => val.GetInt(SubKey)) {                                //__SILP__
+                : base(subKey, minValue, (Data val) => val.GetInt(subKey)) {                                //__SILP__
         }                                                                                                   //__SILP__
     }                                                                                                       //__SILP__
                                                                                                             //__SILP__
@@ -96,7 +96,7 @@ namespace angeldnd.dap {
                                                                                                             //__SILP__
     public class DataIntSpecValueCheckerBiggerOrEqual : SubIntSpecValueCheckerBiggerOrEqual<Data> {         //__SILP__
         public DataIntSpecValueCheckerBiggerOrEqual(string subKey, int minValue)                            //__SILP__
-                : base(subKey, minValue, (Data val) => val.GetInt(SubKey)) {                                //__SILP__
+                : base(subKey, minValue, (Data val) => val.GetInt(subKey)) {                                //__SILP__
         }                                                                                                   //__SILP__
     }                                                                                                       //__SILP__
                                                                                                             //__SILP__
@@ -138,7 +138,7 @@ namespace angeldnd.dap {
                                                                                                             //__SILP__
     public class DataIntSpecValueCheckerSmaller : SubIntSpecValueCheckerSmaller<Data> {                     //__SILP__
         public DataIntSpecValueCheckerSmaller(string subKey, int maxValue)                                  //__SILP__
-                : base(subKey, maxValue, (Data val) => val.GetInt(SubKey)) {                                //__SILP__
+                : base(subKey, maxValue, (Data val) => val.GetInt(subKey)) {                                //__SILP__
         }                                                                                                   //__SILP__
     }                                                                                                       //__SILP__
                                                                                                             //__SILP__
@@ -180,7 +180,7 @@ namespace angeldnd.dap {
                                                                                                             //__SILP__
     public class DataIntSpecValueCheckerSmallerOrEqual : SubIntSpecValueCheckerSmallerOrEqual<Data> {       //__SILP__
         public DataIntSpecValueCheckerSmallerOrEqual(string subKey, int maxValue)                           //__SILP__
-                : base(subKey, maxValue, (Data val) => val.GetInt(SubKey)) {                                //__SILP__
+                : base(subKey, maxValue, (Data val) => val.GetInt(subKey)) {                                //__SILP__
         }                                                                                                   //__SILP__
     }                                                                                                       //__SILP__
                                                                                                             //__SILP__
@@ -239,7 +239,7 @@ namespace angeldnd.dap {
                                                                                                   //__SILP__
     public class DataIntSpecValueCheckerIn : SubIntSpecValueCheckerIn<Data> {                     //__SILP__
         public DataIntSpecValueCheckerIn(string subKey, int[] values)                             //__SILP__
-                : base(subKey, values, (Data val) => val.GetInt(SubKey)) {                        //__SILP__
+                : base(subKey, values, (Data val) => val.GetInt(subKey)) {                        //__SILP__
         }                                                                                         //__SILP__
     }                                                                                             //__SILP__
                                                                                                   //__SILP__
@@ -297,7 +297,7 @@ namespace angeldnd.dap {
                                                                                                   //__SILP__
     public class DataIntSpecValueCheckerNotIn : SubIntSpecValueCheckerNotIn<Data> {               //__SILP__
         public DataIntSpecValueCheckerNotIn(string subKey, int[] values)                          //__SILP__
-                : base(subKey, values, (Data val) => val.GetInt(SubKey)) {                        //__SILP__
+                : base(subKey, values, (Data val) => val.GetInt(subKey)) {                        //__SILP__
         }                                                                                         //__SILP__
     }                                                                                             //__SILP__
                                                                                                   //__SILP__
@@ -340,7 +340,7 @@ namespace angeldnd.dap {
                                                                                                              //__SILP__
     public class DataLongSpecValueCheckerBigger : SubLongSpecValueCheckerBigger<Data> {                      //__SILP__
         public DataLongSpecValueCheckerBigger(string subKey, long minValue)                                  //__SILP__
-                : base(subKey, minValue, (Data val) => val.GetLong(SubKey)) {                                //__SILP__
+                : base(subKey, minValue, (Data val) => val.GetLong(subKey)) {                                //__SILP__
         }                                                                                                    //__SILP__
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
@@ -382,7 +382,7 @@ namespace angeldnd.dap {
                                                                                                              //__SILP__
     public class DataLongSpecValueCheckerBiggerOrEqual : SubLongSpecValueCheckerBiggerOrEqual<Data> {        //__SILP__
         public DataLongSpecValueCheckerBiggerOrEqual(string subKey, long minValue)                           //__SILP__
-                : base(subKey, minValue, (Data val) => val.GetLong(SubKey)) {                                //__SILP__
+                : base(subKey, minValue, (Data val) => val.GetLong(subKey)) {                                //__SILP__
         }                                                                                                    //__SILP__
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
@@ -424,7 +424,7 @@ namespace angeldnd.dap {
                                                                                                              //__SILP__
     public class DataLongSpecValueCheckerSmaller : SubLongSpecValueCheckerSmaller<Data> {                    //__SILP__
         public DataLongSpecValueCheckerSmaller(string subKey, long maxValue)                                 //__SILP__
-                : base(subKey, maxValue, (Data val) => val.GetLong(SubKey)) {                                //__SILP__
+                : base(subKey, maxValue, (Data val) => val.GetLong(subKey)) {                                //__SILP__
         }                                                                                                    //__SILP__
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
@@ -466,7 +466,7 @@ namespace angeldnd.dap {
                                                                                                              //__SILP__
     public class DataLongSpecValueCheckerSmallerOrEqual : SubLongSpecValueCheckerSmallerOrEqual<Data> {      //__SILP__
         public DataLongSpecValueCheckerSmallerOrEqual(string subKey, long maxValue)                          //__SILP__
-                : base(subKey, maxValue, (Data val) => val.GetLong(SubKey)) {                                //__SILP__
+                : base(subKey, maxValue, (Data val) => val.GetLong(subKey)) {                                //__SILP__
         }                                                                                                    //__SILP__
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
@@ -525,7 +525,7 @@ namespace angeldnd.dap {
                                                                                                   //__SILP__
     public class DataLongSpecValueCheckerIn : SubLongSpecValueCheckerIn<Data> {                   //__SILP__
         public DataLongSpecValueCheckerIn(string subKey, long[] values)                           //__SILP__
-                : base(subKey, values, (Data val) => val.GetLong(SubKey)) {                       //__SILP__
+                : base(subKey, values, (Data val) => val.GetLong(subKey)) {                       //__SILP__
         }                                                                                         //__SILP__
     }                                                                                             //__SILP__
                                                                                                   //__SILP__
@@ -583,7 +583,7 @@ namespace angeldnd.dap {
                                                                                                   //__SILP__
     public class DataLongSpecValueCheckerNotIn : SubLongSpecValueCheckerNotIn<Data> {             //__SILP__
         public DataLongSpecValueCheckerNotIn(string subKey, long[] values)                        //__SILP__
-                : base(subKey, values, (Data val) => val.GetLong(SubKey)) {                       //__SILP__
+                : base(subKey, values, (Data val) => val.GetLong(subKey)) {                       //__SILP__
         }                                                                                         //__SILP__
     }                                                                                             //__SILP__
                                                                                                   //__SILP__
@@ -626,7 +626,7 @@ namespace angeldnd.dap {
                                                                                                               //__SILP__
     public class DataFloatSpecValueCheckerBigger : SubFloatSpecValueCheckerBigger<Data> {                     //__SILP__
         public DataFloatSpecValueCheckerBigger(string subKey, float minValue)                                 //__SILP__
-                : base(subKey, minValue, (Data val) => val.GetFloat(SubKey)) {                                //__SILP__
+                : base(subKey, minValue, (Data val) => val.GetFloat(subKey)) {                                //__SILP__
         }                                                                                                     //__SILP__
     }                                                                                                         //__SILP__
                                                                                                               //__SILP__
@@ -668,7 +668,7 @@ namespace angeldnd.dap {
                                                                                                               //__SILP__
     public class DataFloatSpecValueCheckerBiggerOrEqual : SubFloatSpecValueCheckerBiggerOrEqual<Data> {       //__SILP__
         public DataFloatSpecValueCheckerBiggerOrEqual(string subKey, float minValue)                          //__SILP__
-                : base(subKey, minValue, (Data val) => val.GetFloat(SubKey)) {                                //__SILP__
+                : base(subKey, minValue, (Data val) => val.GetFloat(subKey)) {                                //__SILP__
         }                                                                                                     //__SILP__
     }                                                                                                         //__SILP__
                                                                                                               //__SILP__
@@ -710,7 +710,7 @@ namespace angeldnd.dap {
                                                                                                               //__SILP__
     public class DataFloatSpecValueCheckerSmaller : SubFloatSpecValueCheckerSmaller<Data> {                   //__SILP__
         public DataFloatSpecValueCheckerSmaller(string subKey, float maxValue)                                //__SILP__
-                : base(subKey, maxValue, (Data val) => val.GetFloat(SubKey)) {                                //__SILP__
+                : base(subKey, maxValue, (Data val) => val.GetFloat(subKey)) {                                //__SILP__
         }                                                                                                     //__SILP__
     }                                                                                                         //__SILP__
                                                                                                               //__SILP__
@@ -752,7 +752,7 @@ namespace angeldnd.dap {
                                                                                                               //__SILP__
     public class DataFloatSpecValueCheckerSmallerOrEqual : SubFloatSpecValueCheckerSmallerOrEqual<Data> {     //__SILP__
         public DataFloatSpecValueCheckerSmallerOrEqual(string subKey, float maxValue)                         //__SILP__
-                : base(subKey, maxValue, (Data val) => val.GetFloat(SubKey)) {                                //__SILP__
+                : base(subKey, maxValue, (Data val) => val.GetFloat(subKey)) {                                //__SILP__
         }                                                                                                     //__SILP__
     }                                                                                                         //__SILP__
                                                                                                               //__SILP__
@@ -795,7 +795,7 @@ namespace angeldnd.dap {
                                                                                                                //__SILP__
     public class DataDoubleSpecValueCheckerBigger : SubDoubleSpecValueCheckerBigger<Data> {                    //__SILP__
         public DataDoubleSpecValueCheckerBigger(string subKey, double minValue)                                //__SILP__
-                : base(subKey, minValue, (Data val) => val.GetDouble(SubKey)) {                                //__SILP__
+                : base(subKey, minValue, (Data val) => val.GetDouble(subKey)) {                                //__SILP__
         }                                                                                                      //__SILP__
     }                                                                                                          //__SILP__
                                                                                                                //__SILP__
@@ -837,7 +837,7 @@ namespace angeldnd.dap {
                                                                                                                //__SILP__
     public class DataDoubleSpecValueCheckerBiggerOrEqual : SubDoubleSpecValueCheckerBiggerOrEqual<Data> {      //__SILP__
         public DataDoubleSpecValueCheckerBiggerOrEqual(string subKey, double minValue)                         //__SILP__
-                : base(subKey, minValue, (Data val) => val.GetDouble(SubKey)) {                                //__SILP__
+                : base(subKey, minValue, (Data val) => val.GetDouble(subKey)) {                                //__SILP__
         }                                                                                                      //__SILP__
     }                                                                                                          //__SILP__
                                                                                                                //__SILP__
@@ -879,7 +879,7 @@ namespace angeldnd.dap {
                                                                                                                //__SILP__
     public class DataDoubleSpecValueCheckerSmaller : SubDoubleSpecValueCheckerSmaller<Data> {                  //__SILP__
         public DataDoubleSpecValueCheckerSmaller(string subKey, double maxValue)                               //__SILP__
-                : base(subKey, maxValue, (Data val) => val.GetDouble(SubKey)) {                                //__SILP__
+                : base(subKey, maxValue, (Data val) => val.GetDouble(subKey)) {                                //__SILP__
         }                                                                                                      //__SILP__
     }                                                                                                          //__SILP__
                                                                                                                //__SILP__
@@ -921,7 +921,7 @@ namespace angeldnd.dap {
                                                                                                                //__SILP__
     public class DataDoubleSpecValueCheckerSmallerOrEqual : SubDoubleSpecValueCheckerSmallerOrEqual<Data> {    //__SILP__
         public DataDoubleSpecValueCheckerSmallerOrEqual(string subKey, double maxValue)                        //__SILP__
-                : base(subKey, maxValue, (Data val) => val.GetDouble(SubKey)) {                                //__SILP__
+                : base(subKey, maxValue, (Data val) => val.GetDouble(subKey)) {                                //__SILP__
         }                                                                                                      //__SILP__
     }                                                                                                          //__SILP__
                                                                                                                //__SILP__
@@ -980,7 +980,7 @@ namespace angeldnd.dap {
                                                                                                   //__SILP__
     public class DataStringSpecValueCheckerIn : SubStringSpecValueCheckerIn<Data> {               //__SILP__
         public DataStringSpecValueCheckerIn(string subKey, string[] values)                       //__SILP__
-                : base(subKey, values, (Data val) => val.GetString(SubKey)) {                     //__SILP__
+                : base(subKey, values, (Data val) => val.GetString(subKey)) {                     //__SILP__
         }                                                                                         //__SILP__
     }                                                                                             //__SILP__
                                                                                                   //__SILP__
@@ -1038,7 +1038,7 @@ namespace angeldnd.dap {
                                                                                                   //__SILP__
     public class DataStringSpecValueCheckerNotIn : SubStringSpecValueCheckerNotIn<Data> {         //__SILP__
         public DataStringSpecValueCheckerNotIn(string subKey, string[] values)                    //__SILP__
-                : base(subKey, values, (Data val) => val.GetString(SubKey)) {                     //__SILP__
+                : base(subKey, values, (Data val) => val.GetString(subKey)) {                     //__SILP__
         }                                                                                         //__SILP__
     }                                                                                             //__SILP__
                                                                                                   //__SILP__
