@@ -22,6 +22,10 @@ namespace angeldnd.dap {
             }
         }
 
+        public override string ToString() {
+            return string.Format("[{0}: {1} {2}]", GetType().Name, Separator, Pattern);
+        }
+
         private bool IsMatchedSegment(string patternSegment, string pathSegment) {
             if (patternSegment == PatternMatcherConsts.WildcastSegments) {
                 return true;

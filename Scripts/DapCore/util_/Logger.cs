@@ -122,7 +122,7 @@ namespace angeldnd.dap {
             fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
             var lineNumber = stackFrame.GetFileLineNumber();
             var method = stackFrame.GetMethod();
-            return string.Format("{0}[{1}]:{2}() ", fileName, lineNumber, method.Name);
+            return string.Format("{0}[{1}]: {2}() ", fileName, lineNumber, method.Name);
         }
 
         public void Critical(string format, params object[] values) {
