@@ -20,15 +20,6 @@ namespace angeldnd.dap {
 
         private Dictionary<string, Aspect> _Aspects = new Dictionary<string, Aspect>();
 
-        private bool _Sealed = false;
-        public bool Sealed {
-            get { return _Sealed; }
-        }
-
-        public void Seal() {
-            _Sealed = true;
-        }
-
         public int AspectsCount {
             get { return _Aspects.Count; }
         }
@@ -126,7 +117,6 @@ namespace angeldnd.dap {
         }
 
         protected bool AddAspect(Aspect aspect) {
-            if (Sealed) return false;
             Aspect oldAspect = GetAspect(aspect.Path);
             if (oldAspect != null) {
                 Error("Aspect Exist: {0}, {1}, {2}", aspect.Path, oldAspect, aspect);
@@ -151,7 +141,6 @@ namespace angeldnd.dap {
         }
 
         public Aspect Add(string path, string type, Pass pass) {
-            if (Sealed) return null;
             if (!Has(path)) {
                 Aspect aspect = FactoryAspect(this, path, type);
                 if (aspect != null) {
@@ -186,7 +175,6 @@ namespace angeldnd.dap {
         }
 
         public T Add<T>(string path, Pass pass) where T : class, Aspect {
-            if (Sealed) return null;
             if (!Has(path)) {
                 T aspect = Activator.CreateInstance(typeof(T)) as T;
                 if (aspect != null) {
@@ -207,7 +195,6 @@ namespace angeldnd.dap {
         }
 
         public T Remove<T>(string path, Pass pass) where T : class, Aspect {
-            if (Sealed) return null;
             T aspect = Get<T>(path);
             if (aspect != null) {
                 if (aspect is SecurableAspect) {
@@ -236,7 +223,6 @@ namespace angeldnd.dap {
         }
 
         public List<T> RemoveByChecker<T>(Pass pass, CheckAspect<T> checker) where T : class, Aspect {
-            if (Sealed) return null;
             List<T> removed = null;
             List<T> matched = All<T>();
             if (matched != null) {

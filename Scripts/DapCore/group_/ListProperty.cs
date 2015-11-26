@@ -23,7 +23,7 @@ namespace angeldnd.dap {
         }
 
         public bool IsReadOnly {
-            get { return !Sealed; }
+            get { return false; }
         }
 
         public T this[int index] {
@@ -69,8 +69,6 @@ namespace angeldnd.dap {
         }
 
         public bool Remove(T element) {
-            if (Sealed) return false;
-
             return Remove(element, null) != null;
         }
 
@@ -98,10 +96,6 @@ namespace angeldnd.dap {
         }
 
         public void Clear(Pass pass) {
-            if (Sealed) {
-                Error("Clear Failed: Sealed");
-                return;
-            }
             _MuteOnChanged = true;
             All<T>((T element) => {
                 Remove(element, pass);

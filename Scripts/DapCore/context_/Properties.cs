@@ -23,7 +23,6 @@ namespace angeldnd.dap {
 
         public Property Add(string path, Pass pass, bool open, Data data) {
             if (data == null) return null;
-            if (Sealed) return null;
 
             string type = data.GetString(DapObjectConsts.KeyType);
             if (string.IsNullOrEmpty(type)) {
@@ -65,7 +64,6 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddBoolValueChecker(string path, Pass pass, ValueChecker<bool> checker) {                                      //__SILP__
-            if (Sealed) return false;                                                                                              //__SILP__
             BoolProperty p = Get<BoolProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                           //__SILP__
@@ -80,7 +78,6 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool RemoveBoolValueChecker(string path, Pass pass, ValueChecker<bool> checker) {                                   //__SILP__
-            if (Sealed) return false;                                                                                              //__SILP__
             BoolProperty p = Get<BoolProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                        //__SILP__
@@ -206,7 +203,6 @@ namespace angeldnd.dap {
         }                                                                                                                       //__SILP__
                                                                                                                                 //__SILP__
         public bool AddIntValueChecker(string path, Pass pass, ValueChecker<int> checker) {                                     //__SILP__
-            if (Sealed) return false;                                                                                           //__SILP__
             IntProperty p = Get<IntProperty>(path);                                                                             //__SILP__
             if (p != null) {                                                                                                    //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                        //__SILP__
@@ -221,7 +217,6 @@ namespace angeldnd.dap {
         }                                                                                                                       //__SILP__
                                                                                                                                 //__SILP__
         public bool RemoveIntValueChecker(string path, Pass pass, ValueChecker<int> checker) {                                  //__SILP__
-            if (Sealed) return false;                                                                                           //__SILP__
             IntProperty p = Get<IntProperty>(path);                                                                             //__SILP__
             if (p != null) {                                                                                                    //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                     //__SILP__
@@ -347,7 +342,6 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddLongValueChecker(string path, Pass pass, ValueChecker<long> checker) {                                      //__SILP__
-            if (Sealed) return false;                                                                                              //__SILP__
             LongProperty p = Get<LongProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                           //__SILP__
@@ -362,7 +356,6 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool RemoveLongValueChecker(string path, Pass pass, ValueChecker<long> checker) {                                   //__SILP__
-            if (Sealed) return false;                                                                                              //__SILP__
             LongProperty p = Get<LongProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                        //__SILP__
@@ -488,7 +481,6 @@ namespace angeldnd.dap {
         }                                                                                                                             //__SILP__
                                                                                                                                       //__SILP__
         public bool AddFloatValueChecker(string path, Pass pass, ValueChecker<float> checker) {                                       //__SILP__
-            if (Sealed) return false;                                                                                                 //__SILP__
             FloatProperty p = Get<FloatProperty>(path);                                                                               //__SILP__
             if (p != null) {                                                                                                          //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                              //__SILP__
@@ -503,7 +495,6 @@ namespace angeldnd.dap {
         }                                                                                                                             //__SILP__
                                                                                                                                       //__SILP__
         public bool RemoveFloatValueChecker(string path, Pass pass, ValueChecker<float> checker) {                                    //__SILP__
-            if (Sealed) return false;                                                                                                 //__SILP__
             FloatProperty p = Get<FloatProperty>(path);                                                                               //__SILP__
             if (p != null) {                                                                                                          //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                           //__SILP__
@@ -629,7 +620,6 @@ namespace angeldnd.dap {
         }                                                                                                                                //__SILP__
                                                                                                                                          //__SILP__
         public bool AddDoubleValueChecker(string path, Pass pass, ValueChecker<double> checker) {                                        //__SILP__
-            if (Sealed) return false;                                                                                                    //__SILP__
             DoubleProperty p = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                                 //__SILP__
@@ -644,7 +634,6 @@ namespace angeldnd.dap {
         }                                                                                                                                //__SILP__
                                                                                                                                          //__SILP__
         public bool RemoveDoubleValueChecker(string path, Pass pass, ValueChecker<double> checker) {                                     //__SILP__
-            if (Sealed) return false;                                                                                                    //__SILP__
             DoubleProperty p = Get<DoubleProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                              //__SILP__
@@ -770,7 +759,6 @@ namespace angeldnd.dap {
         }                                                                                                                                //__SILP__
                                                                                                                                          //__SILP__
         public bool AddStringValueChecker(string path, Pass pass, ValueChecker<string> checker) {                                        //__SILP__
-            if (Sealed) return false;                                                                                                    //__SILP__
             StringProperty p = Get<StringProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                                 //__SILP__
@@ -785,7 +773,6 @@ namespace angeldnd.dap {
         }                                                                                                                                //__SILP__
                                                                                                                                          //__SILP__
         public bool RemoveStringValueChecker(string path, Pass pass, ValueChecker<string> checker) {                                     //__SILP__
-            if (Sealed) return false;                                                                                                    //__SILP__
             StringProperty p = Get<StringProperty>(path);                                                                                //__SILP__
             if (p != null) {                                                                                                             //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                              //__SILP__
@@ -911,7 +898,6 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool AddDataValueChecker(string path, Pass pass, ValueChecker<Data> checker) {                                      //__SILP__
-            if (Sealed) return false;                                                                                              //__SILP__
             DataProperty p = Get<DataProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.AddValueChecker(pass, checker);                                                                           //__SILP__
@@ -926,7 +912,6 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public bool RemoveDataValueChecker(string path, Pass pass, ValueChecker<Data> checker) {                                   //__SILP__
-            if (Sealed) return false;                                                                                              //__SILP__
             DataProperty p = Get<DataProperty>(path);                                                                              //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueChecker(pass, checker);                                                                        //__SILP__
