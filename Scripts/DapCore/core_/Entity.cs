@@ -33,7 +33,7 @@ namespace angeldnd.dap {
             get { return _Aspects.Count; }
         }
 
-        public Dictionary<string, Aspect>.KeyCollection AspectsKeys {
+        public ICollection<string> AspectsKeys {
             get {
                 return _Aspects.Keys;
             }

@@ -7,17 +7,25 @@ namespace angeldnd.dap {
         public const string KeyIndex = "_i";
     }
 
-    public abstract class ListProperty<T> : GroupProperty, IEnumerable<T> where T : class, Property {
+    public abstract class ListProperty<T> : GroupProperty, IList<T> where T : class, Property {
         private List<T> _Elements = new List<T>();
 
+        #region IList<T>
         public int Count {
             get { return _Elements.Count; }
+        }
+
+        public bool IsReadOnly {
+            get { return !Sealed; }
         }
 
         public T this[int index] {
             get {
                 if (index < 0 || index >= _Elements.Count) return null;
                 return _Elements[index];
+            }
+            set {
+                throw new System.NotSupportedException("ListProperty<T>.indexer:set");
             }
         }
 
@@ -29,8 +37,52 @@ namespace angeldnd.dap {
             return GetEnumerator();
         }
 
+        public void Add(T element) {
+            throw new System.NotSupportedException("ListProperty<T>.Add(T), use Add() or Add(Pass)");
+        }
+
+        public void Clear() {
+            if (Sealed) {
+                Error("Clear Failed: Sealed");
+                return;
+            }
+            Clear(null);
+        }
+
+        public bool Contains(T element) {
+            return _Elements.Contains(element);
+        }
+
+        public void CopyTo(T[] array, int arrayIndex) {
+            throw new System.NotSupportedException("ListProperty<T>.CopyTo()");
+        }
+
+        public int IndexOf(T element) {
+            return _Elements.IndexOf(element);
+        }
+
+        public void Insert(int index, T element) {
+            throw new System.NotSupportedException("ListProperty<T>.InsertAt()");
+        }
+
+        public bool Remove(T element) {
+            if (Sealed) return false;
+
+            return Remove(element, null) != null;
+        }
+
+        public void RemoveAt(int index) {
+            if (index < 0 || index >= _Elements.Count) return;
+
+            Remove(_Elements[index]);
+        }
+
+        #endregion
+
+        #region APIs
         public T Add() {
-            return Add(null);
+            string path = Guid.NewGuid().ToString();
+            return Add<T>(path, null);
         }
 
         public T Add(Pass pass) {
@@ -38,20 +90,14 @@ namespace angeldnd.dap {
             return Add<T>(path, pass);
         }
 
-        public T Remove(T element) {
-            return Remove(element, null);
-        }
-
         public T Remove(T element, Pass pass) {
             return Remove<T>(element.Path, pass);
         }
 
-        public int IndexOf(T element) {
-            return _Elements.IndexOf(element);
-        }
-
-        public bool Contains(T element) {
-            return _Elements.Contains(element);
+        public void Clear(Pass pass) {
+            All<T>((T element) => {
+                Remove(element, pass);
+            });
         }
 
         public bool MoveToHead(T element) {
@@ -122,6 +168,7 @@ namespace angeldnd.dap {
                 }
             }
         }
+        #endregion
 
         public override void OnAspectRemoved(Entity entity, Aspect aspect) {
             base.OnAspectRemoved(entity, aspect);
@@ -185,6 +232,7 @@ namespace angeldnd.dap {
                 Data subData = dataByIndex[index];
                 Property prop = SpecHelper.AddWithSpec(this, key, Pass, false, subData);
                 if (!(prop is T)) {
+                    Log.Error("Type Mismatched: {0}: {1} -> {2}", key, typeof(T).Name, prop.GetType().FullName);
                     return false;
                 }
             }
