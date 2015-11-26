@@ -9,7 +9,10 @@ namespace angeldnd.dap {
         bool IsValid(string path, T val, T newVal);
     }
 
-    public interface ValueWatcher<T> {
+    public interface ValueWatcher {
+    }
+
+    public interface ValueWatcher<T> : ValueWatcher {
         void OnChanged(string path, T lastVal, T val);
     }
 
@@ -45,6 +48,8 @@ namespace angeldnd.dap {
         }
 
         public bool Decode(Pass pass, Data data) {
+            if (!CheckWritePass(pass)) return false;
+
             string type = data.GetString(DapObjectConsts.KeyType);
             if (type == Type) {
                 return DoDecode(pass, data);
@@ -169,6 +174,7 @@ namespace angeldnd.dap {
             return false;                                                    //__SILP__
         }                                                                    //__SILP__
                                                                              //__SILP__
+
     }
 
     //SILP: PROPERTY_CLASS(Bool, bool)

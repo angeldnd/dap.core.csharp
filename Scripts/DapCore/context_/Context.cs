@@ -70,23 +70,7 @@ namespace angeldnd.dap {
         }
 
         public Property AddProperty(string path, Pass pass, bool open, Data data) {
-            if (data == null) return null;
-
-            string type = data.GetString(DapObjectConsts.KeyType);
-            if (string.IsNullOrEmpty(type)) {
-                Error("Invalid Property data: {0}, {1}", path, data);
-                return null;
-            }
-            Property prop = Properties.Add(path, type, open ? pass.Open : pass) as Property;
-            if (prop == null) {
-                Error("Failed to Add Property: {0}, {1}", path, data);
-                return null;
-            }
-            if (!prop.Decode(pass, data)) {
-                Error("Failed to Decode Property: {0}, {1} -> {2}", path, data, prop);
-            }
-
-            return prop;
+            return Properties.Add(path, pass, open, data);
         }
 
         public bool FireEvent(string channelPath, Pass pass, Data evt) {

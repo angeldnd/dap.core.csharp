@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 
 namespace angeldnd.dap {
     public sealed class Environment {
+        public readonly int MajorVersion;
+        public readonly int MinorVersion;
         public readonly LogProvider LogProvider;
         public readonly Plugin[] Plugins;
 

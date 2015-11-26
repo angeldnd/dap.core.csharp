@@ -45,7 +45,7 @@ namespace angeldnd.dap {
             get { return _Provider; }
         }
         public static bool SetProvider(LogProvider provider) {
-            if (_Provider == null) {
+            if (provider != null) {
                 _Provider = provider;
                 return true;
             }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
@@ -146,7 +146,7 @@ namespace angeldnd.dap {
         }
 
         public string GetDescendantPath(string relativePath) {
-            return Registry.GetAbsolutePath(Path, relativePath);
+	        return RegistryHelper.GetAbsolutePath(Path, relativePath);
         }
 
         public Item GetDescendant(string relativePath) {

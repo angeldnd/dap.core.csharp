@@ -19,17 +19,28 @@ namespace angeldnd.dap {
             return data;
         }
 
-        public static Property AddPropertyWithSpec(this Item item, string path, Pass pass, bool open, Data data) {
-            Property prop = item.AddProperty(path, pass, open, data);
+        public static void SetPropertyWithSpec(this Property prop, Pass pass, Data data) {
             if (prop != null) {
+                Factory factory = RegistryHelper.GetRegistry(prop).Factory;
                 Data spec = data.GetData(SpecConsts.KeySpec, null);
                 if (spec != null) {
                     foreach (string key in spec.Keys) {
-                        item.Registry.Factory.FactorySpecValueChecker(prop, pass, spec, key);
+                        factory.FactorySpecValueChecker(prop, pass, spec, key);
                     }
                 }
             }
+        }
+
+        public static Property AddWithSpec(this Properties properties, string path, Pass pass, bool open, Data data) {
+            Property prop = properties.Add(path, pass, open, data);
+            if (prop != null) {
+                SetPropertyWithSpec(prop, pass, data);
+            }
             return prop;
+        }
+
+        public static Property AddPropertyWithSpec(this Item item, string path, Pass pass, bool open, Data data) {
+            return AddWithSpec(item.Properties, path, pass, open, data);
         }
 
         public static void RegistrySpecValueCheckers() {

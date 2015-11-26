@@ -160,6 +160,7 @@ public ${type}Property Remove${type}(string path) {
 }
 
 public bool Add${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_type}> checker) {
+    if (Sealed) return false;
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.AddValueChecker(pass, checker);
@@ -174,6 +175,7 @@ public bool Add${type}ValueChecker(string path, ValueChecker<${cs_type}> checker
 }
 
 public bool Remove${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_type}> checker) {
+    if (Sealed) return false;
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.RemoveValueChecker(pass, checker);
