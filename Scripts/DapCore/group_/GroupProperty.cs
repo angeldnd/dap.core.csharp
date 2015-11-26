@@ -79,12 +79,17 @@ namespace angeldnd.dap {
             }
         }
 
-        public void OnVarChanged(Var v) {
+        protected void FireOnChanged() {
             if (_Watchers != null) {
                 for (int i = 0; i < _Watchers.Count; i++) {
                     _Watchers[i].OnChanged(Path);
                 }
             }
+        }
+
+
+        public void OnVarChanged(Var v) {
+            FireOnChanged();
         }
 
         private void ResetAllVarWatchers() {

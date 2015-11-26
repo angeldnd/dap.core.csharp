@@ -7,8 +7,15 @@ namespace angeldnd.dap {
         public const string KeyIndex = "_i";
     }
 
+    public interface ListWatcher : ValueWatcher {
+        void OnAdded(string path);
+        void OnRemoved(string path);
+    }
+
     public abstract class ListProperty<T> : GroupProperty, IList<T> where T : class, Property {
         private List<T> _Elements = new List<T>();
+
+        private bool _MuteOnChanged = false;
 
         #region IList<T>
         public int Count {
@@ -42,10 +49,6 @@ namespace angeldnd.dap {
         }
 
         public void Clear() {
-            if (Sealed) {
-                Error("Clear Failed: Sealed");
-                return;
-            }
             Clear(null);
         }
 
@@ -95,9 +98,16 @@ namespace angeldnd.dap {
         }
 
         public void Clear(Pass pass) {
+            if (Sealed) {
+                Error("Clear Failed: Sealed");
+                return;
+            }
+            _MuteOnChanged = true;
             All<T>((T element) => {
                 Remove(element, pass);
             });
+            FireOnChanged();
+            _MuteOnChanged = false;
         }
 
         public bool MoveToHead(T element) {
@@ -107,6 +117,8 @@ namespace angeldnd.dap {
 
             _Elements.RemoveAt(index);
             _Elements.Insert(0, element);
+
+            FireOnChanged();
             return true;
         }
 
@@ -117,6 +129,8 @@ namespace angeldnd.dap {
 
             _Elements.RemoveAt(index);
             _Elements.Add(element);
+
+            FireOnChanged();
             return true;
         }
 
@@ -130,6 +144,8 @@ namespace angeldnd.dap {
             T tmp = _Elements[indexA];
             _Elements[indexA] = _Elements[indexB];
             _Elements[indexB] = tmp;
+
+            FireOnChanged();
             return true;
         }
 
@@ -146,6 +162,8 @@ namespace angeldnd.dap {
             }
 
             _Elements.Insert(indexB, elementA);
+
+            FireOnChanged();
             return true;
         }
 
@@ -163,6 +181,7 @@ namespace angeldnd.dap {
                 if (aspect is T) {
                     T element = (T)aspect;
                     _Elements.Add(element);
+                    if (!_MuteOnChanged) FireOnChanged();
                 } else {
                     aspect.Error("Type Mismatched: <{0}>", typeof(T).FullName);
                 }
@@ -176,6 +195,7 @@ namespace angeldnd.dap {
                 if (aspect is T) {
                     T element = (T)aspect;
                     _Elements.Remove(element);
+                    if (!_MuteOnChanged) FireOnChanged();
                 } else {
                     aspect.Error("Type Mismatched: <{0}>", typeof(T).FullName);
                 }

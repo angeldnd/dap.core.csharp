@@ -6,6 +6,8 @@ namespace angeldnd.dap {
     public abstract class DictProperty<T> : GroupProperty, IDictionary<string, T> where T : class, Property {
         private Dictionary<string, T> _Elements = new Dictionary<string, T>();
 
+        private bool _MuteOnChanged = false;
+
         #region IDictionary<string, T>
         public int Count {
             get { return _Elements.Count; }
@@ -53,10 +55,6 @@ namespace angeldnd.dap {
         }
 
         public void Clear() {
-            if (Sealed) {
-                Error("Clear Failed: Sealed");
-                return;
-            }
             Clear(null);
         }
 
@@ -102,9 +100,16 @@ namespace angeldnd.dap {
         }
 
         public void Clear(Pass pass) {
+            if (Sealed) {
+                Error("Clear Failed: Sealed");
+                return;
+            }
+            _MuteOnChanged = true;
             All<T>((T element) => {
                 Remove(element, pass);
             });
+            FireOnChanged();
+            _MuteOnChanged = false;
         }
 
         public override void OnAspectAdded(Entity entity, Aspect aspect) {
@@ -113,6 +118,7 @@ namespace angeldnd.dap {
                 if (aspect is T) {
                     T element = (T)aspect;
                     _Elements[element.Path] = element;
+                    if (!_MuteOnChanged) FireOnChanged();
                 } else {
                     aspect.Error("Type Mismatched: <{0}>", typeof(T).FullName);
                 }
@@ -125,6 +131,7 @@ namespace angeldnd.dap {
             if (entity == this) {
                 if (aspect is T) {
                     _Elements.Remove(aspect.Path);
+                    if (!_MuteOnChanged) FireOnChanged();
                 } else {
                     aspect.Error("Type Mismatched: <{0}>", typeof(T).FullName);
                 }
