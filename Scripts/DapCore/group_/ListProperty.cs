@@ -220,6 +220,7 @@ namespace angeldnd.dap {
             Dictionary<int, Data> dataByIndex = new Dictionary<int, Data>();
             foreach (var key in data.Keys) {
                 if (key == DapObjectConsts.KeyType) continue;
+
                 Data subData = data.GetData(key);
                 if (subData == null) {
                     Log.Error("Invalid Elements Data: {0} -> {1}", key, data.GetValue(key));
