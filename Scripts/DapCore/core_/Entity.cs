@@ -66,7 +66,7 @@ namespace angeldnd.dap {
                 if (aspect is T) {
                     return (T)aspect;
                 } else {
-                    Error("Get<{0}>({1}): Type Mismatch: {2}", typeof(T).Name, path, aspect.GetType().Name);
+                    Error("Get<{0}>({1}): Type Mismatched: {2}", typeof(T).Name, path, aspect.GetType().Name);
                 }
             } else {
                 Debug("Get<{0}>({1}): Not Found", typeof(T).Name, path);
@@ -255,6 +255,10 @@ namespace angeldnd.dap {
             _Revision += 1;                                           //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
+        public virtual string[] DebugPatterns {                       //__SILP__
+            get { return null; }                                      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
 
         //SILP: ENTITY_LOG_MIXIN()
         private DebugLogger _DebugLogger = DebugLogger.Instance;                                      //__SILP__
@@ -264,14 +268,6 @@ namespace angeldnd.dap {
             get { return _DebugMode; }                                                                //__SILP__
             set {                                                                                     //__SILP__
                 _DebugMode = true;                                                                    //__SILP__
-            }                                                                                         //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        private string[] _DebugPatterns = {""};                                                       //__SILP__
-        public virtual string[] DebugPatterns {                                                       //__SILP__
-            get { return _DebugPatterns; }                                                            //__SILP__
-            set {                                                                                     //__SILP__
-                _DebugPatterns = value;                                                               //__SILP__
             }                                                                                         //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__

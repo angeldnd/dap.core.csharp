@@ -45,12 +45,15 @@
     <Compile Include="DapCore\context_\Vars.cs" />               <!--__SILP__-->
     <Compile Include="DapCore\core_\Accessor.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\core_\Aspect.cs" />                <!--__SILP__-->
-    <Compile Include="DapCore\core_\AspectAccessor.cs" />        <!--__SILP__-->
     <Compile Include="DapCore\core_\DapObject.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\core_\Data.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\core_\Entity.cs" />                <!--__SILP__-->
     <Compile Include="DapCore\core_\Pass.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\core_\SecurableAspect.cs" />       <!--__SILP__-->
+    <Compile Include="DapCore\group_\ComboProperty.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\group_\DictProperty.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\group_\GroupProperty.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\group_\ListProperty.cs" />         <!--__SILP__-->
     <Compile Include="DapCore\plugin_\Bootstrapper.cs" />        <!--__SILP__-->
     <Compile Include="DapCore\plugin_\Environment.cs" />         <!--__SILP__-->
     <Compile Include="DapCore\plugin_\Plugin.cs" />              <!--__SILP__-->
@@ -67,6 +70,7 @@
     <Compile Include="DapCore\util_\FileLogProvider.cs" />       <!--__SILP__-->
     <Compile Include="DapCore\util_\Logger.cs" />                <!--__SILP__-->
     <Compile Include="DapCore\util_\PatternMatcher.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\util_\RegistryHelper.cs" />        <!--__SILP__-->
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -6,31 +6,23 @@ namespace angeldnd.dap {
         public const string TypeTickable = "Tickable";
     }
 
-    public class Tickable : ItemType, EventListener {
+    public class Tickable : Item, EventListener {
         public override string Type {
             get { return TickableConsts.TypeTickable; }
         }
 
-        public override void OnAdded() {
-            base.OnAdded();
-            if (Item.Registry != null) {
-                Item.AddChannel(RegistryConsts.ChannelTick, Pass);
-                Item.Registry.Channels.AddEventListener(RegistryConsts.ChannelTick, this);
-            } else {
-                Error("Invalid Tickable: Registry is null");
-            }
+        protected override void OnItemAdded() {
+            AddChannel(RegistryConsts.ChannelTick, Pass);
+            Registry.Channels.AddEventListener(RegistryConsts.ChannelTick, this);
         }
 
-        public override void OnRemoved() {
-            if (Item.Registry != null) {
-                Item.Registry.Channels.RemoveEventListener(RegistryConsts.ChannelTick, this);
-            }
-            base.OnRemoved();
+        protected override void OnItemRemoved() {
+            Registry.Channels.RemoveEventListener(RegistryConsts.ChannelTick, this);
         }
 
         public void OnEvent(string channelPath, Data evt) {
             if (channelPath == RegistryConsts.ChannelTick) {
-                Item.FireEvent(RegistryConsts.ChannelTick, Pass, evt);
+                FireEvent(RegistryConsts.ChannelTick, Pass, evt);
             }
         }
     }

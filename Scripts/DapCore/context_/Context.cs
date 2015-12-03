@@ -52,6 +52,15 @@ namespace angeldnd.dap {
             Vars = Add<Vars>(ContextConsts.AspectVars, _Pass);
         }
 
+        private string[] _DebugPatterns = {""};
+        public override string[] DebugPatterns {
+            get { return _DebugPatterns; }
+        }
+
+        public void SetDebugPatterns(string[] patterns) {
+            _DebugPatterns = patterns;
+        }
+
         public void OtherAspects<T>(OnAspect<T> callback) where T : class, Aspect {
             Filter<T>(PatternMatcherConsts.WildcastSegments, (T aspect) => {
                 if (aspect != Vars && aspect != Properties && aspect != Channels && aspect != Handlers) {

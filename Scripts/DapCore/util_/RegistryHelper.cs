@@ -39,6 +39,26 @@ namespace angeldnd.dap {
             return path;
         }
 
+        public static string GetDescendantPath(string path, string relativePath) {
+            return string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
+        }
+
+        public static string GetDescendantsPattern(string path) {
+            if (string.IsNullOrEmpty(path)) {
+                return PatternMatcherConsts.WildcastSegments;
+            } else {
+                return path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments;
+            }
+        }
+
+        public static string GetChildrenPattern(string path) {
+            if (string.IsNullOrEmpty(path)) {
+                return PatternMatcherConsts.WildcastSegment;
+            } else {
+                return path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegment;
+            }
+        }
+
         public static string GetParentPath(string path) {
             return AspectHelper.GetParentPath(path, RegistryConsts.Separator);
         }
@@ -47,8 +67,12 @@ namespace angeldnd.dap {
             return string.Format("{0}{1}{2}", ancestorPath, RegistryConsts.Separator, relativePath);
         }
 
+        public static string GetAbsolutePath(Item item, string relativePath) {
+            return GetAbsolutePath(item.Path, relativePath);
+        }
+
         public static string GetAbsolutePath(ItemAspect ancestorAspect, string relativePath) {
-            return GetAbsolutePath(ancestorAspect.Item.Path, relativePath);
+            return GetAbsolutePath(ancestorAspect.ItemPath, relativePath);
         }
 
         public static string GetRelativePath(string ancestorPath, string descendantPath) {
@@ -61,8 +85,28 @@ namespace angeldnd.dap {
             return null;
         }
 
+        public static string GetRelativePath(Item item, string descendantPath) {
+            return GetRelativePath(item.Path, descendantPath);
+        }
+
         public static string GetRelativePath(ItemAspect ancestorAspect, string descendantPath) {
-            return GetRelativePath(ancestorAspect.Item.Path, descendantPath);
+            return GetRelativePath(ancestorAspect.ItemPath, descendantPath);
+        }
+
+        public static T GetDescendantAspect<T>(this Registry registry, string path, string relativePath, string aspectPath) where T : class, ItemAspect {
+            Item item = registry.GetDescendant<Item>(path, relativePath);
+            if (item != null) {
+                return item.GetItemAspect<T>(aspectPath);
+            }
+            return null;
+        }
+
+        public static T GetDescendantAspect<T>(this Registry registry, Item item, string relativePath, string aspectPath) where T : class, ItemAspect {
+            return GetDescendantAspect<T>(registry, item.Path, relativePath, aspectPath);
+        }
+
+        public static T GetDescendantAspect<T>(this Registry registry, ItemAspect itemAspect, string relativePath, string aspectPath) where T : class, ItemAspect {
+            return GetDescendantAspect<T>(registry, itemAspect.ItemPath, relativePath, aspectPath);
         }
     }
 }

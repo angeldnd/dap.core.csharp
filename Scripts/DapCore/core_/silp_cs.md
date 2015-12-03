@@ -138,6 +138,10 @@ protected virtual void AdvanceRevision() {
     _Revision += 1;
 }
 
+public virtual string[] DebugPatterns {
+    get { return null; }
+}
+
 ```
 
 # ENTITY_LOG_MIXIN() #
@@ -149,14 +153,6 @@ public bool DebugMode {
     get { return _DebugMode; }
     set {
         _DebugMode = true;
-    }
-}
-
-private string[] _DebugPatterns = {""};
-public virtual string[] DebugPatterns {
-    get { return _DebugPatterns; }
-    set {
-        _DebugPatterns = value;
     }
 }
 

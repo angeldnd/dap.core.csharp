@@ -1,7 +1,8 @@
 using System;
 
 namespace angeldnd.dap {
-    public interface Aspect : DapObject, Accessor {
+    public interface Aspect : DapObject {
+        Entity Entity { get; }
         string Path { get; }
         string RevPath { get; }
 
@@ -25,6 +26,10 @@ namespace angeldnd.dap {
                                                                       //__SILP__
         protected virtual void AdvanceRevision() {                    //__SILP__
             _Revision += 1;                                           //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public virtual string[] DebugPatterns {                       //__SILP__
+            get { return null; }                                      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         //SILP: ASPECT_MIXIN()

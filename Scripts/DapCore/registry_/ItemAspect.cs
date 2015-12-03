@@ -2,14 +2,26 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    /*
-     * Any Item can have only one ItemType aspect, which is used to
-     * identify it's main type, though it may have multiple ItemAspect
-     */
-    public abstract class ItemAspect : BaseSecurableAspect {
-        private Item _Item = null;
-        public Item Item {
+    public interface ItemAspect : Aspect {
+        Registry Registry { get; }
+        string ItemPath { get; }
+        Item GetItem();
+    }
+
+    public abstract class ItemAspect<T> : BaseSecurableAspect, ItemAspect where T : Item {
+        private T _Item = null;
+        public T Item {
             get { return _Item; }
+        }
+
+        public string ItemPath {
+            get {
+                return _Item != null ? _Item.Path : null;
+            }
+        }
+
+        public Item GetItem() {
+            return _Item;
         }
 
         public Registry Registry {
@@ -20,19 +32,13 @@ namespace angeldnd.dap {
             if (!base.Init(entity, path, pass)) {
                 return false;
             }
-            if (!(entity is Item)) {
-                Error("Invalid Entity: {0}", entity.GetType());
+            if (entity is T) {
+                _Item = (T)entity;
+                return true;
+            } else {
+                Error("Invalid Entity: {0} -> {1}", typeof(T).FullName, entity.GetType().FullName);
                 return false;
             }
-            _Item = entity as Item;
-            return true;
         }
-
-        public string GetDescendantPath(string relativePath) {
-            return Item.GetDescendantPath(relativePath);
-        }
-    }
-
-    public abstract class ItemType : ItemAspect {
     }
 }

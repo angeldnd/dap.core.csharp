@@ -19,10 +19,6 @@ namespace angeldnd.dap {
         }
     }
 
-    public interface RegistryWatcher {
-        void OnItemSetup(Registry registry, Item item);
-    }
-
     public sealed class Registry : Context {
         public override char Separator {
             get { return RegistryConsts.Separator; }
@@ -60,8 +56,6 @@ namespace angeldnd.dap {
 
         public readonly Factory Factory;
 
-        private List<RegistryWatcher> _Watchers = new List<RegistryWatcher>();
-
         private Registry() {
             Factory = Factory.NewBuiltinFactory();
 
@@ -70,235 +64,85 @@ namespace angeldnd.dap {
             AddChannel(RegistryConsts.ChannelTick, DepositChannelPass(RegistryConsts.ChannelTick, new Pass()));
         }
 
-        public bool AddRegistryWatcher(RegistryWatcher watcher) {
-            if (!_Watchers.Contains(watcher)) {
-                _Watchers.Add(watcher);
-                return true;
-            }
-            return false;
+        public override Aspect FactoryAspect(Entity entity, string path, string type) {
+            return Factory.FactoryAspect(entity, path, type);
         }
 
-        public bool RemoveRegistryWatcher(RegistryWatcher watcher) {
-            if (_Watchers.Contains(watcher)) {
-                _Watchers.Remove(watcher);
-                return true;
-            }
-            return false;
+        public T GetParent<T>(string path) where T : Item {
+	        return Get<T>(RegistryHelper.GetParentPath(path));
         }
 
-
-        public string GetDescendantsPattern(string path) {
-            if (string.IsNullOrEmpty(path)) {
-                return PatternMatcherConsts.WildcastSegments;
-            } else {
-                return path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegments;
-            }
+        public List<T> GetChildren<T>(string path) where T : Item {
+            return Filter<T>(RegistryHelper.GetChildrenPattern(path));
         }
 
-        public string GetChildrenPattern(string path) {
-            if (string.IsNullOrEmpty(path)) {
-                return PatternMatcherConsts.WildcastSegment;
-            } else {
-                return path + RegistryConsts.Separator + PatternMatcherConsts.WildcastSegment;
-            }
+        public void FilterChildren<T>(string path, OnAspect<T> callback) where T : Item {
+            Filter<T>(RegistryHelper.GetChildrenPattern(path), callback);
         }
 
-        public Item GetItem(string path) {
-            return Get<Item>(path);
-        }
-
-        public T GetItem<T>(string path) where T : ItemType {
-            Item item = GetItem(path);
-            if (item != null) {
-                return item.GetItemType<T>();
-            }
-            return null;
-        }
-
-        public T GetItemAspect<T>(string path, string aspectPath) where T : ItemAspect {
-            Item item = GetItem(path);
-            if (item == null) {
-                Error("GetItemAspect: Item Not Found: {0}", path);
-                return null;
-            }
-            T aspect = item.Get<T>(aspectPath);
-            if (aspect == null) {
-                Error("GetItemAspect: {0} Not Found: {1} -> {2}", typeof(T).Name, aspectPath, item);
-                return null;
-            }
-            return aspect;
-        }
-
-        public T GetItemAspect<T>(ItemAspect a, string aspectPath) where T : ItemAspect {
-            return GetItemAspect<T>(a.Item.Path, aspectPath);
-        }
-
-        public List<Item> GetChildren(string path) {
-            return Filter<Item>(GetChildrenPattern(path));
-        }
-
-        public List<Item> GetChildren(ItemAspect a) {
-            return GetChildren(a.Item.Path);
-        }
-
-        public List<Item> GetDescendants(string path) {
-            return Filter<Item>(GetDescendantsPattern(path));
-        }
-
-        public List<Item> GetDescendants(ItemAspect a) {
-            return GetDescendants(a.Item.Path);
-        }
-
-        public void FilterDescendantsWithAspect<T>(string path, string aspectPath,
-                                                    OnAspect<T> callback) where T : ItemAspect {
-            Filter<Item>(GetDescendantsPattern(path), (Item item) => {
-                if (item.Has(aspectPath)) {
-                    Aspect aspect = item.Get<Aspect>(aspectPath);
-                    if (aspect != null && aspect is T) {
-                        callback(aspect as T);
-                    }
-                }
-            });
-        }
-
-        public void FilterDescendantsWithAspect<T>(ItemAspect a, string aspectPath,
-                                                    OnAspect<T> callback) where T : ItemAspect {
-            FilterDescendantsWithAspect<T>(a.Item.Path, aspectPath, callback);
-        }
-
-        public List<T> GetDescendantsWithAspect<T>(string path, string aspectPath) where T : ItemAspect {
-            List<T> result = null;
-            FilterDescendantsWithAspect(path, aspectPath, (T aspect) => {
-                if (result == null) result = new List<T>();
-                result.Add(aspect);
-            });
-            return result;
-        }
-
-        public List<T> GetDescendantsWithAspect<T>(ItemAspect a, string aspectPath) where T : ItemAspect {
-            return GetDescendantsWithAspect<T>(a.Item.Path, aspectPath);
-        }
-
-        public void FilterDescendants<T>(string path, OnAspect<T> callback) where T : ItemType {
-            FilterDescendantsWithAspect<T>(path, ItemConsts.AspectType, callback);
-        }
-
-        public void FilterDescendants<T>(ItemAspect a, OnAspect<T> callback) where T : ItemType {
-            FilterDescendantsWithAspect<T>(a.Item.Path, ItemConsts.AspectType, callback);
-        }
-
-        public List<T> GetDescendants<T>(string path) where T : ItemType {
-            return GetDescendantsWithAspect<T>(path, ItemConsts.AspectType);
-        }
-
-        public List<T> GetDescendants<T>(ItemAspect a) where T : ItemType {
-            return GetDescendantsWithAspect<T>(a.Item.Path, ItemConsts.AspectType);
-        }
-
-        public Item GetDescendant(string path, string relativePath) {
-            string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
-            Item result =  Get<Item>(absPath);
-            if (result == null) {
-                Error("Descendant Not Found: {0}", absPath);
-            }
-            return result;
-        }
-
-        public Item GetDescendant(ItemAspect a, string relativePath) {
-            return GetDescendant(a.Item.Path, relativePath);
-        }
-
-        public T GetDescendant<T>(string path, string relativePath) where T : ItemType {
-            Item item = GetDescendant(path, relativePath);
-            if (item != null) {
-                ItemType typeAspect = item.ItemType;
-                if (typeAspect != null && typeAspect is T) {
-                    return typeAspect as T;
-                } else {
-                    Error("Descendant Not Matched: {0} -> {1}", typeof(T),
-                            typeAspect == null ? "null" : typeAspect.GetType().ToString());
-                }
-            }
-            return null;
-        }
-
-        public T GetDescendant<T>(ItemAspect a, string relativePath) where T : ItemType {
-            return GetDescendant<T>(a.Item.Path, relativePath);
-        }
-
-        public T GetDescendantAspect<T>(string path, string relativePath, string aspectPath) where T : ItemAspect {
-            string absPath = string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
-            return GetItemAspect<T>(absPath, aspectPath);
-        }
-
-        public T GetDescendantAspect<T>(ItemAspect a, string relativePath, string aspectPath) where T : ItemAspect {
-            return GetDescendantAspect<T>(a.Item.Path, relativePath, aspectPath);
-        }
-
-        public Item GetParent(string path) {
-	        return Get<Item>(RegistryHelper.GetParentPath(path));
-        }
-
-        public Item GetParent(ItemAspect a) {
-            return GetParent(a.Item.Path);
-        }
-
-        public T GetAncestor<T>(string path) where T : ItemType {
-            Item parent = GetParent(path);
+        public T GetAncestor<T>(string path) where T : Item {
+            Item parent = GetParent<Item>(path);
             if (parent == null) {
                 return null;
             } else {
-                T aspect = parent.ItemType as T;
-                if (aspect != null) {
-                    return aspect;
+                if (parent is T) {
+                    return (T)parent;
                 } else {
                     return GetAncestor<T>(parent.Path);
                 }
             }
         }
 
-        public T GetAncestor<T>(ItemAspect a) where T : ItemType {
-            return GetAncestor<T>(a.Item.Path);
+        public List<T> GetDescendants<T>(string path) where T : Item {
+            return Filter<T>(RegistryHelper.GetDescendantsPattern(path));
         }
 
-        public Item AddItem(string path, string itemType) {
-            Item item = Add<Item>(path);
-            if (item == null) {
-                return null;
-            }
-            if (item.Setup(itemType)) {
-                for (int i = 0; i < _Watchers.Count; i++) {
-                    _Watchers[i].OnItemSetup(this, item);
-                }
+        public void FilterDescendants<T>(string path, OnAspect<T> callback) where T : Item {
+            Filter<T>(RegistryHelper.GetDescendantsPattern(path), callback);
+        }
+
+        public T GetDescendant<T>(string path, string relativePath) where T : Item {
+            string absPath = RegistryHelper.GetDescendantPath(path, relativePath);
+            Item result =  Get<Item>(absPath);
+            if (result == null) {
+                Error("GetDescendant: {0} Not Found", absPath);
+            } else if (result is T) {
+                return (T)result;
             } else {
-                Remove<Item>(path);
-                return null;
+                Error("GetDescendant: {0} Type Mismatched: {1} -> {2}",
+                        absPath, typeof(T).FullName, result.GetType().FullName);
+                Error("Descendant Not Found: {0}", absPath);
             }
-            return item;
+            return null;
+        }
+
+        public T AddItem<T>(string path) where T : Item {
+            return Add<T>(path);
+        }
+
+        public T GetItem<T>(string path) where T : Item {
+            return Get<T>(path);
         }
 
         public Item AddItem(string path) {
-            return AddItem(path, ItemConsts.TypeItem);
+            return Add<Item>(path);
         }
 
-        public T AddItem<T>(string path) where T : ItemType {
-            Item item = Add<Item>(path);
-            if (item == null) {
-                return null;
-            }
-            if (item.Setup<T>()) {
-                for (int i = 0; i < _Watchers.Count; i++) {
-                    _Watchers[i].OnItemSetup(this, item);
-                }
+        public Item GetItem(string path) {
+            return GetItem<Item>(path);
+        }
+
+        public Item AddItem(string path, string type) {
+            Aspect aspect = Add(path, type);
+            if (aspect is Item) {
+                return (Item)aspect;
+            } else if (aspect == null) {
+                Error("AddItem: {0} Failed: {1}", path, type);
             } else {
-                Remove<Item>(path);
-                return null;
+                Error("AddItem: {0} Type Mismatched: {1} -> {2}", path, type, aspect.GetType().FullName);
+                Remove<Aspect>(path);
             }
-            return item.ItemType as T;
-        }
-
-        public override Aspect FactoryAspect(Entity entity, string path, string type) {
-            return Factory.FactoryAspect(entity, path, type);
+            return null;
         }
     }
 }

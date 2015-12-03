@@ -56,14 +56,14 @@ namespace angeldnd.dap {
             return CompareAspect(aspectA, aspectB);
         }
 
-        public static int CompareAspectAccessor(AspectAccessor accessorA, AspectAccessor accessorB) {
+        public static int CompareAspectAccessor(Accessor accessorA, Accessor accessorB) {
             if (accessorA == null && accessorB == null) return 0;
             if (accessorA == null) return -1;
             if (accessorB == null) return 1;
-            return CompareAspect(accessorA.Aspect, accessorB.Aspect);
+            return CompareAspect(accessorA.GetObject() as Aspect, accessorB.GetObject() as Aspect);
         }
 
-        public static int CompareAccessor<T>(T aspectA, T aspectB) where T : AspectAccessor {
+        public static int CompareAccessor<T>(T aspectA, T aspectB) where T : Accessor {
             return CompareAspectAccessor(aspectA, aspectB);
         }
     }

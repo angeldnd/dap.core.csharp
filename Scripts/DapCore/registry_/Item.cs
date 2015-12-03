@@ -4,12 +4,9 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public struct ItemConsts {
         public const string TypeItem = "Item";
-        public const string AspectType = "_type";
-
-        public const string PropType = "_type";
     }
 
-    public sealed class Item : Context, Aspect {
+    public class Item : Context, Aspect {
         public override string Type {
             get { return ItemConsts.TypeItem; }
         }
@@ -71,61 +68,16 @@ namespace angeldnd.dap {
 
         public void OnAdded() {
             _Registry = FindRegistry(_Entity);
+            if (_Registry != null) {
+                OnItemAdded();
+            }
         }
 
         public void OnRemoved() {
+            if (_Registry != null) {
+                OnItemRemoved();
+            }
             _Registry = null;
-        }
-
-        public ItemType ItemType {
-            get { return Get<ItemType>(ItemConsts.AspectType); }
-        }
-
-        public T GetItemType<T>() where T : ItemType {
-            ItemType itemType = ItemType;
-            if (itemType != null) {
-                return itemType as T;
-            }
-            return null;
-        }
-
-        //Only Registry supposed to call this method.
-        internal bool Setup(string itemType) {
-            if (IsString(ItemConsts.PropType)) {
-                Error("Already Setup: {0} -> {1}", GetString(ItemConsts.PropType), itemType);
-                return false;
-            }
-            if (itemType == ItemConsts.TypeItem || string.IsNullOrEmpty(itemType)) {
-                AddString(ItemConsts.PropType, Pass, ItemConsts.TypeItem);
-                return true;
-            }
-
-            Aspect aspect = Add(ItemConsts.AspectType, itemType, Pass);
-            if (aspect != null) {
-                if (aspect is ItemType) {
-                    AddString(ItemConsts.PropType, Pass, itemType);
-                    return true;
-                } else {
-                    Error("Invalid Type: {0} -> {1}", itemType, aspect.GetType());
-                }
-            }
-            AddString(ItemConsts.PropType, Pass, ItemConsts.TypeItem);
-            return false;
-        }
-
-        //Only Registry supposed to call this method.
-        internal bool Setup<T>() where T : ItemType {
-            if (IsString(ItemConsts.PropType)) {
-                Error("Already Setup: {0} -> {1}", GetString(ItemConsts.PropType), typeof(T));
-                return false;
-            }
-            T itemType = Add<T>(ItemConsts.AspectType, Pass);
-            if (itemType != null) {
-                AddString(ItemConsts.PropType, Pass, itemType.Type);
-                return true;
-            }
-            AddString(ItemConsts.PropType, Pass, ItemConsts.TypeItem);
-            return false;
         }
 
         private Registry FindRegistry(Entity entity) {
@@ -145,16 +97,98 @@ namespace angeldnd.dap {
             return null;
         }
 
+        public T GetParent<T>() where T : Item {
+            if (_Registry != null) {
+                return Registry.GetParent<T>(Path);
+            }
+            return null;
+        }
+
+        public List<T> GetChildren<T>() where T : Item {
+            if (_Registry != null) {
+                return Registry.GetChildren<T>(Path);
+            }
+            return null;
+        }
+
+        public void FilterChildren<T>(OnAspect<T> callback) where T : Item {
+            if (_Registry != null) {
+                Registry.FilterChildren<T>(Path, callback);
+            }
+        }
+
         public string GetDescendantPath(string relativePath) {
-	        return RegistryHelper.GetAbsolutePath(Path, relativePath);
+            return RegistryHelper.GetDescendantPath(Path, relativePath);
         }
 
-        public Item GetDescendant(string relativePath) {
-            return Registry.GetDescendant(Path, relativePath);
+        public T GetAncestor<T>() where T : Item {
+            if (_Registry != null) {
+                return Registry.GetAncestor<T>(Path);
+            }
+            return null;
         }
 
-        public T GetDescendant<T>(string relativePath) where T : ItemType {
-            return Registry.GetDescendant<T>(Path, relativePath);
+        public List<T> GetDescendants<T>() where T : Item {
+            if (_Registry != null) {
+                return Registry.GetDescendants<T>(Path);
+            }
+            return null;
         }
+
+        public void FilterDescendants<T>(OnAspect<T> callback) where T : Item {
+            if (_Registry != null) {
+                Registry.FilterDescendants<T>(Path, callback);
+            }
+        }
+
+        public T GetDescendant<T>(string relativePath) where T : Item {
+            if (_Registry != null) {
+                return Registry.GetDescendant<T>(Path, relativePath);
+            }
+            return null;
+        }
+
+        private T GetItemAspect<T>(string aspectPath, bool logError) where T : class, ItemAspect {
+            Aspect aspect = Get<Aspect>(aspectPath);
+            if (aspect != null && aspect is T) {
+                return (T)aspect;
+            } else if (logError) {
+                if (aspect == null) {
+                    Error("GetItemAspect: {0} Not Found: {1}", typeof(T).FullName, aspectPath);
+                } else {
+                    Error("GetItemAspect: {0} Type Mismatched: {1} -> {2}", typeof(T).FullName, aspect.GetType().FullName);
+                }
+            }
+            return null;
+        }
+
+        public T GetItemAspect<T>(string aspectPath) where T : class, ItemAspect {
+            return GetItemAspect<T>(aspectPath, true);
+        }
+
+        public bool TryGetItemAspect<T>(string aspectPath, out T aspect) where T : class, ItemAspect {
+            aspect = GetItemAspect<T>(aspectPath, false);
+            return aspect != null;
+        }
+
+        private OnAspect<Item> GetItemAspectCallback<T>(string aspectPath, OnAspect<T> callback) where T : class, ItemAspect {
+            return (Item item) => {
+                T aspect = item.GetItemAspect<T>(aspectPath, false);
+                if (aspect != null) {
+                    callback(aspect);
+                }
+            };
+        }
+
+        public void FilterChildrenWithAspect<T>(string aspectPath, OnAspect<T> callback) where T : class, ItemAspect {
+            FilterChildren<Item>(GetItemAspectCallback<T>(aspectPath, callback));
+        }
+
+        public void FilterDescendantsWithAspect<T>(string aspectPath, OnAspect<T> callback) where T : class, ItemAspect {
+            FilterDescendants<Item>(GetItemAspectCallback<T>(aspectPath, callback));
+        }
+
+        protected virtual void OnItemAdded() {}
+        protected virtual void OnItemRemoved() {}
     }
 }

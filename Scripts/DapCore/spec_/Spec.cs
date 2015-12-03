@@ -45,7 +45,7 @@ namespace angeldnd.dap {
         }
     }
 
-    public class Spec : ItemAspect, DataChecker {
+    public class Spec : ItemAspect<Item>, DataChecker {
         protected virtual bool StrictMode {
             get { return false; }
         }

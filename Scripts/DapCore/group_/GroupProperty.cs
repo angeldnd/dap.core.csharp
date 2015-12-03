@@ -46,7 +46,7 @@ namespace angeldnd.dap {
             if (type == Type) {
                 return DoDecode(pass, data);
             } else {
-                Error("Mismatched Type: {0}, {1}", Type, type);
+                Error("Type Mismatched: {0}, {1}", Type, type);
             }
             return false;
         }
