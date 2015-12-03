@@ -28,7 +28,7 @@ namespace angeldnd.dap {
             get { return _Item; }
         }
 
-        public T GetObject {
+        public DapObject GetObject() {
             return _Item;
         }
 

@@ -21,7 +21,7 @@ namespace angeldnd.dap {
             return _Object;
         }
 
-        public Accessor() {
+        public BaseAccessor() {
             _LogSource = this;
         }
 

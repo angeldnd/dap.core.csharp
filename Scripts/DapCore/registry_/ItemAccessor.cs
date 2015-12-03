@@ -6,7 +6,7 @@ namespace angeldnd.dap {
         Item GetItem();
     }
 
-    public interface ItemAccessor<T> : Accessor<T>, ItemAccessor, Logger where T : class, Item {
+    public interface ItemAccessor<T> : Accessor<T>, ItemAccessor where T : Item {
         T Item { get; }
     }
 
@@ -16,6 +16,16 @@ namespace angeldnd.dap {
         }
 
         public Item Item {
+            get { return Object; }
+        }
+    }
+
+    public class BaseItemAccessor<T> : BaseAccessor<T>, ItemAccessor<T> where T : Item {
+        public Item GetItem() {
+            return Object;
+        }
+
+        public T Item {
             get { return Object; }
         }
     }
