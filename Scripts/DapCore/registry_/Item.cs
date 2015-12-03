@@ -6,6 +6,14 @@ namespace angeldnd.dap {
         public const string TypeItem = "Item";
     }
 
+    public interface ItemAccessor : Accessor {
+        Item GetItem();
+    }
+
+    public interface ItemAccessor<T> : Accessor<T>, ItemAccessor, Logger where T : class, Item {
+        T Item { get; }
+    }
+
     public class Item : Context, Aspect {
         public override string Type {
             get { return ItemConsts.TypeItem; }

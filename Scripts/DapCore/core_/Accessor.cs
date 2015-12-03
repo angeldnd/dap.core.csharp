@@ -5,7 +5,11 @@ namespace angeldnd.dap {
         DapObject GetObject();
     }
 
-    public abstract class Accessor<T> : Accessor, Logger where T : class, DapObject {
+    public interface Accessor<T> : Accessor, Logger where T : class, DapObject {
+        T Object { get; }
+    }
+
+    public abstract class BaseAccessor<T> : Accessor<T> where T : class, DapObject {
         private Object _LogSource = null;
 
         private T _Object = null;
@@ -103,7 +107,7 @@ namespace angeldnd.dap {
                                                                                                       //__SILP__
     }
 
-    public sealed class ProxyAccessor<T> : Accessor<T> where T : class, DapObject {
+    public sealed class ProxyAccessor<T> : BaseAccessor<T> where T : class, DapObject {
         public bool Setup(Object source, T obj) {
             return _Setup(source, obj);
         }

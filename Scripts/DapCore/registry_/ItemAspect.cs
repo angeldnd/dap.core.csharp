@@ -8,7 +8,7 @@ namespace angeldnd.dap {
         Item GetItem();
     }
 
-    public abstract class ItemAspect<T> : BaseSecurableAspect, ItemAspect where T : Item {
+    public abstract class ItemAspect<T> : BaseSecurableAspect, ItemAccessor<T>, ItemAspect where T : Item {
         private T _Item = null;
         public T Item {
             get { return _Item; }
@@ -21,6 +21,14 @@ namespace angeldnd.dap {
         }
 
         public Item GetItem() {
+            return _Item;
+        }
+
+        public T Object {
+            get { return _Item; }
+        }
+
+        public T GetObject {
             return _Item;
         }
 
