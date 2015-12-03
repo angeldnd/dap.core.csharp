@@ -59,6 +59,7 @@
     <Compile Include="DapCore\plugin_\Plugin.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\registry_\Factory.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\registry_\Item.cs" />              <!--__SILP__-->
+    <Compile Include="DapCore\registry_\ItemAccessor.cs" />      <!--__SILP__-->
     <Compile Include="DapCore\registry_\ItemAspect.cs" />        <!--__SILP__-->
     <Compile Include="DapCore\registry_\Registry.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\registry_\Tickable.cs" />          <!--__SILP__-->
