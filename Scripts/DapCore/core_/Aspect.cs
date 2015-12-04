@@ -13,25 +13,7 @@ namespace angeldnd.dap {
         void OnRemoved();
     }
 
-    public abstract class BaseAspect : Aspect {
-        //SILP: DAPOBJECT_MIXIN()
-        public virtual string Type {                                  //__SILP__
-            get { return null; }                                      //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        private int _Revision = 0;                                    //__SILP__
-        public int Revision {                                         //__SILP__
-            get { return _Revision; }                                 //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        protected virtual void AdvanceRevision() {                    //__SILP__
-            _Revision += 1;                                           //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public virtual string[] DebugPatterns {                       //__SILP__
-            get { return null; }                                      //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
+    public abstract class BaseAspect : BaseDapObject, Aspect {
         //SILP: ASPECT_MIXIN()
         private Entity _Entity = null;                                            //__SILP__
         public Entity Entity {                                                    //__SILP__
@@ -76,8 +58,8 @@ namespace angeldnd.dap {
         public virtual void OnAdded() {}                              //__SILP__
         public virtual void OnRemoved() {}                            //__SILP__
 
-        //SILP: ASPECT_LOG_MIXIN(virtual)
-        public virtual string GetLogPrefix() {                                                           //__SILP__
+        //SILP: ASPECT_LOG_MIXIN(override)
+        public override string GetLogPrefix() {                                                          //__SILP__
             if (_Entity != null) {                                                                       //__SILP__
                 return string.Format("{0}[{1}] {2} ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
             } else {                                                                                     //__SILP__
@@ -85,68 +67,19 @@ namespace angeldnd.dap {
             }                                                                                            //__SILP__
         }                                                                                                //__SILP__
         //SILP: ACCESSOR_LOG_MIXIN(this, _Entity, _Entity)
-        private DebugLogger _DebugLogger = DebugLogger.Instance;                                      //__SILP__
-                                                                                                      //__SILP__
-        public bool DebugMode {                                                                       //__SILP__
-            get { return _Entity != null && _Entity.DebugMode; }                                      //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public bool LogDebug {                                                                        //__SILP__
-            get { return (_Entity != null && _Entity.LogDebug) || Log.LogDebug; }                     //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public void Critical(string format, params object[] values) {                                 //__SILP__
-            Log.Source = this;                                                                        //__SILP__
-            if (DebugMode) {                                                                          //__SILP__
-                _DebugLogger.Critical(                                                                //__SILP__
-                        _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
-            } else {                                                                                  //__SILP__
-                Log.Critical(GetLogPrefix() + string.Format(format, values));                         //__SILP__
-            }                                                                                         //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public void Error(string format, params object[] values) {                                    //__SILP__
-            Log.Source = this;                                                                        //__SILP__
-            if (DebugMode) {                                                                          //__SILP__
-                _DebugLogger.Error(                                                                   //__SILP__
-                        _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
-            } else {                                                                                  //__SILP__
-                Log.Error(GetLogPrefix() + string.Format(format, values));                            //__SILP__
-            }                                                                                         //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public void Info(string format, params object[] values) {                                     //__SILP__
-            Log.Source = this;                                                                        //__SILP__
-            if (DebugMode) {                                                                          //__SILP__
-                _DebugLogger.LogWithPatterns(LoggerConsts.INFO, _Entity.DebugPatterns,                //__SILP__
-                        _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
-            } else {                                                                                  //__SILP__
-                Log.Info(GetLogPrefix() + string.Format(format, values));                             //__SILP__
-            }                                                                                         //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public void Debug(string format, params object[] values) {                                    //__SILP__
-            Log.Source = this;                                                                        //__SILP__
-            if (DebugMode) {                                                                          //__SILP__
-                _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, _Entity.DebugPatterns,               //__SILP__
-                        _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));  //__SILP__
-            } else {                                                                                  //__SILP__
-                Log.Debug(GetLogPrefix() + string.Format(format, values));                            //__SILP__
-            }                                                                                         //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
+        public override bool DebugMode {                                    //__SILP__
+            get { return _Entity != null && _Entity.DebugMode; }            //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
+        public override string[] DebugPatterns {                            //__SILP__
+            get { return _Entity != null ? _Entity.DebugPatterns : null; }  //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
     }
 
     public abstract class EntityAspect : Entity, Aspect {
-        public override Aspect FactoryAspect(Entity entity, string path, string type) {
-            if (Entity != null) {
-                return Entity.FactoryAspect(entity, path, type);
-            }
-            return null;
-        }
-
-        public override bool LogDebug {
-            get { return base.LogDebug || (_Entity != null && _Entity.LogDebug); }
+        public override bool DebugMode {
+            get { return _Entity != null && _Entity.DebugMode; }
         }
 
         public override string[] DebugPatterns {

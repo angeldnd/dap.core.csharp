@@ -18,26 +18,19 @@ namespace angeldnd.dap {
         private int _RunID = -1;
         private int _LogDayOfYear = -1;
         private string _LogFilePath = "";
-        private bool _LogDebug = true;
         private bool _LogAutoFlush = false;
         private StreamWriter _LogWriter = null;
         private DateTime _LastFlushTime;
 
-        public override bool LogDebug {
-            get {
-                return _LogDebug;
-            }
-        }
-
         public FileLogProvider() : this(RegistryConsts.DefaultLogDir,
                                                RegistryConsts.DefaultLogName,
-                                               -1, RegistryConsts.DefaultLogDebug) {
+                                               -1) {
         }
 
-        public FileLogProvider(string logDir, string logName, int runID, bool logDebug) {
+        public FileLogProvider(string logDir, string logName, int runID) {
             _LogRoot = GetLogRoot();
 
-            Debug("FileLogProvider: {0} {1} {2} {3}", logDir, logName, runID, logDebug);
+            Info("FileLogProvider: {0} {1} {2}", logDir, logName, runID);
             _LogDir = logDir;
             _LogName = logName;
             if (runID < 0) {
@@ -45,7 +38,6 @@ namespace angeldnd.dap {
             } else {
                 _RunID = runID;
             }
-            _LogDebug = logDebug;
             SetupLogWriter();
         }
 
@@ -58,18 +50,14 @@ namespace angeldnd.dap {
                 }
                 runID++;
             }
-            Debug("GetNextRunID: {0} {1} {2} -> {3}", logDir, logName, startRunID, runID);
+            Info("GetNextRunID: {0} {1} {2} -> {3}", logDir, logName, startRunID, runID);
             return runID;
         }
 
         public void SetRunID(int runID) {
-            Debug("SetRunID: {0}", runID);
+            Info("SetRunID: {0}", runID);
             _RunID = runID;
             SetupLogWriter();
-        }
-
-        public void SetLogDebug(bool logDebug) {
-            _LogDebug = logDebug;
         }
 
         public void SetLogAutoFlush(bool autoFlush) {
@@ -124,7 +112,7 @@ namespace angeldnd.dap {
  
             try {
                 if (!Directory.Exists(dir)) {
-                    Debug("CreateDirectory: {0}", dir);
+                    Info("CreateDirectory: {0}", dir);
                     Directory.CreateDirectory(dir);
                 }
                 _LogWriter = File.AppendText(_LogFilePath);
@@ -140,7 +128,17 @@ namespace angeldnd.dap {
             }
         }
 
-        public override void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
+        protected void Info(string format, params object[] values) {
+            //TODO: Add log prefix and tostring()
+            AddLog(this, LoggerConsts.INFO, null, format, values);
+        }
+
+        protected void Error(string format, params object[] values) {
+            //TODO: Add log prefix and tostring()
+            AddLog(this, LoggerConsts.ERROR, null, format, values);
+        }
+
+        public override void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values) {
             var now = System.DateTime.UtcNow;
 
             string msg = format;
@@ -150,10 +148,10 @@ namespace angeldnd.dap {
 
             string log = null;
             if (stackTrace != null) {
-                log = string.Format("{0} [{1}] {2}\n{3}", now.ToString(TIMESTAMP_FORMAT), type, msg,
+                log = string.Format("{0} [{1}] {2}\n{3}", now.ToString(TIMESTAMP_FORMAT), kind, msg,
                                     FormatStackTrace(stackTrace, "\t", MAX_STACK_TRACK_NUM));
             } else {
-                log = string.Format("{0} [{1}] {2}", now.ToString(TIMESTAMP_FORMAT), type, msg);
+                log = string.Format("{0} [{1}] {2}", now.ToString(TIMESTAMP_FORMAT), kind, msg);
             }
 
             if (_LogWriter != null) {
@@ -165,7 +163,7 @@ namespace angeldnd.dap {
                 }
                 try {
                     _LogWriter.WriteLine(log);
-                    if (type == LoggerConsts.CRITICAL || now.Ticks - _LastFlushTime.Ticks > FLUSH_DURATION) {
+                    if (kind == LoggerConsts.CRITICAL || now.Ticks - _LastFlushTime.Ticks > FLUSH_DURATION) {
                         _LogWriter.Flush();
                         _LastFlushTime = now;
                     }
@@ -175,7 +173,7 @@ namespace angeldnd.dap {
                     //TODO: maybe try to resume logging to file later.
                 }
             }
-            OnLog(stackTrace, log);
+            OnLog(source, log, stackTrace);
         }
 
         public string FormatStackTrace(StackTrace stackTrace, string prefix, int max) {
@@ -195,33 +193,11 @@ namespace angeldnd.dap {
             return writer.ToString();
         }
 
-        public void Critical(string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(1, true);
-            AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
-        }
-
-        public void Error(string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(1, true);
-            AddLog(LoggerConsts.ERROR, stackTrace, format, values);
-        }
-
-        public void Info(string format, params object[] values) {
-            AddLog(LoggerConsts.INFO, null, format, values);
-        }
-
-        public void Debug(string format, params object[] values) {
-            if (_LogDebug) AddLog(LoggerConsts.DEBUG, null, format, values);
-        }
-
-        public void Custom(string type, string format, params object[] values) {
-            AddLog(type, null, format, values);
-        }
-
         protected virtual string GetLogRoot() {
             return "Logs";
         }
 
-        protected virtual void OnLog(StackTrace stackTrace, string log) {}
+        protected virtual void OnLog(object source, string log, StackTrace stackTrace) {}
 
     }
 }

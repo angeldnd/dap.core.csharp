@@ -17,6 +17,7 @@ namespace angeldnd.dap {
         void Error(string format, params object[] values);
         void Info(string format, params object[] values);
         void Debug(string format, params object[] values);
+        void Custom(string kind, string format, params object[] values);
     }
 
     /*
@@ -33,30 +34,33 @@ namespace angeldnd.dap {
     }
     */
     public abstract class LogProvider {
-        public abstract bool LogDebug { get; }
-
-        public abstract void AddLog(string type, StackTrace stackTrace, string format, params object[] values);
+        public abstract void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values);
         public abstract void Flush();
     }
 
-    public class Log {
+    public static class Log {
         private static LogProvider _Provider = null;
         public static LogProvider Provider {
             get { return _Provider; }
         }
-        public static bool SetProvider(LogProvider provider) {
+        private static bool _LogDebug = true;
+        public static bool LogDebug {
+            get { return _LogDebug; }
+        }
+        public static bool Init(bool logDebug, LogProvider provider) {
             if (provider != null) {
+                _LogDebug = logDebug;
                 _Provider = provider;
                 return true;
             }
             return false;
         }
 
-        public static object Source = null;
+        public readonly static DefaultLogger Default = new DefaultLogger(1);
 
-        public static void AddLog(string type, StackTrace stackTrace, string format, params object[] values) {
+        public static void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values) {
             if (_Provider == null) return;
-            _Provider.AddLog(type, stackTrace, format, values);
+            _Provider.AddLog(source, kind, stackTrace, format, values);
         }
 
         public static void Flush() {
@@ -64,51 +68,123 @@ namespace angeldnd.dap {
             _Provider.Flush();
         }
 
-        public static bool LogDebug {
-            get {
-                if (_Provider == null) return false;
-                return _Provider.LogDebug;
-            }
+        private readonly static DefaultLogger _Default = new DefaultLogger(2);
+
+        public static void CriticalFrom(object source, string format, params object[] values) {
+            _Default.CriticalFrom(source, format, values);
+        }
+
+        public static void ErrorFrom(object source, string format, params object[] values) {
+            _Default.ErrorFrom(source, format, values);
+        }
+
+        public static void InfoFrom(object source, string format, params object[] values) {
+            _Default.InfoFrom(source, format, values);
+        }
+
+        public static void DebugFrom(object source, string format, params object[] values) {
+            if (LogDebug) _Default.DebugFrom(source, format, values);
+        }
+
+        public static void CustomFrom(object source, string kind, string format, params object[] values) {
+            _Default.CustomFrom(source, kind, format, values);
         }
 
         public static void Critical(string format, params object[] values) {
-            if (_Provider == null) return;
-            StackTrace stackTrace = new StackTrace(1, true);
-            _Provider.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
+            _Default.Critical(format, values);
         }
 
         public static void Error(string format, params object[] values) {
-            if (_Provider == null) return;
-            StackTrace stackTrace = new StackTrace(1, true);
-            _Provider.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
+            _Default.Error(format, values);
         }
 
         public static void Info(string format, params object[] values) {
-            if (_Provider == null) return;
-            _Provider.AddLog(LoggerConsts.INFO, null, format, values);
+            _Default.Info(format, values);
         }
 
         public static void Debug(string format, params object[] values) {
-            if (_Provider == null) return;
-            if (_Provider.LogDebug) _Provider.AddLog(LoggerConsts.DEBUG, null, format, values);
+            if (LogDebug) {
+                _Default.Debug(format, values);
+            }
         }
 
-        public static void Custom(string type, string format, params object[] values) {
-            if (_Provider == null) return;
-            _Provider.AddLog(type, null, format, values);
+        public static void Custom(string kind, string format, params object[] values) {
+            _Default.Custom(null, format, values);
         }
     }
 
-    public class DebugLogger : Logger {
-        public static readonly DebugLogger Instance = new DebugLogger(2);
-
+    public abstract class BaseLogger : Logger {
         public readonly int IgnoreStackTraceCount;
 
-        private DebugLogger(int ignoreStackTraceCount) {
+        protected BaseLogger(int ignoreStackTraceCount) {
             IgnoreStackTraceCount = ignoreStackTraceCount;
         }
 
-        public bool LogDebug {
+        public abstract bool LogDebug { get; }
+
+        public void CriticalFrom(object source, string format, params object[] values) {
+            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
+            Log.AddLog(source, LoggerConsts.CRITICAL, stackTrace, format, values);
+        }
+
+        public void ErrorFrom(object source, string format, params object[] values) {
+            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
+            Log.AddLog(source, LoggerConsts.ERROR, stackTrace, format, values);
+        }
+
+        public void InfoFrom(object source, string format, params object[] values) {
+            Log.AddLog(source, LoggerConsts.INFO, null, format, values);
+        }
+
+        public void DebugFrom(object source, string format, params object[] values) {
+            if (LogDebug) {
+                Log.AddLog(source, LoggerConsts.DEBUG, null, format, values);
+            }
+        }
+
+        public void CustomFrom(object source, string kind, string format, params object[] values) {
+            Log.AddLog(source, kind, null, format, values);
+        }
+
+        public void Critical(string format, params object[] values) {
+            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
+            Log.AddLog(null, LoggerConsts.CRITICAL, stackTrace, format, values);
+        }
+
+        public void Error(string format, params object[] values) {
+            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
+            Log.AddLog(null, LoggerConsts.ERROR, stackTrace, format, values);
+        }
+
+        public void Info(string format, params object[] values) {
+            Log.AddLog(null, LoggerConsts.INFO, null, format, values);
+        }
+
+        public void Debug(string format, params object[] values) {
+            if (LogDebug) {
+                Log.AddLog(null, LoggerConsts.DEBUG, null, format, values);
+            }
+        }
+
+        public void Custom(string kind, string format, params object[] values) {
+            Log.AddLog(null, kind, null, format, values);
+        }
+    }
+
+    public sealed class DefaultLogger : BaseLogger {
+        public DefaultLogger(int ignoreStackTraceCount) : base(ignoreStackTraceCount) {
+        }
+
+        public override bool LogDebug {
+            get { return Log.LogDebug; }
+        }
+    }
+
+    public sealed class DebugLogger : BaseLogger {
+        public DebugLogger(int ignoreStackTraceCount) : base(ignoreStackTraceCount) {
+        }
+
+        public override bool LogDebug {
             get { return true; }
         }
 
@@ -125,45 +201,27 @@ namespace angeldnd.dap {
             return string.Format("{0}[{1}]: {2}() ", fileName, lineNumber, method.Name);
         }
 
-        public void Critical(string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog(LoggerConsts.CRITICAL, stackTrace, format, values);
-        }
-
-        public void Error(string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog(LoggerConsts.ERROR, stackTrace, format, values);
-        }
-
-        public void Info(string format, params object[] values) {
-            Log.AddLog(LoggerConsts.INFO, null, format, values);
-        }
-
-        public void Debug(string format, params object[] values) {
-            Log.AddLog(LoggerConsts.DEBUG, null, format, values);
-        }
-
-        public void LogWithPatterns(string type, string[] patterns, string format, params object[] values) {
+        public void LogWithPatternsFrom(object source, string kind, string[] patterns, string format, params object[] values) {
             string msg = format;
             if (values != null && values.Length > 0) msg = string.Format(format, values);
 
             if (IsMatchPatterns(patterns, msg)) {
                 StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-                Log.AddLog(type, stackTrace, format, values);
+                Log.AddLog(source, kind, stackTrace, format, values);
             } else {
-                Log.AddLog(type, null, format, values);
+                Log.AddLog(source, kind, null, format, values);
             }
         }
 
-        public void LogWithPattern(string type, string pattern, string format, params object[] values) {
+        public void LogWithPatternFrom(object source, string kind, string pattern, string format, params object[] values) {
             string msg = format;
             if (values != null && values.Length > 0) msg = string.Format(format, values);
 
             if (IsMatchPattern(pattern, msg)) {
                 StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-                Log.AddLog(type, stackTrace, format, values);
+                Log.AddLog(source, kind, stackTrace, format, values);
             } else {
-                Log.AddLog(type, null, format, values);
+                Log.AddLog(source, kind, null, format, values);
             }
         }
 

@@ -17,6 +17,12 @@ namespace angeldnd.dap {
             return OnInit();
         }
 
-        protected abstract bool OnInit();
+        protected virtual bool OnInit() {
+            return true;
+        }
+
+        public virtual bool SetupRegistry(Registry registry) {
+            return true;
+        }
     }
 }

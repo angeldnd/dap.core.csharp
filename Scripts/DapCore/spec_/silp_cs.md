@@ -122,7 +122,7 @@ public class Data${type}SpecValueChecker${checker_kind} : Sub${type}SpecValueChe
 
 # _REGISTER_SPEC_HELPER(type, cs_type, checker_kind) #
 ```C#
-Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
+Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
         (Property _prop, Pass pass, Data spec, string specKey) => {
     if (spec == null) return false;
     ${type}Property prop = _prop as ${type}Property;
@@ -142,7 +142,7 @@ Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Pro
 
 # _REGISTER_SPEC_IN_HELPER(type, cs_type, checker_kind) #
 ```C#
-Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
+Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
         (Property _prop, Pass pass, Data spec, string specKey) => {
     if (spec == null) return false;
     ${type}Property prop = _prop as ${type}Property;
@@ -168,7 +168,7 @@ Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Pro
 
 # _REGISTER_SPEC_DATA_HELPER(checker_kind) #
 ```C#
-Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
+Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
         (Property _prop, Pass pass, Data spec, string specKey) => {
     if (spec == null) return false;
     DataProperty prop = _prop as DataProperty;
@@ -210,7 +210,7 @@ Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProper
 
 # _REGISTER_SPEC_DATA_IN_HELPER(checker_kind) #
 ```C#
-Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
+Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
         (Property _prop, Pass pass, Data spec, string specKey) => {
     if (spec == null) return false;
     DataProperty prop = _prop as DataProperty;

@@ -52,11 +52,18 @@ namespace angeldnd.dap {
             Vars = Add<Vars>(ContextConsts.AspectVars, _Pass);
         }
 
+        private bool _DebugMode = false;
+        public override bool DebugMode {
+            get { return _DebugMode; }
+        }
+        public void SetDebugMode(bool debugMode) {
+            _DebugMode= debugMode;
+        }
+
         private string[] _DebugPatterns = {""};
         public override string[] DebugPatterns {
             get { return _DebugPatterns; }
         }
-
         public void SetDebugPatterns(string[] patterns) {
             _DebugPatterns = patterns;
         }

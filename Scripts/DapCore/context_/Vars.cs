@@ -67,19 +67,23 @@ namespace angeldnd.dap {
          * if thed deposit failed, an error will be trigger all
          * the time (also the default value will be returned)
          */
-        public T DepositValue<T>(string path, Pass pass, T val) {
+        public T DepositValue<T>(string path, Pass pass, T val, T defaultValue) {
             Var<T> v = GetVar<T>(path);
             if (v == null) {
                 v = AddVar<T>(path, pass, val);
                 return v.Value;
             } else {
                 Error("Already Exist: {0} {1} -> {2}", path, v.Value, val);
-                return default(T);
+                return defaultValue;
             }
         }
 
+        public T DepositValue<T>(string path, Pass pass, T val) {
+            return DepositValue<T>(path, pass, val, default(T));
+        }
+
         public T DepositValue<T>(string path, T val) {
-            return DepositValue<T>(path, null, val);
+            return DepositValue<T>(path, null, val, default(T));
         }
 
         public T WithdrawValue<T>(string path, Pass pass, T defaultValue) {

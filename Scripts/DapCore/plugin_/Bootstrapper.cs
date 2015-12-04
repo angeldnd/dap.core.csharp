@@ -21,7 +21,7 @@ namespace angeldnd.dap {
             return fileName == DAP_ENV_ASSEMBLY || fileName == DAP_UNITY_ASSEMBLY;
         }
 
-        public static Environment Bootstrap() {
+        public static Bootstrapper Bootstrap() {
             Type BootstrapperType = typeof(Bootstrapper);
             Bootstrapper bootstrapper = null;
 
@@ -41,36 +41,30 @@ namespace angeldnd.dap {
             if (bootstrapper == null) {
                 bootstrapper = new AssemblyBootstrapper();
             }
-
-            Environment env = null;
-            if (bootstrapper != null) {
-                env = bootstrapper.Init();
-            }
-
-            if (env != null) {
-                env.Bootstrapper = bootstrapper.GetType().AssemblyQualifiedName;
-            }
-            return env;
+            return bootstrapper;
         }
 
-        protected abstract Environment Init();
+        public abstract int GetVersion();
+        public abstract int GetSubVersion();
+        public abstract bool GetLogDebug();
+        public abstract LogProvider GetLogProvider();
+        public abstract List<Plugin> GetPlugins();
     }
 
     public class AssemblyBootstrapper : Bootstrapper {
-        public static Environment GetAssemblyEnv() {
-            return new AssemblyBootstrapper().Init();
+        public override int GetVersion() {
+            return -1;
         }
 
-        protected override Environment Init() {
-            LogProvider logProvider = GetLogProvider();
-            List<Plugin> plugins = GetPlugins();
-            if (logProvider != null) {
-                return new Environment(logProvider, plugins.ToArray());
-            }
-            return null;
+        public override int GetSubVersion() {
+            return -1;
         }
 
-        private LogProvider GetLogProvider() {
+        public override bool GetLogDebug() {
+            return true;
+        }
+
+        public override LogProvider GetLogProvider() {
             int maxPriority = -1;
             Type logType = null;
             Type LogProviderType = typeof(LogProvider);
@@ -97,7 +91,7 @@ namespace angeldnd.dap {
             return null;
         }
 
-        private List<Plugin> GetPlugins() {
+        public override List<Plugin> GetPlugins() {
             List<Plugin> plugins = new List<Plugin>();
             Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly asm in asms) {

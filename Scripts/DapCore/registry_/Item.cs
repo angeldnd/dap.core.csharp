@@ -90,13 +90,6 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public override Aspect FactoryAspect(Entity entity, string path, string type) {
-            if (_Registry != null) {
-                return _Registry.FactoryAspect(entity, path, type);
-            }
-            return null;
-        }
-
         public T GetParent<T>() where T : Item {
             if (_Registry != null) {
                 return Registry.GetParent<T>(Path);

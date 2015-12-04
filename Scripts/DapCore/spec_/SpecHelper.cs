@@ -21,11 +21,10 @@ namespace angeldnd.dap {
 
         public static void SetPropertyWithSpec(this Property prop, Pass pass, Data data) {
             if (prop != null) {
-                Factory factory = RegistryHelper.GetRegistry(prop).Factory;
                 Data spec = data.GetData(SpecConsts.KeySpec, null);
                 if (spec != null) {
                     foreach (string key in spec.Keys) {
-                        factory.FactorySpecValueChecker(prop, pass, spec, key);
+                        Factory.FactorySpecValueChecker(prop, pass, spec, key);
                     }
                 }
             }
@@ -45,244 +44,244 @@ namespace angeldnd.dap {
 
         public static void RegistrySpecValueCheckers() {
             //SILP:REGISTER_SPEC_HELPER(Int, int);
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindBigger,          //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                //__SILP__
-                if (spec == null) return false;                                                                                //__SILP__
-                IntProperty prop = _prop as IntProperty;                                                                       //__SILP__
-                if (prop == null) return false;                                                                                //__SILP__
-                return prop.AddValueChecker(pass, new IntSpecValueCheckerBigger(spec.GetInt(specKey)));                        //__SILP__
-            });                                                                                                                //__SILP__
-                                                                                                                               //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindBiggerOrEqual,   //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                //__SILP__
-                if (spec == null) return false;                                                                                //__SILP__
-                IntProperty prop = _prop as IntProperty;                                                                       //__SILP__
-                if (prop == null) return false;                                                                                //__SILP__
-                return prop.AddValueChecker(pass, new IntSpecValueCheckerBiggerOrEqual(spec.GetInt(specKey)));                 //__SILP__
-            });                                                                                                                //__SILP__
-                                                                                                                               //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindSmaller,         //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                //__SILP__
-                if (spec == null) return false;                                                                                //__SILP__
-                IntProperty prop = _prop as IntProperty;                                                                       //__SILP__
-                if (prop == null) return false;                                                                                //__SILP__
-                return prop.AddValueChecker(pass, new IntSpecValueCheckerSmaller(spec.GetInt(specKey)));                       //__SILP__
-            });                                                                                                                //__SILP__
-                                                                                                                               //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindSmallerOrEqual,  //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                //__SILP__
-                if (spec == null) return false;                                                                                //__SILP__
-                IntProperty prop = _prop as IntProperty;                                                                       //__SILP__
-                if (prop == null) return false;                                                                                //__SILP__
-                return prop.AddValueChecker(pass, new IntSpecValueCheckerSmallerOrEqual(spec.GetInt(specKey)));                //__SILP__
-            });                                                                                                                //__SILP__
-                                                                                                                               //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindBigger,            //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                  //__SILP__
+                if (spec == null) return false;                                                                  //__SILP__
+                IntProperty prop = _prop as IntProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                  //__SILP__
+                return prop.AddValueChecker(pass, new IntSpecValueCheckerBigger(spec.GetInt(specKey)));          //__SILP__
+            });                                                                                                  //__SILP__
+                                                                                                                 //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindBiggerOrEqual,     //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                  //__SILP__
+                if (spec == null) return false;                                                                  //__SILP__
+                IntProperty prop = _prop as IntProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                  //__SILP__
+                return prop.AddValueChecker(pass, new IntSpecValueCheckerBiggerOrEqual(spec.GetInt(specKey)));   //__SILP__
+            });                                                                                                  //__SILP__
+                                                                                                                 //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindSmaller,           //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                  //__SILP__
+                if (spec == null) return false;                                                                  //__SILP__
+                IntProperty prop = _prop as IntProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                  //__SILP__
+                return prop.AddValueChecker(pass, new IntSpecValueCheckerSmaller(spec.GetInt(specKey)));         //__SILP__
+            });                                                                                                  //__SILP__
+                                                                                                                 //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindSmallerOrEqual,    //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                  //__SILP__
+                if (spec == null) return false;                                                                  //__SILP__
+                IntProperty prop = _prop as IntProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                  //__SILP__
+                return prop.AddValueChecker(pass, new IntSpecValueCheckerSmallerOrEqual(spec.GetInt(specKey)));  //__SILP__
+            });                                                                                                  //__SILP__
+                                                                                                                 //__SILP__
             //SILP:REGISTER_SPEC_IN_HELPER(Int, int);
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindIn,     //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                       //__SILP__
-                if (spec == null) return false;                                                                       //__SILP__
-                IntProperty prop = _prop as IntProperty;                                                              //__SILP__
-                if (prop == null) return false;                                                                       //__SILP__
-                Data _values = spec.GetData(specKey, null);                                                           //__SILP__
-                if (_values == null) return false;                                                                    //__SILP__
-                List<int> values = new List<int>();                                                                   //__SILP__
-                for (int i = 0; i < _values.Count; i++) {                                                             //__SILP__
-                    string index = i.ToString();                                                                      //__SILP__
-                    if (_values.IsInt(index)) {                                                                       //__SILP__
-                        values.Add(_values.GetInt(index));                                                            //__SILP__
-                    }                                                                                                 //__SILP__
-                }                                                                                                     //__SILP__
-                return prop.AddValueChecker(pass, new IntSpecValueCheckerIn(values.ToArray()));                       //__SILP__
-            });                                                                                                       //__SILP__
-                                                                                                                      //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindNotIn,  //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                       //__SILP__
-                if (spec == null) return false;                                                                       //__SILP__
-                IntProperty prop = _prop as IntProperty;                                                              //__SILP__
-                if (prop == null) return false;                                                                       //__SILP__
-                Data _values = spec.GetData(specKey, null);                                                           //__SILP__
-                if (_values == null) return false;                                                                    //__SILP__
-                List<int> values = new List<int>();                                                                   //__SILP__
-                for (int i = 0; i < _values.Count; i++) {                                                             //__SILP__
-                    string index = i.ToString();                                                                      //__SILP__
-                    if (_values.IsInt(index)) {                                                                       //__SILP__
-                        values.Add(_values.GetInt(index));                                                            //__SILP__
-                    }                                                                                                 //__SILP__
-                }                                                                                                     //__SILP__
-                return prop.AddValueChecker(pass, new IntSpecValueCheckerNotIn(values.ToArray()));                    //__SILP__
-            });                                                                                                       //__SILP__
-                                                                                                                      //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindIn,     //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                       //__SILP__
+                if (spec == null) return false;                                                       //__SILP__
+                IntProperty prop = _prop as IntProperty;                                              //__SILP__
+                if (prop == null) return false;                                                       //__SILP__
+                Data _values = spec.GetData(specKey, null);                                           //__SILP__
+                if (_values == null) return false;                                                    //__SILP__
+                List<int> values = new List<int>();                                                   //__SILP__
+                for (int i = 0; i < _values.Count; i++) {                                             //__SILP__
+                    string index = i.ToString();                                                      //__SILP__
+                    if (_values.IsInt(index)) {                                                       //__SILP__
+                        values.Add(_values.GetInt(index));                                            //__SILP__
+                    }                                                                                 //__SILP__
+                }                                                                                     //__SILP__
+                return prop.AddValueChecker(pass, new IntSpecValueCheckerIn(values.ToArray()));       //__SILP__
+            });                                                                                       //__SILP__
+                                                                                                      //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeIntProperty, SpecConsts.KindNotIn,  //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                       //__SILP__
+                if (spec == null) return false;                                                       //__SILP__
+                IntProperty prop = _prop as IntProperty;                                              //__SILP__
+                if (prop == null) return false;                                                       //__SILP__
+                Data _values = spec.GetData(specKey, null);                                           //__SILP__
+                if (_values == null) return false;                                                    //__SILP__
+                List<int> values = new List<int>();                                                   //__SILP__
+                for (int i = 0; i < _values.Count; i++) {                                             //__SILP__
+                    string index = i.ToString();                                                      //__SILP__
+                    if (_values.IsInt(index)) {                                                       //__SILP__
+                        values.Add(_values.GetInt(index));                                            //__SILP__
+                    }                                                                                 //__SILP__
+                }                                                                                     //__SILP__
+                return prop.AddValueChecker(pass, new IntSpecValueCheckerNotIn(values.ToArray()));    //__SILP__
+            });                                                                                       //__SILP__
+                                                                                                      //__SILP__
             //SILP:REGISTER_SPEC_HELPER(Long, long);
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindBigger,          //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                 //__SILP__
-                if (spec == null) return false;                                                                                 //__SILP__
-                LongProperty prop = _prop as LongProperty;                                                                      //__SILP__
-                if (prop == null) return false;                                                                                 //__SILP__
-                return prop.AddValueChecker(pass, new LongSpecValueCheckerBigger(spec.GetLong(specKey)));                       //__SILP__
-            });                                                                                                                 //__SILP__
-                                                                                                                                //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindBiggerOrEqual,   //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                 //__SILP__
-                if (spec == null) return false;                                                                                 //__SILP__
-                LongProperty prop = _prop as LongProperty;                                                                      //__SILP__
-                if (prop == null) return false;                                                                                 //__SILP__
-                return prop.AddValueChecker(pass, new LongSpecValueCheckerBiggerOrEqual(spec.GetLong(specKey)));                //__SILP__
-            });                                                                                                                 //__SILP__
-                                                                                                                                //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindSmaller,         //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                 //__SILP__
-                if (spec == null) return false;                                                                                 //__SILP__
-                LongProperty prop = _prop as LongProperty;                                                                      //__SILP__
-                if (prop == null) return false;                                                                                 //__SILP__
-                return prop.AddValueChecker(pass, new LongSpecValueCheckerSmaller(spec.GetLong(specKey)));                      //__SILP__
-            });                                                                                                                 //__SILP__
-                                                                                                                                //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindSmallerOrEqual,  //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                 //__SILP__
-                if (spec == null) return false;                                                                                 //__SILP__
-                LongProperty prop = _prop as LongProperty;                                                                      //__SILP__
-                if (prop == null) return false;                                                                                 //__SILP__
-                return prop.AddValueChecker(pass, new LongSpecValueCheckerSmallerOrEqual(spec.GetLong(specKey)));               //__SILP__
-            });                                                                                                                 //__SILP__
-                                                                                                                                //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindBigger,             //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                    //__SILP__
+                if (spec == null) return false;                                                                    //__SILP__
+                LongProperty prop = _prop as LongProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                    //__SILP__
+                return prop.AddValueChecker(pass, new LongSpecValueCheckerBigger(spec.GetLong(specKey)));          //__SILP__
+            });                                                                                                    //__SILP__
+                                                                                                                   //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindBiggerOrEqual,      //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                    //__SILP__
+                if (spec == null) return false;                                                                    //__SILP__
+                LongProperty prop = _prop as LongProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                    //__SILP__
+                return prop.AddValueChecker(pass, new LongSpecValueCheckerBiggerOrEqual(spec.GetLong(specKey)));   //__SILP__
+            });                                                                                                    //__SILP__
+                                                                                                                   //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindSmaller,            //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                    //__SILP__
+                if (spec == null) return false;                                                                    //__SILP__
+                LongProperty prop = _prop as LongProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                    //__SILP__
+                return prop.AddValueChecker(pass, new LongSpecValueCheckerSmaller(spec.GetLong(specKey)));         //__SILP__
+            });                                                                                                    //__SILP__
+                                                                                                                   //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindSmallerOrEqual,     //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                    //__SILP__
+                if (spec == null) return false;                                                                    //__SILP__
+                LongProperty prop = _prop as LongProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                    //__SILP__
+                return prop.AddValueChecker(pass, new LongSpecValueCheckerSmallerOrEqual(spec.GetLong(specKey)));  //__SILP__
+            });                                                                                                    //__SILP__
+                                                                                                                   //__SILP__
             //SILP:REGISTER_SPEC_IN_HELPER(Long, long);
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindIn,     //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                        //__SILP__
-                if (spec == null) return false;                                                                        //__SILP__
-                LongProperty prop = _prop as LongProperty;                                                             //__SILP__
-                if (prop == null) return false;                                                                        //__SILP__
-                Data _values = spec.GetData(specKey, null);                                                            //__SILP__
-                if (_values == null) return false;                                                                     //__SILP__
-                List<long> values = new List<long>();                                                                  //__SILP__
-                for (int i = 0; i < _values.Count; i++) {                                                              //__SILP__
-                    string index = i.ToString();                                                                       //__SILP__
-                    if (_values.IsLong(index)) {                                                                       //__SILP__
-                        values.Add(_values.GetLong(index));                                                            //__SILP__
-                    }                                                                                                  //__SILP__
-                }                                                                                                      //__SILP__
-                return prop.AddValueChecker(pass, new LongSpecValueCheckerIn(values.ToArray()));                       //__SILP__
-            });                                                                                                        //__SILP__
-                                                                                                                       //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindNotIn,  //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                        //__SILP__
-                if (spec == null) return false;                                                                        //__SILP__
-                LongProperty prop = _prop as LongProperty;                                                             //__SILP__
-                if (prop == null) return false;                                                                        //__SILP__
-                Data _values = spec.GetData(specKey, null);                                                            //__SILP__
-                if (_values == null) return false;                                                                     //__SILP__
-                List<long> values = new List<long>();                                                                  //__SILP__
-                for (int i = 0; i < _values.Count; i++) {                                                              //__SILP__
-                    string index = i.ToString();                                                                       //__SILP__
-                    if (_values.IsLong(index)) {                                                                       //__SILP__
-                        values.Add(_values.GetLong(index));                                                            //__SILP__
-                    }                                                                                                  //__SILP__
-                }                                                                                                      //__SILP__
-                return prop.AddValueChecker(pass, new LongSpecValueCheckerNotIn(values.ToArray()));                    //__SILP__
-            });                                                                                                        //__SILP__
-                                                                                                                       //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindIn,     //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                        //__SILP__
+                if (spec == null) return false;                                                        //__SILP__
+                LongProperty prop = _prop as LongProperty;                                             //__SILP__
+                if (prop == null) return false;                                                        //__SILP__
+                Data _values = spec.GetData(specKey, null);                                            //__SILP__
+                if (_values == null) return false;                                                     //__SILP__
+                List<long> values = new List<long>();                                                  //__SILP__
+                for (int i = 0; i < _values.Count; i++) {                                              //__SILP__
+                    string index = i.ToString();                                                       //__SILP__
+                    if (_values.IsLong(index)) {                                                       //__SILP__
+                        values.Add(_values.GetLong(index));                                            //__SILP__
+                    }                                                                                  //__SILP__
+                }                                                                                      //__SILP__
+                return prop.AddValueChecker(pass, new LongSpecValueCheckerIn(values.ToArray()));       //__SILP__
+            });                                                                                        //__SILP__
+                                                                                                       //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeLongProperty, SpecConsts.KindNotIn,  //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                        //__SILP__
+                if (spec == null) return false;                                                        //__SILP__
+                LongProperty prop = _prop as LongProperty;                                             //__SILP__
+                if (prop == null) return false;                                                        //__SILP__
+                Data _values = spec.GetData(specKey, null);                                            //__SILP__
+                if (_values == null) return false;                                                     //__SILP__
+                List<long> values = new List<long>();                                                  //__SILP__
+                for (int i = 0; i < _values.Count; i++) {                                              //__SILP__
+                    string index = i.ToString();                                                       //__SILP__
+                    if (_values.IsLong(index)) {                                                       //__SILP__
+                        values.Add(_values.GetLong(index));                                            //__SILP__
+                    }                                                                                  //__SILP__
+                }                                                                                      //__SILP__
+                return prop.AddValueChecker(pass, new LongSpecValueCheckerNotIn(values.ToArray()));    //__SILP__
+            });                                                                                        //__SILP__
+                                                                                                       //__SILP__
             //SILP:REGISTER_SPEC_HELPER(Float, float);
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeFloatProperty, SpecConsts.KindBigger,          //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
-                if (spec == null) return false;                                                                                  //__SILP__
-                FloatProperty prop = _prop as FloatProperty;                                                                     //__SILP__
-                if (prop == null) return false;                                                                                  //__SILP__
-                return prop.AddValueChecker(pass, new FloatSpecValueCheckerBigger(spec.GetFloat(specKey)));                      //__SILP__
-            });                                                                                                                  //__SILP__
-                                                                                                                                 //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeFloatProperty, SpecConsts.KindBiggerOrEqual,   //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
-                if (spec == null) return false;                                                                                  //__SILP__
-                FloatProperty prop = _prop as FloatProperty;                                                                     //__SILP__
-                if (prop == null) return false;                                                                                  //__SILP__
-                return prop.AddValueChecker(pass, new FloatSpecValueCheckerBiggerOrEqual(spec.GetFloat(specKey)));               //__SILP__
-            });                                                                                                                  //__SILP__
-                                                                                                                                 //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeFloatProperty, SpecConsts.KindSmaller,         //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
-                if (spec == null) return false;                                                                                  //__SILP__
-                FloatProperty prop = _prop as FloatProperty;                                                                     //__SILP__
-                if (prop == null) return false;                                                                                  //__SILP__
-                return prop.AddValueChecker(pass, new FloatSpecValueCheckerSmaller(spec.GetFloat(specKey)));                     //__SILP__
-            });                                                                                                                  //__SILP__
-                                                                                                                                 //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeFloatProperty, SpecConsts.KindSmallerOrEqual,  //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
-                if (spec == null) return false;                                                                                  //__SILP__
-                FloatProperty prop = _prop as FloatProperty;                                                                     //__SILP__
-                if (prop == null) return false;                                                                                  //__SILP__
-                return prop.AddValueChecker(pass, new FloatSpecValueCheckerSmallerOrEqual(spec.GetFloat(specKey)));              //__SILP__
-            });                                                                                                                  //__SILP__
-                                                                                                                                 //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeFloatProperty, SpecConsts.KindBigger,              //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                      //__SILP__
+                if (spec == null) return false;                                                                      //__SILP__
+                FloatProperty prop = _prop as FloatProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                      //__SILP__
+                return prop.AddValueChecker(pass, new FloatSpecValueCheckerBigger(spec.GetFloat(specKey)));          //__SILP__
+            });                                                                                                      //__SILP__
+                                                                                                                     //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeFloatProperty, SpecConsts.KindBiggerOrEqual,       //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                      //__SILP__
+                if (spec == null) return false;                                                                      //__SILP__
+                FloatProperty prop = _prop as FloatProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                      //__SILP__
+                return prop.AddValueChecker(pass, new FloatSpecValueCheckerBiggerOrEqual(spec.GetFloat(specKey)));   //__SILP__
+            });                                                                                                      //__SILP__
+                                                                                                                     //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeFloatProperty, SpecConsts.KindSmaller,             //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                      //__SILP__
+                if (spec == null) return false;                                                                      //__SILP__
+                FloatProperty prop = _prop as FloatProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                      //__SILP__
+                return prop.AddValueChecker(pass, new FloatSpecValueCheckerSmaller(spec.GetFloat(specKey)));         //__SILP__
+            });                                                                                                      //__SILP__
+                                                                                                                     //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeFloatProperty, SpecConsts.KindSmallerOrEqual,      //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                      //__SILP__
+                if (spec == null) return false;                                                                      //__SILP__
+                FloatProperty prop = _prop as FloatProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                      //__SILP__
+                return prop.AddValueChecker(pass, new FloatSpecValueCheckerSmallerOrEqual(spec.GetFloat(specKey)));  //__SILP__
+            });                                                                                                      //__SILP__
+                                                                                                                     //__SILP__
             //SILP:REGISTER_SPEC_HELPER(Double, double);
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDoubleProperty, SpecConsts.KindBigger,          //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                   //__SILP__
-                if (spec == null) return false;                                                                                   //__SILP__
-                DoubleProperty prop = _prop as DoubleProperty;                                                                    //__SILP__
-                if (prop == null) return false;                                                                                   //__SILP__
-                return prop.AddValueChecker(pass, new DoubleSpecValueCheckerBigger(spec.GetDouble(specKey)));                     //__SILP__
-            });                                                                                                                   //__SILP__
-                                                                                                                                  //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDoubleProperty, SpecConsts.KindBiggerOrEqual,   //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                   //__SILP__
-                if (spec == null) return false;                                                                                   //__SILP__
-                DoubleProperty prop = _prop as DoubleProperty;                                                                    //__SILP__
-                if (prop == null) return false;                                                                                   //__SILP__
-                return prop.AddValueChecker(pass, new DoubleSpecValueCheckerBiggerOrEqual(spec.GetDouble(specKey)));              //__SILP__
-            });                                                                                                                   //__SILP__
-                                                                                                                                  //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDoubleProperty, SpecConsts.KindSmaller,         //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                   //__SILP__
-                if (spec == null) return false;                                                                                   //__SILP__
-                DoubleProperty prop = _prop as DoubleProperty;                                                                    //__SILP__
-                if (prop == null) return false;                                                                                   //__SILP__
-                return prop.AddValueChecker(pass, new DoubleSpecValueCheckerSmaller(spec.GetDouble(specKey)));                    //__SILP__
-            });                                                                                                                   //__SILP__
-                                                                                                                                  //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDoubleProperty, SpecConsts.KindSmallerOrEqual,  //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                                   //__SILP__
-                if (spec == null) return false;                                                                                   //__SILP__
-                DoubleProperty prop = _prop as DoubleProperty;                                                                    //__SILP__
-                if (prop == null) return false;                                                                                   //__SILP__
-                return prop.AddValueChecker(pass, new DoubleSpecValueCheckerSmallerOrEqual(spec.GetDouble(specKey)));             //__SILP__
-            });                                                                                                                   //__SILP__
-                                                                                                                                  //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDoubleProperty, SpecConsts.KindBigger,               //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                        //__SILP__
+                if (spec == null) return false;                                                                        //__SILP__
+                DoubleProperty prop = _prop as DoubleProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                        //__SILP__
+                return prop.AddValueChecker(pass, new DoubleSpecValueCheckerBigger(spec.GetDouble(specKey)));          //__SILP__
+            });                                                                                                        //__SILP__
+                                                                                                                       //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDoubleProperty, SpecConsts.KindBiggerOrEqual,        //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                        //__SILP__
+                if (spec == null) return false;                                                                        //__SILP__
+                DoubleProperty prop = _prop as DoubleProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                        //__SILP__
+                return prop.AddValueChecker(pass, new DoubleSpecValueCheckerBiggerOrEqual(spec.GetDouble(specKey)));   //__SILP__
+            });                                                                                                        //__SILP__
+                                                                                                                       //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDoubleProperty, SpecConsts.KindSmaller,              //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                        //__SILP__
+                if (spec == null) return false;                                                                        //__SILP__
+                DoubleProperty prop = _prop as DoubleProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                        //__SILP__
+                return prop.AddValueChecker(pass, new DoubleSpecValueCheckerSmaller(spec.GetDouble(specKey)));         //__SILP__
+            });                                                                                                        //__SILP__
+                                                                                                                       //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDoubleProperty, SpecConsts.KindSmallerOrEqual,       //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                                        //__SILP__
+                if (spec == null) return false;                                                                        //__SILP__
+                DoubleProperty prop = _prop as DoubleProperty;                                                         //__SILP__
+                if (prop == null) return false;                                                                        //__SILP__
+                return prop.AddValueChecker(pass, new DoubleSpecValueCheckerSmallerOrEqual(spec.GetDouble(specKey)));  //__SILP__
+            });                                                                                                        //__SILP__
+                                                                                                                       //__SILP__
             //SILP:REGISTER_SPEC_IN_HELPER(String, string);
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeStringProperty, SpecConsts.KindIn,     //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                          //__SILP__
-                if (spec == null) return false;                                                                          //__SILP__
-                StringProperty prop = _prop as StringProperty;                                                           //__SILP__
-                if (prop == null) return false;                                                                          //__SILP__
-                Data _values = spec.GetData(specKey, null);                                                              //__SILP__
-                if (_values == null) return false;                                                                       //__SILP__
-                List<string> values = new List<string>();                                                                //__SILP__
-                for (int i = 0; i < _values.Count; i++) {                                                                //__SILP__
-                    string index = i.ToString();                                                                         //__SILP__
-                    if (_values.IsString(index)) {                                                                       //__SILP__
-                        values.Add(_values.GetString(index));                                                            //__SILP__
-                    }                                                                                                    //__SILP__
-                }                                                                                                        //__SILP__
-                return prop.AddValueChecker(pass, new StringSpecValueCheckerIn(values.ToArray()));                       //__SILP__
-            });                                                                                                          //__SILP__
-                                                                                                                         //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeStringProperty, SpecConsts.KindNotIn,  //__SILP__
-                    (Property _prop, Pass pass, Data spec, string specKey) => {                                          //__SILP__
-                if (spec == null) return false;                                                                          //__SILP__
-                StringProperty prop = _prop as StringProperty;                                                           //__SILP__
-                if (prop == null) return false;                                                                          //__SILP__
-                Data _values = spec.GetData(specKey, null);                                                              //__SILP__
-                if (_values == null) return false;                                                                       //__SILP__
-                List<string> values = new List<string>();                                                                //__SILP__
-                for (int i = 0; i < _values.Count; i++) {                                                                //__SILP__
-                    string index = i.ToString();                                                                         //__SILP__
-                    if (_values.IsString(index)) {                                                                       //__SILP__
-                        values.Add(_values.GetString(index));                                                            //__SILP__
-                    }                                                                                                    //__SILP__
-                }                                                                                                        //__SILP__
-                return prop.AddValueChecker(pass, new StringSpecValueCheckerNotIn(values.ToArray()));                    //__SILP__
-            });                                                                                                          //__SILP__
-                                                                                                                         //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeStringProperty, SpecConsts.KindIn,     //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                          //__SILP__
+                if (spec == null) return false;                                                          //__SILP__
+                StringProperty prop = _prop as StringProperty;                                           //__SILP__
+                if (prop == null) return false;                                                          //__SILP__
+                Data _values = spec.GetData(specKey, null);                                              //__SILP__
+                if (_values == null) return false;                                                       //__SILP__
+                List<string> values = new List<string>();                                                //__SILP__
+                for (int i = 0; i < _values.Count; i++) {                                                //__SILP__
+                    string index = i.ToString();                                                         //__SILP__
+                    if (_values.IsString(index)) {                                                       //__SILP__
+                        values.Add(_values.GetString(index));                                            //__SILP__
+                    }                                                                                    //__SILP__
+                }                                                                                        //__SILP__
+                return prop.AddValueChecker(pass, new StringSpecValueCheckerIn(values.ToArray()));       //__SILP__
+            });                                                                                          //__SILP__
+                                                                                                         //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeStringProperty, SpecConsts.KindNotIn,  //__SILP__
+                    (Property _prop, Pass pass, Data spec, string specKey) => {                          //__SILP__
+                if (spec == null) return false;                                                          //__SILP__
+                StringProperty prop = _prop as StringProperty;                                           //__SILP__
+                if (prop == null) return false;                                                          //__SILP__
+                Data _values = spec.GetData(specKey, null);                                              //__SILP__
+                if (_values == null) return false;                                                       //__SILP__
+                List<string> values = new List<string>();                                                //__SILP__
+                for (int i = 0; i < _values.Count; i++) {                                                //__SILP__
+                    string index = i.ToString();                                                         //__SILP__
+                    if (_values.IsString(index)) {                                                       //__SILP__
+                        values.Add(_values.GetString(index));                                            //__SILP__
+                    }                                                                                    //__SILP__
+                }                                                                                        //__SILP__
+                return prop.AddValueChecker(pass, new StringSpecValueCheckerNotIn(values.ToArray()));    //__SILP__
+            });                                                                                          //__SILP__
+                                                                                                         //__SILP__
             //SILP:REGISTER_SPEC_DATA_HELPER();
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindBigger,           //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindBigger,                           //__SILP__
                     (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
                 if (spec == null) return false;                                                                                  //__SILP__
                 DataProperty prop = _prop as DataProperty;                                                                       //__SILP__
@@ -307,7 +306,7 @@ namespace angeldnd.dap {
                 return false;                                                                                                    //__SILP__
             });                                                                                                                  //__SILP__
                                                                                                                                  //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindBiggerOrEqual,    //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindBiggerOrEqual,                    //__SILP__
                     (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
                 if (spec == null) return false;                                                                                  //__SILP__
                 DataProperty prop = _prop as DataProperty;                                                                       //__SILP__
@@ -332,7 +331,7 @@ namespace angeldnd.dap {
                 return false;                                                                                                    //__SILP__
             });                                                                                                                  //__SILP__
                                                                                                                                  //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindSmaller,          //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindSmaller,                          //__SILP__
                     (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
                 if (spec == null) return false;                                                                                  //__SILP__
                 DataProperty prop = _prop as DataProperty;                                                                       //__SILP__
@@ -357,7 +356,7 @@ namespace angeldnd.dap {
                 return false;                                                                                                    //__SILP__
             });                                                                                                                  //__SILP__
                                                                                                                                  //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindSmallerOrEqual,   //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindSmallerOrEqual,                   //__SILP__
                     (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
                 if (spec == null) return false;                                                                                  //__SILP__
                 DataProperty prop = _prop as DataProperty;                                                                       //__SILP__
@@ -382,7 +381,7 @@ namespace angeldnd.dap {
                 return false;                                                                                                    //__SILP__
             });                                                                                                                  //__SILP__
                                                                                                                                  //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindIn,               //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindIn,                               //__SILP__
                     (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
                 if (spec == null) return false;                                                                                  //__SILP__
                 DataProperty prop = _prop as DataProperty;                                                                       //__SILP__
@@ -424,7 +423,7 @@ namespace angeldnd.dap {
                 return false;                                                                                                    //__SILP__
             });                                                                                                                  //__SILP__
                                                                                                                                  //__SILP__
-            Registry.Global.Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindNotIn,            //__SILP__
+            Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.KindNotIn,                            //__SILP__
                     (Property _prop, Pass pass, Data spec, string specKey) => {                                                  //__SILP__
                 if (spec == null) return false;                                                                                  //__SILP__
                 DataProperty prop = _prop as DataProperty;                                                                       //__SILP__

@@ -144,68 +144,6 @@ public virtual string[] DebugPatterns {
 
 ```
 
-# ENTITY_LOG_MIXIN() #
-```
-private DebugLogger _DebugLogger = DebugLogger.Instance;
-
-private bool _DebugMode = false;
-public bool DebugMode {
-    get { return _DebugMode; }
-    set {
-        _DebugMode = true;
-    }
-}
-
-public virtual bool LogDebug {
-    get { return _DebugMode || Log.LogDebug; }
-}
-
-public virtual string GetLogPrefix() {
-    return string.Format("[{0}] ({1}) ", GetType().Name, Revision);
-}
-
-public void Critical(string format, params object[] values) {
-    Log.Source = this;
-    if (DebugMode) {
-        _DebugLogger.Critical(
-            _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
-    } else {
-        Log.Critical(GetLogPrefix() + string.Format(format, values));
-    }
-}
-
-public void Error(string format, params object[] values) {
-    Log.Source = this;
-    if (DebugMode) {
-        _DebugLogger.Error(
-            _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
-    } else {
-        Log.Error(GetLogPrefix() + string.Format(format, values));
-    }
-}
-
-public void Info(string format, params object[] values) {
-    Log.Source = this;
-    if (DebugMode) {
-        _DebugLogger.LogWithPatterns(LoggerConsts.INFO, DebugPatterns,
-                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
-    } else {
-        Log.Info(GetLogPrefix() + string.Format(format, values));
-    }
-}
-
-public void Debug(string format, params object[] values) {
-    Log.Source = this;
-    if (DebugMode) {
-        _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, DebugPatterns,
-                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
-    } else {
-        Log.Debug(GetLogPrefix() + string.Format(format, values));
-    }
-}
-
-```
-
 # ASPECT_LOG_MIXIN(virtualOrOverride) #
 ```C#
 public ${virtualOrOverride} string GetLogPrefix() {
@@ -219,54 +157,12 @@ public ${virtualOrOverride} string GetLogPrefix() {
 
 # ACCESSOR_LOG_MIXIN(source, target, entity) #
 ```C#
-private DebugLogger _DebugLogger = DebugLogger.Instance;
-
-public bool DebugMode {
+public override bool DebugMode {
     get { return ${target} != null && ${target}.DebugMode; }
 }
 
-public bool LogDebug {
-    get { return (${target} != null && ${target}.LogDebug) || Log.LogDebug; }
-}
-
-public void Critical(string format, params object[] values) {
-    Log.Source = ${source};
-    if (DebugMode) {
-        _DebugLogger.Critical(
-                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
-    } else {
-        Log.Critical(GetLogPrefix() + string.Format(format, values));
-    }
-}
-
-public void Error(string format, params object[] values) {
-    Log.Source = ${source};
-    if (DebugMode) {
-        _DebugLogger.Error(
-                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
-    } else {
-        Log.Error(GetLogPrefix() + string.Format(format, values));
-    }
-}
-
-public void Info(string format, params object[] values) {
-    Log.Source = ${source};
-    if (DebugMode) {
-        _DebugLogger.LogWithPatterns(LoggerConsts.INFO, ${entity}.DebugPatterns,
-                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
-    } else {
-        Log.Info(GetLogPrefix() + string.Format(format, values));
-    }
-}
-
-public void Debug(string format, params object[] values) {
-    Log.Source = ${source};
-    if (DebugMode) {
-        _DebugLogger.LogWithPatterns(LoggerConsts.DEBUG, ${entity}.DebugPatterns,
-                _DebugLogger.GetLogHint() + GetLogPrefix() + string.Format(format, values));
-    } else {
-        Log.Debug(GetLogPrefix() + string.Format(format, values));
-    }
+public override string[] DebugPatterns {
+    get { return ${target} != null ? ${target}.DebugPatterns : null; }
 }
 
 ```

@@ -1,8 +1,7 @@
 using System;
 
 namespace angeldnd.dap {
-    public delegate Entity EntityFactory();
-    public delegate Aspect AspectFactory(Entity entity, string path);
+    public delegate DapObject DapFactory();
 
     /*
      * Here the factory will add checker to property directly, since the checker
@@ -12,96 +11,83 @@ namespace angeldnd.dap {
      */
     public delegate bool SpecValueCheckerFactory(Property prop, Pass pass, Data spec, string specKey);
 
-    public class Factory: Entity {
-        public override string Type {
-            get { return null; }
-        }
+    public static class Factory {
+        private static Vars _Factories;
 
-        public static Factory NewBuiltinFactory() {
-            var result = new Factory();
+        private static Vars _SpecValueCheckerFactories;
+
+        static Factory() {
+            Context context = new Context();
+            _Factories = context.Add<Vars>("factories");
+            _SpecValueCheckerFactories = context.Add<Vars>("spec_value_checker_factories");
+
             //Entities
-            result.RegisterEntity<Context>(ContextConsts.TypeContext);
+            Register<Context>(ContextConsts.TypeContext);
+            Register<Registry>(RegistryConsts.TypeRegistry);
 
             //Aspects
-            result.RegisterAspect<Item>(ItemConsts.TypeItem);
-            result.RegisterAspect<Properties>(PropertiesConsts.TypeProperties);
-            result.RegisterAspect<BoolProperty>(PropertiesConsts.TypeBoolProperty);
-            result.RegisterAspect<IntProperty>(PropertiesConsts.TypeIntProperty);
-            result.RegisterAspect<LongProperty>(PropertiesConsts.TypeLongProperty);
-            result.RegisterAspect<FloatProperty>(PropertiesConsts.TypeFloatProperty);
-            result.RegisterAspect<DoubleProperty>(PropertiesConsts.TypeDoubleProperty);
-            result.RegisterAspect<StringProperty>(PropertiesConsts.TypeStringProperty);
-            result.RegisterAspect<DataProperty>(PropertiesConsts.TypeDataProperty);
+            Register<Item>(ItemConsts.TypeItem);
+            Register<Properties>(PropertiesConsts.TypeProperties);
+            Register<BoolProperty>(PropertiesConsts.TypeBoolProperty);
+            Register<IntProperty>(PropertiesConsts.TypeIntProperty);
+            Register<LongProperty>(PropertiesConsts.TypeLongProperty);
+            Register<FloatProperty>(PropertiesConsts.TypeFloatProperty);
+            Register<DoubleProperty>(PropertiesConsts.TypeDoubleProperty);
+            Register<StringProperty>(PropertiesConsts.TypeStringProperty);
+            Register<DataProperty>(PropertiesConsts.TypeDataProperty);
 
-            result.RegisterAspect<Tickable>(TickableConsts.TypeTickable);
+            Register<Tickable>(TickableConsts.TypeTickable);
 
-            return result;
+            SpecHelper.RegistrySpecValueCheckers();
         }
 
-        public readonly Vars EntityFactories;
-        public readonly Vars AspectFactories;
-        public readonly Vars SpecValueCheckerFactories;
-
-        public Factory() {
-            EntityFactories = Add<Vars>("entity_factories");
-            AspectFactories = Add<Vars>("aspect_factories");
-            SpecValueCheckerFactories = Add<Vars>("spec_value_checker_factories");
+        public static bool Register(string type, DapFactory factory) {
+            return _Factories.AddVar(type, factory) != null;
         }
 
-        public bool RegisterEntity(string type, EntityFactory factory) {
-            return EntityFactories.AddVar(type, factory) != null;
-        }
-
-        public bool RegisterEntity<T>(string type) where T : Entity {
-            return RegisterEntity(type, () => {
+        public static bool Register<T>(string type) where T : class, DapObject {
+            return Register(type, () => {
                 return Activator.CreateInstance(typeof(T)) as T;
             });
         }
 
-        public Entity FactoryEntity(string type) {
-            EntityFactory factory = EntityFactories.GetValue<EntityFactory>(type);
+        public static T New<T>(string type) where T : class, DapObject {
+            DapFactory factory = _Factories.GetValue<DapFactory>(type);
             if (factory != null) {
-                return factory();
+                DapObject obj = factory();
+                if (obj is T) {
+                    return (T)obj;
+                } else {
+                    Log.Error("Factory.New: {0} Type Mismatched: {1} -> {2}",
+                            type, typeof(T).FullName, obj.GetType().FullName);
+                }
             } else {
-                Error("Unknown Entity Type: {0}", type);
+                Log.Error("Factory.New: {0} Unknown Type", type);
             }
             return null;
         }
 
-        public bool RegisterAspect(string type, AspectFactory factory) {
-            return AspectFactories.AddVar(type, factory) != null;
+        public static Entity NewEntity(string type) {
+            return New<Entity>(type);
         }
 
-        public bool RegisterAspect<T>(string type) where T : class, Aspect {
-            return RegisterAspect(type, (Entity entity, string path) => {
-                T aspect = Activator.CreateInstance(typeof(T)) as T;
-                return aspect;
-            });
+        public static Aspect NewAspect(string type) {
+            return New<Aspect>(type);
         }
 
-        public override Aspect FactoryAspect(Entity entity, string path, string type) {
-            AspectFactory factory = AspectFactories.GetValue<AspectFactory>(type);
-            if (factory != null) {
-                return factory(entity, path);
-            } else {
-                entity.Error("Unknown Aspect Type: {0}, {1}", path, type);
-            }
-            return null;
-        }
-
-        public bool RegisterSpecValueChecker(string propertyType, string specKind, SpecValueCheckerFactory factory) {
+        public static bool RegisterSpecValueChecker(string propertyType, string specKind, SpecValueCheckerFactory factory) {
             string factoryKey = string.Format("{0}{1}{2}", propertyType, SpecConsts.Separator, specKind);
-            return SpecValueCheckerFactories.AddVar(factoryKey, factory) != null;
+            return _SpecValueCheckerFactories.AddVar(factoryKey, factory) != null;
         }
 
-        public bool FactorySpecValueChecker(Property prop, Pass pass, Data spec, string specKey) {
+        public static bool FactorySpecValueChecker(Property prop, Pass pass, Data spec, string specKey) {
             string specKind = SpecConsts.GetSpecKind(specKey);
             string factoryKey = string.Format("{0}{1}{2}", prop.Type, SpecConsts.Separator, specKind);
-            SpecValueCheckerFactory factory = SpecValueCheckerFactories.GetValue<SpecValueCheckerFactory>(factoryKey);
+            SpecValueCheckerFactory factory = _SpecValueCheckerFactories.GetValue<SpecValueCheckerFactory>(factoryKey);
             if (factory != null) {
                 return factory(prop, pass, spec, specKey);
             } else {
-                Error("Unknown SpecValueChecker Type: {0}, Spec: {1}", factoryKey, spec);
+                Log.Error("Unknown SpecValueChecker Type: {0}, Spec: {1}", factoryKey, spec);
             }
             return false;
         }
