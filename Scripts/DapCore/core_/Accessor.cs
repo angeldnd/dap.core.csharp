@@ -1,11 +1,11 @@
 using System;
 
 namespace angeldnd.dap {
-    public interface Accessor : Logger {
+    public interface Accessor {
         DapObject GetObject();
     }
 
-    public interface Accessor<T> : Accessor where T : class, DapObject {
+    public interface Accessor<T> : Accessor, Logger where T : class, DapObject {
         T Object { get; }
     }
 
