@@ -5,6 +5,9 @@ namespace angeldnd.dap {
         private readonly static DefaultLogger _DefaultLogger = new DefaultLogger(2);
         private readonly static DebugLogger _DebugLogger = new DebugLogger(2);
 
+        private readonly static DefaultLogger _ProxyDefaultLogger = new DefaultLogger(3);
+        private readonly static DebugLogger _ProxyDebugLogger = new DebugLogger(3);
+
         private object _LogSource = null;
         public object LogSource {
             get { return _LogSource; }
@@ -90,6 +93,53 @@ namespace angeldnd.dap {
                 _DebugLogger.LogWithPatternsFrom(_LogSource, kind, DebugPatterns, msg);
             } else {
                 _DefaultLogger.CustomFrom(_LogSource, kind, msg);
+            }
+        }
+
+        public void CriticalFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugLogger.CriticalFrom(_LogSource, msg);
+            } else {
+                _ProxyDefaultLogger.CriticalFrom(_LogSource, msg);
+            }
+        }
+
+        public void ErrorFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugLogger.ErrorFrom(_LogSource, msg);
+            } else {
+                _ProxyDefaultLogger.ErrorFrom(_LogSource, msg);
+            }
+        }
+
+        public void InfoFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugLogger.LogWithPatternsFrom(_LogSource, LoggerConsts.INFO, DebugPatterns, msg);
+            } else {
+                _ProxyDefaultLogger.InfoFrom(_LogSource, msg);
+            }
+        }
+
+        public void DebugFromProxy(string format, params object[] values) {
+            if (LogDebug) {
+                string msg = GetLogMsg(format, values);
+                if (DebugMode) {
+                    _ProxyDebugLogger.LogWithPatternsFrom(_LogSource, LoggerConsts.DEBUG, DebugPatterns, msg);
+                } else {
+                    _ProxyDefaultLogger.DebugFrom(_LogSource, msg);
+                }
+            }
+        }
+
+        public void CustomFromProxy(string kind, string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugLogger.LogWithPatternsFrom(_LogSource, kind, DebugPatterns, msg);
+            } else {
+                _ProxyDefaultLogger.CustomFrom(_LogSource, kind, msg);
             }
         }
     }
