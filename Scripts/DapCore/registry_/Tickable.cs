@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public struct TickableConsts {
+    public static class TickableConsts {
         public const string TypeTickable = "Tickable";
     }
 

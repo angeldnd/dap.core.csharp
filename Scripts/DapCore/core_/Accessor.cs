@@ -27,6 +27,9 @@ namespace angeldnd.dap {
                 _Object = obj;
                 OnSetup();
                 return true;
+            } else if (obj == null) {
+                Error("Invalid obj: LogSource = {0}, _Object = {1}, source = {2}, obj = {3}",
+                        LogSource, _Object, source, obj);
             } else {
                 Error("Already Setup: LogSource = {0}, _Object = {1}, source = {2}, obj = {3}",
                         LogSource, _Object, source, obj);
@@ -44,7 +47,7 @@ namespace angeldnd.dap {
             if (_Object != null) {
                 return string.Format("{0}[{1}] ", _Object.GetLogPrefix(), LogSource.GetType().Name);
             } else {
-                return string.Format("[] [{0}] ", LogSource.GetType().Name);
+                return string.Format("[{0}] [{1}] ", typeof(T).Name, LogSource.GetType().Name);
             }
         }
 

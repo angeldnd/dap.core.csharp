@@ -1,7 +1,7 @@
 using System;
 
 namespace angeldnd.dap {
-    public struct PatternMatcherConsts {
+    public static class PatternMatcherConsts {
         public const string WildcastSegment = "*";
         public const string WildcastSegments = "**";
     }

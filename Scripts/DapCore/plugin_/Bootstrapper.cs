@@ -46,7 +46,6 @@ namespace angeldnd.dap {
 
         public abstract int GetVersion();
         public abstract int GetSubVersion();
-        public abstract bool GetLogDebug();
         public abstract LogProvider GetLogProvider();
         public abstract List<Plugin> GetPlugins();
     }
@@ -58,10 +57,6 @@ namespace angeldnd.dap {
 
         public override int GetSubVersion() {
             return -1;
-        }
-
-        public override bool GetLogDebug() {
-            return true;
         }
 
         public override LogProvider GetLogProvider() {

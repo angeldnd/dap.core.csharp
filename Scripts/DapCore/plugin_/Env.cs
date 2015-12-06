@@ -6,6 +6,17 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace angeldnd.dap {
+    public static class EnvConsts {
+        public const string DefaultLogDir = "dap";
+        public const string DefaultLogName = "env";
+        public const bool DefaultLogDebug = true;
+    }
+
+    public interface EnvWatcher {
+        void OnRegistryAdded(Registry registry);
+        void OnRegistryRemoved(Registry registry);
+    }
+
     public static class Env {
         static Env() {
             Context context = new Context();
@@ -13,7 +24,7 @@ namespace angeldnd.dap {
 
             Bootstrapper bootstrapper = Bootstrapper.Bootstrap();
             if (bootstrapper != null) {
-                if (Log.Init(bootstrapper.GetLogDebug(), bootstrapper.GetLogProvider())) {
+                if (Log.Init(bootstrapper.GetLogProvider())) {
                     _Bootstrapper = bootstrapper;
                     _Version = bootstrapper.GetVersion();
                     _SubVersion = bootstrapper.GetSubVersion();
@@ -49,7 +60,27 @@ namespace angeldnd.dap {
             get { return _Bootstrapper; }
         }
 
+        private static Pass _Pass = new Pass();
         private static Vars _Registries = null;
+
+        private static List<EnvWatcher> _Watchers = null;
+
+        public static bool AddWatcher(EnvWatcher watcher) {
+            if (_Watchers == null) _Watchers = new List<EnvWatcher>();
+            if (!_Watchers.Contains(watcher)) {
+                _Watchers.Add(watcher);
+                return true;
+            }
+            return false;
+        }
+
+        public static bool RemoveWatcher(EnvWatcher watcher) {
+            if (_Watchers != null && _Watchers.Contains(watcher)) {
+                _Watchers.Remove(watcher);
+                return true;
+            }
+            return false;
+        }
 
         public static bool HasRegistry(string name) {
             return _Registries.Has(name);
@@ -87,11 +118,41 @@ namespace angeldnd.dap {
                     }
                 }
             }
+            if (registry != null && _Watchers != null) {
+                for (int i = 0; i < _Watchers.Count; i++) {
+                    _Watchers[i].OnRegistryAdded(registry);
+                }
+            }
             return registry;
         }
 
+        public static Registry AddRegistry(string name, bool setupWithPlugins) {
+            return AddRegistry(name, _Pass, setupWithPlugins);
+        }
+
+        public static Registry AddRegistry(string name, Pass pass) {
+            return AddRegistry(name, pass, true);
+        }
+
+        public static Registry AddRegistry(string name) {
+            return AddRegistry(name, _Pass, true);
+        }
+
         public static Registry RemoveRegistry(string name, Pass pass) {
-            return _Registries.WithdrawValue<Registry>(name, pass, null);
+            Registry registry = _Registries.WithdrawValue<Registry>(name, pass, null);
+            if (registry != null && _Watchers != null) {
+                for (int i = 0; i < _Watchers.Count; i++) {
+                    _Watchers[i].OnRegistryRemoved(registry);
+                }
+            }
+            return registry;
+        }
+
+        public static Registry GetOrAddRegistry(string name) {
+            Registry registry = GetRegistry(name);
+            if (registry != null) return registry;
+
+            return AddRegistry(name);
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public struct ContextConsts {
+    public static class ContextConsts {
         public const string TypeContext = "Context";
 
         public const string AspectVars = "_vars";

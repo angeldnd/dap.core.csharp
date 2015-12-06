@@ -22,23 +22,25 @@ namespace angeldnd.dap {
         private StreamWriter _LogWriter = null;
         private DateTime _LastFlushTime;
 
-        public FileLogProvider() : this(RegistryConsts.DefaultLogDir,
-                                               RegistryConsts.DefaultLogName,
-                                               -1) {
+        public FileLogProvider() : this(EnvConsts.DefaultLogDebug,
+                                        EnvConsts.DefaultLogDir,
+                                        EnvConsts.DefaultLogName,
+                                        -1) {
         }
 
-        public FileLogProvider(string logDir, string logName, int runID) {
+        public FileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug) {
             _LogRoot = GetLogRoot();
 
-            Info("FileLogProvider: {0} {1} {2}", logDir, logName, runID);
-            _LogDir = logDir;
-            _LogName = logName;
+            _LogDir = string.IsNullOrEmpty(logDir) ? EnvConsts.DefaultLogDir : logDir;
+            _LogName = string.IsNullOrEmpty(logName) ? EnvConsts.DefaultLogName : logName;
+
             if (runID < 0) {
-                _RunID = GetNextRunID(logDir, logName, 0);
+                _RunID = GetNextRunID(logDir, logName, 1);
             } else {
                 _RunID = runID;
             }
             SetupLogWriter();
+            Info("FileLogProvider: {0} {1} {2}", logDir, logName, runID);
         }
 
         public int GetNextRunID(string logDir, string logName, int startRunID) {
@@ -128,16 +130,6 @@ namespace angeldnd.dap {
             }
         }
 
-        protected void Info(string format, params object[] values) {
-            //TODO: Add log prefix and tostring()
-            AddLog(this, LoggerConsts.INFO, null, format, values);
-        }
-
-        protected void Error(string format, params object[] values) {
-            //TODO: Add log prefix and tostring()
-            AddLog(this, LoggerConsts.ERROR, null, format, values);
-        }
-
         public override void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values) {
             var now = System.DateTime.UtcNow;
 
@@ -148,10 +140,10 @@ namespace angeldnd.dap {
 
             string log = null;
             if (stackTrace != null) {
-                log = string.Format("{0} [{1}] {2}\n{3}", now.ToString(TIMESTAMP_FORMAT), kind, msg,
+                log = string.Format("{0}{1} [{2}] {3}\n{4}", now.ToString(TIMESTAMP_FORMAT), GetExtraTimeStamp(), kind, msg,
                                     FormatStackTrace(stackTrace, "\t", MAX_STACK_TRACK_NUM));
             } else {
-                log = string.Format("{0} [{1}] {2}", now.ToString(TIMESTAMP_FORMAT), kind, msg);
+                log = string.Format("{0}{1} [{2}] {3}", now.ToString(TIMESTAMP_FORMAT), GetExtraTimeStamp(), kind, msg);
             }
 
             if (_LogWriter != null) {
@@ -176,28 +168,15 @@ namespace angeldnd.dap {
             OnLog(source, log, stackTrace);
         }
 
-        public string FormatStackTrace(StackTrace stackTrace, string prefix, int max) {
-            StringWriter writer = new StringWriter();
-            for (int i = 0; i< stackTrace.FrameCount; i++) {
-                if (i >= max) break;
-                StackFrame stackFrame = stackTrace.GetFrame(i);
-                var method = stackFrame.GetMethod();
-                string line = string.Format("{0}{1}.{2}:{3}() ({4}:{5})", prefix,
-                                            method.ReflectedType.Namespace,
-                                            method.ReflectedType.Name,
-                                            method.Name,
-                                            stackFrame.GetFileName(),
-                                            stackFrame.GetFileLineNumber());
-                writer.WriteLine(line);
-            }
-            return writer.ToString();
-        }
-
         protected virtual string GetLogRoot() {
             return "Logs";
         }
 
         protected virtual void OnLog(object source, string log, StackTrace stackTrace) {}
+
+        protected virtual string GetExtraTimeStamp() {
+            return "";
+        }
 
     }
 }

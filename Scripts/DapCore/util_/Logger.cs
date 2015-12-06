@@ -1,10 +1,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-//using System.Text.RegularExpressions;
 
 namespace angeldnd.dap {
-    public struct LoggerConsts {
+    public static class LoggerConsts {
         public const string CRITICAL = "CRITICAL";
         public const string ERROR = "ERROR";
         public const string INFO = "INFO";
@@ -18,99 +17,6 @@ namespace angeldnd.dap {
         void Info(string format, params object[] values);
         void Debug(string format, params object[] values);
         void Custom(string kind, string format, params object[] values);
-    }
-
-    /*
-     * Check Bootstrapper.cs for detail of the bootstrap, if there is no specific
-     * config. then the AutoBootstrapper will check all LogProvider subclasses,
-     * the one with highest priority will be selected.
-     *
-    [DapPriority(2)]
-    public class TestLogProvider : FileLogProvider {
-        public static bool SetupLogging() {
-            Log.Provider = new TestLogProvider("dap", "init", -1, true);
-            return true;
-        }
-    }
-    */
-    public abstract class LogProvider {
-        public abstract void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values);
-        public abstract void Flush();
-    }
-
-    public static class Log {
-        private static LogProvider _Provider = null;
-        public static LogProvider Provider {
-            get { return _Provider; }
-        }
-        private static bool _LogDebug = true;
-        public static bool LogDebug {
-            get { return _LogDebug; }
-        }
-        public static bool Init(bool logDebug, LogProvider provider) {
-            if (provider != null) {
-                _LogDebug = logDebug;
-                _Provider = provider;
-                return true;
-            }
-            return false;
-        }
-
-        public readonly static DefaultLogger Default = new DefaultLogger(1);
-
-        public static void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values) {
-            if (_Provider == null) return;
-            _Provider.AddLog(source, kind, stackTrace, format, values);
-        }
-
-        public static void Flush() {
-            if (_Provider == null) return;
-            _Provider.Flush();
-        }
-
-        private readonly static DefaultLogger _Default = new DefaultLogger(2);
-
-        public static void CriticalFrom(object source, string format, params object[] values) {
-            _Default.CriticalFrom(source, format, values);
-        }
-
-        public static void ErrorFrom(object source, string format, params object[] values) {
-            _Default.ErrorFrom(source, format, values);
-        }
-
-        public static void InfoFrom(object source, string format, params object[] values) {
-            _Default.InfoFrom(source, format, values);
-        }
-
-        public static void DebugFrom(object source, string format, params object[] values) {
-            if (LogDebug) _Default.DebugFrom(source, format, values);
-        }
-
-        public static void CustomFrom(object source, string kind, string format, params object[] values) {
-            _Default.CustomFrom(source, kind, format, values);
-        }
-
-        public static void Critical(string format, params object[] values) {
-            _Default.Critical(format, values);
-        }
-
-        public static void Error(string format, params object[] values) {
-            _Default.Error(format, values);
-        }
-
-        public static void Info(string format, params object[] values) {
-            _Default.Info(format, values);
-        }
-
-        public static void Debug(string format, params object[] values) {
-            if (LogDebug) {
-                _Default.Debug(format, values);
-            }
-        }
-
-        public static void Custom(string kind, string format, params object[] values) {
-            _Default.Custom(null, format, values);
-        }
     }
 
     public abstract class BaseLogger : Logger {

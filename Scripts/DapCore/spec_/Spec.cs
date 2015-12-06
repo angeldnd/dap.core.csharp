@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace angeldnd.dap {
-    public struct SpecConsts {
+    public static class SpecConsts {
         public const string AspectSpec = "_spec";
 
         public const string KeySpec = "spec";

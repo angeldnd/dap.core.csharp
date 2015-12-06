@@ -5,16 +5,12 @@ using System.Text;
 using System.Reflection;
 
 namespace angeldnd.dap {
-    public struct RegistryConsts {
+    public static class RegistryConsts {
         public const char Separator = '/';
 
         public const string TypeRegistry = "Registry";
 
         public const string ChannelTick = "_tick";
-
-        public const string DefaultLogDir = "dap";
-        public const string DefaultLogName = "init";
-        public const bool DefaultLogDebug = true;
 
         public static string GetItemPath(params string[] segments) {
             return string.Join("/", segments);

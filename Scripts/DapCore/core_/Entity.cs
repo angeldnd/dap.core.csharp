@@ -7,7 +7,7 @@ namespace angeldnd.dap {
         void OnAspectRemoved(Entity entity, Aspect aspect);
     }
 
-    public struct EntityConsts {
+    public static class EntityConsts {
         public const string KeyAspects = "aspects";
 
         public const char Separator = '.';
@@ -30,27 +30,30 @@ namespace angeldnd.dap {
             }
         }
 
-        private List<EntityWatcher> _Watchers = new List<EntityWatcher>();
-
         public delegate void OnAspect<T>(T aspect) where T : class, Aspect;
 
         public delegate bool CheckAspect<T>(T aspect) where T : class, Aspect;
 
-        public bool AddWatcher(EntityWatcher watcher) {
-            if (!_Watchers.Contains(watcher)) {
-                _Watchers.Add(watcher);
-                return true;
-            }
-            return false;
-        }
-
-        public bool RemoveWatcher(EntityWatcher watcher) {
-            if (_Watchers.Contains(watcher)) {
-                _Watchers.Remove(watcher);
-                return true;
-            }
-            return false;
-        }
+        //SILP: DECLARE_LIST(Watcher, watcher, EntityWatcher, _Watchers)
+        protected List<EntityWatcher> _Watchers = null;                    //__SILP__
+                                                                           //__SILP__
+        public bool AddWatcher(EntityWatcher watcher) {                    //__SILP__
+            if (_Watchers == null) _Watchers = new List<EntityWatcher>();  //__SILP__
+            if (!_Watchers.Contains(watcher)) {                            //__SILP__
+                _Watchers.Add(watcher);                                    //__SILP__
+                return true;                                               //__SILP__
+            }                                                              //__SILP__
+            return false;                                                  //__SILP__
+        }                                                                  //__SILP__
+                                                                           //__SILP__
+        public bool RemoveWatcher(EntityWatcher watcher) {                 //__SILP__
+            if (_Watchers != null && _Watchers.Contains(watcher)) {        //__SILP__
+                _Watchers.Remove(watcher);                                 //__SILP__
+                return true;                                               //__SILP__
+            }                                                              //__SILP__
+            return false;                                                  //__SILP__
+        }                                                                  //__SILP__
+                                                                           //__SILP__
 
         public bool Has(string path) {
             return _Aspects.ContainsKey(path);
@@ -126,8 +129,10 @@ namespace angeldnd.dap {
             _Aspects[aspect.Path] = aspect;
             aspect.OnAdded();
 
-            for (int i = 0; i < _Watchers.Count; i++) {
-                _Watchers[i].OnAspectAdded(this, aspect);
+            if (_Watchers != null) {
+                for (int i = 0; i < _Watchers.Count; i++) {
+                    _Watchers[i].OnAspectAdded(this, aspect);
+                }
             }
             AdvanceRevision();
             return true;
@@ -205,8 +210,10 @@ namespace angeldnd.dap {
                 _Aspects.Remove(path);
                 AdvanceRevision();
 
-                for (int i = 0; i < _Watchers.Count; i++) {
-                    _Watchers[i].OnAspectRemoved(this, aspect);
+                if (_Watchers != null) {
+                    for (int i = 0; i < _Watchers.Count; i++) {
+                        _Watchers[i].OnAspectRemoved(this, aspect);
+                    }
                 }
                 return aspect;
             } else {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace angeldnd.dap {
-    public struct ListPropertyConsts {
+    public static class ListPropertyConsts {
         public const string KeyIndex = "_i";
     }
 

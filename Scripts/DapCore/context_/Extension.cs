@@ -30,12 +30,18 @@ namespace angeldnd.dap.binding {
             return false;
         }
 
+        private Dictionary<string, Pass> _VarPasses;
         private Dictionary<string, Pass> _PropertyPasses;
         private Dictionary<string, Pass> _ChannelPasses;
         private Dictionary<string, Pass> _HandlerPasses;
 
         public delegate void SyncPropertyBlock(string key);
         private Dictionary<string, SyncPropertyBlock> _PropertySyncers;
+
+        private void SaveVarPass(string key, Pass pass) {
+            if (_VarPasses == null) _VarPasses = new Dictionary<string, Pass>();
+            _VarPasses[key] = pass;
+        }
 
         private void SavePropertyPass(string key, Pass pass) {
             if (_PropertyPasses == null) _PropertyPasses = new Dictionary<string, Pass>();
@@ -68,7 +74,7 @@ namespace angeldnd.dap.binding {
             };
         }
 
-        public void ResetExtension() {
+        public void ClearExtension() {
             if (Context == null) return;
 
             if (_HandlerPasses != null) {
@@ -91,6 +97,12 @@ namespace angeldnd.dap.binding {
             }
             if (_PropertySyncers != null) {
                 _PropertySyncers.Clear();
+            }
+            if (_VarPasses != null) {
+                foreach (var kv in _VarPasses) {
+                    Context.Vars.Remove<Var>(kv.Key, kv.Value);
+                }
+                _VarPasses.Clear();
             }
         }
 
@@ -146,6 +158,21 @@ namespace angeldnd.dap.binding {
 
         public Data HandleRequest(string fragment, Data req) {
             return HandleRequest(fragment, null, req);
+        }
+
+        public Var<T> SetupVar<T>(string fragment, Pass pass, T val, BlockVarWatcher.WatcherBlock  watcher) {
+            string key = GetSubKey(fragment);
+            Var<T> v = Context.Vars.AddVar<T>(key, pass, val);
+            if (v != null) {
+                if (watcher != null && !v.AddVarWatcher(new BlockVarWatcher(watcher))) {
+                    Error("Add Watcher Failed: {0} -> {1}, {2}", this, typeof(T).FullName, fragment);
+                }
+            }
+            return v;
+        }
+
+        public Var<T> SetupVar<T>(string fragment, Pass pass, T val) {
+            return SetupVar<T>(fragment, pass, val, null);
         }
 
         public Property<T> SetupProperty<T>(string type, string fragment,

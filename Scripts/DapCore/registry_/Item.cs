@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public struct ItemConsts {
+    public static class ItemConsts {
         public const string TypeItem = "Item";
     }
 

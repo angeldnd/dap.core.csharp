@@ -10,7 +10,7 @@ namespace angeldnd.dap {
         string GetLogPrefix();
     }
 
-    public struct DapObjectConsts {
+    public static class DapObjectConsts {
         public const string KeyType = "type";
     }
 

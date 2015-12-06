@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public struct PropertiesConsts {
+    public static class PropertiesConsts {
         public const string TypeProperties = "Properties";
 
         public const string TypeBoolProperty = "Bool";

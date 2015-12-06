@@ -13,6 +13,20 @@ namespace angeldnd.dap {
         bool RemoveVarWatcher(VarWatcher watcher);
     }
 
+    public sealed class BlockVarWatcher : VarWatcher {
+        public delegate void WatcherBlock(Var v);
+
+        private readonly WatcherBlock _Block;
+
+        public BlockVarWatcher(WatcherBlock block) {
+            _Block = block;
+        }
+
+        public void OnVarChanged(Var v) {
+            _Block(v);
+        }
+    }
+
     public class Var<T> : BaseSecurableAspect, Var {
         public delegate T GetterBlock();
 
