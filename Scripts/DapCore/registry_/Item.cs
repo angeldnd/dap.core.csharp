@@ -55,7 +55,7 @@ namespace angeldnd.dap {
                 Error("Invalid Entity: {0}, {1}", entity, path);                  //__SILP__
                 return false;                                                     //__SILP__
             }                                                                     //__SILP__
-            if (string.IsNullOrEmpty(path)) {                                     //__SILP__
+            if (path == null) {                                                   //__SILP__
                 Error("Invalid Path: {0}, {1}", entity, path);                    //__SILP__
                 return false;                                                     //__SILP__
             }                                                                     //__SILP__
@@ -179,6 +179,18 @@ namespace angeldnd.dap {
 
         public void FilterDescendantsWithAspect<T>(string aspectPath, OnAspect<T> callback) where T : class, ItemAspect {
             FilterDescendants<Item>(GetItemAspectCallback<T>(aspectPath, callback));
+        }
+
+        public T AddDescendant<T>(string relativePath) where T : Item {
+            return Registry.Add<T>(RegistryHelper.GetAbsolutePath(Path, relativePath));
+        }
+
+        public Item AddDescendant(string relativePath) {
+            return AddDescendant<Item>(relativePath);
+        }
+
+        public Item AddDescendant(string relativePath, string type) {
+            return Registry.AddItem(RegistryHelper.GetAbsolutePath(Path, relativePath), type);
         }
 
         protected virtual void OnItemAdded() {}

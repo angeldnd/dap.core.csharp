@@ -39,6 +39,10 @@ namespace angeldnd.dap {
             return true;                                                        //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
+        public override sealed bool Init(Entity entity, string path) {          //__SILP__
+            return Init(entity, path, null);                                    //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
         public bool CheckAdminPass(Pass pass) {                                 //__SILP__
             if (_Pass == null) return true;                                     //__SILP__
             if (_Pass.CheckAdminPass(this, pass)) return true;                  //__SILP__
@@ -84,6 +88,10 @@ namespace angeldnd.dap {
             }                                                                   //__SILP__
             _Pass = pass;                                                       //__SILP__
             return true;                                                        //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
+        public override sealed bool Init(Entity entity, string path) {          //__SILP__
+            return Init(entity, path, null);                                    //__SILP__
         }                                                                       //__SILP__
                                                                                 //__SILP__
         public bool CheckAdminPass(Pass pass) {                                 //__SILP__
