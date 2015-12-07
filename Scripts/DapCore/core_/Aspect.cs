@@ -44,7 +44,7 @@ namespace angeldnd.dap {
                 Error("Invalid Entity: {0}, {1}", entity, path);                  //__SILP__
                 return false;                                                     //__SILP__
             }                                                                     //__SILP__
-            if (path == null) {                                                   //__SILP__
+            if (IsNullOrEmpty(path)) {                                            //__SILP__
                 Error("Invalid Path: {0}, {1}", entity, path);                    //__SILP__
                 return false;                                                     //__SILP__
             }                                                                     //__SILP__
@@ -131,7 +131,7 @@ namespace angeldnd.dap {
                 Error("Invalid Entity: {0}, {1}", entity, path);                  //__SILP__
                 return false;                                                     //__SILP__
             }                                                                     //__SILP__
-            if (path == null) {                                                   //__SILP__
+            if (IsNullOrEmpty(path)) {                                            //__SILP__
                 Error("Invalid Path: {0}, {1}", entity, path);                    //__SILP__
                 return false;                                                     //__SILP__
             }                                                                     //__SILP__

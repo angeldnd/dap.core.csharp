@@ -29,7 +29,7 @@ public bool Init(Entity entity, string path) {
         Error("Invalid Entity: {0}, {1}", entity, path);
         return false;
     }
-    if (path == null) {
+    if (string.IsNullOrEmpty(path)) {
         Error("Invalid Path: {0}, {1}", entity, path);
         return false;
     }
