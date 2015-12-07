@@ -196,6 +196,10 @@ public virtual bool Init(Entity entity, string path, Pass pass) {
     return true;
 }
 
+public override sealed bool Init(Entity entity, string path) {
+    return Init(entity, path, null);
+}
+
 public bool CheckAdminPass(Pass pass) {
     if (_Pass == null) return true;
     if (_Pass.CheckAdminPass(this, pass)) return true;
