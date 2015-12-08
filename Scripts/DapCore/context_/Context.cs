@@ -89,6 +89,10 @@ namespace angeldnd.dap {
             return Properties.Add(path, pass, open, data);
         }
 
+        public Property GetProperty(string path) {
+            return Properties.Get<Property>(path);
+        }
+
         public bool FireEvent(string channelPath, Pass pass, Data evt) {
             return Channels.FireEvent(channelPath, pass, evt);
         }
