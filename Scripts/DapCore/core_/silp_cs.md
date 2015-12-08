@@ -105,7 +105,7 @@ public virtual bool Init(Entity entity, string path) {
         Error("Invalid Entity: {0}, {1}", entity, path);
         return false;
     }
-    if (IsNullOrEmpty(path)) {
+    if (string.IsNullOrEmpty(path)) {
         Error("Invalid Path: {0}, {1}", entity, path);
         return false;
     }
