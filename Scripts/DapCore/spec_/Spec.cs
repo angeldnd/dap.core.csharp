@@ -17,7 +17,7 @@ namespace angeldnd.dap {
         public const string KindIn = "~";
         public const string KindNotIn = "!~";
 
-        public const string Separator = ":";
+        public const string Separator = " ";
         public const string SubPrefix = ".";
 
         public static string GetSubSpecKey(string subKey, string SpecKind) {
