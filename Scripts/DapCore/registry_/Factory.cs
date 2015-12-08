@@ -36,8 +36,6 @@ namespace angeldnd.dap {
             Register<StringProperty>(PropertiesConsts.TypeStringProperty);
             Register<DataProperty>(PropertiesConsts.TypeDataProperty);
 
-            Register<Tickable>(TickableConsts.TypeTickable);
-
             SpecHelper.RegistrySpecValueCheckers();
         }
 
