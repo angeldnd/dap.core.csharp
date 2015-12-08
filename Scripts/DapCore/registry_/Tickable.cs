@@ -7,6 +7,11 @@ namespace angeldnd.dap {
     }
 
     public class Tickable : ItemAspect<Item> {
+        public static bool AddToItem(Item item) {
+            Tickable tickable = item.Add<Tickable>(TickableConsts.AspectTickable);
+            return tickable != null && tickable.IsValid;
+        }
+
         private Pass _Pass = new Pass();
         private EventListener _OnTick;
 
@@ -29,13 +34,6 @@ namespace angeldnd.dap {
                 Item.Registry.Channels.RemoveEventListener(RegistryConsts.ChannelTick, _OnTick);
                 _OnTick = null;
             }
-        }
-    }
-
-    public static class TickableExtesnion {
-        public static bool AddTickable(this Item item) {
-            Tickable tickable = item.Add<Tickable>(TickableConsts.AspectTickable);
-            return tickable != null && tickable.IsValid;
         }
     }
 }
