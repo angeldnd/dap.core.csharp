@@ -11,6 +11,18 @@ namespace angeldnd.dap {
         public const string KeyAspects = "aspects";
 
         public const char Separator = '.';
+
+        public const char EntitySeparator = ':';
+
+        public static bool IsValidAspectPath(string path) {
+            if (string.IsNullOrEmpty(path)) {
+                return false;
+            }
+            if (path.IndexOf(EntitySeparator) >= 0) {
+                return false;
+            }
+            return true;
+        }
     }
 
     public abstract class Entity : BaseDapObject {
