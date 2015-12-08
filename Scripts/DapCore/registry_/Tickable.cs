@@ -10,8 +10,12 @@ namespace angeldnd.dap {
         private Pass _Pass = new Pass();
         private EventListener _OnTick;
 
+        public bool IsValid {
+            get { return _OnTick != null; }
+        }
+
         public override void OnAdded() {
-            if (Item.AddChannel(RegistryConsts.ChannelTick, _Pass)) {
+            if (Item.AddChannel(RegistryConsts.ChannelTick, _Pass) != null) {
                 _OnTick = new BlockEventListener(
                     (string channelPath, Data evt) => {
                         Item.FireEvent(RegistryConsts.ChannelTick, _Pass, evt);
@@ -30,7 +34,8 @@ namespace angeldnd.dap {
 
     public static class TickableExtesnion {
         public static bool AddTickable(this Item item) {
-            return item.Add<Tickable>(TickableConsts.AspectTickable);
+            Tickable tickable = item.Add<Tickable>(TickableConsts.AspectTickable);
+            return tickable != null && tickable.IsValid;
         }
     }
 }
