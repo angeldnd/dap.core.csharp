@@ -2,19 +2,15 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public static class TickerConsts {
-        public const string AspectTicker = "_ticker";
+    public static class TickableConsts {
+        public const string AspectTickable = "_tickable";
     }
 
-    public class Ticker : ItemAspect, EventListener {
-        public static bool AddTicker(this Item item) {
-            return item.Add<Ticker>(TickerConsts.AspectTicker);
-        }
-
+    public class Tickable : ItemAspect<Item> {
         private Pass _Pass = new Pass();
         private EventListener _OnTick;
 
-        protected override void OnAdded() {
+        public override void OnAdded() {
             if (Item.AddChannel(RegistryConsts.ChannelTick, _Pass)) {
                 _OnTick = new BlockEventListener(
                     (string channelPath, Data evt) => {
@@ -24,11 +20,17 @@ namespace angeldnd.dap {
             }
         }
 
-        protected override void OnRemoved() {
+        public override void OnRemoved() {
             if (_OnTick != null) {
                 Item.Registry.Channels.RemoveEventListener(RegistryConsts.ChannelTick, _OnTick);
                 _OnTick = null;
             }
+        }
+    }
+
+    public static class TickableExtesnion {
+        public static bool AddTickable(this Item item) {
+            return item.Add<Tickable>(TickableConsts.AspectTickable);
         }
     }
 }
