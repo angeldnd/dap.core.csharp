@@ -67,6 +67,10 @@ namespace angeldnd.dap {
             if (_Checkers != null) {
                 for (int i = 0; i < _Checkers.Count; i++) {
                     if (!_Checkers[i].IsValid(Path, Value, newVal)) {
+                        if (LogDebug) {
+                            Debug("Check Not Passed: {0}: {1} -> {2} => {3}",
+                                Path, Value, newVal, _Checkers[i]);
+                        }
                         return false;
                     }
                 }
