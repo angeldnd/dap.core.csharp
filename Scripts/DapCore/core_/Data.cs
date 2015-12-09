@@ -9,7 +9,7 @@ namespace angeldnd.dap {
 
     public enum DataType : byte {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
-    public sealed class Data {
+    public sealed class Data : Sealable {
         public const string VarPrefix = "$";
         public static string GetVarKey(string key) {
             return VarPrefix + key;
