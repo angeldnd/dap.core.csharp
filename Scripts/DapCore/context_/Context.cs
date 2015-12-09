@@ -153,6 +153,10 @@ namespace angeldnd.dap {
             return Vars.Has(varPath);
         }
 
+        public Var GetVar(string path) {
+            return Vars.Get<Var>(path);
+        }
+
         public bool SetVarValue<T>(string varPath, Pass pass, T val) {
             return Vars.SetValue<T>(varPath, pass, val);
         }
