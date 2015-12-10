@@ -9,7 +9,7 @@ namespace angeldnd.dap {
 
     public enum DataType : byte {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
-    public sealed class Data : Sealable {
+    public sealed class Data : BaseSealable {
         public const string VarPrefix = "$";
         public static string GetVarKey(string key) {
             return VarPrefix + key;
@@ -33,14 +33,6 @@ namespace angeldnd.dap {
             if (data == null) return new Data();
 
             return data.Clone();
-        }
-
-        private bool _Sealed = false;
-        public bool Sealed {
-            get { return _Sealed; }
-        }
-        public void Seal() {
-            _Sealed = true;
         }
 
         private Dictionary<string, DataType> _ValueTypes = new Dictionary<string, DataType>();
