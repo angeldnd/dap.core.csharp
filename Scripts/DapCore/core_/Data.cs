@@ -225,7 +225,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetBool(string key, bool val) {                   //__SILP__
-            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
                 return false;                                         //__SILP__
             }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
@@ -266,7 +266,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetInt(string key, int val) {                     //__SILP__
-            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
                 return false;                                         //__SILP__
             }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
@@ -307,7 +307,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetLong(string key, long val) {                   //__SILP__
-            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
                 return false;                                         //__SILP__
             }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
@@ -348,7 +348,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetFloat(string key, float val) {                 //__SILP__
-            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
                 return false;                                         //__SILP__
             }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
@@ -389,7 +389,7 @@ namespace angeldnd.dap {
         }                                                              //__SILP__
                                                                        //__SILP__
         public bool SetDouble(string key, double val) {                //__SILP__
-            if (_Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
+            if (Sealed && !key.StartsWith(VarPrefix)) {                //__SILP__
                 return false;                                          //__SILP__
             }                                                          //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                       //__SILP__
@@ -430,7 +430,7 @@ namespace angeldnd.dap {
         }                                                              //__SILP__
                                                                        //__SILP__
         public bool SetString(string key, string val) {                //__SILP__
-            if (_Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
+            if (Sealed && !key.StartsWith(VarPrefix)) {                //__SILP__
                 return false;                                          //__SILP__
             }                                                          //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                       //__SILP__
@@ -471,7 +471,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public bool SetData(string key, Data val) {                   //__SILP__
-            if (_Sealed && !key.StartsWith(VarPrefix)) {              //__SILP__
+            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
                 return false;                                         //__SILP__
             }                                                         //__SILP__
             if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
