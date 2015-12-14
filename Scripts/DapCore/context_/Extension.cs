@@ -181,10 +181,10 @@ namespace angeldnd.dap.binding {
             T prop = null;
             if (_prop != null) {
                 prop = _prop as T;
-                if (prop == null) {
+                if (prop != null) {
                     SavePropertyPass(key, pass);
                 } else {
-                    Error("Setup Property Failed: {0} -> {1}, {2} Type Mismatched: Property<{3}> -> {4}",
+                    Error("Setup Property Failed: {0} -> {1}, {2} Type Mismatched: {3} -> {4}",
                             this, type, fragment, typeof(T).FullName, _prop.GetType().FullName);
                     Context.Properties.Remove<Aspect>(key, pass);
                 }
