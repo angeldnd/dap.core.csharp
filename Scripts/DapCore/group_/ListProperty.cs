@@ -7,11 +7,6 @@ namespace angeldnd.dap {
         public const string KeyIndex = "_i";
     }
 
-    public interface ListWatcher : ValueWatcher {
-        void OnAdded(string path);
-        void OnRemoved(string path);
-    }
-
     public abstract class ListProperty<T> : GroupProperty, IList<T> where T : class, Property {
         private List<T> _Elements = new List<T>();
 

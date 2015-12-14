@@ -175,26 +175,14 @@ namespace angeldnd.dap.binding {
             return SetupVar<T>(fragment, pass, val, null);
         }
 
-        public Property<T> SetupProperty<T>(string type, string fragment,
-                Pass pass, Property<T>.GetterBlock getter,
-                ValueChecker<T> checker,
-                ValueWatcher<T> watcher) {
+        public T SetupProperty<T>(string type, string fragment, Pass pass) where T : class, Property {
             string key = GetSubKey(fragment);
             Aspect _prop = Context.Properties.Add(key, type, pass);
-            Property<T> prop = null;
+            T prop = null;
             if (_prop != null) {
-                prop = _prop as Property<T>;
-                if (prop != null) {
-                    T val = getter();
-                    prop.Setup(pass, val);
+                prop = _prop as T;
+                if (prop == null) {
                     SavePropertyPass(key, pass);
-                    SavePropertySyncer<T>(key, prop, getter);
-                    if (checker != null && !prop.AddValueChecker(checker)) {
-                        Error("Add Checker Failed: {0} -> {1}, {2}", this, type, fragment);
-                    }
-                    if (watcher != null && !prop.AddValueWatcher(watcher)) {
-                        Error("Add Watcher Failed: {0} -> {1}, {2}", this, type, fragment);
-                    }
                 } else {
                     Error("Setup Property Failed: {0} -> {1}, {2} Type Mismatched: Property<{3}> -> {4}",
                             this, type, fragment, typeof(T).FullName, _prop.GetType().FullName);
@@ -202,6 +190,28 @@ namespace angeldnd.dap.binding {
                 }
             } else {
                 Error("Setup Property Failed: {0} -> {1}, {2}", this, type, fragment);
+            }
+            return prop;
+        }
+
+        public Property<T> SetupProperty<T>(string type, string fragment,
+                Pass pass, Property<T>.GetterBlock getter,
+                ValueChecker<T> checker,
+                ValueWatcher<T> watcher) {
+            string key = GetSubKey(fragment);
+
+            Property<T> prop = SetupProperty<Property<T>>(type, fragment, pass);
+
+            if (prop != null) {
+                T val = getter();
+                prop.Setup(pass, val);
+                SavePropertySyncer<T>(key, prop, getter);
+                if (checker != null && !prop.AddValueChecker(checker)) {
+                    Error("Add Checker Failed: {0} -> {1}, {2}", this, type, fragment);
+                }
+                if (watcher != null && !prop.AddValueWatcher(watcher)) {
+                    Error("Add Watcher Failed: {0} -> {1}, {2}", this, type, fragment);
+                }
             }
             return prop;
         }

@@ -193,6 +193,14 @@ namespace angeldnd.dap {
             return Registry.AddItem(RegistryHelper.GetAbsolutePath(Path, relativePath), type);
         }
 
+        public T GetOrAddItemAspect<T>(string aspectPath) where T : class, ItemAspect {
+            T aspect = Get<T>(aspectPath);
+            if (aspect != null) {
+                return aspect;
+            }
+            return Add<T>(aspectPath);
+        }
+
         protected virtual void OnItemAdded() {}
         protected virtual void OnItemRemoved() {}
     }
