@@ -146,7 +146,10 @@ namespace angeldnd.dap {
         }
 
         public bool HasDescendant(string relativePath) {
-            return GetDescendant<Item>(relativePath) != null;
+            if (_Registry != null) {
+                return _Registry.Has(GetDescendantPath(relativePath));
+            }
+            return false;
         }
 
         private T GetItemAspect<T>(string aspectPath, bool logError) where T : class, ItemAspect {
