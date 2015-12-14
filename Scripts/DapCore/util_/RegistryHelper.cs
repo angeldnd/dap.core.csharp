@@ -40,7 +40,7 @@ namespace angeldnd.dap {
         }
 
         public static string GetDescendantPath(string path, string relativePath) {
-            return string.Format("{0}{1}{2}", path, RegistryConsts.Separator, relativePath);
+            return GetAbsolutePath(path, relativePath);
         }
 
         public static string GetDescendantsPattern(string path) {
@@ -64,7 +64,13 @@ namespace angeldnd.dap {
         }
 
         public static string GetAbsolutePath(string ancestorPath, string relativePath) {
-            return string.Format("{0}{1}{2}", ancestorPath, RegistryConsts.Separator, relativePath);
+            if (string.IsNullOrEmpty(ancestorPath)) {
+                return relativePath;
+            } else if (string.IsNullOrEmpty(relativePath)) {
+                return string.Empty;
+            } else {
+                return string.Format("{0}{1}{2}", ancestorPath, RegistryConsts.Separator, relativePath);
+            }
         }
 
         public static string GetAbsolutePath(Item item, string relativePath) {

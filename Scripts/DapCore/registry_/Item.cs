@@ -202,7 +202,7 @@ namespace angeldnd.dap {
 
         public T RemoveDescendant<T>(string relativePath) where T : Item {
             if (_Registry != null) {
-                return _Registry.Remove<T>(RegistryHelper.GetAbsolutePath(Path, relativePath));
+                return _Registry.Remove<T>(GetDescendantPath(relativePath));
             }
             return null;
         }
@@ -213,7 +213,7 @@ namespace angeldnd.dap {
 
         public Item AddDescendant(string relativePath, string type) {
             if (_Registry != null) {
-                return _Registry.AddItem(RegistryHelper.GetAbsolutePath(Path, relativePath), type);
+                return _Registry.AddItem(GetDescendantPath(relativePath), type);
             }
             return null;
         }
