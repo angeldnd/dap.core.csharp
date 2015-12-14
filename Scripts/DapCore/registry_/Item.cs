@@ -92,21 +92,21 @@ namespace angeldnd.dap {
 
         public T GetParent<T>() where T : Item {
             if (_Registry != null) {
-                return Registry.GetParent<T>(Path);
+                return _Registry.GetParent<T>(Path);
             }
             return null;
         }
 
         public List<T> GetChildren<T>() where T : Item {
             if (_Registry != null) {
-                return Registry.GetChildren<T>(Path);
+                return _Registry.GetChildren<T>(Path);
             }
             return null;
         }
 
         public void FilterChildren<T>(OnAspect<T> callback) where T : Item {
             if (_Registry != null) {
-                Registry.FilterChildren<T>(Path, callback);
+                _Registry.FilterChildren<T>(Path, callback);
             }
         }
 
@@ -116,14 +116,14 @@ namespace angeldnd.dap {
 
         public T GetAncestor<T>() where T : Item {
             if (_Registry != null) {
-                return Registry.GetAncestor<T>(Path);
+                return _Registry.GetAncestor<T>(Path);
             }
             return null;
         }
 
         public List<T> GetDescendants<T>() where T : Item {
             if (_Registry != null) {
-                return Registry.GetDescendants<T>(Path);
+                return _Registry.GetDescendants<T>(Path);
             }
             return null;
         }
@@ -136,9 +136,17 @@ namespace angeldnd.dap {
 
         public T GetDescendant<T>(string relativePath) where T : Item {
             if (_Registry != null) {
-                return Registry.GetDescendant<T>(Path, relativePath);
+                return _Registry.GetDescendant<T>(Path, relativePath);
             }
             return null;
+        }
+
+        public Item GetDescendant(string relativePath) {
+            return GetDescendant<Item>(relativePath);
+        }
+
+        public bool HasDescendant(string relativePath) {
+            return GetDescendant<Item>(relativePath) != null;
         }
 
         private T GetItemAspect<T>(string aspectPath, bool logError) where T : class, ItemAspect {
@@ -189,8 +197,22 @@ namespace angeldnd.dap {
             return AddDescendant<Item>(relativePath);
         }
 
+        public T RemoveDescendant<T>(string relativePath) where T : Item {
+            if (_Registry != null) {
+                return _Registry.Remove<T>(RegistryHelper.GetAbsolutePath(Path, relativePath));
+            }
+            return null;
+        }
+
+        public Item RemoveDescendant(string relativePath) {
+            return Remove<Item>(relativePath);
+        }
+
         public Item AddDescendant(string relativePath, string type) {
-            return Registry.AddItem(RegistryHelper.GetAbsolutePath(Path, relativePath), type);
+            if (_Registry != null) {
+                return _Registry.AddItem(RegistryHelper.GetAbsolutePath(Path, relativePath), type);
+            }
+            return null;
         }
 
         public T GetOrAddItemAspect<T>(string aspectPath) where T : class, ItemAspect {
