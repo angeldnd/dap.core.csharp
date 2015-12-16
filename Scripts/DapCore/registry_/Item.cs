@@ -16,6 +16,20 @@ namespace angeldnd.dap {
             get { return _Registry; }
         }
 
+        private string _Name = null;
+        public string Name {
+            get {
+                if (_Name == null) {
+                    _Name = _Path;
+                    string parentPath = RegistryHelper.GetParentPath(_Path);
+                    if (parentPath != null) {
+                        _Name = _Name.Substring(parentPath.Length);
+                    }
+                }
+                return _Name;
+            }
+        }
+
         //SILP: ASPECT_LOG_MIXIN(override)
         public override string GetLogPrefix() {                                                          //__SILP__
             if (_Entity != null) {                                                                       //__SILP__
