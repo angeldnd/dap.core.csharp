@@ -77,10 +77,10 @@ namespace angeldnd.dap {
                 if (aspect is T) {
                     return (T)aspect;
                 } else {
-                    Error("Get<{0}>({1}): Type Mismatched: {2}", typeof(T).Name, path, aspect.GetType().Name);
+                    Error("Get<{0}>({1}): Type Mismatched: {2}", typeof(T).FullName, path, aspect.GetType().FullName);
                 }
             } else {
-                Debug("Get<{0}>({1}): Not Found", typeof(T).Name, path);
+                Debug("Get<{0}>({1}): Not Found", typeof(T).FullName, path);
             }
             return null;
         }
