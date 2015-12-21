@@ -23,7 +23,7 @@ namespace angeldnd.dap {
                     _Name = _Path;
                     string parentPath = RegistryHelper.GetParentPath(_Path);
                     if (parentPath != null) {
-                        _Name = _Name.Substring(parentPath.Length);
+                        _Name = _Name.Substring(parentPath.Length + 1);
                     }
                 }
                 return _Name;
