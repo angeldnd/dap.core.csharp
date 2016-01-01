@@ -8,45 +8,23 @@ namespace angeldnd.dap {
         Item GetItem();
     }
 
-    public abstract class ItemAspect<T> : BaseSecurableAspect, ItemAccessor<T>, ItemAspect where T : Item {
-        private T _Item = null;
+    public abstract class ItemAspect<T> : ContextAspect<T>, ItemAccessor<T>, ItemAspect where T : Item {
         public T Item {
-            get { return _Item; }
+            get { return Context; }
         }
 
         public string ItemPath {
             get {
-                return _Item != null ? _Item.Path : null;
+                return Context == null ? null : Context.Path;
             }
         }
 
         public Item GetItem() {
-            return _Item;
-        }
-
-        public T Object {
-            get { return _Item; }
-        }
-
-        public DapObject GetObject() {
-            return _Item;
+            return Context;
         }
 
         public Registry Registry {
-            get { return _Item == null ? null : _Item.Registry; }
-        }
-
-        public override bool Init(Entity entity, string path, Pass pass) {
-            if (!base.Init(entity, path, pass)) {
-                return false;
-            }
-            if (entity is T) {
-                _Item = (T)entity;
-                return true;
-            } else {
-                Error("Invalid Entity: {0} -> {1}", typeof(T).FullName, entity.GetType().FullName);
-                return false;
-            }
+            get { return Context == null ? null : Context.Registry; }
         }
     }
 }
