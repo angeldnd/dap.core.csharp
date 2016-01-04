@@ -85,6 +85,14 @@ namespace angeldnd.dap {
             return result;
         }
 
+        public T GetOrAddContextAspect<T>(string aspectPath) where T : class, ContextAspect {
+            T aspect = Get<T>(aspectPath);
+            if (aspect != null) {
+                return aspect;
+            }
+            return Add<T>(aspectPath);
+        }
+
         public Property AddProperty(string path, Pass pass, bool open, Data data) {
             return Properties.Add(path, pass, open, data);
         }

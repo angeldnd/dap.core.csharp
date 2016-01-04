@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface ItemAspect : Aspect {
+    public interface ItemAspect : ContextAspect {
         Registry Registry { get; }
         string ItemPath { get; }
         Item GetItem();

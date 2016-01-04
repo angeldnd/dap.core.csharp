@@ -233,11 +233,7 @@ namespace angeldnd.dap {
         }
 
         public T GetOrAddItemAspect<T>(string aspectPath) where T : class, ItemAspect {
-            T aspect = Get<T>(aspectPath);
-            if (aspect != null) {
-                return aspect;
-            }
-            return Add<T>(aspectPath);
+            return GetOrAddContextAspect<T>(aspectPath);
         }
 
         protected virtual void OnItemAdded() {}
