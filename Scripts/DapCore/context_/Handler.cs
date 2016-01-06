@@ -18,12 +18,12 @@ namespace angeldnd.dap {
         Data DoHandle(string handlerPath, Data req);
     }
 
-    public sealed class BlockRequestChecker : RequestChecker {
+    public sealed class BlockRequestChecker : WeakBlock, RequestChecker {
         public delegate bool CheckerBlock(string handlerPath, Data req);
 
         private readonly CheckerBlock _Block;
 
-        public BlockRequestChecker(CheckerBlock block) {
+        public BlockRequestChecker(BlockOwner owner, CheckerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -32,12 +32,12 @@ namespace angeldnd.dap {
         }
     }
 
-    public sealed class BlockRequestListener : RequestListener {
+    public sealed class BlockRequestListener : WeakBlock, RequestListener {
         public delegate void ListenerBlock(string handlerPath, Data req);
 
         private readonly ListenerBlock _Block;
 
-        public BlockRequestListener(ListenerBlock block) {
+        public BlockRequestListener(BlockOwner owner, ListenerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -46,12 +46,12 @@ namespace angeldnd.dap {
         }
     }
 
-    public sealed class BlockResponseListener : ResponseListener {
+    public sealed class BlockResponseListener : WeakBlock, ResponseListener {
         public delegate void ListenerBlock(string handlerPath, Data req, Data res);
 
         private readonly ListenerBlock _Block;
 
-        public BlockResponseListener(ListenerBlock block) {
+        public BlockResponseListener(BlockOwner owner, ListenerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -60,6 +60,7 @@ namespace angeldnd.dap {
         }
     }
 
+    /* The Handler should NOT be weak */
     public sealed class BlockRequestHandler : RequestHandler {
         public delegate Data HandlerBlock(string handlerPath, Data req);
 
@@ -74,7 +75,7 @@ namespace angeldnd.dap {
         }
     }
 
-    public class Handler : BaseSecurableAspect {
+    public sealed class Handler : BaseSecurableAspect {
         private RequestHandler _Handler = null;
 
         public bool IsEmpty {
@@ -96,127 +97,81 @@ namespace angeldnd.dap {
         }
 
         //SILP: DECLARE_SECURE_LIST(RequestChecker, checker, RequestChecker, _RequestCheckers)
-        protected List<RequestChecker> _RequestCheckers = null;                           //__SILP__
-                                                                                          //__SILP__
-        public int RequestCheckerCount {                                                  //__SILP__
-            get {                                                                         //__SILP__
-                if (_RequestCheckers == null) {                                           //__SILP__
-                    return 0;                                                             //__SILP__
-                }                                                                         //__SILP__
-                return _RequestCheckers.Count;                                            //__SILP__
-            }                                                                             //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public virtual bool AddRequestChecker(Pass pass, RequestChecker checker) {        //__SILP__
-            if (!CheckAdminPass(pass)) return false;                                      //__SILP__
-            if (_RequestCheckers == null) _RequestCheckers = new List<RequestChecker>();  //__SILP__
-            if (!_RequestCheckers.Contains(checker)) {                                    //__SILP__
-                _RequestCheckers.Add(checker);                                            //__SILP__
-                return true;                                                              //__SILP__
-            }                                                                             //__SILP__
-            return false;                                                                 //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public bool AddRequestChecker(RequestChecker checker) {                           //__SILP__
-            return AddRequestChecker(null, checker);                                      //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public virtual bool RemoveRequestChecker(Pass pass, RequestChecker checker) {     //__SILP__
-            if (!CheckAdminPass(pass)) return false;                                      //__SILP__
-            if (_RequestCheckers != null && _RequestCheckers.Contains(checker)) {         //__SILP__
-                _RequestCheckers.Remove(checker);                                         //__SILP__
-                return true;                                                              //__SILP__
-            }                                                                             //__SILP__
-            return false;                                                                 //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public bool RemoveRequestChecker(RequestChecker checker) {                        //__SILP__
-            return RemoveRequestChecker(null, checker);                                   //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
+        private WeakList<RequestChecker> _RequestCheckers = null;              //__SILP__
+                                                                               //__SILP__
+        public int RequestCheckerCount {                                       //__SILP__
+            get { return WeakListHelper.Count(_RequestCheckers); }             //__SILP__
+        }                                                                      //__SILP__
+                                                                               //__SILP__
+        public bool AddRequestChecker(Pass pass, RequestChecker checker) {     //__SILP__
+            if (!CheckAdminPass(pass)) return false;                           //__SILP__
+            return WeakListHelper.Add(ref _RequestCheckers, checker);          //__SILP__
+        }                                                                      //__SILP__
+                                                                               //__SILP__
+        public bool AddRequestChecker(RequestChecker checker) {                //__SILP__
+            return AddRequestChecker(null, checker);                           //__SILP__
+        }                                                                      //__SILP__
+                                                                               //__SILP__
+        public bool RemoveRequestChecker(Pass pass, RequestChecker checker) {  //__SILP__
+            if (!CheckAdminPass(pass)) return false;                           //__SILP__
+            return WeakListHelper.Remove(_RequestCheckers, checker);           //__SILP__
+        }                                                                      //__SILP__
+                                                                               //__SILP__
+        public bool RemoveRequestChecker(RequestChecker checker) {             //__SILP__
+            return RemoveRequestChecker(null, checker);                        //__SILP__
+        }                                                                      //__SILP__
+                                                                               //__SILP__
         //SILP: DECLARE_LIST(RequestListener, listener, RequestListener, _RequestListeners)
-        protected List<RequestListener> _RequestListeners = null;                            //__SILP__
-                                                                                             //__SILP__
-        public int RequestListenerCount {                                                    //__SILP__
-            get {                                                                            //__SILP__
-                if (_RequestListeners == null) {                                             //__SILP__
-                    return 0;                                                                //__SILP__
-                }                                                                            //__SILP__
-                return _RequestListeners.Count;                                              //__SILP__
-            }                                                                                //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
-        public virtual bool AddRequestListener(RequestListener listener) {                   //__SILP__
-            if (_RequestListeners == null) _RequestListeners = new List<RequestListener>();  //__SILP__
-            if (!_RequestListeners.Contains(listener)) {                                     //__SILP__
-                _RequestListeners.Add(listener);                                             //__SILP__
-                return true;                                                                 //__SILP__
-            }                                                                                //__SILP__
-            return false;                                                                    //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
-        public virtual bool RemoveRequestListener(RequestListener listener) {                //__SILP__
-            if (_RequestListeners != null && _RequestListeners.Contains(listener)) {         //__SILP__
-                _RequestListeners.Remove(listener);                                          //__SILP__
-                return true;                                                                 //__SILP__
-            }                                                                                //__SILP__
-            return false;                                                                    //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
+        private WeakList<RequestListener> _RequestListeners = null;      //__SILP__
+                                                                         //__SILP__
+        public int RequestListenerCount {                                //__SILP__
+            get { return WeakListHelper.Count(_RequestListeners); }      //__SILP__
+        }                                                                //__SILP__
+                                                                         //__SILP__
+        public bool AddRequestListener(RequestListener listener) {       //__SILP__
+            return WeakListHelper.Add(ref _RequestListeners, listener);  //__SILP__
+        }                                                                //__SILP__
+                                                                         //__SILP__
+        public bool RemoveRequestListener(RequestListener listener) {    //__SILP__
+            return WeakListHelper.Remove(_RequestListeners, listener);   //__SILP__
+        }                                                                //__SILP__
+                                                                         //__SILP__
         //SILP: DECLARE_LIST(ResponseListener, listener, ResponseListener, _ResponseListeners)
-        protected List<ResponseListener> _ResponseListeners = null;                             //__SILP__
-                                                                                                //__SILP__
-        public int ResponseListenerCount {                                                      //__SILP__
-            get {                                                                               //__SILP__
-                if (_ResponseListeners == null) {                                               //__SILP__
-                    return 0;                                                                   //__SILP__
-                }                                                                               //__SILP__
-                return _ResponseListeners.Count;                                                //__SILP__
-            }                                                                                   //__SILP__
-        }                                                                                       //__SILP__
-                                                                                                //__SILP__
-        public virtual bool AddResponseListener(ResponseListener listener) {                    //__SILP__
-            if (_ResponseListeners == null) _ResponseListeners = new List<ResponseListener>();  //__SILP__
-            if (!_ResponseListeners.Contains(listener)) {                                       //__SILP__
-                _ResponseListeners.Add(listener);                                               //__SILP__
-                return true;                                                                    //__SILP__
-            }                                                                                   //__SILP__
-            return false;                                                                       //__SILP__
-        }                                                                                       //__SILP__
-                                                                                                //__SILP__
-        public virtual bool RemoveResponseListener(ResponseListener listener) {                 //__SILP__
-            if (_ResponseListeners != null && _ResponseListeners.Contains(listener)) {          //__SILP__
-                _ResponseListeners.Remove(listener);                                            //__SILP__
-                return true;                                                                    //__SILP__
-            }                                                                                   //__SILP__
-            return false;                                                                       //__SILP__
-        }                                                                                       //__SILP__
-                                                                                                //__SILP__
+        private WeakList<ResponseListener> _ResponseListeners = null;     //__SILP__
+                                                                          //__SILP__
+        public int ResponseListenerCount {                                //__SILP__
+            get { return WeakListHelper.Count(_ResponseListeners); }      //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
+        public bool AddResponseListener(ResponseListener listener) {      //__SILP__
+            return WeakListHelper.Add(ref _ResponseListeners, listener);  //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
+        public bool RemoveResponseListener(ResponseListener listener) {   //__SILP__
+            return WeakListHelper.Remove(_ResponseListeners, listener);   //__SILP__
+        }                                                                 //__SILP__
+                                                                          //__SILP__
         public Data HandleRequest(Pass pass, Data req) {
             if (!CheckWritePass(pass)) return null;
 
             if (_Handler == null) return null;
-            if (_RequestCheckers != null) {
-                for (int i = 0; i < _RequestCheckers.Count; i++) {
-                    if (!_RequestCheckers[i].IsValidRequest(Path, req)) {
-                        return null;
-                    }
-                }
+
+            if (!WeakListHelper.IsValid(_RequestCheckers, (RequestChecker checker) => {
+                return checker.IsValidRequest(Path, req);
+            })) {
+                return null;
             }
-            if (_RequestListeners != null) {
-                for (int i = 0; i < _RequestListeners.Count; i++) {
-                    _RequestListeners[i].OnRequest(Path, req);
-                }
-            }
+
+            WeakListHelper.Notify(_RequestListeners, (RequestListener listener) => {
+                listener.OnRequest(Path, req);
+            });
 
             Data res = _Handler.DoHandle(Path, req);
             AdvanceRevision();
 
-            if (_ResponseListeners != null) {
-                for (int i = 0; i < _ResponseListeners.Count; i++) {
-                    _ResponseListeners[i].OnResponse(Path, req, res);
-                }
-            }
+            WeakListHelper.Notify(_ResponseListeners, (ResponseListener listener) => {
+                listener.OnResponse(Path, req, res);
+            });
             return res;
         }
 

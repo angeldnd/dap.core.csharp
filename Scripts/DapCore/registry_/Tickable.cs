@@ -21,7 +21,7 @@ namespace angeldnd.dap {
 
         public override void OnAdded() {
             if (Item.AddChannel(RegistryConsts.ChannelTick, _Pass) != null) {
-                _OnTick = new BlockEventListener(
+                _OnTick = new BlockEventListener(this,
                     (string channelPath, Data evt) => {
                         Item.FireEvent(RegistryConsts.ChannelTick, _Pass, evt);
                 });

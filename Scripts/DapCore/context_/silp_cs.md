@@ -40,70 +40,42 @@ public bool Set${type}(string path, ${cs_type} value) {
 
 # DECLARE_LIST(name, var_name, cs_type, list_name) #
 ```C#
-protected List<${cs_type}> ${list_name} = null;
+private WeakList<${cs_type}> ${list_name} = null;
 
 public int ${name}Count {
-    get {
-        if (${list_name} == null) {
-            return 0;
-        }
-        return ${list_name}.Count;
-    }
+    get { return WeakListHelper.Count(${list_name}); }
 }
 
-public virtual bool Add${name}(${cs_type} ${var_name}) {
-    if (${list_name} == null) ${list_name} = new List<${cs_type}>();
-    if (!${list_name}.Contains(${var_name})) {
-        ${list_name}.Add(${var_name});
-        return true;
-    }
-    return false;
+public bool Add${name}(${cs_type} ${var_name}) {
+    return WeakListHelper.Add(ref ${list_name}, ${var_name});
 }
 
-public virtual bool Remove${name}(${cs_type} ${var_name}) {
-    if (${list_name} != null && ${list_name}.Contains(${var_name})) {
-        ${list_name}.Remove(${var_name});
-        return true;
-    }
-    return false;
+public bool Remove${name}(${cs_type} ${var_name}) {
+    return WeakListHelper.Remove(${list_name}, ${var_name});
 }
 
 ```
 
 # DECLARE_SECURE_LIST(name, var_name, cs_type, list_name) #
 ```C#
-protected List<${cs_type}> ${list_name} = null;
+private WeakList<${cs_type}> ${list_name} = null;
 
 public int ${name}Count {
-    get {
-        if (${list_name} == null) {
-            return 0;
-        }
-        return ${list_name}.Count;
-    }
+    get { return WeakListHelper.Count(${list_name}); }
 }
 
-public virtual bool Add${name}(Pass pass, ${cs_type} ${var_name}) {
+public bool Add${name}(Pass pass, ${cs_type} ${var_name}) {
     if (!CheckAdminPass(pass)) return false;
-    if (${list_name} == null) ${list_name} = new List<${cs_type}>();
-    if (!${list_name}.Contains(${var_name})) {
-        ${list_name}.Add(${var_name});
-        return true;
-    }
-    return false;
+    return WeakListHelper.Add(ref ${list_name}, ${var_name});
 }
 
 public bool Add${name}(${cs_type} ${var_name}) {
     return Add${name}(null, ${var_name});
 }
 
-public virtual bool Remove${name}(Pass pass, ${cs_type} ${var_name}) {
+public bool Remove${name}(Pass pass, ${cs_type} ${var_name}) {
     if (!CheckAdminPass(pass)) return false;
-    if (${list_name} != null && ${list_name}.Contains(${var_name})) {
-        ${list_name}.Remove(${var_name});
-        return true;
-    }
-    return false;
+    return WeakListHelper.Remove(${list_name}, ${var_name});
 }
 
 public bool Remove${name}(${cs_type} ${var_name}) {
@@ -187,18 +159,20 @@ public bool Remove${type}ValueChecker(string path, ValueChecker<${cs_type}> chec
     return Remove${type}ValueChecker(path, checker);
 }
 
-public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, Pass pass, ${type}BlockValueChecker.CheckerBlock block) {
+public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, Pass pass,
+                                    BlockOwner owner, ${type}BlockValueChecker.CheckerBlock checker) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
-        return p.AddBlockValueChecker(pass, block);
+        return p.AddBlockValueChecker(pass, owner, checker);
     } else {
         Error("Property Not Exist: {0}", path);
     }
     return null;
 }
 
-public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, ${type}BlockValueChecker.CheckerBlock block) {
-    return Add${type}BlockValueChecker(path, block);
+public ${type}BlockValueChecker Add${type}BlockValueChecker(string path,
+                                    BlockOwner owner, ${type}BlockValueChecker.CheckerBlock block) {
+    return Add${type}BlockValueChecker(path, owner, block);
 }
 
 public bool Add${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watcher) {
@@ -221,10 +195,11 @@ public bool Remove${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watc
     return false;
 }
 
-public ${type}BlockValueWatcher Add${type}BlockValueWatcher(string path, ${type}BlockValueWatcher.WatcherBlock block) {
+public ${type}BlockValueWatcher Add${type}BlockValueWatcher(string path,
+                                    BlockOwner owner, ${type}BlockValueWatcher.WatcherBlock watcher) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
-        return p.AddBlockValueWatcher(block);
+        return p.AddBlockValueWatcher(owner, watcher);
     } else {
         Error("Property Not Exist: {0}", path);
     }
@@ -280,12 +255,12 @@ public bool Set${type}(string path, Pass pass, ${cs_type} val) {
 
 # PROPERTY_CLASS(type, cs_type) #
 ```C#
-public sealed class ${type}BlockValueChecker : ValueChecker<${cs_type}> {
+public sealed class ${type}BlockValueChecker : WeakBlock, ValueChecker<${cs_type}> {
     public delegate bool CheckerBlock(string path, ${cs_type} val, ${cs_type} newVal);
 
     private readonly CheckerBlock _Block;
 
-    public ${type}BlockValueChecker(CheckerBlock block) {
+    public ${type}BlockValueChecker(BlockOwner owner, CheckerBlock block) : base(owner) {
         _Block = block;
     }
 
@@ -294,12 +269,12 @@ public sealed class ${type}BlockValueChecker : ValueChecker<${cs_type}> {
     }
 }
 
-public sealed class ${type}BlockValueWatcher : ValueWatcher<${cs_type}> {
+public sealed class ${type}BlockValueWatcher : WeakBlock, ValueWatcher<${cs_type}> {
     public delegate void WatcherBlock(string path, ${cs_type} val, ${cs_type} newVal);
 
     private readonly WatcherBlock _Block;
 
-    public ${type}BlockValueWatcher(WatcherBlock block) {
+    public ${type}BlockValueWatcher(BlockOwner owner, WatcherBlock block) : base(owner) {
         _Block = block;
     }
 
@@ -325,20 +300,25 @@ public class ${type}Property : Property<${cs_type}> {
         return NeedSetup || (Value != newVal);
     }
 
-    public ${type}BlockValueChecker AddBlockValueChecker(Pass pass, ${type}BlockValueChecker.CheckerBlock block) {
-        ${type}BlockValueChecker checker = new ${type}BlockValueChecker(block);
+    public ${type}BlockValueChecker AddBlockValueChecker(Pass pass, BlockOwner owner,
+                                                         ${type}BlockValueChecker.CheckerBlock _checker) {
+        if (!CheckAdminPass(pass)) return null;
+
+        ${type}BlockValueChecker checker = new ${type}BlockValueChecker(owner, _checker);
         if (AddValueChecker(pass, checker)) {
             return checker;
         }
         return null;
     }
 
-    public ${type}BlockValueChecker AddBlockValueChecker(${type}BlockValueChecker.CheckerBlock block) {
-        return AddBlockValueChecker(null, block);
+    public ${type}BlockValueChecker AddBlockValueChecker(BlockOwner owner,
+                                                         ${type}BlockValueChecker.CheckerBlock checker) {
+        return AddBlockValueChecker(null, checker);
     }
 
-    public ${type}BlockValueWatcher AddBlockValueWatcher(${type}BlockValueWatcher.WatcherBlock block) {
-        ${type}BlockValueWatcher watcher = new ${type}BlockValueWatcher(block);
+    public ${type}BlockValueWatcher AddBlockValueWatcher(BlockOwner owner,
+                                                         ${type}BlockValueWatcher.WatcherBlock _watcher) {
+        ${type}BlockValueWatcher watcher = new ${type}BlockValueWatcher(owner, _watcher);
         if (AddValueWatcher(watcher)) {
             return watcher;
         }
@@ -360,4 +340,54 @@ public ${type} Withdraw${name}(string key) {
     return Vars.WithdrawValue<${type}>(varPath);
 }
 
+```
+
+# EXTENSION_SETUP_PROPERTY(type, cs_type) #
+```C#
+public ${type}Property Setup${type}Property(string fragment,
+        Pass pass, ${type}Property.GetterBlock getter,
+        ${type}BlockValueChecker.CheckerBlock checker,
+        ${type}BlockValueWatcher.WatcherBlock watcher) {
+    return SetupProperty<${cs_type}>(PropertiesConsts.Type${type}Property,
+        fragment, pass, getter,
+        checker == null ? null : new ${type}BlockValueChecker(this, checker),
+        watcher == null ? null : new ${type}BlockValueWatcher(this, watcher)
+    ) as ${type}Property;
+}
+
+public ${type}Property Setup${type}Property(string fragment, Pass pass,
+        ${type}Property.GetterBlock getter) {
+    return Setup${type}Property(fragment, pass, getter, null, null);
+}
+
+public ${type}Property Setup${type}Property(string fragment, Pass pass,
+        ${type}Property.GetterBlock getter,
+        ${type}BlockValueWatcher.WatcherBlock watcher) {
+    return Setup${type}Property(fragment, pass, getter, null, watcher);
+}
+
+```
+
+# BLOCK_OWNER() #
+```
+private List<WeakBlock> _Blocks = null;
+
+public void AddBlock(WeakBlock block) {
+    if (_Blocks == null) {
+        _Blocks = new List<WeakBlock>();
+    }
+    if (!_Blocks.Contains(block)) {
+        _Blocks.Add(block);
+    }
+}
+
+public void RemoveBlock(WeakBlock block) {
+    if (_Blocks == null) {
+        return;
+    }
+    int index = _Blocks.IndexOf(block);
+    if (index >= 0) {
+        _Blocks.RemoveAt(index);
+    }
+}
 ```

@@ -60,7 +60,7 @@ namespace angeldnd.dap {
         }
 
         public void Insert(int index, T element) {
-            throw new System.NotSupportedException("ListProperty<T>.InsertAt()");
+            throw new System.NotSupportedException("ListProperty<T>.Insert()");
         }
 
         public bool Remove(T element) {

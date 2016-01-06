@@ -37,6 +37,9 @@
     <Compile Include="DapCore\context_\Channel.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\Channels.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\context_\Context.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\context_\ContextAccessor.cs" />    <!--__SILP__-->
+    <Compile Include="DapCore\context_\ContextAspect.cs" />      <!--__SILP__-->
+    <Compile Include="DapCore\context_\Extension.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\context_\Handler.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\Handlers.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\context_\Properties.cs" />         <!--__SILP__-->
@@ -49,13 +52,14 @@
     <Compile Include="DapCore\core_\Data.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\core_\Entity.cs" />                <!--__SILP__-->
     <Compile Include="DapCore\core_\Pass.cs" />                  <!--__SILP__-->
+    <Compile Include="DapCore\core_\Sealable.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\core_\SecurableAspect.cs" />       <!--__SILP__-->
     <Compile Include="DapCore\group_\ComboProperty.cs" />        <!--__SILP__-->
     <Compile Include="DapCore\group_\DictProperty.cs" />         <!--__SILP__-->
     <Compile Include="DapCore\group_\GroupProperty.cs" />        <!--__SILP__-->
     <Compile Include="DapCore\group_\ListProperty.cs" />         <!--__SILP__-->
     <Compile Include="DapCore\plugin_\Bootstrapper.cs" />        <!--__SILP__-->
-    <Compile Include="DapCore\plugin_\Environment.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\plugin_\Env.cs" />                 <!--__SILP__-->
     <Compile Include="DapCore\plugin_\Plugin.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\registry_\Factory.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\registry_\Item.cs" />              <!--__SILP__-->
@@ -68,10 +72,16 @@
     <Compile Include="DapCore\spec_\SpecHelper.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\util_\AspectHelper.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\util_\DapAttributes.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\util_\DapLogger.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\util_\FileLogProvider.cs" />       <!--__SILP__-->
+    <Compile Include="DapCore\util_\Log.cs" />                   <!--__SILP__-->
     <Compile Include="DapCore\util_\Logger.cs" />                <!--__SILP__-->
+    <Compile Include="DapCore\util_\LogProvider.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\util_\PatternMatcher.cs" />        <!--__SILP__-->
     <Compile Include="DapCore\util_\RegistryHelper.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\weak_\WeakList.cs" />              <!--__SILP__-->
+    <Compile Include="DapCore\weak_\WeakListHelper.cs" />        <!--__SILP__-->
+    <Compile Include="DapCore\weak_\WeakPubSub.cs" />            <!--__SILP__-->
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

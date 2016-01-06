@@ -10,12 +10,12 @@ namespace angeldnd.dap {
         void OnEvent(string channelPath, Data evt);
     }
 
-    public sealed class BlockEventChecker : EventChecker {
+    public sealed class BlockEventChecker : WeakBlock, EventChecker {
         public delegate bool CheckerBlock(string channelPath, Data evt);
 
         private readonly CheckerBlock _Block;
 
-        public BlockEventChecker(CheckerBlock block) {
+        public BlockEventChecker(BlockOwner owner, CheckerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -24,12 +24,12 @@ namespace angeldnd.dap {
         }
     }
 
-    public sealed class BlockEventListener : EventListener {
+    public sealed class BlockEventListener : WeakBlock, EventListener {
         public delegate void ListenerBlock(string channelPath, Data evt);
 
         private readonly ListenerBlock _Block;
 
-        public BlockEventListener(ListenerBlock block) {
+        public BlockEventListener(BlockOwner owner, ListenerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -38,91 +38,60 @@ namespace angeldnd.dap {
         }
     }
 
-    public class Channel : BaseSecurableAspect {
+    public sealed class Channel : BaseSecurableAspect {
         //SILP: DECLARE_SECURE_LIST(EventChecker, listener, EventChecker, _EventCheckers)
-        protected List<EventChecker> _EventCheckers = null;                         //__SILP__
-                                                                                    //__SILP__
-        public int EventCheckerCount {                                              //__SILP__
-            get {                                                                   //__SILP__
-                if (_EventCheckers == null) {                                       //__SILP__
-                    return 0;                                                       //__SILP__
-                }                                                                   //__SILP__
-                return _EventCheckers.Count;                                        //__SILP__
-            }                                                                       //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public virtual bool AddEventChecker(Pass pass, EventChecker listener) {     //__SILP__
-            if (!CheckAdminPass(pass)) return false;                                //__SILP__
-            if (_EventCheckers == null) _EventCheckers = new List<EventChecker>();  //__SILP__
-            if (!_EventCheckers.Contains(listener)) {                               //__SILP__
-                _EventCheckers.Add(listener);                                       //__SILP__
-                return true;                                                        //__SILP__
-            }                                                                       //__SILP__
-            return false;                                                           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public bool AddEventChecker(EventChecker listener) {                        //__SILP__
-            return AddEventChecker(null, listener);                                 //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public virtual bool RemoveEventChecker(Pass pass, EventChecker listener) {  //__SILP__
-            if (!CheckAdminPass(pass)) return false;                                //__SILP__
-            if (_EventCheckers != null && _EventCheckers.Contains(listener)) {      //__SILP__
-                _EventCheckers.Remove(listener);                                    //__SILP__
-                return true;                                                        //__SILP__
-            }                                                                       //__SILP__
-            return false;                                                           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public bool RemoveEventChecker(EventChecker listener) {                     //__SILP__
-            return RemoveEventChecker(null, listener);                              //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
+        private WeakList<EventChecker> _EventCheckers = null;               //__SILP__
+                                                                            //__SILP__
+        public int EventCheckerCount {                                      //__SILP__
+            get { return WeakListHelper.Count(_EventCheckers); }            //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
+        public bool AddEventChecker(Pass pass, EventChecker listener) {     //__SILP__
+            if (!CheckAdminPass(pass)) return false;                        //__SILP__
+            return WeakListHelper.Add(ref _EventCheckers, listener);        //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
+        public bool AddEventChecker(EventChecker listener) {                //__SILP__
+            return AddEventChecker(null, listener);                         //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
+        public bool RemoveEventChecker(Pass pass, EventChecker listener) {  //__SILP__
+            if (!CheckAdminPass(pass)) return false;                        //__SILP__
+            return WeakListHelper.Remove(_EventCheckers, listener);         //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
+        public bool RemoveEventChecker(EventChecker listener) {             //__SILP__
+            return RemoveEventChecker(null, listener);                      //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
         //SILP: DECLARE_LIST(EventListener, listener, EventListener, _EventListeners)
-        protected List<EventListener> _EventListeners = null;                          //__SILP__
-                                                                                       //__SILP__
-        public int EventListenerCount {                                                //__SILP__
-            get {                                                                      //__SILP__
-                if (_EventListeners == null) {                                         //__SILP__
-                    return 0;                                                          //__SILP__
-                }                                                                      //__SILP__
-                return _EventListeners.Count;                                          //__SILP__
-            }                                                                          //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
-        public virtual bool AddEventListener(EventListener listener) {                 //__SILP__
-            if (_EventListeners == null) _EventListeners = new List<EventListener>();  //__SILP__
-            if (!_EventListeners.Contains(listener)) {                                 //__SILP__
-                _EventListeners.Add(listener);                                         //__SILP__
-                return true;                                                           //__SILP__
-            }                                                                          //__SILP__
-            return false;                                                              //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
-        public virtual bool RemoveEventListener(EventListener listener) {              //__SILP__
-            if (_EventListeners != null && _EventListeners.Contains(listener)) {       //__SILP__
-                _EventListeners.Remove(listener);                                      //__SILP__
-                return true;                                                           //__SILP__
-            }                                                                          //__SILP__
-            return false;                                                              //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
+        private WeakList<EventListener> _EventListeners = null;        //__SILP__
+                                                                       //__SILP__
+        public int EventListenerCount {                                //__SILP__
+            get { return WeakListHelper.Count(_EventListeners); }      //__SILP__
+        }                                                              //__SILP__
+                                                                       //__SILP__
+        public bool AddEventListener(EventListener listener) {         //__SILP__
+            return WeakListHelper.Add(ref _EventListeners, listener);  //__SILP__
+        }                                                              //__SILP__
+                                                                       //__SILP__
+        public bool RemoveEventListener(EventListener listener) {      //__SILP__
+            return WeakListHelper.Remove(_EventListeners, listener);   //__SILP__
+        }                                                              //__SILP__
+                                                                       //__SILP__
         public bool FireEvent(Pass pass, Data evt) {
             if (!CheckWritePass(pass)) return false;
 
-            if (_EventCheckers != null) {
-                for (int i = 0; i < _EventCheckers.Count; i++) {
-                    if (!_EventCheckers[i].IsValidEvent(Path, evt)) {
-                        return false;
-                    }
-                }
-            }
-            if (_EventListeners != null) {
-                for (int i = 0; i < _EventListeners.Count; i++) {
-                    _EventListeners[i].OnEvent(Path, evt);
-                }
+            if (!WeakListHelper.IsValid(_EventCheckers, (EventChecker checker) => {
+                return checker.IsValidEvent(Path, evt);
+            })) {
+                return false;
             }
             AdvanceRevision();
+
+            WeakListHelper.Notify(_EventListeners, (EventListener listener) => {
+                listener.OnEvent(Path, evt);
+            });
             return true;
         }
 

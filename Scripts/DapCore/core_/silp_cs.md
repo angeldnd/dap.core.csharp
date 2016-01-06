@@ -1,25 +1,20 @@
 # DECLARE_LIST(name, var_name, cs_type, list_name) #
 ```C#
-protected List<${cs_type}> ${list_name} = null;
+private WeakList<${cs_type}> ${list_name} = null;
+
+public int ${name}Count {
+    get { return WeakListHelper.Count(${list_name}); }
+}
 
 public bool Add${name}(${cs_type} ${var_name}) {
-    if (${list_name} == null) ${list_name} = new List<${cs_type}>();
-    if (!${list_name}.Contains(${var_name})) {
-        ${list_name}.Add(${var_name});
-        return true;
-    }
-    return false;
+    return WeakListHelper.Add(ref ${list_name}, ${var_name});
 }
 
 public bool Remove${name}(${cs_type} ${var_name}) {
-    if (${list_name} != null && ${list_name}.Contains(${var_name})) {
-        ${list_name}.Remove(${var_name});
-        return true;
-    }
-    return false;
+    return WeakListHelper.Remove(${list_name}, ${var_name});
 }
 
-``` 
+```
 
 # DATA_TYPE(type, cs_type) #
 ```
@@ -218,3 +213,26 @@ public bool CheckWritePass(Pass pass) {
 
 ```
 
+# BLOCK_OWNER() #
+```
+private List<WeakBlock> _Blocks = null;
+
+public void AddBlock(WeakBlock block) {
+    if (_Blocks == null) {
+        _Blocks = new List<WeakBlock>();
+    }
+    if (!_Blocks.Contains(block)) {
+        _Blocks.Add(block);
+    }
+}
+
+public void RemoveBlock(WeakBlock block) {
+    if (_Blocks == null) {
+        return;
+    }
+    int index = _Blocks.IndexOf(block);
+    if (index >= 0) {
+        _Blocks.RemoveAt(index);
+    }
+}
+```

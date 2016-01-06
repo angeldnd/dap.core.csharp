@@ -47,25 +47,20 @@ namespace angeldnd.dap {
         public delegate bool CheckAspect<T>(T aspect) where T : class, Aspect;
 
         //SILP: DECLARE_LIST(Watcher, watcher, EntityWatcher, _Watchers)
-        protected List<EntityWatcher> _Watchers = null;                    //__SILP__
-                                                                           //__SILP__
-        public bool AddWatcher(EntityWatcher watcher) {                    //__SILP__
-            if (_Watchers == null) _Watchers = new List<EntityWatcher>();  //__SILP__
-            if (!_Watchers.Contains(watcher)) {                            //__SILP__
-                _Watchers.Add(watcher);                                    //__SILP__
-                return true;                                               //__SILP__
-            }                                                              //__SILP__
-            return false;                                                  //__SILP__
-        }                                                                  //__SILP__
-                                                                           //__SILP__
-        public bool RemoveWatcher(EntityWatcher watcher) {                 //__SILP__
-            if (_Watchers != null && _Watchers.Contains(watcher)) {        //__SILP__
-                _Watchers.Remove(watcher);                                 //__SILP__
-                return true;                                               //__SILP__
-            }                                                              //__SILP__
-            return false;                                                  //__SILP__
-        }                                                                  //__SILP__
-                                                                           //__SILP__
+        private WeakList<EntityWatcher> _Watchers = null;             //__SILP__
+                                                                      //__SILP__
+        public int WatcherCount {                                     //__SILP__
+            get { return WeakListHelper.Count(_Watchers); }           //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool AddWatcher(EntityWatcher watcher) {               //__SILP__
+            return WeakListHelper.Add(ref _Watchers, watcher);        //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool RemoveWatcher(EntityWatcher watcher) {            //__SILP__
+            return WeakListHelper.Remove(_Watchers, watcher);         //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
 
         public bool Has(string path) {
             return _Aspects.ContainsKey(path);
@@ -141,12 +136,11 @@ namespace angeldnd.dap {
             _Aspects[aspect.Path] = aspect;
             aspect.OnAdded();
 
-            if (_Watchers != null) {
-                for (int i = 0; i < _Watchers.Count; i++) {
-                    _Watchers[i].OnAspectAdded(this, aspect);
-                }
-            }
             AdvanceRevision();
+
+            WeakListHelper.Notify(_Watchers, (EntityWatcher watcher) => {
+                watcher.OnAspectAdded(this, aspect);
+            });
             return true;
         }
 
@@ -222,11 +216,9 @@ namespace angeldnd.dap {
                 _Aspects.Remove(path);
                 AdvanceRevision();
 
-                if (_Watchers != null) {
-                    for (int i = 0; i < _Watchers.Count; i++) {
-                        _Watchers[i].OnAspectRemoved(this, aspect);
-                    }
-                }
+                WeakListHelper.Notify(_Watchers, (EntityWatcher watcher) => {
+                    watcher.OnAspectRemoved(this, aspect);
+                });
                 return aspect;
             } else {
                 Error("Aspect Not Exist: {0}, {1}", path, typeof(T));

@@ -80,11 +80,9 @@ namespace angeldnd.dap {
         }
 
         protected void FireOnChanged() {
-            if (_ValueWatchers != null) {
-                for (int i = 0; i < _Watchers.Count; i++) {
-                    _ValueWatchers[i].OnChanged(Path);
-                }
-            }
+            WeakListHelper.Notify(_ValueWatchers, (GroupValueWatcher watcher) => {
+                watcher.OnChanged(Path);
+            });
         }
 
         public void OnVarChanged(Var v) {
@@ -112,40 +110,19 @@ namespace angeldnd.dap {
         public void AllValueCheckers<T1>(OnValueChecker<T1> callback) where T1 : ValueChecker {}
 
         //SILP: DECLARE_LIST(ValueWatcher, watcher, GroupValueWatcher, _ValueWatchers)
-        protected List<GroupValueWatcher> _ValueWatchers = null;               //__SILP__
-                                                                               //__SILP__
-        public int ValueWatcherCount {                                         //__SILP__
-            get {                                                              //__SILP__
-                if (_ValueWatchers == null) {                                  //__SILP__
-                    return 0;                                                  //__SILP__
-                }                                                              //__SILP__
-                return _ValueWatchers.Count;                                   //__SILP__
-            }                                                                  //__SILP__
-        }                                                                      //__SILP__
-                                                                               //__SILP__
-        public virtual bool AddValueWatcher(GroupValueWatcher watcher) {       //__SILP__
-            if (_ValueWatchers == null) {                                      //__SILP__
-                _ValueWatchers = new List<GroupValueWatcher>();                //__SILP__
-                ResetAllVarWatchers();                                         //__SILP__
-            }                                                                  //__SILP__
-            if (!_ValueWatchers.Contains(watcher)) {                           //__SILP__
-                _ValueWatchers.Add(watcher);                                   //__SILP__
-                return true;                                                   //__SILP__
-            }                                                                  //__SILP__
-            return false;                                                      //__SILP__
-        }                                                                      //__SILP__
-                                                                               //__SILP__
-        public virtual bool RemoveValueWatcher(GroupValueWatcher watcher) {    //__SILP__
-            if (_ValueWatchers != null && _ValueWatchers.Contains(watcher)) {  //__SILP__
-                _ValueWatchers.Remove(watcher);                                //__SILP__
-                if (_ValueWatchers.Count == 0) {                               //__SILP__
-                    _ValueWatchers = null;                                     //__SILP__
-                    ResetAllVarWatchers();                                     //__SILP__
-                }                                                              //__SILP__
-                return true;                                                   //__SILP__
-            }                                                                  //__SILP__
-            return false;                                                      //__SILP__
-        }                                                                      //__SILP__
-                                                                               //__SILP__
+        private WeakList<GroupValueWatcher> _ValueWatchers = null;    //__SILP__
+                                                                      //__SILP__
+        public int ValueWatcherCount {                                //__SILP__
+            get { return WeakListHelper.Count(_ValueWatchers); }      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool AddValueWatcher(GroupValueWatcher watcher) {      //__SILP__
+            return WeakListHelper.Add(ref _ValueWatchers, watcher);   //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool RemoveValueWatcher(GroupValueWatcher watcher) {   //__SILP__
+            return WeakListHelper.Remove(_ValueWatchers, watcher);    //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
     }
 }
