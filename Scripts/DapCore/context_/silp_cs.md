@@ -255,7 +255,7 @@ public bool Set${type}(string path, Pass pass, ${cs_type} val) {
 
 # PROPERTY_CLASS(type, cs_type) #
 ```C#
-public sealed class ${type}BlockValueChecker : WeakBlock, ValueChecker<${cs_type}> {
+public sealed class ${type}BlockValueChecker : WeakBlock, IValueChecker<${cs_type}> {
     public delegate bool CheckerBlock(string path, ${cs_type} val, ${cs_type} newVal);
 
     private readonly CheckerBlock _Block;
@@ -269,7 +269,7 @@ public sealed class ${type}BlockValueChecker : WeakBlock, ValueChecker<${cs_type
     }
 }
 
-public sealed class ${type}BlockValueWatcher : WeakBlock, ValueWatcher<${cs_type}> {
+public sealed class ${type}BlockValueWatcher : WeakBlock, IValueWatcher<${cs_type}> {
     public delegate void WatcherBlock(string path, ${cs_type} val, ${cs_type} newVal);
 
     private readonly WatcherBlock _Block;

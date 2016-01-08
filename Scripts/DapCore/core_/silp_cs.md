@@ -69,148 +69,37 @@ public Data ${name}(string key, ${cs_type} val) {
 
 ```
 
-# ASPECT_MIXIN() #
+# ASPECT_MIXIN(class) #
 ```
-private Entity _Entity = null;
-public Entity Entity {
-    get { return _Entity; }
-}
+public readonly Entity Entity;
 
-private string _Path = null;
-public string Path {
-    get { return _Path; }
-}
+public readonly string Path;
 
 public string RevPath {
     get {
-        return string.Format("{0} ({1})", _Path, Revision);
+        return string.Format("{0} ({1})", Path, Revision);
     }
 }
 
-public bool Inited {
-    get { return _Entity != null; }
+public ${class}(Entity entity, string path, Pass pass) : base(pass) {
+    Entity = entity;
+    Path = path;
 }
 
-public virtual bool Init(Entity entity, string path) {
-    if (_Entity != null) {
-        Error("Already Inited: {0} -> {1}, {2}", _Entity, entity, path);
-        return false;
-    }
-    if (entity == null) {
-        Error("Invalid Entity: {0}, {1}", entity, path);
-        return false;
-    }
-    if (!EntityConsts.IsValidAspectPath(path)) {
-        Error("Invalid Path: {0}, {1}", entity, path);
-        return false;
-    }
-
-    _Entity = entity;
-    _Path = path;
-    return true;
+public override string GetLogPrefix() {
+    return string.Format("{0}[{1}] {2} ", Entity.GetLogPrefix(), GetType().Name, RevPath);
 }
 
-```
-
-# ASPECT_EVENTS_MIXIN() #
-```
-public virtual void OnAdded() {}
-public virtual void OnRemoved() {}
-```
-
-# DAPOBJECT_MIXIN() #
-```
-public virtual string Type {
-    get { return null; }
-}
-
-private int _Revision = 0;
-public int Revision {
-    get { return _Revision; }
-}
-
-protected virtual void AdvanceRevision() {
-    _Revision += 1;
-}
-
-public virtual string[] DebugPatterns {
-    get { return null; }
-}
-
-```
-
-# ASPECT_LOG_MIXIN(virtualOrOverride) #
-```C#
-public ${virtualOrOverride} string GetLogPrefix() {
-    if (_Entity != null) {
-        return string.Format("{0}[{1}] {2} ", _Entity.GetLogPrefix(), GetType().Name, RevPath);
-    } else {
-        return string.Format("[] [{0}] {1} ", GetType().Name, RevPath);
-    }
-}
-```
-
-# ACCESSOR_LOG_MIXIN(source, target, entity) #
-```C#
 public override bool DebugMode {
-    get { return ${target} != null && ${target}.DebugMode; }
+    get { return Entity.DebugMode; }
 }
 
 public override string[] DebugPatterns {
-    get { return ${target} != null ? ${target}.DebugPatterns : null; }
+    get { return Entity.DebugPatterns; }
 }
 
-```
-
-# SECURABLE_ASPECT_MIXIN() #
-```C#
-private Pass _Pass = null;
-protected Pass Pass {
-    get { return _Pass; }
-}
-
-public bool AdminSecured {
-    get {
-        return _Pass != null;
-    }
-}
-
-public bool WriteSecured {
-    get {
-        if (_Pass == null) return false;
-        if (_Pass.Writable) return false;
-        return true;
-    }
-}
-
-public virtual bool Init(Entity entity, string path, Pass pass) {
-    if (!base.Init(entity, path)) {
-        return false;
-    }
-    _Pass = pass;
-    return true;
-}
-
-public override sealed bool Init(Entity entity, string path) {
-    return Init(entity, path, null);
-}
-
-public bool CheckAdminPass(Pass pass) {
-    if (_Pass == null) return true;
-    if (_Pass.CheckAdminPass(this, pass)) return true;
-
-    Error("Invalid Admin Pass: _Pass = {0}, pass = {1}", _Pass, pass);
-    return false;
-}
-
-public bool CheckWritePass(Pass pass) {
-    if (_Pass == null) return true;
-    if (_Pass.CheckWritePass(this, pass)) return true;
-
-    Error("Invalid Write Pass: _Pass = {0}, pass = {1}", _Pass, pass);
-    return false;
-}
-
+public virtual void OnAdded() {}
+public virtual void OnRemoved() {}
 ```
 
 # BLOCK_OWNER() #

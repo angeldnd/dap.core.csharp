@@ -2,13 +2,32 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
+    public interface IContext : IEntity {
+        void SetDebugMode(bool debugMode);
+        void SetDebugPatterns(string[] patterns);
+
+        Properties Properties { get; }
+        Channels Channels { get; }
+        Handlers Handlers { get; }
+        Vars Vars { get; }
+    }
+
+    public interface IContext<TE> : IEntity<TE>, IContext
+                                        where TE : IContext {
+    }
+
+    public interface IContext<TO, TE> : IEntity<TO, TE>, IContext<TE>
+                                            where TO : ITree
+                                            where TE : IContext {
+    }
+
     public static class ContextConsts {
         public const string TypeContext = "Context";
 
-        public const string AspectVars = "_vars";
-        public const string AspectProperties = "_properties";
-        public const string AspectChannels = "_channels";
-        public const string AspectHandlers = "_handlers";
+        public const string SectionVars = "_vars";
+        public const string SectionProperties = "_properties";
+        public const string SectionChannels = "_channels";
+        public const string SectionHandlers = "_handlers";
 
         public const string VarsPropertyPasses = "_property_passes";
         public const string VarsChannelPasses = "_channel_passes";
@@ -30,26 +49,28 @@ namespace angeldnd.dap {
         }
     }
 
-    public class Context : Entity {
+    public sealed class Context : Context<ITree, Context> {
         public override string Type {
             get { return ContextConsts.TypeContext; }
         }
 
-        private Pass _Pass = new Pass();
-        protected Pass Pass {
-            get { return _Pass; }
+        public Context(ITree owner, string path, Pass pass) : base(owner, path, pass) {
         }
+    }
 
+    public abstract class Context<TO, TE> : Entity<TO, TE>, IContext<TO, TE>
+                                                    where TO : ITree
+                                                    where TE : IContext {
         public readonly Properties Properties;
         public readonly Channels Channels;
         public readonly Handlers Handlers;
         public readonly Vars Vars;
 
-        public Context() {
-            Properties = Add<Properties>(ContextConsts.AspectProperties, _Pass);
-            Channels = Add<Channels>(ContextConsts.AspectChannels, _Pass);
-            Handlers = Add<Handlers>(ContextConsts.AspectHandlers, _Pass);
-            Vars = Add<Vars>(ContextConsts.AspectVars, _Pass);
+        public Context(TO owner, string path, Pass pass) : base(owner, path, pass) {
+            Properties = Add<Properties>(ContextConsts.SectionProperties, Pass);
+            Channels = Add<Channels>(ContextConsts.SectionChannels, Pass);
+            Handlers = Add<Handlers>(ContextConsts.SectionHandlers, Pass);
+            Vars = Add<Vars>(ContextConsts.SectionVars, Pass);
         }
 
         private bool _DebugMode = false;
@@ -68,7 +89,8 @@ namespace angeldnd.dap {
             _DebugPatterns = patterns;
         }
 
-        public void OtherAspects<T>(OnAspect<T> callback) where T : class, Aspect {
+        /* TODO
+        public void OtherAspects<T>(Action<T> callback) where T : class, Aspect {
             Filter<T>(PatternMatcherConsts.WildcastSegments, (T aspect) => {
                 if (aspect != Vars && aspect != Properties && aspect != Channels && aspect != Handlers) {
                     callback(aspect);
@@ -85,13 +107,14 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public T GetOrAddContextAspect<T>(string aspectPath) where T : class, ContextAspect {
+        public T GetOrAddContextAspect<T>(string aspectPath) where T : Aspect<Context> {
             T aspect = Get<T>(aspectPath);
             if (aspect != null) {
                 return aspect;
             }
             return Add<T>(aspectPath);
         }
+        */
 
         public Property AddProperty(string path, Pass pass, bool open, Data data) {
             return Properties.Add(path, pass, open, data);

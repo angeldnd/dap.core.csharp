@@ -2,23 +2,23 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface VarWatcher {
-        void OnVarChanged(Var v);
+    public interface IVarWatcher {
+        void OnVarChanged(IVar v);
     }
 
-    public interface Var : SecurableAspect {
+    public interface IVar : IAspect<Context> {
         object GetValue();
         int VarWatcherCount { get; }
-        bool AddVarWatcher(VarWatcher watcher);
-        bool RemoveVarWatcher(VarWatcher watcher);
+        bool AddVarWatcher(IVarWatcher watcher);
+        bool RemoveVarWatcher(IVarWatcher watcher);
     }
 
-    public sealed class BlockVarWatcher : VarWatcher {
+    public sealed class BlockVarWatcher : WeakBlock, IVarWatcher {
         public delegate void WatcherBlock(Var v);
 
         private readonly WatcherBlock _Block;
 
-        public BlockVarWatcher(WatcherBlock block) {
+        public BlockVarWatcher(BlockOwner owner, WatcherBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -27,12 +27,21 @@ namespace angeldnd.dap {
         }
     }
 
-    public class Var<T> : BaseSecurableAspect, Var {
+    public class Var<T> : Var<Vars, T> {
+        public Var(Context owner, string path, Pass pass) : base(owner, path, pass) {
+        }
+    }
+
+    public abstract class Var<TO, T> : Aspect<Context, TO>, IVar
+                                where TO : ISection<Context> {
         public delegate T GetterBlock();
 
         private T _Value;
         public T Value {
             get { return _Value; }
+        }
+
+        public Var(Context owner, string path, Pass pass) : base(owner, path, pass) {
         }
 
         private bool _Setup = false;
@@ -60,18 +69,18 @@ namespace angeldnd.dap {
             return default(T);
         }
 
-        //SILP: DECLARE_LIST(VarWatcher, watcher, VarWatcher, _VarWatchers)
-        private WeakList<VarWatcher> _VarWatchers = null;             //__SILP__
+        //SILP: DECLARE_LIST(VarWatcher, watcher, IVarWatcher, _VarWatchers)
+        private WeakList<IVarWatcher> _VarWatchers = null;            //__SILP__
                                                                       //__SILP__
         public int VarWatcherCount {                                  //__SILP__
             get { return WeakListHelper.Count(_VarWatchers); }        //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public bool AddVarWatcher(VarWatcher watcher) {               //__SILP__
+        public bool AddVarWatcher(IVarWatcher watcher) {              //__SILP__
             return WeakListHelper.Add(ref _VarWatchers, watcher);     //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public bool RemoveVarWatcher(VarWatcher watcher) {            //__SILP__
+        public bool RemoveVarWatcher(IVarWatcher watcher) {           //__SILP__
             return WeakListHelper.Remove(_VarWatchers, watcher);      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__

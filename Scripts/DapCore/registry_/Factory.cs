@@ -1,7 +1,7 @@
 using System;
 
 namespace angeldnd.dap {
-    public delegate DapObject DapFactory();
+    public delegate DapObject DapFactory(params object[] values);
 
     /*
      * Here the factory will add checker to property directly, since the checker
@@ -20,10 +20,6 @@ namespace angeldnd.dap {
             Context context = new Context();
             _Factories = context.Add<Vars>("factories");
             _SpecValueCheckerFactories = context.Add<Vars>("spec_value_checker_factories");
-
-            //Entities
-            Register<Context>(ContextConsts.TypeContext);
-            Register<Registry>(RegistryConsts.TypeRegistry);
 
             //Aspects
             Register<Item>(ItemConsts.TypeItem);
@@ -44,15 +40,15 @@ namespace angeldnd.dap {
         }
 
         public static bool Register<T>(string type) where T : class, DapObject {
-            return Register(type, () => {
-                return Activator.CreateInstance(typeof(T)) as T;
+            return Register(type, (object[] values) => {
+                return Activator.CreateInstance(typeof(T), values) as T;
             });
         }
 
-        public static T New<T>(string type) where T : class, DapObject {
+        public static T New<T>(string type, params object[] values) where T : class, DapObject {
             DapFactory factory = _Factories.GetValue<DapFactory>(type);
             if (factory != null) {
-                DapObject obj = factory();
+                DapObject obj = factory(values);
                 if (obj is T) {
                     return (T)obj;
                 } else {
@@ -63,14 +59,6 @@ namespace angeldnd.dap {
                 Log.Error("Factory.New: {0} Unknown Type", type);
             }
             return null;
-        }
-
-        public static Entity NewEntity(string type) {
-            return New<Entity>(type);
-        }
-
-        public static Aspect NewAspect(string type) {
-            return New<Aspect>(type);
         }
 
         public static bool RegisterSpecValueChecker(string propertyType, string specKind, SpecValueCheckerFactory factory) {

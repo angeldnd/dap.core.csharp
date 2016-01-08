@@ -27,7 +27,7 @@ namespace angeldnd.dap {
             return false;
         }
 
-        public readonly static DefaultLogger Default = new DefaultLogger(1);
+        public readonly static DefaultLogWriter Default = new DefaultLogWriter(1);
 
         public static void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values) {
             _Provider.AddLog(source, kind, stackTrace, format, values);
@@ -37,7 +37,7 @@ namespace angeldnd.dap {
             _Provider.Flush();
         }
 
-        private readonly static DefaultLogger _Default = new DefaultLogger(2);
+        private readonly static DefaultLogWriter _Default = new DefaultLogWriter(2);
 
         public static void CriticalFrom(object source, string format, params object[] values) {
             _Default.CriticalFrom(source, format, values);

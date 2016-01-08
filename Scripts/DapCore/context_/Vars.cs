@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public class Vars : SecurableEntityAspect {
+    public sealed class Vars : Section<Context, IVar> {
         public Var<T> AddVar<T>(string path, T val) {
             return AddVar<T>(path, null, val);
         }

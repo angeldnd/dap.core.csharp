@@ -19,24 +19,6 @@ namespace angeldnd.dap {
             return _Object;
         }
 
-        protected bool _Setup(Object source, T obj) {
-            if (_Object == null && obj != null) {
-                if (source != null) {
-                    SetLogSource(source);
-                }
-                _Object = obj;
-                OnSetup();
-                return true;
-            } else if (obj == null) {
-                Error("Invalid obj: LogSource = {0}, _Object = {1}, source = {2}, obj = {3}",
-                        LogSource, _Object, source, obj);
-            } else {
-                Error("Already Setup: LogSource = {0}, _Object = {1}, source = {2}, obj = {3}",
-                        LogSource, _Object, source, obj);
-            }
-            return false;
-        }
-
         protected virtual void OnSetup() {}
 
         public bool Setup(T obj) {
@@ -52,14 +34,6 @@ namespace angeldnd.dap {
         }
 
         //SILP: ACCESSOR_LOG_MIXIN(_LogSource, _Object, _Object)
-        public override bool DebugMode {                                    //__SILP__
-            get { return _Object != null && _Object.DebugMode; }            //__SILP__
-        }                                                                   //__SILP__
-                                                                            //__SILP__
-        public override string[] DebugPatterns {                            //__SILP__
-            get { return _Object != null ? _Object.DebugPatterns : null; }  //__SILP__
-        }                                                                   //__SILP__
-                                                                            //__SILP__
     }
 
     public sealed class ProxyAccessor<T> : BaseAccessor<T> where T : class, DapObject {

@@ -16,7 +16,7 @@ namespace angeldnd.dap {
         }
     }
     */
-    public abstract class LogProvider : Logger {
+    public abstract class LogProvider : ILogger {
         public abstract void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values);
         public abstract void Flush();
 

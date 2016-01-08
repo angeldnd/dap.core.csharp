@@ -4,8 +4,6 @@ using System.Text;
 
 namespace angeldnd.dap {
     public static class SpecConsts {
-        public const string AspectSpec = "_spec";
-
         public const string KeySpec = "spec";
 
         public const string KindBigger = ">";
@@ -44,6 +42,8 @@ namespace angeldnd.dap {
             return specKey;
         }
     }
+
+    /*
 
     public class Spec : ItemAspect<Item>, DataChecker {
         protected virtual bool StrictMode {
@@ -94,4 +94,5 @@ namespace angeldnd.dap {
             get { return true; }
         }
     }
+    */
 }

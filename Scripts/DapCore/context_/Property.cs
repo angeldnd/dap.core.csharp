@@ -2,23 +2,23 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface ValueChecker {
+    public interface IValueChecker {
     }
 
-    public interface ValueChecker<T> : ValueChecker {
-        bool IsValid(string path, T val, T newVal);
+    public interface IValueChecker<T> : IValueChecker {
+        bool IsValid(Property<T> property, T val, T newVal);
     }
 
-    public interface ValueWatcher {
+    public interface IValueWatcher {
     }
 
-    public interface ValueWatcher<T> : ValueWatcher {
-        void OnChanged(string path, T lastVal, T val);
+    public interface IValueWatcher<T> : IValueWatcher {
+        void OnChanged(Property<T> property, T lastVal, T val);
     }
 
     public delegate void OnValueChecker<T1>(T1 checker) where T1 : ValueChecker;
 
-    public interface Property : Var {
+    public interface IProperty : IVar {
         Data Encode();
         bool Decode(Data data);
         bool Decode(Pass pass, Data data);
@@ -29,7 +29,10 @@ namespace angeldnd.dap {
         void AllValueCheckers<T1>(OnValueChecker<T1> callback) where T1 : ValueChecker;
     }
 
-    public abstract class Property<T>: Var<T>, Property {
+    public abstract class Property<T>: Var<Properties, T>, IProperty {
+        public Property(Context owner, string path, Pass pass) : base(owner, path, pass) {
+        }
+
         public Data Encode() {
             if (!string.IsNullOrEmpty(Type)) {
                 Data data = new Data();
@@ -150,7 +153,7 @@ namespace angeldnd.dap {
     }
 
     //SILP: PROPERTY_CLASS(Bool, bool)
-    public sealed class BoolBlockValueChecker : WeakBlock, ValueChecker<bool> {                              //__SILP__
+    public sealed class BoolBlockValueChecker : WeakBlock, IValueChecker<bool> {                             //__SILP__
         public delegate bool CheckerBlock(string path, bool val, bool newVal);                               //__SILP__
                                                                                                              //__SILP__
         private readonly CheckerBlock _Block;                                                                //__SILP__
@@ -164,7 +167,7 @@ namespace angeldnd.dap {
         }                                                                                                    //__SILP__
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
-    public sealed class BoolBlockValueWatcher : WeakBlock, ValueWatcher<bool> {                              //__SILP__
+    public sealed class BoolBlockValueWatcher : WeakBlock, IValueWatcher<bool> {                             //__SILP__
         public delegate void WatcherBlock(string path, bool val, bool newVal);                               //__SILP__
                                                                                                              //__SILP__
         private readonly WatcherBlock _Block;                                                                //__SILP__
@@ -222,7 +225,7 @@ namespace angeldnd.dap {
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
     //SILP: PROPERTY_CLASS(Int, int)
-    public sealed class IntBlockValueChecker : WeakBlock, ValueChecker<int> {                               //__SILP__
+    public sealed class IntBlockValueChecker : WeakBlock, IValueChecker<int> {                              //__SILP__
         public delegate bool CheckerBlock(string path, int val, int newVal);                                //__SILP__
                                                                                                             //__SILP__
         private readonly CheckerBlock _Block;                                                               //__SILP__
@@ -236,7 +239,7 @@ namespace angeldnd.dap {
         }                                                                                                   //__SILP__
     }                                                                                                       //__SILP__
                                                                                                             //__SILP__
-    public sealed class IntBlockValueWatcher : WeakBlock, ValueWatcher<int> {                               //__SILP__
+    public sealed class IntBlockValueWatcher : WeakBlock, IValueWatcher<int> {                              //__SILP__
         public delegate void WatcherBlock(string path, int val, int newVal);                                //__SILP__
                                                                                                             //__SILP__
         private readonly WatcherBlock _Block;                                                               //__SILP__
@@ -294,7 +297,7 @@ namespace angeldnd.dap {
     }                                                                                                       //__SILP__
                                                                                                             //__SILP__
     //SILP: PROPERTY_CLASS(Long, long)
-    public sealed class LongBlockValueChecker : WeakBlock, ValueChecker<long> {                              //__SILP__
+    public sealed class LongBlockValueChecker : WeakBlock, IValueChecker<long> {                             //__SILP__
         public delegate bool CheckerBlock(string path, long val, long newVal);                               //__SILP__
                                                                                                              //__SILP__
         private readonly CheckerBlock _Block;                                                                //__SILP__
@@ -308,7 +311,7 @@ namespace angeldnd.dap {
         }                                                                                                    //__SILP__
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
-    public sealed class LongBlockValueWatcher : WeakBlock, ValueWatcher<long> {                              //__SILP__
+    public sealed class LongBlockValueWatcher : WeakBlock, IValueWatcher<long> {                             //__SILP__
         public delegate void WatcherBlock(string path, long val, long newVal);                               //__SILP__
                                                                                                              //__SILP__
         private readonly WatcherBlock _Block;                                                                //__SILP__
@@ -366,7 +369,7 @@ namespace angeldnd.dap {
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
     //SILP: PROPERTY_CLASS(Float, float)
-    public sealed class FloatBlockValueChecker : WeakBlock, ValueChecker<float> {                             //__SILP__
+    public sealed class FloatBlockValueChecker : WeakBlock, IValueChecker<float> {                            //__SILP__
         public delegate bool CheckerBlock(string path, float val, float newVal);                              //__SILP__
                                                                                                               //__SILP__
         private readonly CheckerBlock _Block;                                                                 //__SILP__
@@ -380,7 +383,7 @@ namespace angeldnd.dap {
         }                                                                                                     //__SILP__
     }                                                                                                         //__SILP__
                                                                                                               //__SILP__
-    public sealed class FloatBlockValueWatcher : WeakBlock, ValueWatcher<float> {                             //__SILP__
+    public sealed class FloatBlockValueWatcher : WeakBlock, IValueWatcher<float> {                            //__SILP__
         public delegate void WatcherBlock(string path, float val, float newVal);                              //__SILP__
                                                                                                               //__SILP__
         private readonly WatcherBlock _Block;                                                                 //__SILP__
@@ -438,7 +441,7 @@ namespace angeldnd.dap {
     }                                                                                                         //__SILP__
                                                                                                               //__SILP__
     //SILP: PROPERTY_CLASS(Double, double)
-    public sealed class DoubleBlockValueChecker : WeakBlock, ValueChecker<double> {                            //__SILP__
+    public sealed class DoubleBlockValueChecker : WeakBlock, IValueChecker<double> {                           //__SILP__
         public delegate bool CheckerBlock(string path, double val, double newVal);                             //__SILP__
                                                                                                                //__SILP__
         private readonly CheckerBlock _Block;                                                                  //__SILP__
@@ -452,7 +455,7 @@ namespace angeldnd.dap {
         }                                                                                                      //__SILP__
     }                                                                                                          //__SILP__
                                                                                                                //__SILP__
-    public sealed class DoubleBlockValueWatcher : WeakBlock, ValueWatcher<double> {                            //__SILP__
+    public sealed class DoubleBlockValueWatcher : WeakBlock, IValueWatcher<double> {                           //__SILP__
         public delegate void WatcherBlock(string path, double val, double newVal);                             //__SILP__
                                                                                                                //__SILP__
         private readonly WatcherBlock _Block;                                                                  //__SILP__
@@ -510,7 +513,7 @@ namespace angeldnd.dap {
     }                                                                                                          //__SILP__
                                                                                                                //__SILP__
     //SILP: PROPERTY_CLASS(String, string)
-    public sealed class StringBlockValueChecker : WeakBlock, ValueChecker<string> {                            //__SILP__
+    public sealed class StringBlockValueChecker : WeakBlock, IValueChecker<string> {                           //__SILP__
         public delegate bool CheckerBlock(string path, string val, string newVal);                             //__SILP__
                                                                                                                //__SILP__
         private readonly CheckerBlock _Block;                                                                  //__SILP__
@@ -524,7 +527,7 @@ namespace angeldnd.dap {
         }                                                                                                      //__SILP__
     }                                                                                                          //__SILP__
                                                                                                                //__SILP__
-    public sealed class StringBlockValueWatcher : WeakBlock, ValueWatcher<string> {                            //__SILP__
+    public sealed class StringBlockValueWatcher : WeakBlock, IValueWatcher<string> {                           //__SILP__
         public delegate void WatcherBlock(string path, string val, string newVal);                             //__SILP__
                                                                                                                //__SILP__
         private readonly WatcherBlock _Block;                                                                  //__SILP__
@@ -582,7 +585,7 @@ namespace angeldnd.dap {
     }                                                                                                          //__SILP__
                                                                                                                //__SILP__
     //SILP: PROPERTY_CLASS(Data, Data)
-    public sealed class DataBlockValueChecker : WeakBlock, ValueChecker<Data> {                              //__SILP__
+    public sealed class DataBlockValueChecker : WeakBlock, IValueChecker<Data> {                             //__SILP__
         public delegate bool CheckerBlock(string path, Data val, Data newVal);                               //__SILP__
                                                                                                              //__SILP__
         private readonly CheckerBlock _Block;                                                                //__SILP__
@@ -596,7 +599,7 @@ namespace angeldnd.dap {
         }                                                                                                    //__SILP__
     }                                                                                                        //__SILP__
                                                                                                              //__SILP__
-    public sealed class DataBlockValueWatcher : WeakBlock, ValueWatcher<Data> {                              //__SILP__
+    public sealed class DataBlockValueWatcher : WeakBlock, IValueWatcher<Data> {                             //__SILP__
         public delegate void WatcherBlock(string path, Data val, Data newVal);                               //__SILP__
                                                                                                              //__SILP__
         private readonly WatcherBlock _Block;                                                                //__SILP__

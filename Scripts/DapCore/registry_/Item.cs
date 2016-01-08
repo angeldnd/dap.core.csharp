@@ -2,26 +2,47 @@
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
+    public interface IItem : IContext {
+    }
+
+    public interface IItem<TE> : IContext<TE>, IItem
+                                    where TE : IItem {
+    }
+
+    public interface IItem<TO, TE> : IContext<TO, TE>, IItem<TE>
+                                        where TO : ITree
+                                        where TE : IItem {
+    }
+
     public static class ItemConsts {
         public const string TypeItem = "Item";
     }
 
-    public class Item : Context, Aspect {
+    public sealed class Item : Item<Registry, Item> {
         public override string Type {
             get { return ItemConsts.TypeItem; }
         }
 
-        private Registry _Registry = null;
-        public Registry Registry {
-            get { return _Registry; }
+        public Item(Registry registry, string path, Pass pass) : base(registry, path, pass) {
+        }
+    }
+
+    public class Item<TO, TE> : Context<TO, TE>, IItem<TO, TE>
+                                    where TO : IRegistry
+                                    where TE : IItem {
+        public TO Registry {
+            get { return Owner; }
+        }
+
+        public Item(TO registry, string path, Pass pass) : base(registry, path, pass) {
         }
 
         private string _Name = null;
         public string Name {
             get {
                 if (_Name == null) {
-                    _Name = _Path;
-                    string parentPath = RegistryHelper.GetParentPath(_Path);
+                    _Name = Path;
+                    string parentPath = RegistryHelper.GetParentPath(Path);
                     if (parentPath != null) {
                         _Name = _Name.Substring(parentPath.Length + 1);
                     }
@@ -30,98 +51,16 @@ namespace angeldnd.dap {
             }
         }
 
-        //SILP: ASPECT_LOG_MIXIN(override)
-        public override string GetLogPrefix() {                                                          //__SILP__
-            if (_Entity != null) {                                                                       //__SILP__
-                return string.Format("{0}[{1}] {2} ", _Entity.GetLogPrefix(), GetType().Name, RevPath);  //__SILP__
-            } else {                                                                                     //__SILP__
-                return string.Format("[] [{0}] {1} ", GetType().Name, RevPath);                          //__SILP__
-            }                                                                                            //__SILP__
-        }                                                                                                //__SILP__
-
-        //SILP: ASPECT_MIXIN()
-        private Entity _Entity = null;                                            //__SILP__
-        public Entity Entity {                                                    //__SILP__
-            get { return _Entity; }                                               //__SILP__
-        }                                                                         //__SILP__
-                                                                                  //__SILP__
-        private string _Path = null;                                              //__SILP__
-        public string Path {                                                      //__SILP__
-            get { return _Path; }                                                 //__SILP__
-        }                                                                         //__SILP__
-                                                                                  //__SILP__
-        public string RevPath {                                                   //__SILP__
-            get {                                                                 //__SILP__
-                return string.Format("{0} ({1})", _Path, Revision);               //__SILP__
-            }                                                                     //__SILP__
-        }                                                                         //__SILP__
-                                                                                  //__SILP__
-        public bool Inited {                                                      //__SILP__
-            get { return _Entity != null; }                                       //__SILP__
-        }                                                                         //__SILP__
-                                                                                  //__SILP__
-        public bool Init(Entity entity, string path) {                            //__SILP__
-            if (_Entity != null) {                                                //__SILP__
-                Error("Already Inited: {0} -> {1}, {2}", _Entity, entity, path);  //__SILP__
-                return false;                                                     //__SILP__
-            }                                                                     //__SILP__
-            if (entity == null) {                                                 //__SILP__
-                Error("Invalid Entity: {0}, {1}", entity, path);                  //__SILP__
-                return false;                                                     //__SILP__
-            }                                                                     //__SILP__
-            if (!EntityConsts.IsValidAspectPath(path)) {                          //__SILP__
-                Error("Invalid Path: {0}, {1}", entity, path);                    //__SILP__
-                return false;                                                     //__SILP__
-            }                                                                     //__SILP__
-                                                                                  //__SILP__
-            _Entity = entity;                                                     //__SILP__
-            _Path = path;                                                         //__SILP__
-            return true;                                                          //__SILP__
-        }                                                                         //__SILP__
-                                                                                  //__SILP__
-
-        public void OnAdded() {
-            _Registry = FindRegistry(_Entity);
-            if (_Registry != null) {
-                OnItemAdded();
-            }
-        }
-
-        public void OnRemoved() {
-            if (_Registry != null) {
-                OnItemRemoved();
-            }
-            _Registry = null;
-        }
-
-        private Registry FindRegistry(Entity entity) {
-            if (entity is Registry) {
-                return (Registry)entity;
-            } else if (entity is Aspect) {
-                Aspect a = entity as Aspect;
-                return FindRegistry(a.Entity);
-            }
-            return null;
-        }
-
         public T GetParent<T>() where T : Item {
-            if (_Registry != null) {
-                return _Registry.GetParent<T>(Path);
-            }
-            return null;
+            return Registry.GetParent<T>(Path);
         }
 
         public List<T> GetChildren<T>() where T : Item {
-            if (_Registry != null) {
-                return _Registry.GetChildren<T>(Path);
-            }
-            return null;
+            return Registry.GetChildren<T>(Path);
         }
 
-        public void FilterChildren<T>(OnAspect<T> callback) where T : Item {
-            if (_Registry != null) {
-                _Registry.FilterChildren<T>(Path, callback);
-            }
+        public void FilterChildren<T>(Action<T> callback) where T : Item {
+            Registry.FilterChildren<T>(Path, callback);
         }
 
         public string GetDescendantPath(string relativePath) {
@@ -129,30 +68,19 @@ namespace angeldnd.dap {
         }
 
         public T GetAncestor<T>() where T : Item {
-            if (_Registry != null) {
-                return _Registry.GetAncestor<T>(Path);
-            }
-            return null;
+            return Registry.GetAncestor<T>(Path);
         }
 
         public List<T> GetDescendants<T>() where T : Item {
-            if (_Registry != null) {
-                return _Registry.GetDescendants<T>(Path);
-            }
-            return null;
+            return Registry.GetDescendants<T>(Path);
         }
 
-        public void FilterDescendants<T>(OnAspect<T> callback) where T : Item {
-            if (_Registry != null) {
-                Registry.FilterDescendants<T>(Path, callback);
-            }
+        public void FilterDescendants<T>(Action<T> callback) where T : Item {
+            Registry.FilterDescendants<T>(Path, callback);
         }
 
         public T GetDescendant<T>(string relativePath) where T : Item {
-            if (_Registry != null) {
-                return _Registry.GetDescendant<T>(Path, relativePath);
-            }
-            return null;
+            return Registry.GetDescendant<T>(Path, relativePath);
         }
 
         public Item GetDescendant(string relativePath) {
@@ -160,13 +88,10 @@ namespace angeldnd.dap {
         }
 
         public bool HasDescendant(string relativePath) {
-            if (_Registry != null) {
-                return _Registry.Has(GetDescendantPath(relativePath));
-            }
-            return false;
+            return Registry.Has(GetDescendantPath(relativePath));
         }
 
-        private T GetItemAspect<T>(string aspectPath, bool logError) where T : class, ItemAspect {
+        private T GetItemAspect<T>(string aspectPath, bool logError) where T : Aspect<Item> {
             Aspect aspect = Get<Aspect>(aspectPath);
             if (aspect != null && aspect is T) {
                 return (T)aspect;
@@ -180,16 +105,16 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public T GetItemAspect<T>(string aspectPath) where T : class, ItemAspect {
+        public T GetItemAspect<T>(string aspectPath) where T : Aspect<Item> {
             return GetItemAspect<T>(aspectPath, true);
         }
 
-        public bool TryGetItemAspect<T>(string aspectPath, out T aspect) where T : class, ItemAspect {
+        public bool TryGetItemAspect<T>(string aspectPath, out T aspect) where T : Aspect<Item> {
             aspect = GetItemAspect<T>(aspectPath, false);
             return aspect != null;
         }
 
-        private OnAspect<Item> GetItemAspectCallback<T>(string aspectPath, OnAspect<T> callback) where T : class, ItemAspect {
+        private Action<Item> GetItemAspectCallback<T>(string aspectPath, Action<T> callback) where T : Aspect<Item> {
             return (Item item) => {
                 T aspect = item.GetItemAspect<T>(aspectPath, false);
                 if (aspect != null) {
@@ -198,11 +123,11 @@ namespace angeldnd.dap {
             };
         }
 
-        public void FilterChildrenWithAspect<T>(string aspectPath, OnAspect<T> callback) where T : class, ItemAspect {
+        public void FilterChildrenWithAspect<T>(string aspectPath, Action<T> callback) where T : Aspect<Item> {
             FilterChildren<Item>(GetItemAspectCallback<T>(aspectPath, callback));
         }
 
-        public void FilterDescendantsWithAspect<T>(string aspectPath, OnAspect<T> callback) where T : class, ItemAspect {
+        public void FilterDescendantsWithAspect<T>(string aspectPath, Action<T> callback) where T : Aspect<Item> {
             FilterDescendants<Item>(GetItemAspectCallback<T>(aspectPath, callback));
         }
 
@@ -215,10 +140,7 @@ namespace angeldnd.dap {
         }
 
         public T RemoveDescendant<T>(string relativePath) where T : Item {
-            if (_Registry != null) {
-                return _Registry.Remove<T>(GetDescendantPath(relativePath));
-            }
-            return null;
+            return Registry.Remove<T>(GetDescendantPath(relativePath));
         }
 
         public Item RemoveDescendant(string relativePath) {
@@ -226,17 +148,11 @@ namespace angeldnd.dap {
         }
 
         public Item AddDescendant(string relativePath, string type) {
-            if (_Registry != null) {
-                return _Registry.AddItem(GetDescendantPath(relativePath), type);
-            }
-            return null;
+            return Registry.AddItem(GetDescendantPath(relativePath), type);
         }
 
-        public T GetOrAddItemAspect<T>(string aspectPath) where T : class, ItemAspect {
+        public T GetOrAddItemAspect<T>(string aspectPath) where T : Aspect<Item> {
             return GetOrAddContextAspect<T>(aspectPath);
         }
-
-        protected virtual void OnItemAdded() {}
-        protected virtual void OnItemRemoved() {}
     }
 }

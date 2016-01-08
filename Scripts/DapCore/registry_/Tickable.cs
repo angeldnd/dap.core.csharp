@@ -6,17 +6,19 @@ namespace angeldnd.dap {
         public const string AspectTickable = "_tickable";
     }
 
-    public class Tickable : ItemAspect<Item> {
+    public class Tickable : BaseAspect<Item, Section<Item>> {
         public static bool AddToItem(Item item) {
             Tickable tickable = item.Add<Tickable>(TickableConsts.AspectTickable);
             return tickable != null && tickable.IsValid;
         }
 
-        private Pass _Pass = new Pass();
         private EventListener _OnTick;
 
         public bool IsValid {
             get { return _OnTick != null; }
+        }
+
+        public Tickable(Item item, string path, Pass pass) : base(item, path, pass) {
         }
 
         public override void OnAdded() {

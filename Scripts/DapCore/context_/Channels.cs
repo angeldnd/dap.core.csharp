@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public class Channels : SecurableEntityAspect {
+    public sealed class Channels : Section<Context, Channel> {
         public Channel GetChannel(string channelPath) {
-            return Get<Channel>(channelPath);
+            return Get(channelPath);
         }
 
         public Channel AddChannel(string channelPath, Pass pass) {
-            return Add<Channel>(channelPath, pass);
+            return Add(channelPath, pass);
         }
 
         public Channel AddChannel(string channelPath) {
@@ -16,7 +16,7 @@ namespace angeldnd.dap {
         }
 
         public bool FireEvent(string channelPath, Pass pass, Data evt) {
-            Channel channel = Get<Channel>(channelPath);
+            Channel channel = Get(channelPath);
             if (channel != null) {
                 return channel.FireEvent(pass, evt);
             } else {

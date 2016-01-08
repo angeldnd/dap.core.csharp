@@ -3,14 +3,7 @@ using System.Diagnostics;
 using System.IO;
 
 namespace angeldnd.dap {
-    public static class LoggerConsts {
-        public const string CRITICAL = "CRITICAL";
-        public const string ERROR = "ERROR";
-        public const string INFO = "INFO";
-        public const string DEBUG = "DEBUG";
-    }
-
-    public interface Logger {
+    public interface ILogger {
         bool LogDebug { get; }
         void Critical(string format, params object[] values);
         void Error(string format, params object[] values);
@@ -19,176 +12,152 @@ namespace angeldnd.dap {
         void Custom(string kind, string format, params object[] values);
     }
 
-    public abstract class BaseLogger : Logger {
-        public readonly int IgnoreStackTraceCount;
+    public static class LoggerConsts {
+        public const string CRITICAL = "CRITICAL";
+        public const string ERROR = "ERROR";
+        public const string INFO = "INFO";
+        public const string DEBUG = "DEBUG";
+    }
 
-        protected BaseLogger(int ignoreStackTraceCount) {
-            IgnoreStackTraceCount = ignoreStackTraceCount;
+    public abstract class Logger : ILogger {
+        private readonly static DefaultLogWriter _DefaultWriter = new DefaultLogWriter(2);
+        private readonly static DebugLogWriter _DebugWriter = new DebugLogWriter(2);
+
+        private readonly static DefaultLogWriter _ProxyDefaultWriter = new DefaultLogWriter(3);
+        private readonly static DebugLogWriter _ProxyDebugWriter = new DebugLogWriter(3);
+
+        private object _LogSource = null;
+        public object LogSource {
+            get { return _LogSource; }
         }
 
-        public abstract bool LogDebug { get; }
-
-        public void CriticalFrom(object source, string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog(source, LoggerConsts.CRITICAL, stackTrace, format, values);
+        public Logger() {
+            _LogSource = this;
         }
 
-        public void ErrorFrom(object source, string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog(source, LoggerConsts.ERROR, stackTrace, format, values);
-        }
-
-        public void InfoFrom(object source, string format, params object[] values) {
-            Log.AddLog(source, LoggerConsts.INFO, null, format, values);
-        }
-
-        public void DebugFrom(object source, string format, params object[] values) {
-            if (LogDebug) {
-                Log.AddLog(source, LoggerConsts.DEBUG, null, format, values);
+        protected bool SetLogSource(object source) {
+            if (source != null) {
+                _LogSource = source;
+                return true;
+            } else {
+                Error("Already Set: {0} -> {1}", _LogSource, source);
             }
+            return false;
         }
 
-        public void CustomFrom(object source, string kind, string format, params object[] values) {
-            Log.AddLog(source, kind, null, format, values);
+        public virtual bool DebugMode {
+            get { return false; }
+        }
+
+        public virtual string[] DebugPatterns {
+            get { return null; }
+        }
+
+        public abstract string GetLogPrefix();
+
+        public bool LogDebug {
+            get { return DebugMode || Log.LogDebug; }
+        }
+
+        private string GetLogMsg(string format, params object[] values) {
+            string msg = GetLogPrefix() + string.Format(format, values);
+            if (DebugMode) {
+                msg = _DebugWriter.GetLogHint() + msg;
+            }
+            return msg;
         }
 
         public void Critical(string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog(null, LoggerConsts.CRITICAL, stackTrace, format, values);
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _DebugWriter.CriticalFrom(_LogSource, msg);
+            } else {
+                _DefaultWriter.CriticalFrom(_LogSource, msg);
+            }
         }
 
         public void Error(string format, params object[] values) {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            Log.AddLog(null, LoggerConsts.ERROR, stackTrace, format, values);
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _DebugWriter.ErrorFrom(_LogSource, msg);
+            } else {
+                _DefaultWriter.ErrorFrom(_LogSource, msg);
+            }
         }
 
         public void Info(string format, params object[] values) {
-            Log.AddLog(null, LoggerConsts.INFO, null, format, values);
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _DebugWriter.LogWithPatternsFrom(_LogSource, LoggerConsts.INFO, DebugPatterns, msg);
+            } else {
+                _DefaultWriter.InfoFrom(_LogSource, msg);
+            }
         }
 
         public void Debug(string format, params object[] values) {
             if (LogDebug) {
-                Log.AddLog(null, LoggerConsts.DEBUG, null, format, values);
+                string msg = GetLogMsg(format, values);
+                if (DebugMode) {
+                    _DebugWriter.LogWithPatternsFrom(_LogSource, LoggerConsts.DEBUG, DebugPatterns, msg);
+                } else {
+                    _DefaultWriter.DebugFrom(_LogSource, msg);
+                }
             }
         }
 
         public void Custom(string kind, string format, params object[] values) {
-            Log.AddLog(null, kind, null, format, values);
-        }
-    }
-
-    public sealed class DefaultLogger : BaseLogger {
-        public DefaultLogger(int ignoreStackTraceCount) : base(ignoreStackTraceCount) {
-        }
-
-        public override bool LogDebug {
-            get { return Log.LogDebug; }
-        }
-    }
-
-    public sealed class DebugLogger : BaseLogger {
-        public DebugLogger(int ignoreStackTraceCount) : base(ignoreStackTraceCount) {
-        }
-
-        public override bool LogDebug {
-            get { return true; }
-        }
-
-        public string GetLogHint() {
-            StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-            if (stackTrace == null || stackTrace.FrameCount < 1) {
-                return "() ";
-            }
-            StackFrame stackFrame = stackTrace.GetFrame(0);
-            var fileName = stackFrame.GetFileName();
-            fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
-            var lineNumber = stackFrame.GetFileLineNumber();
-            var method = stackFrame.GetMethod();
-            return string.Format("{0}[{1}]: {2}() ", fileName, lineNumber, method.Name);
-        }
-
-        public void LogWithPatternsFrom(object source, string kind, string[] patterns, string format, params object[] values) {
-            string msg = format;
-            if (values != null && values.Length > 0) msg = string.Format(format, values);
-
-            if (IsMatchPatterns(patterns, msg)) {
-                StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-                Log.AddLog(source, kind, stackTrace, format, values);
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _DebugWriter.LogWithPatternsFrom(_LogSource, kind, DebugPatterns, msg);
             } else {
-                Log.AddLog(source, kind, null, format, values);
+                _DefaultWriter.CustomFrom(_LogSource, kind, msg);
             }
         }
 
-        public void LogWithPatternFrom(object source, string kind, string pattern, string format, params object[] values) {
-            string msg = format;
-            if (values != null && values.Length > 0) msg = string.Format(format, values);
-
-            if (IsMatchPattern(pattern, msg)) {
-                StackTrace stackTrace = new StackTrace(IgnoreStackTraceCount, true);
-                Log.AddLog(source, kind, stackTrace, format, values);
+        public void CriticalFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugWriter.CriticalFrom(_LogSource, msg);
             } else {
-                Log.AddLog(source, kind, null, format, values);
+                _ProxyDefaultWriter.CriticalFrom(_LogSource, msg);
             }
         }
 
-        public bool IsMatchPatterns(string[] patterns, string msg) {
-            if (patterns == null) return false;
-            foreach (string pattern in patterns) {
-                if (IsMatchPattern(pattern, msg)) {
-                    return true;
-                }
+        public void ErrorFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugWriter.ErrorFrom(_LogSource, msg);
+            } else {
+                _ProxyDefaultWriter.ErrorFrom(_LogSource, msg);
             }
-            return false;
         }
 
-        public bool IsMatchPattern(string pattern, string msg) {
-            if (string.IsNullOrEmpty(pattern)) {
-                return true;
+        public void InfoFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugWriter.LogWithPatternsFrom(_LogSource, LoggerConsts.INFO, DebugPatterns, msg);
+            } else {
+                _ProxyDefaultWriter.InfoFrom(_LogSource, msg);
             }
-
-            string[] segments = pattern.Split(' ');
-            foreach (string segment in segments) {
-                if (!IsMatchSegment(segment, msg)) {
-                    return false;
-                }
-            }
-            return true;
         }
 
-        public bool IsMatchSegment(string segment, string msg) {
-            string[] conditions = segment.Split('|');
-            foreach (string condition in conditions) {
-                if (IsMatchCondition(condition, msg)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool IsMatchCondition(string condition, string msg) {
-            if (condition.StartsWith("!")) {
-                condition = condition.Replace("!", "");
-                return !IsMatchCondition(condition, msg);
-            }
-
-            //use "+" to match spaces between words
-            condition = condition.Replace("+", " ");
-
-            //Smart Case
-            string lowerCondition = condition.ToLower();
-            if (lowerCondition == condition) {
-                msg = msg.ToLower();
-            }
-            if (condition.StartsWith("^")) {
-                if (condition.EndsWith("$")) {
-                    return msg == condition.Replace("^", "").Replace("$", "");
+        public void DebugFromProxy(string format, params object[] values) {
+            if (LogDebug) {
+                string msg = GetLogMsg(format, values);
+                if (DebugMode) {
+                    _ProxyDebugWriter.LogWithPatternsFrom(_LogSource, LoggerConsts.DEBUG, DebugPatterns, msg);
                 } else {
-                    return msg.StartsWith(condition.Replace("^", ""));
+                    _ProxyDefaultWriter.DebugFrom(_LogSource, msg);
                 }
-            } else if (condition.EndsWith("$")) {
-                return msg.EndsWith(condition.Replace("$", ""));
+            }
+        }
+
+        public void CustomFromProxy(string kind, string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugWriter.LogWithPatternsFrom(_LogSource, kind, DebugPatterns, msg);
             } else {
-                return msg.Contains(condition);
+                _ProxyDefaultWriter.CustomFrom(_LogSource, kind, msg);
             }
         }
     }

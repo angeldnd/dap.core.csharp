@@ -16,12 +16,12 @@ namespace angeldnd.dap {
         public const string KeyValue = "v";
     }
 
-    public class Properties : SecurableEntityAspect {
+    public sealed class Properties : Section<Context, IProperty> {
         public override string Type {
             get { return PropertiesConsts.TypeProperties; }
         }
 
-        public Property Add(string path, Pass pass, bool open, Data data) {
+        public IProperty Add(string path, Pass pass, bool open, Data data) {
             if (data == null) return null;
 
             string type = data.GetString(DapObjectConsts.KeyType);
@@ -29,7 +29,7 @@ namespace angeldnd.dap {
                 Error("Invalid Property data: {0}, {1}", path, data);
                 return null;
             }
-            Property prop = Add(path, type, open ? pass.Open : pass) as Property;
+            IProperty prop = Add(path, type, open ? pass.Open : pass) as IProperty;
             if (prop == null) {
                 Error("Failed to Add Property: {0}, {1}", path, data);
                 return null;

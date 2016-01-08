@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface BlockOwner {
+    public interface IBlockOwner {
         void AddBlock(WeakBlock block);
         void RemoveBlock(WeakBlock block);
     }

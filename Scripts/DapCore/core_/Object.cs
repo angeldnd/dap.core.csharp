@@ -2,22 +2,75 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface DapObject : Logger {
+    public interface IObject : ILogger {
         string Type { get; }
-        int Revision { get; } //Mainly For Debugging
+        int Revision { get; }
 
         bool DebugMode { get; }
         string[] DebugPatterns { get; }
         string GetLogPrefix();
+
+        bool AdminSecured { get; }
+        bool WriteSecured { get; }
+        bool CheckAdminPass(Pass pass);
+        bool CheckWritePass(Pass pass);
     }
 
-    public static class DapObjectConsts {
+    public static class ObjectConsts {
         public const string KeyType = "type";
     }
 
-    public abstract class BaseDapObject : DapLogger, DapObject, BlockOwner {
+    public abstract class Object : Logger, IObject, IBlockOwner {
         public virtual string Type {
             get { return null; }
+        }
+
+        protected readonly Pass Pass;
+
+        protected Object(Pass pass) {
+            Pass = pass;
+        }
+
+        public bool AdminSecured {
+            get {
+                return Pass != null;
+            }
+        }
+
+        public bool WriteSecured {
+            get {
+                if (Pass == null) return false;
+                if (Pass.Writable) return false;
+                return true;
+            }
+        }
+
+        public bool CheckAdminPass(Pass pass, bool logError) {
+            if (Pass == null) return true;
+            if (Pass.CheckAdminPass(this, pass)) return true;
+
+            if (logError) {
+                Error("Invalid Admin Pass: Pass = {0}, pass = {1}", Pass, pass);
+            }
+            return false;
+        }
+
+        public bool CheckAdminPass(Pass pass) {
+            return CheckAdminPass(pass, true);
+        }
+
+        public bool CheckWritePass(Pass pass, bool logError) {
+            if (Pass == null) return true;
+            if (Pass.CheckWritePass(this, pass)) return true;
+
+            if (logError) {
+                Error("Invalid Write Pass: Pass = {0}, pass = {1}", Pass, pass);
+            }
+            return false;
+        }
+
+        public bool CheckWritePass(Pass pass) {
+            return CheckWritePass(pass, true);
         }
 
         private int _Revision = 0;

@@ -17,7 +17,7 @@ namespace angeldnd.dap {
         void OnRegistryRemoved(Registry registry);
     }
 
-    public static class Env {
+    public sealed class Env : Tree<ITree, Registry> {
         static Env() {
             Context context = new Context();
             _Registries = context.Add<Vars>("registries");
