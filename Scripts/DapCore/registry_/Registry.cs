@@ -5,109 +5,98 @@ using System.Text;
 using System.Reflection;
 
 namespace angeldnd.dap {
-    public interface IRegistry : IContext {
-    }
-
     public static class RegistryConsts {
-        public const char Separator = '/';
-
         public const string TypeRegistry = "Registry";
 
-        public const string SectionItems = "_items";
-
         public const string ChannelTick = "_tick";
-
-        public static string GetItemPath(params string[] segments) {
-            return string.Join("/", segments);
-        }
     }
 
-    public sealed class Registry : Context<Env, Registry>, IRegistry {
-        public readonly RegistryItems Items;
+    public sealed class Registry : Tree<Env, IItem>, IContext {
+        public override string Type {
+            get { return RegistryConsts.TypeRegistry; }
+        }
 
-        public Registry(Env owner, string path, Pass pass) : base(owner, path, pass) {
-            Items = new RegistryItems(this, RegistryConsts.SectionItems, Pass);
-
+        public override void OnAdded() {
             //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
             //FixedUpdate(), or other timer on other platform.
-            AddChannel(RegistryConsts.ChannelTick, DepositChannelPass(RegistryConsts.ChannelTick, new Pass()));
+            this.AddChannel(RegistryConsts.ChannelTick,
+                            this.DepositChannelPass(RegistryConsts.ChannelTick, new Pass()));
         }
 
-        public T GetParent<T>(string path) where T : Item {
-	        return Items.Get<T>(RegistryHelper.GetParentPath(path));
+        public override void OnRemoved() {
+            Channels.Remove(Pass, RegistryConsts.ChannelTick);
         }
 
-        public List<T> GetChildren<T>(string path) where T : Item {
-            return Items.Filter<T>(RegistryHelper.GetChildrenPattern(path));
+        public void OnAspectAdded(IAspect aspect) {
+            WeakListHelper.Notify(_Watchers, (IEntityWatcher watcher) => {
+                watcher.OnAspectAdded(aspect);
+            });
         }
 
-        public void FilterChildren<T>(string path, Action<T> callback) where T : Item {
-            Items.Filter<T>(RegistryHelper.GetChildrenPattern(path), callback);
+        public void OnAspectRemoved(IAspect aspect) {
+            WeakListHelper.Notify(_Watchers, (IEntityWatcher watcher) => {
+                watcher.OnAspectRemoved(aspect);
+            });
         }
 
-        public T GetAncestor<T>(string path) where T : Item {
-            Item parent = GetParent<Item>(path);
-            if (parent == null) {
-                return null;
-            } else {
-                if (parent is T) {
-                    return (T)parent;
-                } else {
-                    return GetAncestor<T>(parent.Path);
-                }
-            }
-        }
-
-        public List<T> GetDescendants<T>(string path) where T : Item {
-            return Items.Filter<T>(RegistryHelper.GetDescendantsPattern(path));
-        }
-
-        public void FilterDescendants<T>(string path, Action<T> callback) where T : Item {
-            Items.Filter<T>(RegistryHelper.GetDescendantsPattern(path), callback);
-        }
-
-        public T GetDescendant<T>(string path, string relativePath) where T : Item {
-            string absPath = RegistryHelper.GetDescendantPath(path, relativePath);
-            Item result =  Items.Get<Item>(absPath);
-            if (result == null) {
-                Error("GetDescendant: {0} Not Found", absPath);
-            } else if (result is T) {
-                return (T)result;
-            } else {
-                Error("GetDescendant: {0} Type Mismatched: {1} -> {2}",
-                        absPath, typeof(T).FullName, result.GetType().FullName);
-                Error("Descendant Not Found: {0}", absPath);
-            }
-            return null;
-        }
-
-        public T AddItem<T>(string path) where T : Item {
-            return Items.Add<T>(path);
-        }
-
-        public T GetItem<T>(string path) where T : Item {
-            return Items.Get<T>(path);
-        }
-
-        public Item AddItem(string path) {
-            return Items.Add<Item>(path);
-        }
-
-        public Item GetItem(string path) {
-            return GetItem<Item>(path);
-        }
-
-        public Item AddItem(string path, string type) {
-            Aspect aspect = Items.Add(path, type);
-            if (aspect is Item) {
-                return (Item)aspect;
-            } else if (aspect == null) {
-                Error("AddItem: {0} Failed: {1}", path, type);
-            } else {
-                Error("AddItem: {0} Type Mismatched: {1} -> {2}", path, type, aspect.GetType().FullName);
-                Remove<Aspect>(path);
-            }
-            return null;
-        }
+        //SILP: CONTEXT_MIXIN(Env, Registry)
+        private readonly Properties _Properties;                                               //__SILP__
+        public Properties Properties {                                                         //__SILP__
+            get { return _Properties; }                                                        //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        private readonly Channels _Channels;                                                   //__SILP__
+        public Channels Channels {                                                             //__SILP__
+            get { return _Channels; }                                                          //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        private readonly Handlers _Handlers;                                                   //__SILP__
+        public Handlers Handlers {                                                             //__SILP__
+            get { return _Handlers; }                                                          //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        private readonly Vars _Vars;                                                           //__SILP__
+        public Vars Vars {                                                                     //__SILP__
+            get { return _Vars; }                                                              //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        public Registry(Env owner, string path, Pass pass) : base(owner, path, pass) {         //__SILP__
+            Pass sectionPass = pass.Open;                                                      //__SILP__
+                                                                                               //__SILP__
+            _Properties = new Properties(this, ContextConsts.SectionProperties, sectionPass);  //__SILP__
+            _Channels = new Channels(this, ContextConsts.SectionChannels, sectionPass);        //__SILP__
+            _Handlers = new Handlers(this, ContextConsts.SectionHandlers, sectionPass);        //__SILP__
+            _Vars = new Vars(this, ContextConsts.SectionVars, sectionPass);                    //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        private bool _DebugMode = false;                                                       //__SILP__
+        public override bool DebugMode {                                                       //__SILP__
+            get { return _DebugMode; }                                                         //__SILP__
+        }                                                                                      //__SILP__
+        public void SetDebugMode(bool debugMode) {                                             //__SILP__
+            _DebugMode= debugMode;                                                             //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        private string[] _DebugPatterns = {""};                                                //__SILP__
+        public override string[] DebugPatterns {                                               //__SILP__
+            get { return _DebugPatterns; }                                                     //__SILP__
+        }                                                                                      //__SILP__
+        public void SetDebugPatterns(string[] patterns) {                                      //__SILP__
+            _DebugPatterns = patterns;                                                         //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        private WeakList<IEntityWatcher> _Watchers = null;                                     //__SILP__
+                                                                                               //__SILP__
+        public int WatcherCount {                                                              //__SILP__
+            get { return WeakListHelper.Count(_Watchers); }                                    //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        public bool AddWatcher(IEntityWatcher watcher) {                                       //__SILP__
+            return WeakListHelper.Add(ref _Watchers, watcher);                                 //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        public bool RemoveWatcher(IEntityWatcher watcher) {                                    //__SILP__
+            return WeakListHelper.Remove(_Watchers, watcher);                                  //__SILP__
+        }                                                                                      //__SILP__
     }
 }

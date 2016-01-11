@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace angeldnd.dap {
-    public abstract class DictProperty<T> : GroupProperty, IDictionary<string, T> where T : class, Property {
+    public abstract class DictProperty<T> : GroupProperty, IDictionary<string, T> where T : class, IProperty {
         private Dictionary<string, T> _Elements = new Dictionary<string, T>();
 
         private bool _MuteOnChanged = false;
@@ -152,7 +152,7 @@ namespace angeldnd.dap {
                 Error("Orghan Elements Found: {0}", _Elements.Count);
             }
             foreach (var key in data.Keys) {
-                if (key == DapObjectConsts.KeyType) continue;
+                if (key == ObjectConsts.KeyType) continue;
 
                 Data subData = data.GetData(key);
                 if (subData == null) {

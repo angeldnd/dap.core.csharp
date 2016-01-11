@@ -23,7 +23,7 @@ namespace angeldnd.dap {
 
         private readonly CheckerBlock _Block;
 
-        public BlockRequestChecker(BlockOwner owner, CheckerBlock block) : base(owner) {
+        public BlockRequestChecker(IBlockOwner owner, CheckerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -37,7 +37,7 @@ namespace angeldnd.dap {
 
         private readonly ListenerBlock _Block;
 
-        public BlockRequestListener(BlockOwner owner, ListenerBlock block) : base(owner) {
+        public BlockRequestListener(IBlockOwner owner, ListenerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -51,7 +51,7 @@ namespace angeldnd.dap {
 
         private readonly ListenerBlock _Block;
 
-        public BlockResponseListener(BlockOwner owner, ListenerBlock block) : base(owner) {
+        public BlockResponseListener(IBlockOwner owner, ListenerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -75,14 +75,17 @@ namespace angeldnd.dap {
         }
     }
 
-    public sealed class Handler : Aspect<Context, Handlers> {
+    public sealed class Handler : Aspect<IContext, Handlers> {
         private IRequestHandler _Handler = null;
 
         public bool IsEmpty {
             get { return _Handler == null; }
         }
 
-        public bool Setup(Pass pass, RequestHandler handler) {
+        public Handler(Handlers owner, string path, Pass pass) : base(owner, path, pass) {
+        }
+
+        public bool Setup(Pass pass, IRequestHandler handler) {
             if (!CheckAdminPass(pass)) return false;
             if (_Handler == null) {
                 _Handler = handler;
@@ -120,7 +123,6 @@ namespace angeldnd.dap {
         public bool RemoveRequestChecker(IRequestChecker checker) {             //__SILP__
             return RemoveRequestChecker(null, checker);                         //__SILP__
         }                                                                       //__SILP__
-                                                                                //__SILP__
         //SILP: DECLARE_LIST(RequestListener, listener, IRequestListener, _RequestListeners)
         private WeakList<IRequestListener> _RequestListeners = null;     //__SILP__
                                                                          //__SILP__
@@ -135,7 +137,6 @@ namespace angeldnd.dap {
         public bool RemoveRequestListener(IRequestListener listener) {   //__SILP__
             return WeakListHelper.Remove(_RequestListeners, listener);   //__SILP__
         }                                                                //__SILP__
-                                                                         //__SILP__
         //SILP: DECLARE_LIST(ResponseListener, listener, IResponseListener, _ResponseListeners)
         private WeakList<IResponseListener> _ResponseListeners = null;    //__SILP__
                                                                           //__SILP__
@@ -150,7 +151,6 @@ namespace angeldnd.dap {
         public bool RemoveResponseListener(IResponseListener listener) {  //__SILP__
             return WeakListHelper.Remove(_ResponseListeners, listener);   //__SILP__
         }                                                                 //__SILP__
-                                                                          //__SILP__
         public Data HandleRequest(Pass pass, Data req) {
             if (!CheckWritePass(pass)) return null;
 

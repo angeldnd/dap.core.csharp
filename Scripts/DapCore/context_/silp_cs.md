@@ -1,39 +1,39 @@
 # CONTEXT_PROPERTIES_HELPER(type, cs_type) #
 ```C#
-public ${type}Property Add${type}(string path, Pass pass, ${cs_type} val) {
-    return Properties.Add${type}(path, pass, val);
+public static ${type}Property Add${type}(this IContext context, string path, Pass pass, ${cs_type} val) {
+    return context.Properties.Add${type}(path, pass, val);
 }
 
-public ${type}Property Add${type}(string path, ${cs_type} val) {
-    return Properties.Add${type}(path, val);
+public static ${type}Property Add${type}(this IContext context, string path, ${cs_type} val) {
+    return context.Properties.Add${type}(path, val);
 }
 
-public ${type}Property Remove${type}(string path, Pass pass) {
-    return Properties.Remove${type}(path, pass);
+public static ${type}Property Remove${type}(this IContext context, string path, Pass pass) {
+    return context.Properties.Remove${type}(path, pass);
 }
 
-public ${type}Property Remove${type}(string path) {
-    return Properties.Remove${type}(path);
+public static ${type}Property Remove${type}(this IContext context, string path) {
+    return context.Properties.Remove${type}(path);
 }
 
-public bool Is${type}(string path) {
-    return Properties.Is${type}(path);
+public static bool Is${type}(this IContext context, string path) {
+    return context.Properties.Is${type}(path);
 }
 
-public ${cs_type} Get${type}(string path) {
-    return Properties.Get${type}(path);
+public static ${cs_type} Get${type}(this IContext context, string path) {
+    return context.Properties.Get${type}(path);
 }
 
-public ${cs_type} Get${type}(string path, ${cs_type} defaultValue) {
-    return Properties.Get${type}(path, defaultValue);
+public static ${cs_type} Get${type}(this IContext context, string path, ${cs_type} defaultValue) {
+    return context.Properties.Get${type}(path, defaultValue);
 }
 
-public bool Set${type}(string path, Pass pass, ${cs_type} value) {
-    return Properties.Set${type}(path, pass, value);
+public static bool Set${type}(this IContext context, string path, Pass pass, ${cs_type} value) {
+    return context.Properties.Set${type}(path, pass, value);
 }
 
-public bool Set${type}(string path, ${cs_type} value) {
-    return Properties.Set${type}(path, value);
+public static bool Set${type}(this IContext context, string path, ${cs_type} value) {
+    return context.Properties.Set${type}(path, value);
 }
 
 ```
@@ -53,7 +53,6 @@ public bool Add${name}(${cs_type} ${var_name}) {
 public bool Remove${name}(${cs_type} ${var_name}) {
     return WeakListHelper.Remove(${list_name}, ${var_name});
 }
-
 ```
 
 # DECLARE_SECURE_LIST(name, var_name, cs_type, list_name) #
@@ -81,7 +80,6 @@ public bool Remove${name}(Pass pass, ${cs_type} ${var_name}) {
 public bool Remove${name}(${cs_type} ${var_name}) {
     return Remove${name}(null, ${var_name});
 }
-
 ```
 
 # ADD_REMOVE_HELPER(name, a_path, a_var, a_type, l_name, l_var, l_type) #
@@ -131,7 +129,7 @@ public ${type}Property Remove${type}(string path) {
     return Remove<${type}Property>(path);
 }
 
-public bool Add${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_type}> checker) {
+public bool Add${type}ValueChecker(string path, Pass pass, IValueChecker<${cs_type}> checker) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.AddValueChecker(pass, checker);
@@ -141,11 +139,11 @@ public bool Add${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_typ
     return false;
 }
 
-public bool Add${type}ValueChecker(string path, ValueChecker<${cs_type}> checker) {
+public bool Add${type}ValueChecker(string path, IValueChecker<${cs_type}> checker) {
     return Add${type}ValueChecker(path, checker);
 }
 
-public bool Remove${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_type}> checker) {
+public bool Remove${type}ValueChecker(string path, Pass pass, IValueChecker<${cs_type}> checker) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.RemoveValueChecker(pass, checker);
@@ -155,12 +153,12 @@ public bool Remove${type}ValueChecker(string path, Pass pass, ValueChecker<${cs_
     return false;
 }
 
-public bool Remove${type}ValueChecker(string path, ValueChecker<${cs_type}> checker) {
+public bool Remove${type}ValueChecker(string path, IValueChecker<${cs_type}> checker) {
     return Remove${type}ValueChecker(path, checker);
 }
 
-public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, Pass pass,
-                                    BlockOwner owner, ${type}BlockValueChecker.CheckerBlock checker) {
+public BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(string path, Pass pass,
+                                    IBlockOwner owner, Func<IVar<${cs_type}>, ${cs_type}, bool> checker) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.AddBlockValueChecker(pass, owner, checker);
@@ -170,12 +168,12 @@ public ${type}BlockValueChecker Add${type}BlockValueChecker(string path, Pass pa
     return null;
 }
 
-public ${type}BlockValueChecker Add${type}BlockValueChecker(string path,
-                                    BlockOwner owner, ${type}BlockValueChecker.CheckerBlock block) {
-    return Add${type}BlockValueChecker(path, owner, block);
+public BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(string path,
+                                    IBlockOwner owner, Func<IVar<${cs_type}>, ${cs_type}, bool> checker) {
+    return Add${type}BlockValueChecker(path, owner, checker);
 }
 
-public bool Add${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watcher) {
+public bool Add${type}ValueWatcher(string path, IValueWatcher<${cs_type}> watcher) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.AddValueWatcher(watcher);
@@ -185,7 +183,7 @@ public bool Add${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watcher
     return false;
 }
 
-public bool Remove${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watcher) {
+public bool Remove${type}ValueWatcher(string path, IValueWatcher<${cs_type}> watcher) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.RemoveValueWatcher(watcher);
@@ -195,8 +193,8 @@ public bool Remove${type}ValueWatcher(string path, ValueWatcher<${cs_type}> watc
     return false;
 }
 
-public ${type}BlockValueWatcher Add${type}BlockValueWatcher(string path,
-                                    BlockOwner owner, ${type}BlockValueWatcher.WatcherBlock watcher) {
+public BlockValueWatcher<${cs_type}> Add${type}BlockValueWatcher(string path,
+                                    IBlockOwner owner, Action<IVar<${cs_type}>, ${cs_type}> watcher) {
     ${type}Property p = Get<${type}Property>(path);
     if (p != null) {
         return p.AddBlockValueWatcher(owner, watcher);
@@ -255,37 +253,12 @@ public bool Set${type}(string path, Pass pass, ${cs_type} val) {
 
 # PROPERTY_CLASS(type, cs_type) #
 ```C#
-public sealed class ${type}BlockValueChecker : WeakBlock, IValueChecker<${cs_type}> {
-    public delegate bool CheckerBlock(string path, ${cs_type} val, ${cs_type} newVal);
-
-    private readonly CheckerBlock _Block;
-
-    public ${type}BlockValueChecker(BlockOwner owner, CheckerBlock block) : base(owner) {
-        _Block = block;
-    }
-
-    public bool IsValid(string path, ${cs_type} val, ${cs_type} newVal) {
-        return _Block(path, val, newVal);
-    }
-}
-
-public sealed class ${type}BlockValueWatcher : WeakBlock, IValueWatcher<${cs_type}> {
-    public delegate void WatcherBlock(string path, ${cs_type} val, ${cs_type} newVal);
-
-    private readonly WatcherBlock _Block;
-
-    public ${type}BlockValueWatcher(BlockOwner owner, WatcherBlock block) : base(owner) {
-        _Block = block;
-    }
-
-    public void OnChanged(string path, ${cs_type} lastVal, ${cs_type} val) {
-        _Block(path, lastVal, val);
-    }
-}
-
 public class ${type}Property : Property<${cs_type}> {
     public override string Type {
         get { return PropertiesConsts.Type${type}Property; }
+    }
+
+    public ${type}Property(Properties owner, string path, Pass pass) : base(owner, path, pass) {
     }
 
     protected override bool DoEncode(Data data) {
@@ -297,32 +270,7 @@ public class ${type}Property : Property<${cs_type}> {
     }
 
     protected override bool NeedUpdate(${cs_type} newVal) {
-        return NeedSetup || (Value != newVal);
-    }
-
-    public ${type}BlockValueChecker AddBlockValueChecker(Pass pass, BlockOwner owner,
-                                                         ${type}BlockValueChecker.CheckerBlock _checker) {
-        if (!CheckAdminPass(pass)) return null;
-
-        ${type}BlockValueChecker checker = new ${type}BlockValueChecker(owner, _checker);
-        if (AddValueChecker(pass, checker)) {
-            return checker;
-        }
-        return null;
-    }
-
-    public ${type}BlockValueChecker AddBlockValueChecker(BlockOwner owner,
-                                                         ${type}BlockValueChecker.CheckerBlock checker) {
-        return AddBlockValueChecker(null, checker);
-    }
-
-    public ${type}BlockValueWatcher AddBlockValueWatcher(BlockOwner owner,
-                                                         ${type}BlockValueWatcher.WatcherBlock _watcher) {
-        ${type}BlockValueWatcher watcher = new ${type}BlockValueWatcher(owner, _watcher);
-        if (AddValueWatcher(watcher)) {
-            return watcher;
-        }
-        return null;
+        return base.NeedUpdate(newVal) || (Value != newVal);
     }
 }
 
@@ -330,14 +278,14 @@ public class ${type}Property : Property<${cs_type}> {
 
 # CONTEXT_DEPOSIT_WITHDRAW(name, type, vars, var) #
 ```C#
-public ${type} Deposit${name}(string key, ${type} ${var}) {
+public static ${type} Deposit${name}(this IContext context, string key, ${type} ${var}) {
     string varPath = ContextConsts.GetVarPath(${vars}, key);
-    return Vars.DepositValue<${type}>(varPath, null, ${var});
+    return context.Vars.DepositValue<${type}>(varPath, null, ${var});
 }
 
-public ${type} Withdraw${name}(string key) {
+public static ${type} Withdraw${name}(this IContext context, string key) {
     string varPath = ContextConsts.GetVarPath(${vars}, key);
-    return Vars.WithdrawValue<${type}>(varPath);
+    return context.Vars.WithdrawValue<${type}>(varPath);
 }
 
 ```
@@ -345,24 +293,24 @@ public ${type} Withdraw${name}(string key) {
 # EXTENSION_SETUP_PROPERTY(type, cs_type) #
 ```C#
 public ${type}Property Setup${type}Property(string fragment,
-        Pass pass, ${type}Property.GetterBlock getter,
-        ${type}BlockValueChecker.CheckerBlock checker,
-        ${type}BlockValueWatcher.WatcherBlock watcher) {
-    return SetupProperty<${cs_type}>(PropertiesConsts.Type${type}Property,
+        Pass pass, Func<${cs_type}> getter,
+        Func<IVar<${cs_type}>, ${cs_type}, bool> checker,
+        Action<IVar<${cs_type}>, ${cs_type}> watcher) {
+    return SetupProperty<${type}Property, ${cs_type}>(PropertiesConsts.Type${type}Property,
         fragment, pass, getter,
-        checker == null ? null : new ${type}BlockValueChecker(this, checker),
-        watcher == null ? null : new ${type}BlockValueWatcher(this, watcher)
+        checker == null ? null : new BlockValueChecker<${cs_type}>(this, checker),
+        watcher == null ? null : new BlockValueWatcher<${cs_type}>(this, watcher)
     ) as ${type}Property;
 }
 
 public ${type}Property Setup${type}Property(string fragment, Pass pass,
-        ${type}Property.GetterBlock getter) {
+        Func<${cs_type}> getter) {
     return Setup${type}Property(fragment, pass, getter, null, null);
 }
 
 public ${type}Property Setup${type}Property(string fragment, Pass pass,
-        ${type}Property.GetterBlock getter,
-        ${type}BlockValueWatcher.WatcherBlock watcher) {
+        Func<${cs_type}> getter,
+        Action<IVar<${cs_type}>, ${cs_type}> watcher) {
     return Setup${type}Property(fragment, pass, getter, null, watcher);
 }
 

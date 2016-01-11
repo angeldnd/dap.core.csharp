@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface SpecValueChecker : ValueChecker {
+    public interface SpecValueChecker : IValueChecker {
         bool DoEncode(Data spec);
     }
 
-    public abstract class SpecValueChecker<T> : SpecValueChecker, ValueChecker<T> {
-        public bool IsValid(string path, T val, T newVal) {
+    public abstract class SpecValueChecker<T> : SpecValueChecker, IValueChecker<T> {
+        public bool IsValid(Property<T> property, T val, T newVal) {
             return IsValid(newVal);
         }
 

@@ -16,7 +16,7 @@ namespace angeldnd.dap {
             }
         }
 
-        protected WeakBlock(BlockOwner owner) {
+        protected WeakBlock(IBlockOwner owner) {
             if (owner != null) {
                 _OwnerReference = new WeakReference(owner);
             }
@@ -24,13 +24,13 @@ namespace angeldnd.dap {
 
         public void OnAdded() {
             if (IsOwnerAlive) {
-                ((BlockOwner)_OwnerReference.Target).AddBlock(this);
+                ((IBlockOwner)_OwnerReference.Target).AddBlock(this);
             }
         }
 
         public void OnRemoved() {
             if (IsOwnerAlive) {
-                ((BlockOwner)_OwnerReference.Target).RemoveBlock(this);
+                ((IBlockOwner)_OwnerReference.Target).RemoveBlock(this);
             }
         }
     }

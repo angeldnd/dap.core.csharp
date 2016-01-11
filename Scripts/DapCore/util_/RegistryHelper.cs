@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 
 namespace angeldnd.dap {
+    /*
     public static class RegistryHelper {
         public static Registry GetRegistry(Aspect aspect) {
             if (aspect == null) {
@@ -115,4 +116,5 @@ namespace angeldnd.dap {
             return GetDescendantAspect<T>(registry, itemAspect.ItemPath, relativePath, aspectPath);
         }
     }
+    */
 }

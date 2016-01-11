@@ -7,7 +7,7 @@ namespace angeldnd.dap {
         public const string KeyIndex = "_i";
     }
 
-    public abstract class ListProperty<T> : GroupProperty, IList<T> where T : class, Property {
+    public abstract class ListProperty<T> : GroupProperty, IList<T> where T : class, IProperty {
         private List<T> _Elements = new List<T>();
 
         private bool _MuteOnChanged = false;
@@ -214,7 +214,7 @@ namespace angeldnd.dap {
             Dictionary<int, string> keyByIndex = new Dictionary<int, string>();
             Dictionary<int, Data> dataByIndex = new Dictionary<int, Data>();
             foreach (var key in data.Keys) {
-                if (key == DapObjectConsts.KeyType) continue;
+                if (key == ObjectConsts.KeyType) continue;
 
                 Data subData = data.GetData(key);
                 if (subData == null) {

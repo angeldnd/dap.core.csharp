@@ -3,37 +3,33 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class TickableConsts {
-        public const string AspectTickable = "_tickable";
+        public const string ChannelTick = "_tick";
     }
 
-    public class Tickable : BaseAspect<Item, Section<Item>> {
-        public static bool AddToItem(Item item) {
-            Tickable tickable = item.Add<Tickable>(TickableConsts.AspectTickable);
-            return tickable != null && tickable.IsValid;
-        }
+    public class Tickable : Item {
+        private IEventListener _OnTick;
 
-        private EventListener _OnTick;
-
-        public bool IsValid {
-            get { return _OnTick != null; }
-        }
-
-        public Tickable(Item item, string path, Pass pass) : base(item, path, pass) {
+        public Tickable(Registry owner, string path, Pass pass) : base(owner, path, pass) {
         }
 
         public override void OnAdded() {
-            if (Item.AddChannel(RegistryConsts.ChannelTick, _Pass) != null) {
-                _OnTick = new BlockEventListener(this,
-                    (string channelPath, Data evt) => {
-                        Item.FireEvent(RegistryConsts.ChannelTick, _Pass, evt);
-                });
-                Registry.Channels.AddEventListener(RegistryConsts.ChannelTick, _OnTick);
+            Channel registryTickChannel = Owner.GetChannel(RegistryConsts.ChannelTick);
+
+            if (registryTickChannel != null) {
+                Channel contextTickChannel = this.AddChannel(TickableConsts.ChannelTick, Pass);
+                if (contextTickChannel != null) {
+                    _OnTick = new BlockEventListener(this,
+                        (Channel channel, Data evt) => {
+                            contextTickChannel.FireEvent(Pass, evt);
+                    });
+                    registryTickChannel.AddEventListener(_OnTick);
+                }
             }
         }
 
         public override void OnRemoved() {
             if (_OnTick != null) {
-                Item.Registry.Channels.RemoveEventListener(RegistryConsts.ChannelTick, _OnTick);
+                Owner.Channels.RemoveEventListener(RegistryConsts.ChannelTick, _OnTick);
                 _OnTick = null;
             }
         }

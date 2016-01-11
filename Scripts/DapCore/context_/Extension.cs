@@ -2,32 +2,17 @@ using System;
 using System.Collections.Generic;
 
 using angeldnd.dap;
-using angeldnd.dap.util;
 
 namespace angeldnd.dap.binding {
-    public sealed class Extension : BaseContextAccessor, BlockOwner {
-        private string _Key = null;
-        public string Key {
-            get { return _Key; }
-        }
+    public sealed class Extension : Accessor<IContext>, IBlockOwner {
+        public readonly string Key;
 
         public string GetSubKey(string fragment) {
-            if (string.IsNullOrEmpty(_Key)) {
+            if (string.IsNullOrEmpty(Key)) {
                 return fragment;
             } else {
                 return string.Format("{0}{1}{2}", Key, EntityConsts.Separator, fragment);
             }
-        }
-
-        public bool Setup(Context context, string key) {
-            if (_Key == null) {
-                _Key = key;
-                return base.Setup(context);
-            } else {
-                Error("Already Setup: Context = {0}, _Key = {1}, context = {2}, key = {3}",
-                        Object, _Key, context, key);
-            }
-            return false;
         }
 
         private Dictionary<string, Pass> _VarPasses;
@@ -37,6 +22,10 @@ namespace angeldnd.dap.binding {
 
         public delegate void SyncPropertyBlock(string key);
         private Dictionary<string, SyncPropertyBlock> _PropertySyncers;
+
+        public Extension(IContext obj, string key) : base(obj) {
+            Key = key;
+        }
 
         private void SaveVarPass(string key, Pass pass) {
             if (_VarPasses == null) _VarPasses = new Dictionary<string, Pass>();
@@ -58,7 +47,7 @@ namespace angeldnd.dap.binding {
             _HandlerPasses[key] = pass;
         }
 
-        private void SavePropertySyncer<T>(string key, Property<T> property, Property<T>.GetterBlock getter) {
+        private void SavePropertySyncer<TP, T>(string key, TP property, Func<T> getter) where TP : IProperty<T> {
             if (_PropertySyncers == null) _PropertySyncers = new Dictionary<string, SyncPropertyBlock>();
 
             _PropertySyncers[key] = (string _key) => {
@@ -75,23 +64,21 @@ namespace angeldnd.dap.binding {
         }
 
         public void ClearExtension() {
-            if (Context == null) return;
-
             if (_HandlerPasses != null) {
                 foreach (var kv in _HandlerPasses) {
-                    Context.Handlers.Remove<Handler>(kv.Key, kv.Value);
+                    Obj.Handlers.Remove(kv.Key, kv.Value);
                 }
                 _HandlerPasses.Clear();
             }
             if (_ChannelPasses != null) {
                 foreach (var kv in _ChannelPasses) {
-                    Context.Channels.Remove<Channel>(kv.Key, kv.Value);
+                    Obj.Channels.Remove(kv.Key, kv.Value);
                 }
                 _ChannelPasses.Clear();
             }
             if (_PropertyPasses != null) {
                 foreach (var kv in _PropertyPasses) {
-                    Context.Properties.Remove<Property>(kv.Key, kv.Value);
+                    Obj.Properties.Remove(kv.Key, kv.Value);
                 }
                 _PropertyPasses.Clear();
             }
@@ -100,15 +87,13 @@ namespace angeldnd.dap.binding {
             }
             if (_VarPasses != null) {
                 foreach (var kv in _VarPasses) {
-                    Context.Vars.Remove<Var>(kv.Key, kv.Value);
+                    Obj.Vars.Remove(kv.Key, kv.Value);
                 }
                 _VarPasses.Clear();
             }
         }
 
         public void SyncExtension() {
-            if (Context == null) return;
-
             if (_PropertySyncers != null) {
                 foreach (var kv in _PropertySyncers) {
                     kv.Value(kv.Key);
@@ -118,7 +103,7 @@ namespace angeldnd.dap.binding {
 
         public Channel SetupChannel(string fragment, Pass pass) {
             string key = GetSubKey(fragment);
-            Channel channel = Context.AddChannel(key, pass);
+            Channel channel = Obj.AddChannel(key, pass);
             if (channel != null) {
                 SaveChannelPass(key, pass);
             }
@@ -131,7 +116,7 @@ namespace angeldnd.dap.binding {
 
         public Handler SetupHandler(string fragment, Pass pass) {
             string key = GetSubKey(fragment);
-            Handler handler = Context.AddHandler(key, pass);
+            Handler handler = Obj.AddHandler(key, pass);
             if (handler != null) {
                 SaveHandlerPass(key, pass);
             }
@@ -144,7 +129,7 @@ namespace angeldnd.dap.binding {
 
         public bool FireEvent(string fragment, Pass pass, Data evt) {
             string key = GetSubKey(fragment);
-            return Context.FireEvent(key, pass, evt);
+            return Obj.FireEvent(key, pass, evt);
         }
 
         public bool FireEvent(string fragment, Data evt) {
@@ -153,18 +138,18 @@ namespace angeldnd.dap.binding {
 
         public Data HandleRequest(string fragment, Pass pass, Data req) {
             string key = GetSubKey(fragment);
-            return Context.HandleRequest(key, pass, req);
+            return Obj.HandleRequest(key, pass, req);
         }
 
         public Data HandleRequest(string fragment, Data req) {
             return HandleRequest(fragment, null, req);
         }
 
-        public Var<T> SetupVar<T>(string fragment, Pass pass, T val, BlockVarWatcher.WatcherBlock  watcher) {
+        public Var<T> SetupVar<T>(string fragment, Pass pass, T val, Action<IVar> watcher) {
             string key = GetSubKey(fragment);
-            Var<T> v = Context.Vars.AddVar<T>(key, pass, val);
+            Var<T> v = Obj.Vars.AddVar<T>(key, pass, val);
             if (v != null) {
-                if (watcher != null && !v.AddVarWatcher(new BlockVarWatcher(watcher))) {
+                if (watcher != null && !v.AddVarWatcher(new BlockVarWatcher(this, watcher))) {
                     Error("Add Watcher Failed: {0} -> {1}, {2}", this, typeof(T).FullName, fragment);
                 }
             }
@@ -175,37 +160,28 @@ namespace angeldnd.dap.binding {
             return SetupVar<T>(fragment, pass, val, null);
         }
 
-        public T SetupProperty<T>(string type, string fragment, Pass pass) where T : class, Property {
+        public TP SetupProperty<TP, T>(string type, string fragment, Pass pass) where TP : class, IProperty<T> {
             string key = GetSubKey(fragment);
-            Aspect _prop = Context.Properties.Add(key, type, pass);
-            T prop = null;
-            if (_prop != null) {
-                prop = _prop as T;
-                if (prop != null) {
-                    SavePropertyPass(key, pass);
-                } else {
-                    Error("Setup Property Failed: {0} -> {1}, {2} Type Mismatched: {3} -> {4}",
-                            this, type, fragment, typeof(T).FullName, _prop.GetType().FullName);
-                    Context.Properties.Remove<Aspect>(key, pass);
-                }
-            } else {
-                Error("Setup Property Failed: {0} -> {1}, {2}", this, type, fragment);
+            TP prop = Obj.Properties.New<TP>(type, key, pass);
+            if (prop != null) {
+                SavePropertyPass(key, pass);
             }
             return prop;
         }
 
-        public Property<T> SetupProperty<T>(string type, string fragment,
-                Pass pass, Property<T>.GetterBlock getter,
-                ValueChecker<T> checker,
-                ValueWatcher<T> watcher) {
+        public TP SetupProperty<TP, T>(string type, string fragment,
+                Pass pass, Func<T> getter,
+                IValueChecker<T> checker,
+                IValueWatcher<T> watcher) 
+                    where TP : class, IProperty<T> {
             string key = GetSubKey(fragment);
 
-            Property<T> prop = SetupProperty<Property<T>>(type, fragment, pass);
+            TP prop = SetupProperty<TP, T>(type, fragment, pass);
 
             if (prop != null) {
                 T val = getter();
                 prop.Setup(pass, val);
-                SavePropertySyncer<T>(key, prop, getter);
+                SavePropertySyncer<TP, T>(key, prop, getter);
                 if (checker != null && !prop.AddValueChecker(checker)) {
                     Error("Add Checker Failed: {0} -> {1}, {2}", this, type, fragment);
                 }
@@ -239,165 +215,165 @@ namespace angeldnd.dap.binding {
         }                                                             //__SILP__
 
         //SILP: EXTENSION_SETUP_PROPERTY(Bool, bool)
-        public BoolProperty SetupBoolProperty(string fragment,                      //__SILP__
-                Pass pass, BoolProperty.GetterBlock getter,                         //__SILP__
-                BoolBlockValueChecker.CheckerBlock checker,                         //__SILP__
-                BoolBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupProperty<bool>(PropertiesConsts.TypeBoolProperty,           //__SILP__
-                fragment, pass, getter,                                             //__SILP__
-                checker == null ? null : new BoolBlockValueChecker(this, checker),  //__SILP__
-                watcher == null ? null : new BoolBlockValueWatcher(this, watcher)   //__SILP__
-            ) as BoolProperty;                                                      //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public BoolProperty SetupBoolProperty(string fragment, Pass pass,           //__SILP__
-                BoolProperty.GetterBlock getter) {                                  //__SILP__
-            return SetupBoolProperty(fragment, pass, getter, null, null);           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public BoolProperty SetupBoolProperty(string fragment, Pass pass,           //__SILP__
-                BoolProperty.GetterBlock getter,                                    //__SILP__
-                BoolBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupBoolProperty(fragment, pass, getter, null, watcher);        //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
+        public BoolProperty SetupBoolProperty(string fragment,                           //__SILP__
+                Pass pass, Func<bool> getter,                                            //__SILP__
+                Func<IVar<bool>, bool, bool> checker,                                    //__SILP__
+                Action<IVar<bool>, bool> watcher) {                                      //__SILP__
+            return SetupProperty<BoolProperty, bool>(PropertiesConsts.TypeBoolProperty,  //__SILP__
+                fragment, pass, getter,                                                  //__SILP__
+                checker == null ? null : new BlockValueChecker<bool>(this, checker),     //__SILP__
+                watcher == null ? null : new BlockValueWatcher<bool>(this, watcher)      //__SILP__
+            ) as BoolProperty;                                                           //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public BoolProperty SetupBoolProperty(string fragment, Pass pass,                //__SILP__
+                Func<bool> getter) {                                                     //__SILP__
+            return SetupBoolProperty(fragment, pass, getter, null, null);                //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public BoolProperty SetupBoolProperty(string fragment, Pass pass,                //__SILP__
+                Func<bool> getter,                                                       //__SILP__
+                Action<IVar<bool>, bool> watcher) {                                      //__SILP__
+            return SetupBoolProperty(fragment, pass, getter, null, watcher);             //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
         //SILP: EXTENSION_SETUP_PROPERTY(Int, int)
-        public IntProperty SetupIntProperty(string fragment,                       //__SILP__
-                Pass pass, IntProperty.GetterBlock getter,                         //__SILP__
-                IntBlockValueChecker.CheckerBlock checker,                         //__SILP__
-                IntBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupProperty<int>(PropertiesConsts.TypeIntProperty,            //__SILP__
-                fragment, pass, getter,                                            //__SILP__
-                checker == null ? null : new IntBlockValueChecker(this, checker),  //__SILP__
-                watcher == null ? null : new IntBlockValueWatcher(this, watcher)   //__SILP__
-            ) as IntProperty;                                                      //__SILP__
-        }                                                                          //__SILP__
-                                                                                   //__SILP__
-        public IntProperty SetupIntProperty(string fragment, Pass pass,            //__SILP__
-                IntProperty.GetterBlock getter) {                                  //__SILP__
-            return SetupIntProperty(fragment, pass, getter, null, null);           //__SILP__
-        }                                                                          //__SILP__
-                                                                                   //__SILP__
-        public IntProperty SetupIntProperty(string fragment, Pass pass,            //__SILP__
-                IntProperty.GetterBlock getter,                                    //__SILP__
-                IntBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupIntProperty(fragment, pass, getter, null, watcher);        //__SILP__
-        }                                                                          //__SILP__
-                                                                                   //__SILP__
+        public IntProperty SetupIntProperty(string fragment,                          //__SILP__
+                Pass pass, Func<int> getter,                                          //__SILP__
+                Func<IVar<int>, int, bool> checker,                                   //__SILP__
+                Action<IVar<int>, int> watcher) {                                     //__SILP__
+            return SetupProperty<IntProperty, int>(PropertiesConsts.TypeIntProperty,  //__SILP__
+                fragment, pass, getter,                                               //__SILP__
+                checker == null ? null : new BlockValueChecker<int>(this, checker),   //__SILP__
+                watcher == null ? null : new BlockValueWatcher<int>(this, watcher)    //__SILP__
+            ) as IntProperty;                                                         //__SILP__
+        }                                                                             //__SILP__
+                                                                                      //__SILP__
+        public IntProperty SetupIntProperty(string fragment, Pass pass,               //__SILP__
+                Func<int> getter) {                                                   //__SILP__
+            return SetupIntProperty(fragment, pass, getter, null, null);              //__SILP__
+        }                                                                             //__SILP__
+                                                                                      //__SILP__
+        public IntProperty SetupIntProperty(string fragment, Pass pass,               //__SILP__
+                Func<int> getter,                                                     //__SILP__
+                Action<IVar<int>, int> watcher) {                                     //__SILP__
+            return SetupIntProperty(fragment, pass, getter, null, watcher);           //__SILP__
+        }                                                                             //__SILP__
+                                                                                      //__SILP__
         //SILP: EXTENSION_SETUP_PROPERTY(Long, long)
-        public LongProperty SetupLongProperty(string fragment,                      //__SILP__
-                Pass pass, LongProperty.GetterBlock getter,                         //__SILP__
-                LongBlockValueChecker.CheckerBlock checker,                         //__SILP__
-                LongBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupProperty<long>(PropertiesConsts.TypeLongProperty,           //__SILP__
-                fragment, pass, getter,                                             //__SILP__
-                checker == null ? null : new LongBlockValueChecker(this, checker),  //__SILP__
-                watcher == null ? null : new LongBlockValueWatcher(this, watcher)   //__SILP__
-            ) as LongProperty;                                                      //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public LongProperty SetupLongProperty(string fragment, Pass pass,           //__SILP__
-                LongProperty.GetterBlock getter) {                                  //__SILP__
-            return SetupLongProperty(fragment, pass, getter, null, null);           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public LongProperty SetupLongProperty(string fragment, Pass pass,           //__SILP__
-                LongProperty.GetterBlock getter,                                    //__SILP__
-                LongBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupLongProperty(fragment, pass, getter, null, watcher);        //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
+        public LongProperty SetupLongProperty(string fragment,                           //__SILP__
+                Pass pass, Func<long> getter,                                            //__SILP__
+                Func<IVar<long>, long, bool> checker,                                    //__SILP__
+                Action<IVar<long>, long> watcher) {                                      //__SILP__
+            return SetupProperty<LongProperty, long>(PropertiesConsts.TypeLongProperty,  //__SILP__
+                fragment, pass, getter,                                                  //__SILP__
+                checker == null ? null : new BlockValueChecker<long>(this, checker),     //__SILP__
+                watcher == null ? null : new BlockValueWatcher<long>(this, watcher)      //__SILP__
+            ) as LongProperty;                                                           //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public LongProperty SetupLongProperty(string fragment, Pass pass,                //__SILP__
+                Func<long> getter) {                                                     //__SILP__
+            return SetupLongProperty(fragment, pass, getter, null, null);                //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public LongProperty SetupLongProperty(string fragment, Pass pass,                //__SILP__
+                Func<long> getter,                                                       //__SILP__
+                Action<IVar<long>, long> watcher) {                                      //__SILP__
+            return SetupLongProperty(fragment, pass, getter, null, watcher);             //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
         //SILP: EXTENSION_SETUP_PROPERTY(Float, float)
-        public FloatProperty SetupFloatProperty(string fragment,                     //__SILP__
-                Pass pass, FloatProperty.GetterBlock getter,                         //__SILP__
-                FloatBlockValueChecker.CheckerBlock checker,                         //__SILP__
-                FloatBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupProperty<float>(PropertiesConsts.TypeFloatProperty,          //__SILP__
-                fragment, pass, getter,                                              //__SILP__
-                checker == null ? null : new FloatBlockValueChecker(this, checker),  //__SILP__
-                watcher == null ? null : new FloatBlockValueWatcher(this, watcher)   //__SILP__
-            ) as FloatProperty;                                                      //__SILP__
-        }                                                                            //__SILP__
-                                                                                     //__SILP__
-        public FloatProperty SetupFloatProperty(string fragment, Pass pass,          //__SILP__
-                FloatProperty.GetterBlock getter) {                                  //__SILP__
-            return SetupFloatProperty(fragment, pass, getter, null, null);           //__SILP__
-        }                                                                            //__SILP__
-                                                                                     //__SILP__
-        public FloatProperty SetupFloatProperty(string fragment, Pass pass,          //__SILP__
-                FloatProperty.GetterBlock getter,                                    //__SILP__
-                FloatBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupFloatProperty(fragment, pass, getter, null, watcher);        //__SILP__
-        }                                                                            //__SILP__
-                                                                                     //__SILP__
+        public FloatProperty SetupFloatProperty(string fragment,                            //__SILP__
+                Pass pass, Func<float> getter,                                              //__SILP__
+                Func<IVar<float>, float, bool> checker,                                     //__SILP__
+                Action<IVar<float>, float> watcher) {                                       //__SILP__
+            return SetupProperty<FloatProperty, float>(PropertiesConsts.TypeFloatProperty,  //__SILP__
+                fragment, pass, getter,                                                     //__SILP__
+                checker == null ? null : new BlockValueChecker<float>(this, checker),       //__SILP__
+                watcher == null ? null : new BlockValueWatcher<float>(this, watcher)        //__SILP__
+            ) as FloatProperty;                                                             //__SILP__
+        }                                                                                   //__SILP__
+                                                                                            //__SILP__
+        public FloatProperty SetupFloatProperty(string fragment, Pass pass,                 //__SILP__
+                Func<float> getter) {                                                       //__SILP__
+            return SetupFloatProperty(fragment, pass, getter, null, null);                  //__SILP__
+        }                                                                                   //__SILP__
+                                                                                            //__SILP__
+        public FloatProperty SetupFloatProperty(string fragment, Pass pass,                 //__SILP__
+                Func<float> getter,                                                         //__SILP__
+                Action<IVar<float>, float> watcher) {                                       //__SILP__
+            return SetupFloatProperty(fragment, pass, getter, null, watcher);               //__SILP__
+        }                                                                                   //__SILP__
+                                                                                            //__SILP__
         //SILP: EXTENSION_SETUP_PROPERTY(Double, double)
-        public DoubleProperty SetupDoubleProperty(string fragment,                    //__SILP__
-                Pass pass, DoubleProperty.GetterBlock getter,                         //__SILP__
-                DoubleBlockValueChecker.CheckerBlock checker,                         //__SILP__
-                DoubleBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupProperty<double>(PropertiesConsts.TypeDoubleProperty,         //__SILP__
-                fragment, pass, getter,                                               //__SILP__
-                checker == null ? null : new DoubleBlockValueChecker(this, checker),  //__SILP__
-                watcher == null ? null : new DoubleBlockValueWatcher(this, watcher)   //__SILP__
-            ) as DoubleProperty;                                                      //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
-        public DoubleProperty SetupDoubleProperty(string fragment, Pass pass,         //__SILP__
-                DoubleProperty.GetterBlock getter) {                                  //__SILP__
-            return SetupDoubleProperty(fragment, pass, getter, null, null);           //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
-        public DoubleProperty SetupDoubleProperty(string fragment, Pass pass,         //__SILP__
-                DoubleProperty.GetterBlock getter,                                    //__SILP__
-                DoubleBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupDoubleProperty(fragment, pass, getter, null, watcher);        //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
+        public DoubleProperty SetupDoubleProperty(string fragment,                             //__SILP__
+                Pass pass, Func<double> getter,                                                //__SILP__
+                Func<IVar<double>, double, bool> checker,                                      //__SILP__
+                Action<IVar<double>, double> watcher) {                                        //__SILP__
+            return SetupProperty<DoubleProperty, double>(PropertiesConsts.TypeDoubleProperty,  //__SILP__
+                fragment, pass, getter,                                                        //__SILP__
+                checker == null ? null : new BlockValueChecker<double>(this, checker),         //__SILP__
+                watcher == null ? null : new BlockValueWatcher<double>(this, watcher)          //__SILP__
+            ) as DoubleProperty;                                                               //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        public DoubleProperty SetupDoubleProperty(string fragment, Pass pass,                  //__SILP__
+                Func<double> getter) {                                                         //__SILP__
+            return SetupDoubleProperty(fragment, pass, getter, null, null);                    //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        public DoubleProperty SetupDoubleProperty(string fragment, Pass pass,                  //__SILP__
+                Func<double> getter,                                                           //__SILP__
+                Action<IVar<double>, double> watcher) {                                        //__SILP__
+            return SetupDoubleProperty(fragment, pass, getter, null, watcher);                 //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
         //SILP: EXTENSION_SETUP_PROPERTY(String, string)
-        public StringProperty SetupStringProperty(string fragment,                    //__SILP__
-                Pass pass, StringProperty.GetterBlock getter,                         //__SILP__
-                StringBlockValueChecker.CheckerBlock checker,                         //__SILP__
-                StringBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupProperty<string>(PropertiesConsts.TypeStringProperty,         //__SILP__
-                fragment, pass, getter,                                               //__SILP__
-                checker == null ? null : new StringBlockValueChecker(this, checker),  //__SILP__
-                watcher == null ? null : new StringBlockValueWatcher(this, watcher)   //__SILP__
-            ) as StringProperty;                                                      //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
-        public StringProperty SetupStringProperty(string fragment, Pass pass,         //__SILP__
-                StringProperty.GetterBlock getter) {                                  //__SILP__
-            return SetupStringProperty(fragment, pass, getter, null, null);           //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
-        public StringProperty SetupStringProperty(string fragment, Pass pass,         //__SILP__
-                StringProperty.GetterBlock getter,                                    //__SILP__
-                StringBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupStringProperty(fragment, pass, getter, null, watcher);        //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
+        public StringProperty SetupStringProperty(string fragment,                             //__SILP__
+                Pass pass, Func<string> getter,                                                //__SILP__
+                Func<IVar<string>, string, bool> checker,                                      //__SILP__
+                Action<IVar<string>, string> watcher) {                                        //__SILP__
+            return SetupProperty<StringProperty, string>(PropertiesConsts.TypeStringProperty,  //__SILP__
+                fragment, pass, getter,                                                        //__SILP__
+                checker == null ? null : new BlockValueChecker<string>(this, checker),         //__SILP__
+                watcher == null ? null : new BlockValueWatcher<string>(this, watcher)          //__SILP__
+            ) as StringProperty;                                                               //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        public StringProperty SetupStringProperty(string fragment, Pass pass,                  //__SILP__
+                Func<string> getter) {                                                         //__SILP__
+            return SetupStringProperty(fragment, pass, getter, null, null);                    //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
+        public StringProperty SetupStringProperty(string fragment, Pass pass,                  //__SILP__
+                Func<string> getter,                                                           //__SILP__
+                Action<IVar<string>, string> watcher) {                                        //__SILP__
+            return SetupStringProperty(fragment, pass, getter, null, watcher);                 //__SILP__
+        }                                                                                      //__SILP__
+                                                                                               //__SILP__
         //SILP: EXTENSION_SETUP_PROPERTY(Data, Data)
-        public DataProperty SetupDataProperty(string fragment,                      //__SILP__
-                Pass pass, DataProperty.GetterBlock getter,                         //__SILP__
-                DataBlockValueChecker.CheckerBlock checker,                         //__SILP__
-                DataBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupProperty<Data>(PropertiesConsts.TypeDataProperty,           //__SILP__
-                fragment, pass, getter,                                             //__SILP__
-                checker == null ? null : new DataBlockValueChecker(this, checker),  //__SILP__
-                watcher == null ? null : new DataBlockValueWatcher(this, watcher)   //__SILP__
-            ) as DataProperty;                                                      //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public DataProperty SetupDataProperty(string fragment, Pass pass,           //__SILP__
-                DataProperty.GetterBlock getter) {                                  //__SILP__
-            return SetupDataProperty(fragment, pass, getter, null, null);           //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public DataProperty SetupDataProperty(string fragment, Pass pass,           //__SILP__
-                DataProperty.GetterBlock getter,                                    //__SILP__
-                DataBlockValueWatcher.WatcherBlock watcher) {                       //__SILP__
-            return SetupDataProperty(fragment, pass, getter, null, watcher);        //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
+        public DataProperty SetupDataProperty(string fragment,                           //__SILP__
+                Pass pass, Func<Data> getter,                                            //__SILP__
+                Func<IVar<Data>, Data, bool> checker,                                    //__SILP__
+                Action<IVar<Data>, Data> watcher) {                                      //__SILP__
+            return SetupProperty<DataProperty, Data>(PropertiesConsts.TypeDataProperty,  //__SILP__
+                fragment, pass, getter,                                                  //__SILP__
+                checker == null ? null : new BlockValueChecker<Data>(this, checker),     //__SILP__
+                watcher == null ? null : new BlockValueWatcher<Data>(this, watcher)      //__SILP__
+            ) as DataProperty;                                                           //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public DataProperty SetupDataProperty(string fragment, Pass pass,                //__SILP__
+                Func<Data> getter) {                                                     //__SILP__
+            return SetupDataProperty(fragment, pass, getter, null, null);                //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
+        public DataProperty SetupDataProperty(string fragment, Pass pass,                //__SILP__
+                Func<Data> getter,                                                       //__SILP__
+                Action<IVar<Data>, Data> watcher) {                                      //__SILP__
+            return SetupDataProperty(fragment, pass, getter, null, watcher);             //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
     }
 }

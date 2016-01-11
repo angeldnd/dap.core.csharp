@@ -4,7 +4,7 @@ using System.Text;
 
 namespace angeldnd.dap {
     public static class SpecHelper {
-        public static Data EncodeWithSpec(this Property prop) {
+        public static Data EncodeWithSpec(this IProperty prop) {
             Data data = prop.Encode();
             if (data != null) {
                 Data spec = null;
@@ -19,7 +19,7 @@ namespace angeldnd.dap {
             return data;
         }
 
-        public static void SetPropertyWithSpec(this Property prop, Pass pass, Data data) {
+        public static void SetPropertyWithSpec(this IProperty prop, Pass pass, Data data) {
             if (prop != null) {
                 Data spec = data.GetData(SpecConsts.KeySpec, null);
                 if (spec != null) {
@@ -30,7 +30,7 @@ namespace angeldnd.dap {
             }
         }
 
-        public static Property AddWithSpec(this Properties properties, string path, Pass pass, bool open, Data data) {
+        public static IProperty AddWithSpec(this Properties properties, string path, Pass pass, bool open, Data data) {
             Property prop = properties.Add(path, pass, open, data);
             if (prop != null) {
                 SetPropertyWithSpec(prop, pass, data);
@@ -38,7 +38,7 @@ namespace angeldnd.dap {
             return prop;
         }
 
-        public static Property AddPropertyWithSpec(this Item item, string path, Pass pass, bool open, Data data) {
+        public static IProperty AddPropertyWithSpec(this Item item, string path, Pass pass, bool open, Data data) {
             return AddWithSpec(item.Properties, path, pass, open, data);
         }
 

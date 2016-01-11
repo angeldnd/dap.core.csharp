@@ -15,7 +15,7 @@ namespace angeldnd.dap {
 
         private readonly CheckerBlock _Block;
 
-        public BlockEventChecker(BlockOwner owner, CheckerBlock block) : base(owner) {
+        public BlockEventChecker(IBlockOwner owner, CheckerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -29,7 +29,7 @@ namespace angeldnd.dap {
 
         private readonly ListenerBlock _Block;
 
-        public BlockEventListener(BlockOwner owner, ListenerBlock block) : base(owner) {
+        public BlockEventListener(IBlockOwner owner, ListenerBlock block) : base(owner) {
             _Block = block;
         }
 
@@ -38,7 +38,10 @@ namespace angeldnd.dap {
         }
     }
 
-    public sealed class Channel : Aspect<Context, Channels> {
+    public sealed class Channel : Aspect<IContext, Channels> {
+        public Channel(Channels owner, string path, Pass pass) : base(owner, path, pass) {
+        }
+
         //SILP: DECLARE_SECURE_LIST(EventChecker, listener, IEventChecker, _EventCheckers)
         private WeakList<IEventChecker> _EventCheckers = null;               //__SILP__
                                                                              //__SILP__
@@ -63,7 +66,6 @@ namespace angeldnd.dap {
         public bool RemoveEventChecker(IEventChecker listener) {             //__SILP__
             return RemoveEventChecker(null, listener);                       //__SILP__
         }                                                                    //__SILP__
-                                                                             //__SILP__
         //SILP: DECLARE_LIST(EventListener, listener, IEventListener, _EventListeners)
         private WeakList<IEventListener> _EventListeners = null;       //__SILP__
                                                                        //__SILP__
@@ -78,7 +80,6 @@ namespace angeldnd.dap {
         public bool RemoveEventListener(IEventListener listener) {     //__SILP__
             return WeakListHelper.Remove(_EventListeners, listener);   //__SILP__
         }                                                              //__SILP__
-                                                                       //__SILP__
         public bool FireEvent(Pass pass, Data evt) {
             if (!CheckWritePass(pass)) return false;
 

@@ -7,7 +7,7 @@ namespace angeldnd.dap {
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapPriority: System.Attribute {
         public static int GetPriority(Type type) {
-            Object[] attribs = type.GetCustomAttributes(false);
+            object[] attribs = type.GetCustomAttributes(false);
             foreach (var attr in attribs) {
                 if (attr is DapPriority) {
                     return ((DapPriority)attr).Priority;
@@ -25,7 +25,7 @@ namespace angeldnd.dap {
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapOrder: System.Attribute {
         public static int GetOrder(Type type) {
-            Object[] attribs = type.GetCustomAttributes(false);
+            object[] attribs = type.GetCustomAttributes(false);
             foreach (var attr in attribs) {
                 if (attr is DapOrder) {
                     return ((DapOrder)attr).Order;

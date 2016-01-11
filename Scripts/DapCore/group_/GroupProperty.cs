@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface GroupValueWatcher : ValueWatcher {
-        void OnChanged(string path);
+    public interface IGroupValueWatcher : IValueWatcher {
+        void OnChanged(GroupProperty property);
     }
 
-    public abstract class GroupProperty : Properties, Property, EntityWatcher, VarWatcher {
+    public abstract class GroupProperty : IProperty, ISectionWatcher, IVarWatcher {
         //Not support Var's API here.
         public Object GetValue() {
             return null;
@@ -14,10 +14,10 @@ namespace angeldnd.dap {
         public int VarWatcherCount {
             get { return 0; }
         }
-        public bool AddVarWatcher(VarWatcher watcher) {
+        public bool AddVarWatcher(IVarWatcher watcher) {
             return false;
         }
-        public bool RemoveVarWatcher(VarWatcher watcher) {
+        public bool RemoveVarWatcher(IVarWatcher watcher) {
             return false;
         }
 
@@ -25,7 +25,7 @@ namespace angeldnd.dap {
         public Data Encode() {
             if (!string.IsNullOrEmpty(Type)) {
                 Data data = new Data();
-                if (data.SetString(DapObjectConsts.KeyType, Type)) {
+                if (data.SetString(ObjectConsts.KeyType, Type)) {
                     if (DoEncode(data)) {
                         return data;
                     }
@@ -42,7 +42,7 @@ namespace angeldnd.dap {
         public bool Decode(Pass pass, Data data) {
             if (!CheckWritePass(pass)) return false;
 
-            string type = data.GetString(DapObjectConsts.KeyType);
+            string type = data.GetString(ObjectConsts.KeyType);
             if (type == Type) {
                 return DoDecode(pass, data);
             } else {
@@ -85,7 +85,7 @@ namespace angeldnd.dap {
             });
         }
 
-        public void OnVarChanged(Var v) {
+        public void OnVarChanged(IVar v) {
             FireOnChanged();
         }
 
@@ -107,20 +107,20 @@ namespace angeldnd.dap {
         public int ValueCheckerCount {
             get { return 0; }
         }
-        public void AllValueCheckers<T1>(OnValueChecker<T1> callback) where T1 : ValueChecker {}
+        public void AllValueCheckers<T1>(OnValueChecker<T1> callback) where T1 : IValueChecker {}
 
-        //SILP: DECLARE_LIST(ValueWatcher, watcher, GroupValueWatcher, _ValueWatchers)
-        private WeakList<GroupValueWatcher> _ValueWatchers = null;    //__SILP__
+        //SILP: DECLARE_LIST(ValueWatcher, watcher, IGroupValueWatcher, _ValueWatchers)
+        private WeakList<IGroupValueWatcher> _ValueWatchers = null;   //__SILP__
                                                                       //__SILP__
         public int ValueWatcherCount {                                //__SILP__
             get { return WeakListHelper.Count(_ValueWatchers); }      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public bool AddValueWatcher(GroupValueWatcher watcher) {      //__SILP__
+        public bool AddValueWatcher(IGroupValueWatcher watcher) {     //__SILP__
             return WeakListHelper.Add(ref _ValueWatchers, watcher);   //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public bool RemoveValueWatcher(GroupValueWatcher watcher) {   //__SILP__
+        public bool RemoveValueWatcher(IGroupValueWatcher watcher) {  //__SILP__
             return WeakListHelper.Remove(_ValueWatchers, watcher);    //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__

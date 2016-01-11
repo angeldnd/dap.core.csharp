@@ -108,7 +108,7 @@ namespace angeldnd.dap {
             return DataType.Invalid;
         }
 
-        public Object GetValue(string key) {
+        public object GetValue(string key) {
             DataType valueType = GetValueType(key);
             if (valueType == DataType.Invalid) return null;
 
