@@ -17,7 +17,7 @@ namespace angeldnd.dap {
         public const bool DefaultLogDebug = true;
     }
 
-    public sealed class Env : Tree<IOwner, Registry> {
+    public sealed class Env : Tree<Registry> {
         static Env() {
             Bootstrapper bootstrapper = Bootstrapper.Bootstrap();
             if (bootstrapper != null) {
@@ -126,7 +126,7 @@ namespace angeldnd.dap {
             return _Instance.GetOrAdd(name);
         }
 
-        private Env() : base(null, string.Empty, new Pass().Open) {
+        private Env() : base(new Pass().Open) {
         }
     }
 }

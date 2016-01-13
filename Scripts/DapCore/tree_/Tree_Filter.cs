@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract partial class Tree<TO, T> : Element<TO>, ITree<TO, T>
-                                                where TO : IOwner
-                                                where T : class, IElement {
+    public abstract partial class Tree<T> {
         public void Filter<T1>(string pattern, Action<T1> callback) where T1 : class, T {
             var matcher = new PatternMatcher(Separator, pattern);
             var en = _Elements.GetEnumerator();

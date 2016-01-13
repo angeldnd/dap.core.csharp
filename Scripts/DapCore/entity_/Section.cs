@@ -15,12 +15,12 @@ namespace angeldnd.dap {
         TE Entity { get; }
     }
 
-    public interface ISection<TE, TA> : ITree<TE, TA>, ISection<TE>
+    public interface ISection<TE, TA> : ITree<TA>, ISection<TE>, IElement<TE>
                                                     where TE : class, IEntity
                                                     where TA : class, IAspect<TE> {
     }
 
-    public abstract class Section<TE, TA> : Tree<TE, TA>, ISection<TE, TA>
+    public abstract class Section<TE, TA> : TreeElement<TE, TA>, ISection<TE, TA>
                                                     where TE : class, IEntity
                                                     where TA : class, IAspect<TE> {
         public IEntity GetEntity() {
@@ -31,7 +31,7 @@ namespace angeldnd.dap {
             get { return Owner; }
         }
 
-        protected Section(TE owner, string path, Pass pass) : base(owner, path, pass) {
+        protected Section(TE owner, Pass pass) : base(owner, pass) {
         }
 
         protected override void OnElementAdded(TA element) {

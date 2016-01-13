@@ -17,7 +17,7 @@ namespace angeldnd.dap {
         //private static Vars _SpecValueCheckerFactories;
 
         static Factory() {
-            _Factories = new Context().Vars;
+            _Factories = new Context(null).Vars;
 
             //Aspects
             Register<Item>(ItemConsts.TypeItem);

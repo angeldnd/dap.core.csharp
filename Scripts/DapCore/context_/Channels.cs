@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public sealed class Channels : Section<IContext, Channel> {
-        public Channels(IContext owner, string path, Pass pass) : base(owner, path, pass) {
+        public Channels(IContext owner, Pass pass) : base(owner, pass) {
         }
 
         public Channel GetChannel(string channelPath) {

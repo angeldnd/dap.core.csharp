@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public sealed class Vars : Section<IContext, IVar> {
-        public Vars(IContext owner, string path, Pass pass) : base(owner, path, pass) {
+        public Vars(IContext owner, Pass pass) : base(owner, pass) {
         }
 
         public Var<T> AddVar<T>(string path, T val) {

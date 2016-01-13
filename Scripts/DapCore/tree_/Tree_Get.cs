@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract partial class Tree<TO, T> : Element<TO>, ITree<TO, T>
-                                                where TO : IOwner
-                                                where T : class, IElement {
+    public abstract partial class Tree<T> {
         public bool Has(string path) {
             return _Elements.ContainsKey(path);
         }

@@ -21,7 +21,7 @@ namespace angeldnd.dap {
             get { return PropertiesConsts.TypeProperties; }
         }
 
-        public Properties(IContext owner, string path, Pass pass) : base(owner, path, pass) {
+        public Properties(IContext owner, Pass pass) : base(owner, pass) {
         }
 
         public IProperty Add(string path, Pass pass, bool open, Data data) {

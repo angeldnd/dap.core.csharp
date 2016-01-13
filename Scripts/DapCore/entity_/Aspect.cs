@@ -1,7 +1,7 @@
 using System;
 
 namespace angeldnd.dap {
-    public interface IAspect : IElement {
+    public interface IAspect : IInTreeElement {
         IEntity GetEntity();
     }
 
@@ -15,7 +15,7 @@ namespace angeldnd.dap {
                                             where TO : ISection<TE> {
     }
 
-    public abstract class Aspect<TE, TO> : Element<TO>, IAspect<TE, TO>
+    public abstract class Aspect<TE, TO> : InTreeElement<TO>, IAspect<TE, TO>
                                                 where TE : IEntity
                                                 where TO : ISection<TE> {
         public TE Entity {

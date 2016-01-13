@@ -2,7 +2,19 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface ITree : IOwner, IElement {
+    public interface IInTreeElement : IElement {
+        /*
+         * Constructor(TO owner, string path, Pass pass)
+         */
+        string Path { get; }
+        string RevPath { get; }
+    }
+
+    public interface IInTreeElement<TO> : IElement<TO>, IInTreeElement
+                                            where TO : ITree {
+    }
+
+    public interface ITree : IOwner {
         char Separator { get; }
 
         //Path Helpers
@@ -12,7 +24,7 @@ namespace angeldnd.dap {
     }
 
     public interface ITree<T> : ITree
-                                    where T : class, IElement {
+                                    where T : class, IInTreeElement {
         //Partial IDict<string, T>
         int Count { get; }
         T this[string index] { get; }
@@ -103,25 +115,19 @@ namespace angeldnd.dap {
         List<T> GetDescendants(string path);
     }
 
-    public interface ITree<TO, T> : IElement<TO>, ITree<T>
-                                                where TO : IOwner
-                                                where T : class, IElement {
-    }
-
     public static class TreeConsts {
         public const char Separator = '.';
     }
 
-    public abstract partial class Tree<TO, T> : Element<TO>, ITree<TO, T>
-                                                where TO : IOwner
-                                                where T : class, IElement {
-        private readonly Dictionary<string, T> _Elements = new Dictionary<string, T>();
-
-        protected Tree(TO owner, string path, Pass pass) : base(owner, path, pass) {
-        }
-
+    public abstract partial class Tree<T> : Object, ITree<T>
+                                                where T : class, IInTreeElement {
         public virtual char Separator {
             get { return TreeConsts.Separator; }
+        }
+
+        private readonly Dictionary<string, T> _Elements = new Dictionary<string, T>();
+
+        protected Tree(Pass pass) : base(pass) {
         }
 
         private T1 As<T1>(object element) where T1 : class, T {

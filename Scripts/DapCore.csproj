@@ -34,23 +34,33 @@
   </ItemGroup>
   <ItemGroup>
     <!--SILP:csproj:compile_include(DapCore) -->
+    <Compile Include="DapCore\base_\Context.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\base_\Element.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\base_\Entity.cs" />                <!--__SILP__-->
+    <Compile Include="DapCore\base_\InTreeContext.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\base_\InTreeElement.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\base_\TreeContext.cs" />           <!--__SILP__-->
+    <Compile Include="DapCore\base_\TreeElement.cs" />           <!--__SILP__-->
+    <Compile Include="DapCore\base_\TreeInTree.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\base_\TreeInTreeContext.cs" />     <!--__SILP__-->
     <Compile Include="DapCore\context_\Channel.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\Channels.cs" />           <!--__SILP__-->
-    <Compile Include="DapCore\context_\Context.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\ContextExtension.cs" />   <!--__SILP__-->
     <Compile Include="DapCore\context_\Extension.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\context_\Handler.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\Handlers.cs" />           <!--__SILP__-->
+    <Compile Include="DapCore\context_\IContext.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\context_\Properties.cs" />         <!--__SILP__-->
     <Compile Include="DapCore\context_\Property.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\context_\Vars.cs" />               <!--__SILP__-->
     <Compile Include="DapCore\core_\Data.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\core_\Factory.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\core_\IElement.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\core_\Object.cs" />                <!--__SILP__-->
     <Compile Include="DapCore\core_\Pass.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\core_\Sealable.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\entity_\Aspect.cs" />              <!--__SILP__-->
-    <Compile Include="DapCore\entity_\Entity.cs" />              <!--__SILP__-->
+    <Compile Include="DapCore\entity_\IEntity.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\entity_\Section.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\env_\Bootstrapper.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\env_\Env.cs" />                    <!--__SILP__-->
@@ -58,13 +68,13 @@
     <Compile Include="DapCore\registry_\Item.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\registry_\Registry.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\registry_\Tickable.cs" />          <!--__SILP__-->
-    <Compile Include="DapCore\tree_\Element.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\table_\Table.cs" />                <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_Add.cs" />              <!--__SILP__-->
-    <Compile Include="DapCore\tree_\Tree_New.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_Filter.cs" />           <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_Get.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_IDict.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\tree_\Tree_New.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_Path.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_Relation.cs" />         <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_Remove.cs" />           <!--__SILP__-->

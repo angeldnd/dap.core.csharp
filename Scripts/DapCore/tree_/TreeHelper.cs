@@ -76,7 +76,7 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public static int CompareElement(IElement elementA, IElement elementB) {
+        public static int CompareElement(IInTreeElement elementA, IInTreeElement elementB) {
             if (elementA == null && elementB == null) return 0;
             if (elementA == null) return -1;
             if (elementB == null) return 1;
@@ -88,18 +88,18 @@ namespace angeldnd.dap {
          * IMPORTANT: the generic name can NOT be the same as the non-generic one
          * otherwise will case loop back call (at least in unity)
          */
-        public static int Compare<T>(T elementA, T elementB) where T : IElement {
+        public static int Compare<T>(T elementA, T elementB) where T : IInTreeElement {
             return CompareElement(elementA, elementB);
         }
 
-        public static int CompareElementAccessor(IAccessor<IElement> accessorA, IAccessor<IElement> accessorB) {
+        public static int CompareElementAccessor(IAccessor<IInTreeElement> accessorA, IAccessor<IInTreeElement> accessorB) {
             if (accessorA == null && accessorB == null) return 0;
             if (accessorA == null) return -1;
             if (accessorB == null) return 1;
             return CompareElement(accessorA.Obj, accessorB.Obj);
         }
 
-        public static int CompareAccessor<T>(T aspectA, T aspectB) where T : IAccessor<IElement> {
+        public static int CompareAccessor<T>(T aspectA, T aspectB) where T : IAccessor<IInTreeElement> {
             return CompareElementAccessor(aspectA, aspectB);
         }
     }

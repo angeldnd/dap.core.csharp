@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract partial class Tree<TO, T> : Element<TO>, ITree<TO, T>
-                                                where TO : IOwner
-                                                where T : class, IElement {
+    public abstract partial class Tree<T> {
         public T1 GetParent<T1>(string path) where T1 : class, T {
             return Get<T1>(TreeHelper.GetParentPath(Separator, path));
         }

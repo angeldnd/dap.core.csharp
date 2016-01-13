@@ -51,39 +51,6 @@ public Data ${name}(string key, ${cs_type} val) {
 
 ```
 
-# ASPECT_MIXIN(class) #
-```
-public readonly Entity Entity;
-
-public readonly string Path;
-
-public string RevPath {
-    get {
-        return string.Format("{0} ({1})", Path, Revision);
-    }
-}
-
-public ${class}(Entity entity, string path, Pass pass) : base(pass) {
-    Entity = entity;
-    Path = path;
-}
-
-public override string GetLogPrefix() {
-    return string.Format("{0}[{1}] {2} ", Entity.GetLogPrefix(), GetType().Name, RevPath);
-}
-
-public override bool DebugMode {
-    get { return Entity.DebugMode; }
-}
-
-public override string[] DebugPatterns {
-    get { return Entity.DebugPatterns; }
-}
-
-public virtual void OnAdded() {}
-public virtual void OnRemoved() {}
-```
-
 # BLOCK_OWNER() #
 ```
 private List<WeakBlock> _Blocks = null;

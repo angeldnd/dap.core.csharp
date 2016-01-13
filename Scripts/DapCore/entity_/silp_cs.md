@@ -13,6 +13,5 @@ public bool Add${name}(${cs_type} ${var_name}) {
 public bool Remove${name}(${cs_type} ${var_name}) {
     return WeakListHelper.Remove(${list_name}, ${var_name});
 }
-
 ```
 

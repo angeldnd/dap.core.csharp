@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public sealed class Handlers : Section<IContext, Handler> {
-        public Handlers(IContext owner, string path, Pass pass) : base(owner, path, pass) {
+        public Handlers(IContext owner, Pass pass) : base(owner, pass) {
         }
 
         public Handler GetHandler(string handlerPath) {

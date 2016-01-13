@@ -5,15 +5,23 @@ using System.Text;
 using System.Reflection;
 
 namespace angeldnd.dap {
+    public interface IRegistryWatcher {
+        void OnItemAdded(Registry entity, IItem item);
+        void OnItemRemoved(Registry entity, IItem item);
+    }
+
     public static class RegistryConsts {
         public const string TypeRegistry = "Registry";
 
         public const string ChannelTick = "_tick";
     }
 
-    public sealed class Registry : Tree<Env, IItem>, IContext {
+    public sealed class Registry : TreeInTreeContext<Env, IItem> {
         public override string Type {
             get { return RegistryConsts.TypeRegistry; }
+        }
+
+        public Registry(Env owner, string path, Pass pass) : base(owner, path, pass) {
         }
 
         public override void OnAdded() {
@@ -27,76 +35,31 @@ namespace angeldnd.dap {
             Channels.Remove(Pass, RegistryConsts.ChannelTick);
         }
 
-        public void OnAspectAdded(IAspect aspect) {
-            WeakListHelper.Notify(_Watchers, (IEntityWatcher watcher) => {
-                watcher.OnAspectAdded(aspect);
+        protected override void OnElementAdded(IItem item) {
+            WeakListHelper.Notify(_RegistryWatchers, (IRegistryWatcher watcher) => {
+                watcher.OnItemAdded(this, item);
             });
         }
 
-        public void OnAspectRemoved(IAspect aspect) {
-            WeakListHelper.Notify(_Watchers, (IEntityWatcher watcher) => {
-                watcher.OnAspectRemoved(aspect);
+        protected override void OnElementRemoved(IItem item) {
+            WeakListHelper.Notify(_RegistryWatchers, (IRegistryWatcher watcher) => {
+                watcher.OnItemRemoved(this, item);
             });
         }
 
-        //SILP: CONTEXT_MIXIN(Env, Registry)
-        private readonly Properties _Properties;                                               //__SILP__
-        public Properties Properties {                                                         //__SILP__
-            get { return _Properties; }                                                        //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        private readonly Channels _Channels;                                                   //__SILP__
-        public Channels Channels {                                                             //__SILP__
-            get { return _Channels; }                                                          //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        private readonly Handlers _Handlers;                                                   //__SILP__
-        public Handlers Handlers {                                                             //__SILP__
-            get { return _Handlers; }                                                          //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        private readonly Vars _Vars;                                                           //__SILP__
-        public Vars Vars {                                                                     //__SILP__
-            get { return _Vars; }                                                              //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        public Registry(Env owner, string path, Pass pass) : base(owner, path, pass) {         //__SILP__
-            Pass sectionPass = pass.Open;                                                      //__SILP__
-                                                                                               //__SILP__
-            _Properties = new Properties(this, ContextConsts.SectionProperties, sectionPass);  //__SILP__
-            _Channels = new Channels(this, ContextConsts.SectionChannels, sectionPass);        //__SILP__
-            _Handlers = new Handlers(this, ContextConsts.SectionHandlers, sectionPass);        //__SILP__
-            _Vars = new Vars(this, ContextConsts.SectionVars, sectionPass);                    //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        private bool _DebugMode = false;                                                       //__SILP__
-        public override bool DebugMode {                                                       //__SILP__
-            get { return _DebugMode; }                                                         //__SILP__
-        }                                                                                      //__SILP__
-        public void SetDebugMode(bool debugMode) {                                             //__SILP__
-            _DebugMode= debugMode;                                                             //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        private string[] _DebugPatterns = {""};                                                //__SILP__
-        public override string[] DebugPatterns {                                               //__SILP__
-            get { return _DebugPatterns; }                                                     //__SILP__
-        }                                                                                      //__SILP__
-        public void SetDebugPatterns(string[] patterns) {                                      //__SILP__
-            _DebugPatterns = patterns;                                                         //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        private WeakList<IEntityWatcher> _Watchers = null;                                     //__SILP__
-                                                                                               //__SILP__
-        public int WatcherCount {                                                              //__SILP__
-            get { return WeakListHelper.Count(_Watchers); }                                    //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        public bool AddWatcher(IEntityWatcher watcher) {                                       //__SILP__
-            return WeakListHelper.Add(ref _Watchers, watcher);                                 //__SILP__
-        }                                                                                      //__SILP__
-                                                                                               //__SILP__
-        public bool RemoveWatcher(IEntityWatcher watcher) {                                    //__SILP__
-            return WeakListHelper.Remove(_Watchers, watcher);                                  //__SILP__
-        }                                                                                      //__SILP__
+        //SILP: DECLARE_LIST(RegistryWatcher, watcher, IRegistryWatcher, _RegistryWatchers)
+        private WeakList<IRegistryWatcher> _RegistryWatchers = null;    //__SILP__
+                                                                        //__SILP__
+        public int RegistryWatcherCount {                               //__SILP__
+            get { return WeakListHelper.Count(_RegistryWatchers); }     //__SILP__
+        }                                                               //__SILP__
+                                                                        //__SILP__
+        public bool AddRegistryWatcher(IRegistryWatcher watcher) {      //__SILP__
+            return WeakListHelper.Add(ref _RegistryWatchers, watcher);  //__SILP__
+        }                                                               //__SILP__
+                                                                        //__SILP__
+        public bool RemoveRegistryWatcher(IRegistryWatcher watcher) {   //__SILP__
+            return WeakListHelper.Remove(_RegistryWatchers, watcher);   //__SILP__
+        }                                                               //__SILP__
     }
 }
