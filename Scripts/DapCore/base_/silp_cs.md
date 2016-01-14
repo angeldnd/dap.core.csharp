@@ -73,6 +73,38 @@ public override string LogPrefix {
 }
 ```
 
+# IN_TABLE_MIXIN(class, owner) #
+```
+private int _Index;
+public int Index {
+    get { return _Index; }
+}
+
+protected ${class}(${owner} owner, int index, Pass pass) : base(owner, pass) {
+    _Index = index;
+}
+
+public bool SetIndex(Pass pass, int index) {
+    if (!CheckAdminPass(pass)) return false;
+
+    _Index = index;
+    return true;
+}
+
+public string RevIndex {
+    get {
+        return string.Format("[{0}] ({1})", _Index, Revision);
+    }
+}
+
+public override string LogPrefix {
+    get {
+        return string.Format("{0}[{1}] ({2}) ",
+                base.LogPrefix, _Index, Revision);
+    }
+}
+```
+
 # ENTITY_MIXIN() #
 ```
 //SILP: DECLARE_LIST(EntityWatcher, watcher, IEntityWatcher, _EntityWatchers)
