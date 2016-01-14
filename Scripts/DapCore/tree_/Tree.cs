@@ -17,6 +17,17 @@ namespace angeldnd.dap {
     public interface ITree : IOwner {
         char Separator { get; }
 
+        //Partial IDict
+        int Count { get; }
+        ICollection<string> Keys { get; }
+
+        //Clear
+        void Clear(Pass pass);
+        void Clear();
+
+        //Has
+        bool Has(string path);
+
         //Path Helpers
         int GetDepth(string path);
         string GetName(string path);
@@ -26,9 +37,7 @@ namespace angeldnd.dap {
     public interface ITree<T> : ITree
                                     where T : class, IInTreeElement {
         //Partial IDict<string, T>
-        int Count { get; }
         T this[string index] { get; }
-        ICollection<string> Keys { get; }
         ICollection<T> Values { get; }
         IEnumerator<KeyValuePair<string, T>> GetEnumerator();
         bool TryGetValue(string path, out T element);
@@ -73,12 +82,7 @@ namespace angeldnd.dap {
         List<T> RemoveByChecker(Pass pass, Func<T, bool> checker);
         List<T> RemoveByChecker(Func<T, bool> checker);
 
-        //Clear
-        void Clear(Pass pass);
-        void Clear();
-
-        //Has and Get
-        bool Has(string path);
+        //Get
         T1 Get<T1>(string path) where T1 : class, T;
         T Get(string path);
         T1 GetOrAdd<T1>(string path) where T1 : class, T;
@@ -130,15 +134,8 @@ namespace angeldnd.dap {
         protected Tree(Pass pass) : base(pass) {
         }
 
-        private T1 As<T1>(object element) where T1 : class, T {
-            if (element == null) return null;
-
-            if (!(element is T1)) {
-                Error("Type Mismatched: <{0}> -> {1}", typeof(T1).FullName, element.GetType().FullName);
-                return null;
-            }
-
-            return (T1)element;
+        public bool Has(string path) {
+            return _Elements.ContainsKey(path);
         }
 
         protected virtual void OnElementAdded(T element) {}

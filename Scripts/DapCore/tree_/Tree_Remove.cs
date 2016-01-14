@@ -12,10 +12,11 @@ namespace angeldnd.dap {
                     T1 element = As<T1>(_element);
                     if (element != null) {
                         _Elements.Remove(path);
+                        AdvanceRevision();
+
                         OnElementRemoved(element);
                         element.OnRemoved();
 
-                        AdvanceRevision();
                         return element;
                     }
                 }
@@ -69,18 +70,24 @@ namespace angeldnd.dap {
             if (!CheckAdminPass(pass)) return null;
 
             List<T> removed = null;
-            List<T> matched = All<T>();
-            if (matched != null) {
-                foreach (T aspect in matched) {
-                    if (checker(aspect)) {
-                        T _aspect = Remove(aspect.Path, pass);
-                        if (_aspect != null) {
-                            if (removed == null) {
-                                removed = new List<T>();
-                            }
-                            removed.Add(_aspect);
+            /* Must use the list version since need to remove some of them */
+            List<T> all = All();
+            if (all != null) {
+                foreach (T element in all) {
+                    if (checker(element)) {
+                        _Elements.Remove(element.Path);
+                        if (removed == null) {
+                            removed = new List<T>();
                         }
+                        removed.Add(element);
                     }
+                };
+            }
+            if (removed != null) {
+                AdvanceRevision();
+                foreach (T element in removed) {
+                    OnElementRemoved(element);
+                    element.OnRemoved();
                 }
             }
             return removed;

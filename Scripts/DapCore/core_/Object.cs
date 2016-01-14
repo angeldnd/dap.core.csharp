@@ -15,6 +15,9 @@ namespace angeldnd.dap {
         bool WriteSecured { get; }
         bool CheckAdminPass(Pass pass);
         bool CheckWritePass(Pass pass);
+
+        T As<T>() where T : class, IObject;
+        bool Is<T>() where T : class, IObject;
     }
 
     public static class ObjectConsts {
@@ -22,6 +25,27 @@ namespace angeldnd.dap {
     }
 
     public abstract class Object : Logger, IObject, IBlockOwner {
+        public static T As<T>(object obj, bool logError) where T : class, IObject {
+            if (obj == null) return null;
+
+            if (!(obj is T)) {
+                if (logError) {
+                    Log.Error("Type Mismatched: <{0}> -> {1}: {2}",
+                                typeof(T).FullName, obj.GetType().FullName, obj);
+                }
+                return null;
+            }
+            return (T)obj;
+        }
+
+        public static T As<T>(object obj) where T : class, IObject {
+            return As<T>(obj, true);
+        }
+
+        public static bool Is<T>(object obj) where T : class, IObject {
+            return As<T>(obj, false) != null;
+        }
+
         public virtual string Type {
             get { return null; }
         }
@@ -91,6 +115,14 @@ namespace angeldnd.dap {
 
         public bool CheckWritePass(Pass pass) {
             return CheckWritePass(pass, true);
+        }
+
+        public T As<T>() where T : class, IObject {
+            return Object.As<T>(this);
+        }
+
+        public bool Is<T>() where T : class, IObject {
+            return Object.Is<T>(this);
         }
 
         //SILP:BLOCK_OWNER()

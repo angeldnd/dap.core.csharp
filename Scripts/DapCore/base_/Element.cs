@@ -20,8 +20,7 @@ namespace angeldnd.dap {
         public override string LogPrefix {                            //__SILP__
             get {                                                     //__SILP__
                 return string.Format("{0}{1}",                        //__SILP__
-                        Owner.LogPrefix,                              //__SILP__
-                        base.LogPrefix);                              //__SILP__
+                        Owner.LogPrefix, base.LogPrefix);             //__SILP__
             }                                                         //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__

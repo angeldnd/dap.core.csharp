@@ -69,6 +69,13 @@
     <Compile Include="DapCore\registry_\Registry.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\registry_\Tickable.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\table_\Table.cs" />                <!--__SILP__-->
+    <Compile Include="DapCore\table_\Table_Add.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\table_\Table_Filter.cs" />         <!--__SILP__-->
+    <Compile Include="DapCore\table_\Table_Get.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\table_\Table_IList.cs" />          <!--__SILP__-->
+    <Compile Include="DapCore\table_\Table_Move.cs" />           <!--__SILP__-->
+    <Compile Include="DapCore\table_\Table_New.cs" />            <!--__SILP__-->
+    <Compile Include="DapCore\table_\Table_Remove.cs" />         <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_Add.cs" />              <!--__SILP__-->
     <Compile Include="DapCore\tree_\Tree_Filter.cs" />           <!--__SILP__-->

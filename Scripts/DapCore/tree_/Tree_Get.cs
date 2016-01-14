@@ -3,10 +3,6 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Tree<T> {
-        public bool Has(string path) {
-            return _Elements.ContainsKey(path);
-        }
-
         public T1 Get<T1>(string path) where T1 : class, T {
             T element = null;
             if (_Elements.TryGetValue(path, out element)) {

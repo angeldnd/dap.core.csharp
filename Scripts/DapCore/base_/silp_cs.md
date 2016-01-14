@@ -32,8 +32,7 @@ protected ${class}(${owner} owner, Pass pass) : base(pass) {
 public override string LogPrefix {
     get {
         return string.Format("{0}{1}",
-                Owner.LogPrefix,
-                base.LogPrefix);
+                Owner.LogPrefix, base.LogPrefix);
     }
 }
 
@@ -49,12 +48,15 @@ public virtual void OnAdded() {}
 public virtual void OnRemoved() {}
 ```
 
-
 # IN_TREE_MIXIN(class, owner) #
 ```
 private readonly string _Path;
 public string Path {
     get { return _Path; }
+}
+
+protected ${class}(${owner} owner, string path, Pass pass) : base(owner, pass) {
+    _Path = path;
 }
 
 public string RevPath {
@@ -63,8 +65,11 @@ public string RevPath {
     }
 }
 
-protected ${class}(${owner} owner, string path, Pass pass) : base(owner, pass) {
-    _Path = path;
+public override string LogPrefix {
+    get {
+        return string.Format("{0}{1} ({2}) ",
+                base.LogPrefix, Path, Revision);
+    }
 }
 ```
 

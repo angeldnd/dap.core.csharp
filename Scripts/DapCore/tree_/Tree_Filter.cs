@@ -7,14 +7,6 @@ namespace angeldnd.dap {
             var matcher = new PatternMatcher(Separator, pattern);
             var en = _Elements.GetEnumerator();
             while (en.MoveNext()) {
-                /*
-                if (LogDebug) {
-                    Debug("Check: {0}, {1} -> {2}, {3} -> {4}, {5}",
-                        pattern, typeof(T),
-                        pair.Key, pair.Value.GetType(),
-                        (pair.Value is T), matcher.IsMatched(pair.Key));
-                }
-                */
                 if (en.Current.Value is T1 && matcher.IsMatched(en.Current.Key)) {
                     callback((T1)en.Current.Value);
                 }

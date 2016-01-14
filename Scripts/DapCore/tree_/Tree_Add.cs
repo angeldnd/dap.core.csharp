@@ -33,9 +33,9 @@ namespace angeldnd.dap {
 
             object element = null;
             try {
-                element = Activator.CreateInstance(typeof(T), this, path, elementPass);
+                element = Activator.CreateInstance(typeof(T1), this, path, elementPass);
             } catch (Exception e) {
-                Error("CreateInstance Failed: <{0}> {1} -> {2}", typeof(T).FullName, path, e);
+                Error("CreateInstance Failed: <{0}> {1} -> {2}", typeof(T1).FullName, path, e);
             }
 
             return AddElement<T1>(element);
