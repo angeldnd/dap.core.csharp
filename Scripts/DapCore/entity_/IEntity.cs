@@ -2,12 +2,23 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
+    public interface IEntityAccessor {
+        IEntity GetEntity();
+    }
+
     public interface IEntityWatcher {
         void OnAspectAdded(IEntity entity, IAspect aspect);
         void OnAspectRemoved(IEntity entity, IAspect aspect);
     }
 
-    public interface IEntity : IOwner {
+    public interface IEntity : IOwner, IEntityAccessor {
+        void SetDebugMode(bool debugMode);
+        void SetDebugPatterns(string[] patterns);
+
+        int EntityWatcherCount { get; }
+        bool AddEntityWatcher(IEntityWatcher watcher);
+        bool RemoveEntityWatcher(IEntityWatcher watcher);
+
         void OnAspectAdded(IAspect aspect);
         void OnAspectRemoved(IAspect aspect);
     }

@@ -5,6 +5,7 @@ using System.IO;
 namespace angeldnd.dap {
     public interface ILogger {
         bool LogDebug { get; }
+
         void Critical(string format, params object[] values);
         void Error(string format, params object[] values);
         void Info(string format, params object[] values);

@@ -25,6 +25,11 @@ namespace angeldnd.dap {
          */
         public static bool DebugModeLogError = true;
 
+        public static Pass ToOpen(Pass pass) {
+            if (pass == null) return null;
+            return pass.Open;
+        }
+
         private readonly bool _Writable;
         private readonly int _HashCode;
 

@@ -41,3 +41,4 @@ public bool Remove${name}(${cs_type} ${var_name}) {
     return Remove${name}(null, ${var_name});
 }
 ```
+

@@ -13,7 +13,10 @@ namespace angeldnd.dap {
         }
 
         public T Get(int index) {
-            return Get<T>(index);
+            if (index >= 0 && index < _Elements.Count) {
+                return _Elements[index];
+            }
+            return null;
         }
     }
 }

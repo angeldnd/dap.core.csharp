@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace angeldnd.dap {
-    public interface DataChecker {
+    public interface IDataChecker {
         bool IsValid(Data data);
     }
 

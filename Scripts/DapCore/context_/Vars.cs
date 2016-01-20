@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class Vars : Section<IContext, IVar> {
+    public interface IVars : ISection {
+    }
+
+    public sealed class Vars : TreeSection<IContext, IVar>, IVars {
         public Vars(IContext owner, Pass pass) : base(owner, pass) {
         }
 

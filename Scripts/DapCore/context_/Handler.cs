@@ -75,7 +75,7 @@ namespace angeldnd.dap {
         }
     }
 
-    public sealed class Handler : Aspect<IContext, Handlers> {
+    public sealed class Handler : InTreeAspect<Handlers> {
         private IRequestHandler _Handler = null;
 
         public bool IsEmpty {

@@ -33,16 +33,32 @@ namespace angeldnd.dap {
             return Remove<T>(index);
         }
 
-        public void Clear(Pass pass) {
-            if (!CheckAdminPass(pass)) return;
-
-            _Elements.Clear();
-
-            AdvanceRevision();
+        private void NotifyRemoves(List<T> removed, bool updateIndexes) {
+            if (removed != null) {
+                if (updateIndexes) {
+                    UpdateIndexes(removed[0].Index);
+                } else {
+                    AdvanceRevision();
+                }
+                foreach (T element in removed) {
+                    element.OnRemoved();
+                }
+                OnElementsRemoved(removed);
+            }
         }
 
-        public void Clear() {
-            Clear(null);
+        public List<T> Clear(Pass pass) {
+            if (!CheckAdminPass(pass)) return null;
+
+            List<T> removed = All();
+            _Elements.Clear();
+
+            NotifyRemoves(removed, false);
+            return removed;
+        }
+
+        public List<T> Clear() {
+            return Clear(null);
         }
 
         public List<T> RemoveByChecker(Pass pass, Func<T, bool> checker) {
@@ -62,13 +78,7 @@ namespace angeldnd.dap {
                     }
                 };
             }
-            if (removed != null) {
-                UpdateIndexes(removed[0].Index);
-                foreach (T element in removed) {
-                    OnElementRemoved(element);
-                    element.OnRemoved();
-                }
-            }
+            NotifyRemoves(removed, true);
             return removed;
         }
 

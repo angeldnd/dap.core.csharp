@@ -21,10 +21,6 @@ namespace angeldnd.dap {
         int Count { get; }
         ICollection<string> Keys { get; }
 
-        //Clear
-        void Clear(Pass pass);
-        void Clear();
-
         //Has
         bool Has(string path);
 
@@ -82,11 +78,18 @@ namespace angeldnd.dap {
         List<T> RemoveByChecker(Pass pass, Func<T, bool> checker);
         List<T> RemoveByChecker(Func<T, bool> checker);
 
+        //Clear
+        List<T> Clear(Pass pass);
+        List<T> Clear();
+
         //Get
         T1 Get<T1>(string path) where T1 : class, T;
         T Get(string path);
         T1 GetOrAdd<T1>(string path) where T1 : class, T;
         T GetOrAdd(string path);
+
+        //Is
+        bool Is<T1>(string path) where T1 : class, T;
 
         //Generic Filter
         void Filter<T1>(string pattern, Action<T1> callback) where T1 : class, T;
@@ -138,7 +141,18 @@ namespace angeldnd.dap {
             return _Elements.ContainsKey(path);
         }
 
+        public bool Is<T1>(string path) where T1 : class, T {
+            T element = Get(path);
+            return Object.Is<T1>(element);
+        }
+
         protected virtual void OnElementAdded(T element) {}
         protected virtual void OnElementRemoved(T element) {}
+
+        protected virtual void OnElementsRemoved(List<T> elements) {
+            for (int i = 0; i < elements.Count; i++) {
+                OnElementRemoved(elements[i]);
+            }
+        }
     }
 }

@@ -3,14 +3,18 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public interface IContext : IEntity {
-        void SetDebugMode(bool debugMode);
-        void SetDebugPatterns(string[] patterns);
-
         Properties Properties { get; }
         Channels Channels { get; }
         Handlers Handlers { get; }
         Vars Vars { get; }
-    }
+
+        /*
+        bool FireEvent(string channelPath, Pass pass, Data evt);
+        bool FireEvent(string channelPath, Pass pass);
+        bool FireEvent(string channelPath, Data evt);
+        bool FireEvent(string channelPath);
+        */
+     }
 
     public static class ContextConsts {
         public const string TypeContext = "Context";

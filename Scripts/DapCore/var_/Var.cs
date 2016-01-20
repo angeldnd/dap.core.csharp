@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IVar : IAspect<IContext> {
+    public interface IVar : IAspect, IInTreeElement, IInTableElement {
         object GetValue();
 
         int VarWatcherCount { get; }
@@ -31,8 +31,8 @@ namespace angeldnd.dap {
         }
     }
 
-    public abstract class Var<TO, T> : Aspect<IContext, TO>, IVar<T>
-                                where TO : ISection<IContext> {
+    public abstract class Var<TO, T> : InBothAspect<TO>, IVar<T>
+                                            where TO : IVars {
         private T _Value;
         public T Value {
             get { return _Value; }
@@ -43,6 +43,9 @@ namespace angeldnd.dap {
         }
 
         public Var(TO owner, string path, Pass pass) : base(owner, path, pass) {
+        }
+
+        public Var(TO owner, int index, Pass pass) : base(owner, index, pass) {
         }
 
         private bool _Setup = false;
@@ -84,8 +87,8 @@ namespace angeldnd.dap {
             return WeakListHelper.IsValid(_ValueCheckers, (IValueChecker<T> checker) => {
                 if (!checker.IsValid(this, newValue)) {
                     if (LogDebug) {
-                        Debug("Check Not Passed: {0}: {1} -> {2} => {3}",
-                            Path, Value, newValue, checker);
+                        Debug("Check Not Passed: {0} -> {1} => {2}",
+                                Value, newValue, checker);
                     }
                     return false;
                 }
@@ -116,6 +119,40 @@ namespace angeldnd.dap {
 
         public bool SetValue(T newValue) {
             return SetValue(null, newValue);
+        }
+
+        public BlockVarWatcher AddBlockVarWatcher(IBlockOwner owner,
+                                                            Action<IVar> _watcher) {
+            BlockVarWatcher watcher = new BlockVarWatcher(owner, _watcher);
+            if (AddVarWatcher(watcher)) {
+                return watcher;
+            }
+            return null;
+        }
+
+        public BlockValueChecker<T> AddBlockValueChecker(Pass pass, IBlockOwner owner,
+                                                            Func<IVar<T>, T, bool> _checker) {
+            if (!CheckAdminPass(pass)) return null;
+
+            BlockValueChecker<T> checker = new BlockValueChecker<T>(owner, _checker);
+            if (AddValueChecker(pass, checker)) {
+                return checker;
+            }
+            return null;
+        }
+
+        public BlockValueChecker<T> AddBlockValueChecker(IBlockOwner owner,
+                                                            Func<IVar<T>, T, bool> checker) {
+            return AddBlockValueChecker(null, checker);
+        }
+
+        public BlockValueWatcher<T> AddBlockValueWatcher(IBlockOwner owner,
+                                                            Action<IVar<T>, T> _watcher) {
+            BlockValueWatcher<T> watcher = new BlockValueWatcher<T>(owner, _watcher);
+            if (AddValueWatcher(watcher)) {
+                return watcher;
+            }
+            return null;
         }
 
         //SILP: DECLARE_LIST(VarWatcher, watcher, IVarWatcher, _VarWatchers)
@@ -172,39 +209,5 @@ namespace angeldnd.dap {
         public bool RemoveValueWatcher(IValueWatcher<T> watcher) {    //__SILP__
             return WeakListHelper.Remove(_ValueWatchers, watcher);    //__SILP__
         }                                                             //__SILP__
-
-        public BlockVarWatcher AddBlockVarWatcher(IBlockOwner owner,
-                                                            Action<IVar> _watcher) {
-            BlockVarWatcher watcher = new BlockVarWatcher(owner, _watcher);
-            if (AddVarWatcher(watcher)) {
-                return watcher;
-            }
-            return null;
-        }
-
-        public BlockValueChecker<T> AddBlockValueChecker(Pass pass, IBlockOwner owner,
-                                                            Func<IVar<T>, T, bool> _checker) {
-            if (!CheckAdminPass(pass)) return null;
-
-            BlockValueChecker<T> checker = new BlockValueChecker<T>(owner, _checker);
-            if (AddValueChecker(pass, checker)) {
-                return checker;
-            }
-            return null;
-        }
-
-        public BlockValueChecker<T> AddBlockValueChecker(IBlockOwner owner,
-                                                            Func<IVar<T>, T, bool> checker) {
-            return AddBlockValueChecker(null, checker);
-        }
-
-        public BlockValueWatcher<T> AddBlockValueWatcher(IBlockOwner owner,
-                                                            Action<IVar<T>, T> _watcher) {
-            BlockValueWatcher<T> watcher = new BlockValueWatcher<T>(owner, _watcher);
-            if (AddValueWatcher(watcher)) {
-                return watcher;
-            }
-            return null;
-        }
     }
 }

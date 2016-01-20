@@ -10,6 +10,7 @@ namespace angeldnd.dap {
         public const string KindBiggerOrEqual = ">=";
         public const string KindSmaller = "<";
         public const string KindSmallerOrEqual = "<=";
+
         //Note that since the == and != check is not reliable for
         //float and double, not adding these kinds for them.
         public const string KindIn = "~";
@@ -45,7 +46,7 @@ namespace angeldnd.dap {
 
     /*
 
-    public class Spec : ItemAspect<Item>, DataChecker {
+    public class Spec : ItemAspect<Item>, IDataChecker {
         protected virtual bool StrictMode {
             get { return false; }
         }

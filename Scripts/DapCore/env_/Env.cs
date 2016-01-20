@@ -15,6 +15,8 @@ namespace angeldnd.dap {
         public const string DefaultLogDir = "dap";
         public const string DefaultLogName = "env";
         public const bool DefaultLogDebug = true;
+
+        public const string ChannelTick = "_tick";
     }
 
     public sealed class Env : Tree<Registry> {
@@ -57,7 +59,33 @@ namespace angeldnd.dap {
             get { return _Bootstrapper; }
         }
 
+        private static Pass _TickPass = new Pass();
+
+        private static int _TickCount = 0;
+        public static int TickCount {
+            get { return _TickCount; }
+        }
+
+        public static float _TickDelta = 0f;
+        public static float TickDelta {
+            get { return _TickDelta; }
+        }
+
+        public static void Tick(int tickCount, float tickDelta) {
+            //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
+            //FixedUpdate(), or other timer on other platform.
+            if (tickCount <= _TickCount || tickDelta <= 0.0f) {
+                _Instance.Error("Invalid Tick Param: tickCount = {0}, tickDelta = {1}", tickCount, tickDelta);
+            }
+            _TickCount = tickCount;
+            _TickDelta = tickDelta;
+            _Instance.All((Registry registry) => {
+                registry.Channels.FireEvent(EnvConsts.ChannelTick, _TickPass);
+            });
+        }
+
         private static Env _Instance = new Env();
+
         private static WeakList<IEnvWatcher> _Watchers = null;
 
         public static bool AddWatcher(IEnvWatcher watcher) {
@@ -93,6 +121,7 @@ namespace angeldnd.dap {
                 }
             }
             if (registry != null) {
+                registry.Channels.AddChannel(EnvConsts.ChannelTick, _TickPass);
                 WeakListHelper.Notify(_Watchers, (IEnvWatcher watcher) => {
                     watcher.OnRegistryAdded(registry);
                 });
@@ -120,6 +149,10 @@ namespace angeldnd.dap {
                 });
             }
             return registry;
+        }
+
+        public static Registry RemoveRegistry(string name) {
+            return RemoveRegistry(name, null);
         }
 
         public static Registry GetOrAddRegistry(string name) {

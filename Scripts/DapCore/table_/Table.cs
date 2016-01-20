@@ -17,10 +17,6 @@ namespace angeldnd.dap {
     public interface ITable : IOwner {
         //Partial IList
         int Count { get; }
-
-        //Clear
-        void Clear(Pass pass);
-        void Clear();
     }
 
     /*
@@ -65,9 +61,16 @@ namespace angeldnd.dap {
         List<T> RemoveByChecker(Pass pass, Func<T, bool> checker);
         List<T> RemoveByChecker(Func<T, bool> checker);
 
+        //Clear
+        List<T> Clear(Pass pass);
+        List<T> Clear();
+
         //Get
         T1 Get<T1>(int index) where T1 : class, T;
         T Get(int index);
+
+        //Is
+        bool Is<T1>(int index) where T1 : class, T;
 
         //Generic Filter
         void All<T1>(Action<T1> callback) where T1 : class, T;
@@ -97,6 +100,11 @@ namespace angeldnd.dap {
         protected Table(Pass pass) : base(pass) {
         }
 
+        public bool Is<T1>(int index) where T1 : class, T {
+            T element = Get(index);
+            return Object.Is<T1>(element);
+        }
+
         private void UpdateIndexes(int startIndex) {
             UpdateIndexes(startIndex, _Elements.Count - 1);
         }
@@ -112,5 +120,11 @@ namespace angeldnd.dap {
 
         protected virtual void OnElementAdded(T element) {}
         protected virtual void OnElementRemoved(T element) {}
+
+        protected virtual void OnElementsRemoved(List<T> elements) {
+            for (int i = 0; i < elements.Count; i++) {
+                OnElementRemoved(elements[i]);
+            }
+        }
     }
 }

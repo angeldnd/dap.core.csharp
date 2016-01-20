@@ -15,18 +15,18 @@ public bool Remove${name}(${cs_type} ${var_name}) {
 }
 ```
 
-# ELEMENT_MIXIN(class, owner) #
+# ELEMENT_MIXIN(class) #
 ```
-private readonly ${owner} _Owner;
-public ${owner} Owner {
+protected ${class}(TO owner, Pass pass) : base(pass) {
+    _Owner = owner;
+}
+
+private readonly TO _Owner;
+public TO Owner {
     get { return _Owner; }
 }
 public IOwner GetOwner() {
     return _Owner;
-}
-
-protected ${class}(${owner} owner, Pass pass) : base(pass) {
-    _Owner = owner;
 }
 
 public override string LogPrefix {
@@ -48,15 +48,17 @@ public virtual void OnAdded() {}
 public virtual void OnRemoved() {}
 ```
 
-# IN_TREE_MIXIN(class, owner) #
+# ELEMENT_MIXIN_CONSTRUCTOR(class) #
+```
+protected ${class}(TO owner, Pass pass) : base(owner, pass) {
+}
+```
+
+# IN_TREE_MIXIN_PATH() #
 ```
 private readonly string _Path;
 public string Path {
     get { return _Path; }
-}
-
-protected ${class}(${owner} owner, string path, Pass pass) : base(owner, pass) {
-    _Path = path;
 }
 
 public string RevPath {
@@ -64,7 +66,10 @@ public string RevPath {
         return string.Format("{0} ({1})", Path, Revision);
     }
 }
+```
 
+# IN_TREE_MIXIN_LOG_PREFIX() #
+```
 public override string LogPrefix {
     get {
         return string.Format("{0}{1} ({2}) ",
@@ -73,15 +78,28 @@ public override string LogPrefix {
 }
 ```
 
-# IN_TABLE_MIXIN(class, owner) #
+# IN_TREE_MIXIN(class) #
 ```
-private int _Index;
-public int Index {
-    get { return _Index; }
+protected ${class}(TO owner, string path, Pass pass) : base(owner, pass) {
+    _Path = path;
 }
 
-protected ${class}(${owner} owner, int index, Pass pass) : base(owner, pass) {
-    _Index = index;
+//SILP:IN_TREE_MIXIN_PATH()
+
+//SILP:IN_TREE_MIXIN_LOG_PREFIX()
+```
+
+# IN_TREE_MIXIN_CONSTRUCTOR(class) #
+```
+protected ${class}(TO owner, string path, Pass pass) : base(owner, path, pass) {
+}
+```
+
+# IN_TABLE_MIXIN_INDEX() #
+```
+private int _Index = -1;
+public int Index {
+    get { return _Index; }
 }
 
 public bool SetIndex(Pass pass, int index) {
@@ -96,7 +114,10 @@ public string RevIndex {
         return string.Format("[{0}] ({1})", _Index, Revision);
     }
 }
+```
 
+# IN_TABLE_MIXIN_LOG_PREFIX() #
+```
 public override string LogPrefix {
     get {
         return string.Format("{0}[{1}] ({2}) ",
@@ -105,26 +126,134 @@ public override string LogPrefix {
 }
 ```
 
+# IN_TABLE_MIXIN(class) #
+```
+protected ${class}(TO owner, int index, Pass pass) : base(owner, pass) {
+    _Index = index;
+}
+
+//SILP:IN_TABLE_MIXIN_INDEX()
+
+//SILP:IN_TABLE_MIXIN_LOG_PREFIX()
+```
+
+# IN_TABLE_MIXIN_CONSTRUCTOR(class) #
+```
+protected ${class}(TO owner, int index, Pass pass) : base(owner, index, pass) {
+}
+```
+
+# IN_BOTH_MIXIN_CONSTRUCTOR(class) #
+```
+//SILP:IN_TREE_MIXIN_CONSTRUCTOR(${class})
+
+//SILP:IN_TABLE_MIXIN_CONSTRUCTOR(${class})
+```
+
+# IN_BOTH_MIXIN(class) #
+```
+protected ${class}(TO owner, string path, Pass pass) : base(owner, pass) {
+    _Path = path;
+}
+
+protected ${class}(TO owner, int index, Pass pass) : base(owner, pass) {
+    _Index = index;
+}
+
+//SILP: IN_TREE_MIXIN_PATH()
+
+//SILP: IN_TABLE_MIXIN_INDEX()
+
+public override string LogPrefix {
+    get {
+        if (_Path != null) {
+            return string.Format("{0}{1} ({2}) ",
+                    base.LogPrefix, Path, Revision);
+        } else {
+            return string.Format("{0}[{1}] ({2}) ",
+                    base.LogPrefix, _Index, Revision);
+        }
+    }
+}
+```
+
 # ENTITY_MIXIN() #
 ```
+public IEntity GetEntity() {
+    return this;
+}
+
+private bool _DebugMode = false;
+public override bool DebugMode {
+    get { return _DebugMode; }
+}
+public void SetDebugMode(bool debugMode) {
+    _DebugMode= debugMode;
+}
+
+private string[] _DebugPatterns = null;
+public override string[] DebugPatterns {
+    get { return _DebugPatterns; }
+}
+public void SetDebugPatterns(string[] patterns) {
+    _DebugPatterns = patterns;
+}
+
 //SILP: DECLARE_LIST(EntityWatcher, watcher, IEntityWatcher, _EntityWatchers)
 
-public void OnAspectAdded(IAspect aspect) {
+public virtual void OnAspectAdded(IAspect aspect) {
     WeakListHelper.Notify(_EntityWatchers, (IEntityWatcher watcher) => {
         watcher.OnAspectAdded(this, aspect);
     });
 }
 
-public void OnAspectRemoved(IAspect aspect) {
+public virtual void OnAspectRemoved(IAspect aspect) {
     WeakListHelper.Notify(_EntityWatchers, (IEntityWatcher watcher) => {
         watcher.OnAspectRemoved(this, aspect);
     });
 }
 ```
 
+# IN_ENTITY_ELEMENT_MIXIN() #
+```
+public IEntity GetEntity() {
+    return Owner.GetEntity();
+}
+
+public IEntity Entity {
+    get { return Owner.GetEntity(); }
+}
+```
+
+# ASPECT_MIXIN() #
+```
+//SILP:IN_ENTITY_ELEMENT_MIXIN()
+```
+
+# SECTION_MIXIN(T) #
+```
+//SILP:IN_ENTITY_ELEMENT_MIXIN()
+
+protected override void OnElementAdded(${T} element) {
+    WeakListHelper.Notify(_Watchers, (ISectionWatcher watcher) => {
+        watcher.OnAspectAdded(element);
+    });
+    Entity.OnAspectAdded(element);
+}
+
+protected override void OnElementRemoved(${T} element) {
+    WeakListHelper.Notify(_Watchers, (ISectionWatcher watcher) => {
+        watcher.OnAspectRemoved(element);
+    });
+    Entity.OnAspectRemoved(element);
+}
+
+//SILP: DECLARE_LIST(Watcher, watcher, ISectionWatcher, _Watchers)
+```
+
 # CONTEXT_MIXIN() #
 ```
-    Pass sectionPass = Pass == null ? null : Pass.Open;
+    Pass sectionPass = Pass.ToOpen(Pass);
 
     _Properties = new Properties(this, sectionPass);
     _Channels = new Channels(this, sectionPass);
@@ -151,20 +280,19 @@ private readonly Vars _Vars;
 public Vars Vars {
     get { return _Vars; }
 }
+```
 
-private bool _DebugMode = false;
-public override bool DebugMode {
-    get { return _DebugMode; }
-}
-public void SetDebugMode(bool debugMode) {
-    _DebugMode= debugMode;
+# IN_BOTH_CONTEXT_MIXIN(class) #
+```
+private ${class}(TO owner, string path, Pass pass) : base(owner, path, pass) {
+    Pass sectionPass = Pass.ToOpen(Pass);
+
+    _Properties = new Properties(this, sectionPass);
+    _Channels = new Channels(this, sectionPass);
+    _Handlers = new Handlers(this, sectionPass);
+    _Vars = new Vars(this, sectionPass);
 }
 
-private string[] _DebugPatterns = {""};
-public override string[] DebugPatterns {
-    get { return _DebugPatterns; }
-}
-public void SetDebugPatterns(string[] patterns) {
-    _DebugPatterns = patterns;
-}
+private ${class}(TO owner, int index, Pass pass) : base(owner, index, pass) {
+//SILP: CONTEXT_MIXIN()
 ```

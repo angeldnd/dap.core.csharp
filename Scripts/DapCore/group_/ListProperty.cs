@@ -7,191 +7,10 @@ namespace angeldnd.dap {
         public const string KeyIndex = "_i";
     }
 
-    public abstract class ListProperty<T> : GroupProperty, IList<T> where T : class, IProperty {
-        private List<T> _Elements = new List<T>();
-
-        private bool _MuteOnChanged = false;
-
-        #region IList<T>
-        public int Count {
-            get { return _Elements.Count; }
-        }
-
-        public bool IsReadOnly {
-            get { return false; }
-        }
-
-        public T this[int index] {
-            get {
-                if (index < 0 || index >= _Elements.Count) return null;
-                return _Elements[index];
-            }
-            set {
-                throw new System.NotSupportedException("ListProperty<T>.indexer:set");
-            }
-        }
-
-        public IEnumerator<T> GetEnumerator() {
-            return _Elements.GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-            return GetEnumerator();
-        }
-
-        public void Add(T element) {
-            throw new System.NotSupportedException("ListProperty<T>.Add(T), use Add() or Add(Pass)");
-        }
-
-        public void Clear() {
-            Clear(null);
-        }
-
-        public bool Contains(T element) {
-            return _Elements.Contains(element);
-        }
-
-        public void CopyTo(T[] array, int arrayIndex) {
-            throw new System.NotSupportedException("ListProperty<T>.CopyTo()");
-        }
-
-        public int IndexOf(T element) {
-            return _Elements.IndexOf(element);
-        }
-
-        public void Insert(int index, T element) {
-            throw new System.NotSupportedException("ListProperty<T>.Insert()");
-        }
-
-        public bool Remove(T element) {
-            return Remove(element, null) != null;
-        }
-
-        public void RemoveAt(int index) {
-            if (index < 0 || index >= _Elements.Count) return;
-
-            Remove(_Elements[index]);
-        }
-
-        #endregion
-
-        #region APIs
-        public T Add() {
-            string path = Guid.NewGuid().ToString();
-            return Add<T>(path, null);
-        }
-
-        public T Add(Pass pass) {
-            string path = Guid.NewGuid().ToString();
-            return Add<T>(path, pass);
-        }
-
-        public T Remove(T element, Pass pass) {
-            return Remove<T>(element.Path, pass);
-        }
-
-        public void Clear(Pass pass) {
-            _MuteOnChanged = true;
-            All<T>((T element) => {
-                Remove(element, pass);
-            });
-            FireOnChanged();
-            _MuteOnChanged = false;
-        }
-
-        public bool MoveToHead(T element) {
-            int index = _Elements.IndexOf(element);
-            if (index < 0) return false;
-            if (index == 0) return true;
-
-            _Elements.RemoveAt(index);
-            _Elements.Insert(0, element);
-
-            FireOnChanged();
-            return true;
-        }
-
-        public bool MoveToTail(T element) {
-            int index = _Elements.IndexOf(element);
-            if (index < 0) return false;
-            if (index == _Elements.Count - 1) return true;
-
-            _Elements.RemoveAt(index);
-            _Elements.Add(element);
-
-            FireOnChanged();
-            return true;
-        }
-
-        public bool Swap(T elementA, T elementB) {
-            if (elementA == elementB) return true;
-            int indexA = _Elements.IndexOf(elementA);
-            if (indexA < 0) return false;
-            int indexB = _Elements.IndexOf(elementB);
-            if (indexB < 0) return false;
-
-            T tmp = _Elements[indexA];
-            _Elements[indexA] = _Elements[indexB];
-            _Elements[indexB] = tmp;
-
-            FireOnChanged();
-            return true;
-        }
-
-        private bool MoveBy(T elementA, T elementB, int offset) {
-            int indexA = _Elements.IndexOf(elementA);
-            if (indexA < 0) return false;
-
-            _Elements.RemoveAt(indexA);
-
-            int indexB = _Elements.IndexOf(elementB);
-            if (indexB < 0) {
-                _Elements.Insert(indexA + offset, elementA);
-                return false;
-            }
-
-            _Elements.Insert(indexB, elementA);
-
-            FireOnChanged();
-            return true;
-        }
-
-        public bool MoveBefore(T elementA, T elementB) {
-            return MoveBy(elementA, elementB, 0);
-        }
-
-        public bool MoveAfter(T elementA, T elementB) {
-            return MoveBy(elementA, elementB, 1);
-        }
-
-        public override void OnAspectAdded(Entity entity, Aspect aspect) {
-            base.OnAspectAdded(entity, aspect);
-            if (entity == this) {
-                if (aspect is T) {
-                    T element = (T)aspect;
-                    _Elements.Add(element);
-                    if (!_MuteOnChanged) FireOnChanged();
-                } else {
-                    aspect.Error("Type Mismatched: <{0}>", typeof(T).FullName);
-                }
-            }
-        }
-        #endregion
-
-        public override void OnAspectRemoved(Entity entity, Aspect aspect) {
-            base.OnAspectRemoved(entity, aspect);
-            if (entity == this) {
-                if (aspect is T) {
-                    T element = (T)aspect;
-                    _Elements.Remove(element);
-                    if (!_MuteOnChanged) FireOnChanged();
-                } else {
-                    aspect.Error("Type Mismatched: <{0}>", typeof(T).FullName);
-                }
-            }
-        }
-
-        protected override bool DoEncode(Data data) {
+    public class ListProperty<T> : TableInBothSection<IProperties, T>, ITableProperties<T>, IProperty
+                                                where T : class, IProperty {
+        private bool DoEncode(Data data) {
+            /*
             for (int i = 0; i < _Elements.Count; i++) {
                 T element = _Elements[i];
                 Data subData = element.Encode();
@@ -203,10 +22,12 @@ namespace angeldnd.dap {
                     return false;
                 }
             }
+            */
             return true;
         }
 
-        protected override bool DoDecode(Pass pass, Data data) {
+        private bool DoDecode(Pass pass, Data data) {
+            /*
             RemoveByChecker<T>(Pass, (T element) => true);
             if (_Elements.Count > 0) {
                 Error("Orghan Elements Found: {0}", _Elements.Count);
@@ -247,7 +68,87 @@ namespace angeldnd.dap {
                     return false;
                 }
             }
+            */
             return true;
         }
+
+        //SILP: GROUP_PROPERTY_MIXIN(ListProperty)
+        public ListProperty(IProperties owner, string path, Pass pass) : base(owner, path, pass) {  //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        public ListProperty(IProperties owner, int index, Pass pass) : base(owner, index, pass) {   //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        //IProperty                                                                                 //__SILP__
+        public Data Encode() {                                                                      //__SILP__
+            if (!string.IsNullOrEmpty(Type)) {                                                      //__SILP__
+                Data data = new Data();                                                             //__SILP__
+                if (data.SetString(ObjectConsts.KeyType, Type)) {                                   //__SILP__
+                    if (DoEncode(data)) {                                                           //__SILP__
+                        return data;                                                                //__SILP__
+                    }                                                                               //__SILP__
+                }                                                                                   //__SILP__
+            }                                                                                       //__SILP__
+            if (LogDebug) Debug("Not Encodable!");                                                  //__SILP__
+            return null;                                                                            //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        public bool Decode(Pass pass, Data data) {                                                  //__SILP__
+            if (!CheckWritePass(pass)) return false;                                                //__SILP__
+                                                                                                    //__SILP__
+            string type = data.GetString(ObjectConsts.KeyType);                                     //__SILP__
+            if (type == Type) {                                                                     //__SILP__
+                return DoDecode(pass, data);                                                        //__SILP__
+            } else {                                                                                //__SILP__
+                Error("Type Mismatched: {0}, {1}", Type, type);                                     //__SILP__
+            }                                                                                       //__SILP__
+            return false;                                                                           //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        public bool Decode(Data data) {                                                             //__SILP__
+            return Decode(null, data);                                                              //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        private void FireOnChanged() {                                                              //__SILP__
+            WeakListHelper.Notify(_VarWatchers, (IVarWatcher watcher) => {                          //__SILP__
+                watcher.OnChanged(this);                                                            //__SILP__
+            });                                                                                     //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        public BlockVarWatcher AddBlockVarWatcher(IBlockOwner owner,                                //__SILP__
+                                                            Action<IVar> _watcher) {                //__SILP__
+            BlockVarWatcher watcher = new BlockVarWatcher(owner, _watcher);                         //__SILP__
+            if (AddVarWatcher(watcher)) {                                                           //__SILP__
+                return watcher;                                                                     //__SILP__
+            }                                                                                       //__SILP__
+            return null;                                                                            //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        //IVar                                                                                      //__SILP__
+        public object GetValue() {                                                                  //__SILP__
+            return null;                                                                            //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        private WeakList<IVarWatcher> _VarWatchers = null;                                          //__SILP__
+                                                                                                    //__SILP__
+        public int VarWatcherCount {                                                                //__SILP__
+            get { return WeakListHelper.Count(_VarWatchers); }                                      //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        public bool AddVarWatcher(IVarWatcher watcher) {                                            //__SILP__
+            if (WeakListHelper.Add(ref _VarWatchers, watcher)){                                     //__SILP__
+                //_Properties.ResetAllVarWatchers(_PropertiesPass);                                 //__SILP__
+                return true;                                                                        //__SILP__
+            }                                                                                       //__SILP__
+            return false;                                                                           //__SILP__
+        }                                                                                           //__SILP__
+                                                                                                    //__SILP__
+        public bool RemoveVarWatcher(IVarWatcher watcher) {                                         //__SILP__
+            if (WeakListHelper.Remove(_VarWatchers, watcher)) {                                     //__SILP__
+                //_Properties.ResetAllVarWatchers(_PropertiesPass);                                 //__SILP__
+                return true;                                                                        //__SILP__
+            }                                                                                       //__SILP__
+            return false;                                                                           //__SILP__
+        }                                                                                           //__SILP__
     }
 }

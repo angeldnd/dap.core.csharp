@@ -12,8 +12,6 @@ namespace angeldnd.dap {
 
     public static class RegistryConsts {
         public const string TypeRegistry = "Registry";
-
-        public const string ChannelTick = "_tick";
     }
 
     public sealed class Registry : TreeInTreeContext<Env, IItem> {
@@ -22,17 +20,6 @@ namespace angeldnd.dap {
         }
 
         public Registry(Env owner, string path, Pass pass) : base(owner, path, pass) {
-        }
-
-        public override void OnAdded() {
-            //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
-            //FixedUpdate(), or other timer on other platform.
-            this.AddChannel(RegistryConsts.ChannelTick,
-                            this.DepositChannelPass(RegistryConsts.ChannelTick, new Pass()));
-        }
-
-        public override void OnRemoved() {
-            Channels.Remove(Pass, RegistryConsts.ChannelTick);
         }
 
         protected override void OnElementAdded(IItem item) {

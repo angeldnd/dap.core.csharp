@@ -19,9 +19,9 @@ namespace angeldnd.dap {
         static Factory() {
             _Factories = new Context(null).Vars;
 
-            //Aspects
+            Register<Context>(ContextConsts.TypeContext);
             Register<Item>(ItemConsts.TypeItem);
-            Register<Properties>(PropertiesConsts.TypeProperties);
+
             Register<BoolProperty>(PropertiesConsts.TypeBoolProperty);
             Register<IntProperty>(PropertiesConsts.TypeIntProperty);
             Register<LongProperty>(PropertiesConsts.TypeLongProperty);

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class Channels : Section<IContext, Channel> {
+    public sealed class Channels : TreeSection<IContext, Channel> {
         public Channels(IContext owner, Pass pass) : base(owner, pass) {
         }
 
@@ -26,6 +26,10 @@ namespace angeldnd.dap {
                 Error("Invalid Channel Path: {0}", channelPath);
             }
             return false;
+        }
+
+        public bool FireEvent(string channelPath, Pass pass) {
+            return FireEvent(channelPath, pass, null);
         }
 
         public bool FireEvent(string channelPath, Data evt) {

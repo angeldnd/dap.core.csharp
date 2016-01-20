@@ -6,18 +6,15 @@ namespace angeldnd.dap {
         string Type { get; }
         int Revision { get; }
 
-        string LogPrefix { get; }
-
         bool DebugMode { get; }
         string[] DebugPatterns { get; }
+
+        string LogPrefix { get; }
 
         bool AdminSecured { get; }
         bool WriteSecured { get; }
         bool CheckAdminPass(Pass pass);
         bool CheckWritePass(Pass pass);
-
-        T As<T>() where T : class, IObject;
-        bool Is<T>() where T : class, IObject;
     }
 
     public static class ObjectConsts {
@@ -115,14 +112,6 @@ namespace angeldnd.dap {
 
         public bool CheckWritePass(Pass pass) {
             return CheckWritePass(pass, true);
-        }
-
-        public T As<T>() where T : class, IObject {
-            return Object.As<T>(this);
-        }
-
-        public bool Is<T>() where T : class, IObject {
-            return Object.Is<T>(this);
         }
 
         //SILP:BLOCK_OWNER()

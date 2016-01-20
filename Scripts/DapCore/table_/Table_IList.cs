@@ -9,7 +9,7 @@ namespace angeldnd.dap {
 
         public T this[int index] {
             get {
-                return _Elements[index];
+                return Get(index);
             }
         }
 

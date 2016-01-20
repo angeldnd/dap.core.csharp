@@ -38,7 +38,7 @@ namespace angeldnd.dap {
         }
     }
 
-    public sealed class Channel : Aspect<IContext, Channels> {
+    public sealed class Channel : InTreeAspect<Channels> {
         public Channel(Channels owner, string path, Pass pass) : base(owner, path, pass) {
         }
 
