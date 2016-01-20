@@ -3,22 +3,10 @@ using System;
 namespace angeldnd.dap {
     public delegate IObject DapFactory(params object[] values);
 
-    /*
-     * Here the factory will add checker to property directly, since the checker
-     * need type of the value, which is not available in Property, so we need to do
-     * casting in the factory method, so don't want to cast again just for adding
-     * the checker later.
-     */
-    public delegate bool SpecValueCheckerFactory(IProperty prop, Pass pass, Data spec, string specKey);
-
     public static class Factory {
-        private static Vars _Factories;
-
-        //private static Vars _SpecValueCheckerFactories;
+        private static readonly Vars _Factories = new Vars(null, null);
 
         static Factory() {
-            _Factories = new Context(null).Vars;
-
             Register<Context>(ContextConsts.TypeContext);
             Register<Item>(ItemConsts.TypeItem);
 
@@ -29,11 +17,6 @@ namespace angeldnd.dap {
             Register<DoubleProperty>(PropertiesConsts.TypeDoubleProperty);
             Register<StringProperty>(PropertiesConsts.TypeStringProperty);
             Register<DataProperty>(PropertiesConsts.TypeDataProperty);
-
-            /*
-            _SpecValueCheckerFactories = new Context().Vars;
-            SpecHelper.RegistrySpecValueCheckers();
-            */
         }
 
         public static bool Register(string type, DapFactory factory) {
@@ -65,24 +48,5 @@ namespace angeldnd.dap {
             }
             return null;
         }
-
-        /*
-        public static bool RegisterSpecValueChecker(string propertyType, string specKind, SpecValueCheckerFactory factory) {
-            string factoryKey = string.Format("{0}{1}{2}", propertyType, SpecConsts.Separator, specKind);
-            return _SpecValueCheckerFactories.AddVar(factoryKey, factory) != null;
-        }
-
-        public static bool FactorySpecValueChecker(IProperty prop, Pass pass, Data spec, string specKey) {
-            string specKind = SpecConsts.GetSpecKind(specKey);
-            string factoryKey = string.Format("{0}{1}{2}", prop.Type, SpecConsts.Separator, specKind);
-            SpecValueCheckerFactory factory = _SpecValueCheckerFactories.GetValue<SpecValueCheckerFactory>(factoryKey);
-            if (factory != null) {
-                return factory(prop, pass, spec, specKey);
-            } else {
-                Log.Error("Unknown SpecValueChecker Type: {0}, Spec: {1}", factoryKey, spec);
-            }
-            return false;
-        }
-        */
     }
 }

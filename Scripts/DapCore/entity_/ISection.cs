@@ -11,4 +11,10 @@ namespace angeldnd.dap {
         bool AddWatcher(ISectionWatcher watcher);
         bool RemoveWatcher(ISectionWatcher watcher);
     }
+
+    public interface ITreeSection : ITree, ISection {
+    }
+
+    public interface ITableSection : ITable, ISection {
+    }
 }

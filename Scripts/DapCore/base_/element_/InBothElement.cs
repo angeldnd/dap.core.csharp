@@ -19,12 +19,6 @@ namespace angeldnd.dap {
             get { return _Path; }                                                        //__SILP__
         }                                                                                //__SILP__
                                                                                          //__SILP__
-        public string RevPath {                                                          //__SILP__
-            get {                                                                        //__SILP__
-                return string.Format("{0} ({1})", Path, Revision);                       //__SILP__
-            }                                                                            //__SILP__
-        }                                                                                //__SILP__
-                                                                                         //__SILP__
         private int _Index = -1;                                                         //__SILP__
         public int Index {                                                               //__SILP__
             get { return _Index; }                                                       //__SILP__
@@ -37,20 +31,12 @@ namespace angeldnd.dap {
             return true;                                                                 //__SILP__
         }                                                                                //__SILP__
                                                                                          //__SILP__
-        public string RevIndex {                                                         //__SILP__
-            get {                                                                        //__SILP__
-                return string.Format("[{0}] ({1})", _Index, Revision);                   //__SILP__
-            }                                                                            //__SILP__
-        }                                                                                //__SILP__
-                                                                                         //__SILP__
-        public override string LogPrefix {                                               //__SILP__
+        public override string RevInfo {                                                 //__SILP__
             get {                                                                        //__SILP__
                 if (_Path != null) {                                                     //__SILP__
-                    return string.Format("{0}{1} ({2}) ",                                //__SILP__
-                            base.LogPrefix, Path, Revision);                             //__SILP__
+                    return string.Format("[{0}] ({1}) ", _Path, Revision);               //__SILP__
                 } else {                                                                 //__SILP__
-                    return string.Format("{0}[{1}] ({2}) ",                              //__SILP__
-                            base.LogPrefix, _Index, Revision);                           //__SILP__
+                    return string.Format("[{0}] ({1}) ", _Index, Revision);              //__SILP__
                 }                                                                        //__SILP__
             }                                                                            //__SILP__
         }                                                                                //__SILP__

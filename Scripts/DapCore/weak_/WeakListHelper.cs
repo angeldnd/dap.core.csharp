@@ -26,10 +26,14 @@ namespace angeldnd.dap {
             return false;
         }
 
-        public static void Notify<T>(WeakList<T> list, Action<T> callback) where T : class {
+        public static void ForEach<T>(WeakList<T> list, Action<T> callback) where T : class {
             if (list != null) {
                 list.ForEach(callback);
             }
+        }
+
+        public static void Notify<T>(WeakList<T> list, Action<T> callback) where T : class {
+            ForEach(list, callback);
         }
 
         public static bool IsValid<T>(WeakList<T> list, Func<T, bool> callback) where T : class {

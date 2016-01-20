@@ -3,9 +3,6 @@ using System;
 namespace angeldnd.dap {
     public class ProxyAccessor<T> : ILogger, IAccessor<T>
                                             where T : IObject {
-        private readonly static DefaultLogWriter _DefaultWriter = new DefaultLogWriter(3);
-        private readonly static DebugLogWriter _DebugWriter = new DebugLogWriter(3);
-
         private readonly object _Source;
 
         private readonly T _Obj;
@@ -38,59 +35,24 @@ namespace angeldnd.dap {
             get { return Obj.DebugMode || Log.LogDebug; }
         }
 
-        private string GetLogMsg(string format, params object[] values) {
-            string msg = LogPrefix + string.Format(format, values);
-            if (Obj.DebugMode) {
-                msg = _DebugWriter.GetLogHint() + msg;
-            }
-            return msg;
-        }
-
         public void Critical(string format, params object[] values) {
-            string msg = GetLogMsg(format, values);
-            if (Obj.DebugMode) {
-                _DebugWriter.CriticalFrom(_Source, msg);
-            } else {
-                _DefaultWriter.CriticalFrom(_Source, msg);
-            }
+            Obj.CriticalFromProxy(format, values);
         }
 
         public void Error(string format, params object[] values) {
-            string msg = GetLogMsg(format, values);
-            if (Obj.DebugMode) {
-                _DebugWriter.ErrorFrom(_Source, msg);
-            } else {
-                _DefaultWriter.ErrorFrom(_Source, msg);
-            }
+            Obj.ErrorFromProxy(format, values);
         }
 
         public void Info(string format, params object[] values) {
-            string msg = GetLogMsg(format, values);
-            if (Obj.DebugMode) {
-                _DebugWriter.LogWithPatternsFrom(_Source, LoggerConsts.INFO, Obj.DebugPatterns, msg);
-            } else {
-                _DefaultWriter.InfoFrom(_Source, msg);
-            }
+            Obj.InfoFromProxy(format, values);
         }
 
         public void Debug(string format, params object[] values) {
-            if (LogDebug) {
-                string msg = GetLogMsg(format, values);
-                if (Obj.DebugMode) {
-                    _DebugWriter.LogWithPatternsFrom(_Source, LoggerConsts.DEBUG, Obj.DebugPatterns, msg);
-                } else {
-                    _DefaultWriter.DebugFrom(_Source, msg);
-                }
-            }
+            Obj.DebugFromProxy(format, values);
         }
 
         public void Custom(string kind, string format, params object[] values) {
-            string msg = GetLogMsg(format, values);
-            if (Obj.DebugMode) {
-                _DebugWriter.LogWithPatternsFrom(_Source, kind, Obj.DebugPatterns, msg);
-            } else {
-                _DefaultWriter.CustomFrom(_Source, kind, msg);
-            }
+            Obj.CustomFromProxy(kind, format, values);
         }
     }
 }

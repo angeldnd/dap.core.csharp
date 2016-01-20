@@ -115,5 +115,13 @@ namespace angeldnd.dap {
             }                                                                                        //__SILP__
             return false;                                                                            //__SILP__
         }                                                                                            //__SILP__
+                                                                                                     //__SILP__
+        public int ValueCheckerCount {                                                               //__SILP__
+            get { return 0; }                                                                        //__SILP__
+        }                                                                                            //__SILP__
+                                                                                                     //__SILP__
+        public int ValueWatcherCount {                                                               //__SILP__
+            get { return 0; }                                                                        //__SILP__
+        }                                                                                            //__SILP__
     }
 }

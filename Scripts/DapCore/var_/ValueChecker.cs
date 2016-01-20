@@ -17,7 +17,7 @@ namespace angeldnd.dap {
         }
 
         public bool IsValid(IVar<T> v, T newVal) {
-			return Checker(v, newVal);
+            return Checker(v, newVal);
         }
     }
 }

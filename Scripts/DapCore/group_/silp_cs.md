@@ -77,5 +77,13 @@ public bool RemoveVarWatcher(IVarWatcher watcher) {
     }
     return false;
 }
+
+public int ValueCheckerCount {
+    get { return 0; }
+}
+
+public int ValueWatcherCount {
+    get { return 0; }
+}
 ```
 

@@ -1,9 +1,9 @@
 using System;
 
 namespace angeldnd.dap {
-    public abstract class TableSection<TO, T> : TableElement<TO, T>, ISection
+    public abstract class TableSection<TO, T> : TableElement<TO, T>, ITableSection
                                                     where TO : IOwner, IEntityAccessor
-                                                    where T : class, IAspect, IInTableElement {
+                                                    where T : class, IInTableAspect {
         protected TableSection(TO owner, Pass pass) : base(owner, pass) {
         }
 

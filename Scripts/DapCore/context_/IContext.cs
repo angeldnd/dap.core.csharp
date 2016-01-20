@@ -7,6 +7,7 @@ namespace angeldnd.dap {
         Channels Channels { get; }
         Handlers Handlers { get; }
         Vars Vars { get; }
+        Others Others { get; }
 
         /*
         bool FireEvent(string channelPath, Pass pass, Data evt);

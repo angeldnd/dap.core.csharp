@@ -42,7 +42,7 @@ namespace angeldnd.dap {
             get { return DebugMode || Log.LogDebug; }
         }
 
-        private string GetLogMsg(string format, params object[] values) {
+        protected string GetLogMsg(string format, params object[] values) {
             string msg = LogPrefix + string.Format(format, values);
             if (DebugMode) {
                 msg = _DebugWriter.GetLogHint() + msg;

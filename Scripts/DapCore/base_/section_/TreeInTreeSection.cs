@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class TreeInTreeSection<TO, T> : TreeInTree<TO, T>, ISection
+    public abstract class TreeInTreeSection<TO, T> : TreeInTree<TO, T>, ITreeSection
                                                         where TO : ITree, IEntityAccessor
-                                                        where T : class, IAspect, IInTreeElement {
+                                                        where T : class, IInTreeAspect {
         //SILP:IN_TREE_MIXIN_CONSTRUCTOR(TreeInTreeSection)
         protected TreeInTreeSection(TO owner, string path, Pass pass) : base(owner, path, pass) {  //__SILP__
         }                                                                                          //__SILP__

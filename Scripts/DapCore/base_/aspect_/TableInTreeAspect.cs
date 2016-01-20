@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class TableInTreeAspect<TO, T> : TableInTree<TO, T>, IAspect<TO>
-                                                        where TO : ISection, ITree
+    public abstract class TableInTreeAspect<TO, T> : TableInTree<TO, T>, IInTreeAspect<TO>
+                                                        where TO : ITreeSection
                                                         where T : class, IInTableElement {
         //SILP:IN_TREE_MIXIN_CONSTRUCTOR(TableInTreeAspect)
         protected TableInTreeAspect(TO owner, string path, Pass pass) : base(owner, path, pass) {  //__SILP__

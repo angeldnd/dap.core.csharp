@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IVar : IAspect, IInTreeElement, IInTableElement {
+    public interface IVar : IInTreeAspect, IInTableAspect {
         object GetValue();
 
         int VarWatcherCount { get; }
         bool AddVarWatcher(IVarWatcher watcher);
         bool RemoveVarWatcher(IVarWatcher watcher);
+
+        int ValueCheckerCount { get; }
+        int ValueWatcherCount { get; }
     }
 
     public interface IVar<T> : IVar {
@@ -17,11 +20,12 @@ namespace angeldnd.dap {
 
         bool Setup(Pass pass, T defaultValue);
 
-        int ValueCheckerCount { get; }
         bool AddValueChecker(IValueChecker<T> checker);
         bool RemoveValueChecker(IValueChecker<T> checker);
 
-        int ValueWatcherCount { get; }
+        void AllValueCheckers<T1>(Action<T1> callback) where T1 : IValueChecker<T>;
+        void AllValueCheckers(Action<IValueChecker<T>> callback);
+
         bool AddValueWatcher(IValueWatcher<T> watcher);
         bool RemoveValueWatcher(IValueWatcher<T> watcher);
     }
@@ -153,6 +157,18 @@ namespace angeldnd.dap {
                 return watcher;
             }
             return null;
+        }
+
+        public void AllValueCheckers<T1>(Action<T1> callback) where T1 : IValueChecker<T> {
+            WeakListHelper.ForEach(_ValueCheckers, (IValueChecker<T> checker) => {
+                if (checker is T1) {
+                    callback((T1)checker);
+                }
+            });
+        }
+
+        public void AllValueCheckers(Action<IValueChecker<T>> callback) {
+            WeakListHelper.ForEach(_ValueCheckers, callback);
         }
 
         //SILP: DECLARE_LIST(VarWatcher, watcher, IVarWatcher, _VarWatchers)

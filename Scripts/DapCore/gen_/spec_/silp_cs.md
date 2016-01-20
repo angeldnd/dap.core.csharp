@@ -122,8 +122,8 @@ public class Data${type}SpecValueChecker${checker_kind} : Sub${type}SpecValueChe
 
 # _REGISTER_SPEC_HELPER(type, cs_type, checker_kind) #
 ```C#
-Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
-        (Property _prop, Pass pass, Data spec, string specKey) => {
+Spec.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
+        (IProperty _prop, Pass pass, Data spec, string specKey) => {
     if (spec == null) return false;
     ${type}Property prop = _prop as ${type}Property;
     if (prop == null) return false;
@@ -142,8 +142,8 @@ Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConst
 
 # _REGISTER_SPEC_IN_HELPER(type, cs_type, checker_kind) #
 ```C#
-Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
-        (Property _prop, Pass pass, Data spec, string specKey) => {
+Spec.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
+        (IProperty _prop, Pass pass, Data spec, string specKey) => {
     if (spec == null) return false;
     ${type}Property prop = _prop as ${type}Property;
     if (prop == null) return false;
@@ -168,8 +168,8 @@ Factory.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConst
 
 # _REGISTER_SPEC_DATA_HELPER(checker_kind) #
 ```C#
-Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
-        (Property _prop, Pass pass, Data spec, string specKey) => {
+Spec.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
+        (IProperty _prop, Pass pass, Data spec, string specKey) => {
     if (spec == null) return false;
     DataProperty prop = _prop as DataProperty;
     if (prop == null) return false;
@@ -210,8 +210,8 @@ Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.K
 
 # _REGISTER_SPEC_DATA_IN_HELPER(checker_kind) #
 ```C#
-Factory.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
-        (Property _prop, Pass pass, Data spec, string specKey) => {
+Spec.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
+        (IProperty _prop, Pass pass, Data spec, string specKey) => {
     if (spec == null) return false;
     DataProperty prop = _prop as DataProperty;
     if (prop == null) return false;

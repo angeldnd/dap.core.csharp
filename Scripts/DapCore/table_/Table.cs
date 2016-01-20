@@ -17,6 +17,8 @@ namespace angeldnd.dap {
     public interface ITable : IOwner {
         //Partial IList
         int Count { get; }
+
+        IInTableElement GetElement(int index);
     }
 
     /*

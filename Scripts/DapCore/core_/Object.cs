@@ -6,6 +6,8 @@ namespace angeldnd.dap {
         string Type { get; }
         int Revision { get; }
 
+        string RevInfo { get; }
+
         bool DebugMode { get; }
         string[] DebugPatterns { get; }
 
@@ -15,6 +17,12 @@ namespace angeldnd.dap {
         bool WriteSecured { get; }
         bool CheckAdminPass(Pass pass);
         bool CheckWritePass(Pass pass);
+
+        void CriticalFromProxy(string format, params object[] values);
+        void ErrorFromProxy(string format, params object[] values);
+        void InfoFromProxy(string format, params object[] values);
+        void DebugFromProxy(string format, params object[] values);
+        void CustomFromProxy(string kind, string format, params object[] values);
     }
 
     public static class ObjectConsts {
@@ -22,6 +30,9 @@ namespace angeldnd.dap {
     }
 
     public abstract class Object : Logger, IObject, IBlockOwner {
+        private readonly static DefaultLogWriter _ProxyDefaultWriter = new DefaultLogWriter(3);
+        private readonly static DebugLogWriter _ProxyDebugWriter = new DebugLogWriter(3);
+
         public static T As<T>(object obj, bool logError) where T : class, IObject {
             if (obj == null) return null;
 
@@ -61,6 +72,10 @@ namespace angeldnd.dap {
             get { return _Revision; }
         }
 
+        public virtual string RevInfo {
+            get { return string.Format("({0})", _Revision); }
+        }
+
         protected void AdvanceRevision() {
             _Revision += 1;
         }
@@ -68,7 +83,7 @@ namespace angeldnd.dap {
         public override string LogPrefix {
             get {
                 return string.Format("[{0}] ({1}) ",
-                            Type != null ? Type : GetType().Name, Revision);
+                            Type != null ? Type : GetType().Name, RevInfo);
             }
         }
 
@@ -112,6 +127,53 @@ namespace angeldnd.dap {
 
         public bool CheckWritePass(Pass pass) {
             return CheckWritePass(pass, true);
+        }
+
+        public void CriticalFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugWriter.CriticalFrom(this, msg);
+            } else {
+                _ProxyDefaultWriter.CriticalFrom(this, msg);
+            }
+        }
+
+        public void ErrorFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugWriter.ErrorFrom(this, msg);
+            } else {
+                _ProxyDefaultWriter.ErrorFrom(this, msg);
+            }
+        }
+
+        public void InfoFromProxy(string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugWriter.LogWithPatternsFrom(this, LoggerConsts.INFO, DebugPatterns, msg);
+            } else {
+                _ProxyDefaultWriter.InfoFrom(this, msg);
+            }
+        }
+
+        public void DebugFromProxy(string format, params object[] values) {
+            if (LogDebug) {
+                string msg = GetLogMsg(format, values);
+                if (DebugMode) {
+                    _ProxyDebugWriter.LogWithPatternsFrom(this, LoggerConsts.DEBUG, DebugPatterns, msg);
+                } else {
+                    _ProxyDefaultWriter.DebugFrom(this, msg);
+                }
+            }
+        }
+
+        public void CustomFromProxy(string kind, string format, params object[] values) {
+            string msg = GetLogMsg(format, values);
+            if (DebugMode) {
+                _ProxyDebugWriter.LogWithPatternsFrom(this, kind, DebugPatterns, msg);
+            } else {
+                _ProxyDefaultWriter.CustomFrom(this, kind, msg);
+            }
         }
 
         //SILP:BLOCK_OWNER()

@@ -7,7 +7,6 @@ namespace angeldnd.dap {
          * Constructor(TO owner, string path, Pass pass)
          */
         string Path { get; }
-        string RevPath { get; }
     }
 
     public interface IInTreeElement<TO> : IElement<TO>, IInTreeElement
@@ -28,6 +27,9 @@ namespace angeldnd.dap {
         int GetDepth(string path);
         string GetName(string path);
         string GetParentPath(string path);
+
+        //Get
+        IInTreeElement GetElement(string path);
     }
 
     public interface ITree<T> : ITree

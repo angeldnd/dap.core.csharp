@@ -45,55 +45,35 @@ namespace angeldnd.dap {
     }
 
     /*
+     * Here the factory will add checker to property directly, since the checker
+     * need type of the value, which is not available in Property, so we need to do
+     * casting in the factory method, so don't want to cast again just for adding
+     * the checker later.
+     */
+    public delegate bool SpecValueCheckerFactory(IProperty prop, Pass pass, Data spec, string specKey);
 
-    public class Spec : ItemAspect<Item>, IDataChecker {
-        protected virtual bool StrictMode {
-            get { return false; }
+    public static class Spec {
+        private static Vars _SpecValueCheckerFactories = new Vars(null, null);
+
+        static Spec() {
+            BuiltInSpecFactory.RegistrySpecValueCheckers();
         }
 
-        public bool IsValid(Data data) {
-            foreach (string key in data.Keys) {
-                Property prop = Item.Properties.Get<Property>(key);
-                if (prop == null ) {
-                    if (StrictMode) {
-                        return false;
-                    }
-                } else {
-                    if (!IsValidValue(prop, data, key)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
+        public static bool RegisterSpecValueChecker(string propertyType, string specKind, SpecValueCheckerFactory factory) {
+            string factoryKey = string.Format("{0}{1}{2}", propertyType, SpecConsts.Separator, specKind);
+            return _SpecValueCheckerFactories.AddVar(factoryKey, factory) != null;
         }
 
-        protected virtual bool IsValidValue(Property prop, Data data, string key) {
-            DataType valueType = data.GetValueType(key);
-
-            switch (valueType) {
-                case DataType.Bool:
-                    return (prop is BoolProperty) && ((BoolProperty)prop).CheckNewValue(data.GetBool(key));
-                case DataType.Int:
-                    return (prop is IntProperty) && ((IntProperty)prop).CheckNewValue(data.GetInt(key));
-                case DataType.Long:
-                    return (prop is LongProperty) && ((LongProperty)prop).CheckNewValue(data.GetLong(key));
-                case DataType.Float:
-                    return (prop is FloatProperty) && ((FloatProperty)prop).CheckNewValue(data.GetFloat(key));
-                case DataType.Double:
-                    return (prop is DoubleProperty) && ((DoubleProperty)prop).CheckNewValue(data.GetDouble(key));
-                case DataType.String:
-                    return (prop is StringProperty) && ((StringProperty)prop).CheckNewValue(data.GetString(key));
-                case DataType.Data:
-                    return (prop is DataProperty) && ((DataProperty)prop).CheckNewValue(data.GetData(key));
+        public static bool FactorySpecValueChecker(IProperty prop, Pass pass, Data spec, string specKey) {
+            string specKind = SpecConsts.GetSpecKind(specKey);
+            string factoryKey = string.Format("{0}{1}{2}", prop.Type, SpecConsts.Separator, specKind);
+            SpecValueCheckerFactory factory = _SpecValueCheckerFactories.GetValue<SpecValueCheckerFactory>(factoryKey);
+            if (factory != null) {
+                return factory(prop, pass, spec, specKey);
+            } else {
+                Log.Error("Unknown SpecValueChecker Type: {0}, Spec: {1}", factoryKey, spec);
             }
             return false;
         }
     }
-
-    public class StrictSpec : Spec {
-        protected override bool StrictMode {
-            get { return true; }
-        }
-    }
-    */
 }

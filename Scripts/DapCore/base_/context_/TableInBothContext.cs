@@ -13,6 +13,7 @@ namespace angeldnd.dap {
             _Channels = new Channels(this, sectionPass);                                          //__SILP__
             _Handlers = new Handlers(this, sectionPass);                                          //__SILP__
             _Vars = new Vars(this, sectionPass);                                                  //__SILP__
+            _Others = new Others(this, sectionPass);                                              //__SILP__
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         private TableInBothContext(TO owner, int index, Pass pass) : base(owner, index, pass) {   //__SILP__
@@ -22,6 +23,7 @@ namespace angeldnd.dap {
             _Channels = new Channels(this, sectionPass);                                          //__SILP__
             _Handlers = new Handlers(this, sectionPass);                                          //__SILP__
             _Vars = new Vars(this, sectionPass);                                                  //__SILP__
+            _Others = new Others(this, sectionPass);                                              //__SILP__
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         private readonly Properties _Properties;                                                  //__SILP__
@@ -42,6 +44,11 @@ namespace angeldnd.dap {
         private readonly Vars _Vars;                                                              //__SILP__
         public Vars Vars {                                                                        //__SILP__
             get { return _Vars; }                                                                 //__SILP__
+        }                                                                                         //__SILP__
+                                                                                                  //__SILP__
+        private readonly Others _Others;                                                          //__SILP__
+        public Others Others {                                                                    //__SILP__
+            get { return _Others; }                                                               //__SILP__
         }                                                                                         //__SILP__
 
         //SILP: ENTITY_MIXIN()

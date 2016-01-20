@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class TableInTableSection<TO, T> : TableInTable<TO, T>, ISection
+    public abstract class TableInTableSection<TO, T> : TableInTable<TO, T>, ITableSection
                                                         where TO : ITable, IEntityAccessor
-                                                        where T : class, IAspect, IInTableElement {
+                                                        where T : class, IInTableAspect {
         //SILP:IN_TABLE_MIXIN_CONSTRUCTOR(TableInTableSection)
         protected TableInTableSection(TO owner, int index, Pass pass) : base(owner, index, pass) {  //__SILP__
         }                                                                                           //__SILP__

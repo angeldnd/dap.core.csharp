@@ -2,19 +2,6 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface SpecValueChecker : IValueChecker {
-        bool DoEncode(Data spec);
-    }
-
-    public abstract class SpecValueChecker<T> : SpecValueChecker, IValueChecker<T> {
-        public bool IsValid(Property<T> property, T val, T newVal) {
-            return IsValid(newVal);
-        }
-
-        protected abstract bool IsValid(T val);
-        public abstract bool DoEncode(Data spec);
-    }
-
     //SILP: PROPERTY_SPEC(Int, int)
     public class IntSpecValueCheckerBigger : SpecValueChecker<int> {                                        //__SILP__
         public readonly int MinValue;                                                                       //__SILP__

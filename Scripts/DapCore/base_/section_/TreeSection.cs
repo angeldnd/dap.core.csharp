@@ -1,9 +1,9 @@
 using System;
 
 namespace angeldnd.dap {
-    public abstract class TreeSection<TO, T> : TreeElement<TO, T>, ISection
+    public abstract class TreeSection<TO, T> : TreeElement<TO, T>, ITreeSection
                                                     where TO : IOwner, IEntityAccessor
-                                                    where T : class, IAspect, IInTreeElement {
+                                                    where T : class, IInTreeAspect {
         protected TreeSection(TO owner, Pass pass) : base(owner, pass) {
         }
 

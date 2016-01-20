@@ -15,16 +15,9 @@ namespace angeldnd.dap {
             get { return _Path; }                                                     //__SILP__
         }                                                                             //__SILP__
                                                                                       //__SILP__
-        public string RevPath {                                                       //__SILP__
+        public override string RevInfo {                                              //__SILP__
             get {                                                                     //__SILP__
-                return string.Format("{0} ({1})", Path, Revision);                    //__SILP__
-            }                                                                         //__SILP__
-        }                                                                             //__SILP__
-                                                                                      //__SILP__
-        public override string LogPrefix {                                            //__SILP__
-            get {                                                                     //__SILP__
-                return string.Format("{0}{1} ({2}) ",                                 //__SILP__
-                        base.LogPrefix, Path, Revision);                              //__SILP__
+                return string.Format("[{0}] ({1}) ", _Path, Revision);                //__SILP__
             }                                                                         //__SILP__
         }                                                                             //__SILP__
     }

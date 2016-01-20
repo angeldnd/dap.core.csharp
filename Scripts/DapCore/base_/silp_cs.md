@@ -60,22 +60,6 @@ private readonly string _Path;
 public string Path {
     get { return _Path; }
 }
-
-public string RevPath {
-    get {
-        return string.Format("{0} ({1})", Path, Revision);
-    }
-}
-```
-
-# IN_TREE_MIXIN_LOG_PREFIX() #
-```
-public override string LogPrefix {
-    get {
-        return string.Format("{0}{1} ({2}) ",
-                base.LogPrefix, Path, Revision);
-    }
-}
 ```
 
 # IN_TREE_MIXIN(class) #
@@ -86,7 +70,11 @@ protected ${class}(TO owner, string path, Pass pass) : base(owner, pass) {
 
 //SILP:IN_TREE_MIXIN_PATH()
 
-//SILP:IN_TREE_MIXIN_LOG_PREFIX()
+public override string RevInfo {
+    get {
+        return string.Format("[{0}] ({1}) ", _Path, Revision);
+    }
+}
 ```
 
 # IN_TREE_MIXIN_CONSTRUCTOR(class) #
@@ -108,22 +96,6 @@ public bool SetIndex(Pass pass, int index) {
     _Index = index;
     return true;
 }
-
-public string RevIndex {
-    get {
-        return string.Format("[{0}] ({1})", _Index, Revision);
-    }
-}
-```
-
-# IN_TABLE_MIXIN_LOG_PREFIX() #
-```
-public override string LogPrefix {
-    get {
-        return string.Format("{0}[{1}] ({2}) ",
-                base.LogPrefix, _Index, Revision);
-    }
-}
 ```
 
 # IN_TABLE_MIXIN(class) #
@@ -134,7 +106,11 @@ protected ${class}(TO owner, int index, Pass pass) : base(owner, pass) {
 
 //SILP:IN_TABLE_MIXIN_INDEX()
 
-//SILP:IN_TABLE_MIXIN_LOG_PREFIX()
+public override string RevInfo {
+    get {
+        return string.Format("[{0}] ({1}) ", _Index, Revision);
+    }
+}
 ```
 
 # IN_TABLE_MIXIN_CONSTRUCTOR(class) #
@@ -164,14 +140,12 @@ protected ${class}(TO owner, int index, Pass pass) : base(owner, pass) {
 
 //SILP: IN_TABLE_MIXIN_INDEX()
 
-public override string LogPrefix {
+public override string RevInfo {
     get {
         if (_Path != null) {
-            return string.Format("{0}{1} ({2}) ",
-                    base.LogPrefix, Path, Revision);
+            return string.Format("[{0}] ({1}) ", _Path, Revision);
         } else {
-            return string.Format("{0}[{1}] ({2}) ",
-                    base.LogPrefix, _Index, Revision);
+            return string.Format("[{0}] ({1}) ", _Index, Revision);
         }
     }
 }
@@ -259,6 +233,7 @@ protected override void OnElementRemoved(${T} element) {
     _Channels = new Channels(this, sectionPass);
     _Handlers = new Handlers(this, sectionPass);
     _Vars = new Vars(this, sectionPass);
+    _Others = new Others(this, sectionPass);
 }
 
 private readonly Properties _Properties;
@@ -280,6 +255,11 @@ private readonly Vars _Vars;
 public Vars Vars {
     get { return _Vars; }
 }
+
+private readonly Others _Others;
+public Others Others {
+    get { return _Others; }
+}
 ```
 
 # IN_BOTH_CONTEXT_MIXIN(class) #
@@ -291,6 +271,7 @@ private ${class}(TO owner, string path, Pass pass) : base(owner, path, pass) {
     _Channels = new Channels(this, sectionPass);
     _Handlers = new Handlers(this, sectionPass);
     _Vars = new Vars(this, sectionPass);
+    _Others = new Others(this, sectionPass);
 }
 
 private ${class}(TO owner, int index, Pass pass) : base(owner, index, pass) {

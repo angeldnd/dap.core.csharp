@@ -6,29 +6,46 @@ using System.Reflection;
 
 namespace angeldnd.dap {
     public interface IRegistryWatcher {
-        void OnItemAdded(Registry entity, IItem item);
-        void OnItemRemoved(Registry entity, IItem item);
+        void OnItemAdded(IRegistry entity, IItem item);
+        void OnItemRemoved(IRegistry entity, IItem item);
+    }
+
+    public interface IRegistry : IContext, ITree {
+        int RegistryWatcherCount { get; }
+        bool AddRegistryWatcher(IRegistryWatcher watcher);
+        bool RemoveRegistryWatcher(IRegistryWatcher watcher);
+    }
+
+    public interface IRegistry<T> : ITree<T>, IRegistry
+                                        where T : class, IItem {
     }
 
     public static class RegistryConsts {
         public const string TypeRegistry = "Registry";
     }
 
-    public sealed class Registry : TreeInTreeContext<Env, IItem> {
+    public sealed class Registry : Registry<Env, IItem> {
         public override string Type {
             get { return RegistryConsts.TypeRegistry; }
         }
 
         public Registry(Env owner, string path, Pass pass) : base(owner, path, pass) {
         }
+    }
 
-        protected override void OnElementAdded(IItem item) {
+    public abstract class Registry<TO, T> : TreeInTreeContext<TO, T>, IRegistry<T>
+                                            where TO : ITree
+                                            where T : class, IItem {
+        public Registry(TO owner, string path, Pass pass) : base(owner, path, pass) {
+        }
+
+        protected override void OnElementAdded(T item) {
             WeakListHelper.Notify(_RegistryWatchers, (IRegistryWatcher watcher) => {
                 watcher.OnItemAdded(this, item);
             });
         }
 
-        protected override void OnElementRemoved(IItem item) {
+        protected override void OnElementRemoved(T item) {
             WeakListHelper.Notify(_RegistryWatchers, (IRegistryWatcher watcher) => {
                 watcher.OnItemRemoved(this, item);
             });
