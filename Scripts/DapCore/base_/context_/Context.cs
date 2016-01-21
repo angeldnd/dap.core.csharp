@@ -7,7 +7,7 @@ namespace angeldnd.dap {
             get { return ContextConsts.TypeContext; }
         }
 
-        public Context(Pass owner) : base(owner) {
+        public Context(Pass pass) : base(pass) {
         //SILP: CONTEXT_MIXIN()
             Pass sectionPass = Pass.ToOpen(Pass);                     //__SILP__
                                                                       //__SILP__

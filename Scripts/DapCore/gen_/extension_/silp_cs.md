@@ -40,7 +40,7 @@ public static bool Set${type}(this IContext context, string path, ${cs_type} val
 
 # TREE_PROPERTIES_HELPER(type, cs_type) #
 ```C#
-public static ${type}Property Add${type}(this ITreeProperties<IProperty> properties, string path, Pass propertyPass, ${cs_type} val) {
+public static ${type}Property Add${type}(this ITreeProperties properties, string path, Pass propertyPass, ${cs_type} val) {
     ${type}Property v = properties.Add<${type}Property>(path, propertyPass);
     if (v != null && !v.Setup(propertyPass, val)) {
         properties.Remove<${type}Property>(path);
@@ -49,19 +49,19 @@ public static ${type}Property Add${type}(this ITreeProperties<IProperty> propert
     return v;
 }
 
-public static ${type}Property Add${type}(this ITreeProperties<IProperty> properties, string path, ${cs_type} val) {
+public static ${type}Property Add${type}(this ITreeProperties properties, string path, ${cs_type} val) {
     return properties.Add${type}(path, null, val);
 }
 
-public static ${type}Property Remove${type}(this ITreeProperties<IProperty> properties, string path, Pass propertyPass) {
+public static ${type}Property Remove${type}(this ITreeProperties properties, string path, Pass propertyPass) {
     return properties.Remove<${type}Property>(path, propertyPass);
 }
 
-public static ${type}Property Remove${type}(this ITreeProperties<IProperty> properties, string path) {
+public static ${type}Property Remove${type}(this ITreeProperties properties, string path) {
     return properties.Remove<${type}Property>(path);
 }
 
-public static bool Add${type}ValueChecker(this ITreeProperties<IProperty> properties, string path, Pass propertyPass, IValueChecker<${cs_type}> checker) {
+public static bool Add${type}ValueChecker(this ITreeProperties properties, string path, Pass propertyPass, IValueChecker<${cs_type}> checker) {
     ${type}Property p = properties.Get<${type}Property>(path);
     if (p != null) {
         return p.AddValueChecker(propertyPass, checker);
@@ -71,11 +71,11 @@ public static bool Add${type}ValueChecker(this ITreeProperties<IProperty> proper
     return false;
 }
 
-public static bool Add${type}ValueChecker(this ITreeProperties<IProperty> properties, string path, IValueChecker<${cs_type}> checker) {
+public static bool Add${type}ValueChecker(this ITreeProperties properties, string path, IValueChecker<${cs_type}> checker) {
     return Add${type}ValueChecker(properties, path, null, checker);
 }
 
-public static bool Remove${type}ValueChecker(this ITreeProperties<IProperty> properties, string path, Pass propertyPass, IValueChecker<${cs_type}> checker) {
+public static bool Remove${type}ValueChecker(this ITreeProperties properties, string path, Pass propertyPass, IValueChecker<${cs_type}> checker) {
     ${type}Property p = properties.Get<${type}Property>(path);
     if (p != null) {
         return p.RemoveValueChecker(propertyPass, checker);
@@ -85,11 +85,11 @@ public static bool Remove${type}ValueChecker(this ITreeProperties<IProperty> pro
     return false;
 }
 
-public static bool Remove${type}ValueChecker(this ITreeProperties<IProperty> properties, string path, IValueChecker<${cs_type}> checker) {
+public static bool Remove${type}ValueChecker(this ITreeProperties properties, string path, IValueChecker<${cs_type}> checker) {
     return Remove${type}ValueChecker(properties, path, null, checker);
 }
 
-public static BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(this ITreeProperties<IProperty> properties, string path, Pass propertyPass,
+public static BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(this ITreeProperties properties, string path, Pass propertyPass,
                                     IBlockOwner owner, Func<IVar<${cs_type}>, ${cs_type}, bool> checker) {
     ${type}Property p = properties.Get<${type}Property>(path);
     if (p != null) {
@@ -100,12 +100,12 @@ public static BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(this ITr
     return null;
 }
 
-public static BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(this ITreeProperties<IProperty> properties, string path,
+public static BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(this ITreeProperties properties, string path,
                                     IBlockOwner owner, Func<IVar<${cs_type}>, ${cs_type}, bool> checker) {
     return Add${type}BlockValueChecker(properties, path, null, owner, checker);
 }
 
-public static bool Add${type}ValueWatcher(this ITreeProperties<IProperty> properties, string path, IValueWatcher<${cs_type}> watcher) {
+public static bool Add${type}ValueWatcher(this ITreeProperties properties, string path, IValueWatcher<${cs_type}> watcher) {
     ${type}Property p = properties.Get<${type}Property>(path);
     if (p != null) {
         return p.AddValueWatcher(watcher);
@@ -115,7 +115,7 @@ public static bool Add${type}ValueWatcher(this ITreeProperties<IProperty> proper
     return false;
 }
 
-public static bool Remove${type}ValueWatcher(this ITreeProperties<IProperty> properties, string path, IValueWatcher<${cs_type}> watcher) {
+public static bool Remove${type}ValueWatcher(this ITreeProperties properties, string path, IValueWatcher<${cs_type}> watcher) {
     ${type}Property p = properties.Get<${type}Property>(path);
     if (p != null) {
         return p.RemoveValueWatcher(watcher);
@@ -125,7 +125,7 @@ public static bool Remove${type}ValueWatcher(this ITreeProperties<IProperty> pro
     return false;
 }
 
-public static BlockValueWatcher<${cs_type}> Add${type}BlockValueWatcher(this ITreeProperties<IProperty> properties, string path,
+public static BlockValueWatcher<${cs_type}> Add${type}BlockValueWatcher(this ITreeProperties properties, string path,
                                     IBlockOwner owner, Action<IVar<${cs_type}>, ${cs_type}> watcher) {
     ${type}Property p = properties.Get<${type}Property>(path);
     if (p != null) {
@@ -136,11 +136,11 @@ public static BlockValueWatcher<${cs_type}> Add${type}BlockValueWatcher(this ITr
     return null;
 }
 
-public static bool Is${type}(this ITreeProperties<IProperty> properties, string path) {
+public static bool Is${type}(this ITreeProperties properties, string path) {
     return properties.Is<${type}Property>(path);
 }
 
-public static ${cs_type} Get${type}(this ITreeProperties<IProperty> properties, string path) {
+public static ${cs_type} Get${type}(this ITreeProperties properties, string path) {
     ${type}Property v = properties.Get<${type}Property>(path);
     if (v != null) {
         return v.Value;
@@ -150,7 +150,7 @@ public static ${cs_type} Get${type}(this ITreeProperties<IProperty> properties, 
     return default(${cs_type});
 }
 
-public static ${cs_type} Get${type}(this ITreeProperties<IProperty> properties, string path, ${cs_type} defaultValue) {
+public static ${cs_type} Get${type}(this ITreeProperties properties, string path, ${cs_type} defaultValue) {
     ${type}Property v = properties.Get<${type}Property>(path);
     if (v != null) {
         return v.Value;
@@ -161,7 +161,7 @@ public static ${cs_type} Get${type}(this ITreeProperties<IProperty> properties, 
 }
 
 
-public static bool Set${type}(this ITreeProperties<IProperty> properties, string path, Pass propertyPass, ${cs_type} val) {
+public static bool Set${type}(this ITreeProperties properties, string path, Pass propertyPass, ${cs_type} val) {
     ${type}Property v = properties.Get<${type}Property>(path);
     if (v != null) {
         return v.SetValue(propertyPass, val);
@@ -171,7 +171,7 @@ public static bool Set${type}(this ITreeProperties<IProperty> properties, string
     return false;
 }
 
-public static bool Set${type}(this ITreeProperties<IProperty> properties, string path, ${cs_type} val) {
+public static bool Set${type}(this ITreeProperties properties, string path, ${cs_type} val) {
     ${type}Property v = properties.Get<${type}Property>(path);
     if (v != null) {
         return v.SetValue(val);

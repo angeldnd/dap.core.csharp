@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Tree<T> {
-        public T1 New<T1>(string type, Pass pass, string path, Pass elementPass) where T1 : class, T {
+        public T1 New<T1>(string type, Pass pass, string path, Pass elementPass) where T1 : class, IInTreeElement {
             if (!CheckAdd(pass, path)) return null;
 
             object element = Factory.New<T1>(type, this, path, elementPass);
@@ -11,15 +11,15 @@ namespace angeldnd.dap {
             return AddElement<T1>(element);
         }
 
-        public T1 New<T1>(string type, Pass pass, string path) where T1 : class, T {
+        public T1 New<T1>(string type, Pass pass, string path) where T1 : class, IInTreeElement {
             return New<T1>(type, pass, path, null);
         }
 
-        public T1 New<T1>(string type, string path, Pass elementPass) where T1 : class, T {
+        public T1 New<T1>(string type, string path, Pass elementPass) where T1 : class, IInTreeElement {
             return New<T1>(type, null, path, elementPass);
         }
 
-        public T1 New<T1>(string type, string path) where T1 : class, T {
+        public T1 New<T1>(string type, string path) where T1 : class, IInTreeElement {
             return New<T1>(type, null, path, null);
         }
 

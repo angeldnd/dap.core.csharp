@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public class ComboProperty : TreeInBothSection<IProperties, IProperty>, ITreeProperties<IProperty>, IProperty {
+    public class ComboProperty : TreeInBothSection<IProperties, IProperty>, ITreeProperties, IProperty {
         private bool DoEncode(Data data) {
             bool result = true;
             /*

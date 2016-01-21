@@ -7,7 +7,7 @@ namespace angeldnd.dap {
             return Get(path);
         }
 
-        public T1 Get<T1>(string path) where T1 : class, T {
+        public T1 Get<T1>(string path) where T1 : class, IInTreeElement {
             T element = null;
             if (_Elements.TryGetValue(path, out element)) {
                 return As<T1>(element);
@@ -27,7 +27,7 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public T1 GetOrAdd<T1>(string path) where T1 : class, T {
+        public T1 GetOrAdd<T1>(string path) where T1 : class, IInTreeElement {
             T element = null;
             if (_Elements.TryGetValue(path, out element)) {
                 return As<T1>(element);

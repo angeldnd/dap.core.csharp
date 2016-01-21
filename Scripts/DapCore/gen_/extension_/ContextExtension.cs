@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class ContextExtension {
-        public static IProperty AddProperty(this IContext context, string path, Pass pass, bool open, Data data) {
+        public static IProperty AddProperty(this IContext context, string path,
+                                            Pass pass, bool open, Data data) {
             return context.Properties.AddProperty(path, pass, open, data);
         }
 

@@ -9,21 +9,24 @@ namespace angeldnd.dap {
             return true;
         }
 
-        private T1 AddElement<T1>(object _element) where T1 : class, T {
-            if (_element == null) return null;
+        private T1 AddElement<T1>(object obj) where T1 : class, IInTableElement {
+            if (obj == null) return null;
 
-            T1 element = As<T1>(_element);
-            if (element != null) {
-                element.OnAdded();
-                OnElementAdded(element);
-                _Elements.Add(element);
+            T1 _element = As<T1>(obj);
+            if (_element != null) {
+                T element = As<T>(obj);
+                if (element != null) {
+                    element.OnAdded();
+                    OnElementAdded(element);
+                    _Elements.Add(element);
 
-                AdvanceRevision();
+                    AdvanceRevision();
+                }
             }
-            return element;
+            return _element;
         }
 
-        public T1 Add<T1>(Pass pass) where T1 : class, T {
+        public T1 Add<T1>(Pass pass) where T1 : class, IInTableElement {
             if (!CheckAdd(pass)) return null;
 
             object element = null;
@@ -37,7 +40,7 @@ namespace angeldnd.dap {
             return AddElement<T1>(element);
         }
 
-        public T1 Add<T1>() where T1 : class, T {
+        public T1 Add<T1>() where T1 : class, IInTableElement {
             return Add<T1>(null);
         }
 

@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Tree<T> {
-        public T1 Remove<T1>(Pass pass, string path, Pass elementPass) where T1 : class, T {
+        public T1 Remove<T1>(Pass pass, string path, Pass elementPass) where T1 : class, IInTreeElement {
             if (!CheckWritePass(pass)) return null;
 
-            T _element;
-            if (_Elements.TryGetValue(path, out _element)) {
-                if (CheckAdminPass(pass, false) || _element.CheckAdminPass(elementPass)) {
-                    T1 element = As<T1>(_element);
-                    if (element != null) {
+            T element;
+            if (_Elements.TryGetValue(path, out element)) {
+                if (CheckAdminPass(pass, false) || element.CheckAdminPass(elementPass)) {
+                    T1 _element = As<T1>(element);
+                    if (_element != null) {
                         _Elements.Remove(path);
                         AdvanceRevision();
 
                         OnElementRemoved(element);
                         element.OnRemoved();
 
-                        return element;
+                        return _element;
                     }
                 }
             } else {
@@ -26,15 +26,15 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public T1 Remove<T1>(Pass pass, string path) where T1 : class, T {
+        public T1 Remove<T1>(Pass pass, string path) where T1 : class, IInTreeElement {
             return Remove<T1>(pass, path, null);
         }
 
-        public T1 Remove<T1>(string path, Pass elementPass) where T1 : class, T {
+        public T1 Remove<T1>(string path, Pass elementPass) where T1 : class, IInTreeElement {
             return Remove<T1>(null, path, elementPass);
         }
 
-        public T1 Remove<T1>(string path) where T1 : class, T {
+        public T1 Remove<T1>(string path) where T1 : class, IInTreeElement {
             return Remove<T1>(null, path, null);
         }
 

@@ -3,6 +3,46 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Table<T> {
+        public bool MoveToHead(Pass pass, int index) {
+            return MoveToHead(pass, Get(index));
+        }
+
+        public bool MoveToHead(int index) {
+            return MoveToHead(Get(index));
+        }
+
+        public bool MoveToTail(Pass pass, int index) {
+            return MoveToTail(pass, Get(index));
+        }
+
+        public bool MoveToTail(int index) {
+            return MoveToTail(Get(index));
+        }
+
+        public bool Swap(Pass pass, int indexA, int indexB) {
+            return Swap(pass, Get(indexA), Get(indexB));
+        }
+
+        public bool Swap(int indexA, int indexB) {
+            return Swap(Get(indexA), Get(indexB));
+        }
+
+        public bool MoveBefore(Pass pass, int index, int anchorIndex) {
+            return MoveBefore(pass, Get(index), Get(anchorIndex));
+        }
+
+        public bool MoveBefore(int index, int anchorIndex) {
+            return MoveBefore(Get(index), Get(anchorIndex));
+        }
+
+        public bool MoveAfter(Pass pass, int index, int anchorIndex) {
+            return MoveAfter(pass, Get(index), Get(anchorIndex));
+        }
+
+        public bool MoveAfter(int index, int anchorIndex) {
+            return MoveAfter(Get(index), Get(anchorIndex));
+        }
+
         private bool CheckElement(T element) {
             if (element != null) {
                 int index = element.Index;

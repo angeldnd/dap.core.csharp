@@ -3,25 +3,26 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Table<T> {
-        public T1 Remove<T1>(Pass pass, int index) where T1 : class, T {
+        public T1 Remove<T1>(Pass pass, int index) where T1 : class, IInTableElement {
             if (!CheckAdminPass(pass)) return null;
 
             if (index >= 0 && index < _Elements.Count) {
-                T1 element = As<T1>(_Elements[index]);
-                if (element != null) {
+                T element = _Elements[index];
+                T1 _element = As<T1>(element);
+                if (_element != null) {
                     _Elements.RemoveAt(index);
                     UpdateIndexes(index);
 
                     OnElementRemoved(element);
                     element.OnRemoved();
 
-                    return element;
+                    return _element;
                 }
             }
             return null;
         }
 
-        public T1 Remove<T1>(int index) where T1 : class, T {
+        public T1 Remove<T1>(int index) where T1 : class, IInTableElement {
             return Remove<T1>(null, index);
         }
 

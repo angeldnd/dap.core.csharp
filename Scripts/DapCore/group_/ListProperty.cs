@@ -7,7 +7,7 @@ namespace angeldnd.dap {
         public const string KeyIndex = "_i";
     }
 
-    public class ListProperty<T> : TableInBothSection<IProperties, T>, ITableProperties<T>, IProperty
+    public class ListProperty<T> : TableInBothSection<IProperties, T>, ITableProperties, IProperty
                                                 where T : class, IProperty {
         private bool DoEncode(Data data) {
             /*

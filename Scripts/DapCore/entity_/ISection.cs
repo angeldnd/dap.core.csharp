@@ -2,8 +2,8 @@ using System;
 
 namespace angeldnd.dap {
     public interface ISectionWatcher {
-        void OnAspectAdded(IAspect aspect);
-        void OnAspectRemoved(IAspect aspect);
+        void OnAspectAdded(ISection section, IAspect aspect);
+        void OnAspectRemoved(ISection section, IAspect aspect);
     }
 
     public interface ISection : IOwner, IElement, IEntityAccessor {

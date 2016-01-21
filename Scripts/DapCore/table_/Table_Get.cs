@@ -7,7 +7,7 @@ namespace angeldnd.dap {
             return Get(index);
         }
 
-        public T1 Get<T1>(int index) where T1 : class, T {
+        public T1 Get<T1>(int index) where T1 : class, IInTableElement {
             if (index >= 0 && index < _Elements.Count) {
                 return As<T1>(_Elements[index]);
             } else {

@@ -30,7 +30,7 @@ namespace angeldnd.dap {
             }
         }
 
-        public static IProperty AddPropertyWithSpec(ITreeProperties<IProperty> properties, string path, Pass pass, bool open, Data data) {
+        public static IProperty AddPropertyWithSpec(ITreeProperties properties, string path, Pass pass, bool open, Data data) {
             IProperty prop = properties.AddProperty(path, pass, open, data);
             if (prop != null) {
                 SetPropertyWithSpec(prop, pass, data);

@@ -18,14 +18,14 @@ namespace angeldnd.dap {
                                                                              //__SILP__
         protected override void OnElementAdded(T element) {                  //__SILP__
             WeakListHelper.Notify(_Watchers, (ISectionWatcher watcher) => {  //__SILP__
-                watcher.OnAspectAdded(element);                              //__SILP__
+                watcher.OnAspectAdded(this, element);                        //__SILP__
             });                                                              //__SILP__
             Entity.OnAspectAdded(element);                                   //__SILP__
         }                                                                    //__SILP__
                                                                              //__SILP__
         protected override void OnElementRemoved(T element) {                //__SILP__
             WeakListHelper.Notify(_Watchers, (ISectionWatcher watcher) => {  //__SILP__
-                watcher.OnAspectRemoved(element);                            //__SILP__
+                watcher.OnAspectRemoved(this, element);                      //__SILP__
             });                                                              //__SILP__
             Entity.OnAspectRemoved(element);                                 //__SILP__
         }                                                                    //__SILP__

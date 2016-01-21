@@ -23,13 +23,50 @@ namespace angeldnd.dap {
         //Has
         bool Has(string path);
 
+        //Generic Add
+        T1 Add<T1>(Pass pass, string path, Pass elementPass) where T1 : class, IInTreeElement;
+        T1 Add<T1>(Pass pass, string path) where T1 : class, IInTreeElement;
+        T1 Add<T1>(string path, Pass elementPass) where T1 : class, IInTreeElement;
+        T1 Add<T1>(string path) where T1 : class, IInTreeElement;
+
+        //Generic New With Factory
+        T1 New<T1>(string type, Pass pass, string path, Pass elementPass) where T1 : class, IInTreeElement;
+        T1 New<T1>(string type, Pass pass, string path) where T1 : class, IInTreeElement;
+        T1 New<T1>(string type, string path, Pass elementPass) where T1 : class, IInTreeElement;
+        T1 New<T1>(string type, string path) where T1 : class, IInTreeElement;
+
+        //Generic Remove
+        T1 Remove<T1>(Pass pass, string path, Pass elementPass) where T1 : class, IInTreeElement;
+        T1 Remove<T1>(Pass pass, string path) where T1 : class, IInTreeElement;
+        T1 Remove<T1>(string path, Pass elementPass) where T1 : class, IInTreeElement;
+        T1 Remove<T1>(string path) where T1 : class, IInTreeElement;
+
         //Path Helpers
         int GetDepth(string path);
         string GetName(string path);
         string GetParentPath(string path);
 
-        //Get
-        IInTreeElement GetElement(string path);
+        //Generic Get
+        T1 Get<T1>(string path) where T1 : class, IInTreeElement;
+        T1 GetOrAdd<T1>(string path) where T1 : class, IInTreeElement;
+
+        //Is
+        bool Is<T1>(string path) where T1 : class, IInTreeElement;
+
+        //Generic Filter
+        void Filter<T1>(string pattern, Action<T1> callback) where T1 : class, IInTreeElement;
+        void All<T1>(Action<T1> callback) where T1 : class, IInTreeElement;
+        List<T1> Filter<T1>(string pattern) where T1 : class, IInTreeElement;
+        List<T1> All<T1>() where T1 : class, IInTreeElement;
+
+        //Generic Relation
+        T1 GetParent<T1>(string path) where T1 : class, IInTreeElement;
+        void FilterChildren<T1>(string path, Action<T1> callback) where T1 : class, IInTreeElement;
+        List<T1> GetChildren<T1>(string path) where T1 : class, IInTreeElement;
+        T1 GetAncestor<T1>(string path) where T1 : class, IInTreeElement;
+        T1 GetDescendant<T1>(string path, string relativePath) where T1 : class, IInTreeElement;
+        void FilterDescendants<T1>(string path, Action<T1> callback) where T1 : class, IInTreeElement;
+        List<T1> GetDescendants<T1>(string path) where T1 : class, IInTreeElement;
     }
 
     public interface ITree<T> : ITree
@@ -40,35 +77,17 @@ namespace angeldnd.dap {
         IEnumerator<KeyValuePair<string, T>> GetEnumerator();
         bool TryGetValue(string path, out T element);
 
-        //Generic Add
-        T1 Add<T1>(Pass pass, string path, Pass elementPass) where T1 : class, T;
-        T1 Add<T1>(Pass pass, string path) where T1 : class, T;
-        T1 Add<T1>(string path, Pass elementPass) where T1 : class, T;
-        T1 Add<T1>(string path) where T1 : class, T;
-
         //Add
         T Add(Pass pass, string path, Pass elementPass);
         T Add(Pass pass, string path);
         T Add(string path, Pass elementPass);
         T Add(string path);
 
-        //Generic New With Factory
-        T1 New<T1>(string type, Pass pass, string path, Pass elementPass) where T1 : class, T;
-        T1 New<T1>(string type, Pass pass, string path) where T1 : class, T;
-        T1 New<T1>(string type, string path, Pass elementPass) where T1 : class, T;
-        T1 New<T1>(string type, string path) where T1 : class, T;
-
         //New With Factory
         T New(string type, Pass pass, string path, Pass elementPass);
         T New(string type, Pass pass, string path);
         T New(string type, string path, Pass elementPass);
         T New(string type, string path);
-
-        //Generic Remove
-        T1 Remove<T1>(Pass pass, string path, Pass elementPass) where T1 : class, T;
-        T1 Remove<T1>(Pass pass, string path) where T1 : class, T;
-        T1 Remove<T1>(string path, Pass elementPass) where T1 : class, T;
-        T1 Remove<T1>(string path) where T1 : class, T;
 
         //Remove
         T Remove(Pass pass, string path, Pass elementPass);
@@ -85,34 +104,14 @@ namespace angeldnd.dap {
         List<T> Clear();
 
         //Get
-        T1 Get<T1>(string path) where T1 : class, T;
         T Get(string path);
-        T1 GetOrAdd<T1>(string path) where T1 : class, T;
         T GetOrAdd(string path);
-
-        //Is
-        bool Is<T1>(string path) where T1 : class, T;
-
-        //Generic Filter
-        void Filter<T1>(string pattern, Action<T1> callback) where T1 : class, T;
-        void All<T1>(Action<T1> callback) where T1 : class, T;
-        List<T1> Filter<T1>(string pattern) where T1 : class, T;
-        List<T1> All<T1>() where T1 : class, T;
 
         //Filter
         void Filter(string pattern, Action<T> callback);
         void All(Action<T> callback);
         List<T> Filter(string pattern);
         List<T> All();
-
-        //Generic Relation
-        T1 GetParent<T1>(string path) where T1 : class, T;
-        void FilterChildren<T1>(string path, Action<T1> callback) where T1 : class, T;
-        List<T1> GetChildren<T1>(string path) where T1 : class, T;
-        T1 GetAncestor<T1>(string path) where T1 : class, T;
-        T1 GetDescendant<T1>(string path, string relativePath) where T1 : class, T;
-        void FilterDescendants<T1>(string path, Action<T1> callback) where T1 : class, T;
-        List<T1> GetDescendants<T1>(string path) where T1 : class, T;
 
         //Relation
         T GetParent(string path);
@@ -143,7 +142,7 @@ namespace angeldnd.dap {
             return _Elements.ContainsKey(path);
         }
 
-        public bool Is<T1>(string path) where T1 : class, T {
+        public bool Is<T1>(string path) where T1 : class, IInTreeElement {
             T element = Get(path);
             return Object.Is<T1>(element);
         }

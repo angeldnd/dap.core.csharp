@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     //SILP: PROPERTY_CLASS(Float, float)
-    public class FloatProperty : Property<float> {                                                  //__SILP__
+    public sealed class FloatProperty : Property<float> {                                           //__SILP__
         public override string Type {                                                               //__SILP__
             get { return PropertiesConsts.TypeFloatProperty; }                                      //__SILP__
         }                                                                                           //__SILP__

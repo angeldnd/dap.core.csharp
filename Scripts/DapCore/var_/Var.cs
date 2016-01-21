@@ -19,6 +19,7 @@ namespace angeldnd.dap {
         bool SetValue(T newValue);
 
         bool Setup(Pass pass, T defaultValue);
+        bool Setup(T defaultValue);
 
         bool AddValueChecker(IValueChecker<T> checker);
         bool RemoveValueChecker(IValueChecker<T> checker);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     //SILP: PROPERTY_CLASS(Bool, bool)
-    public class BoolProperty : Property<bool> {                                                   //__SILP__
+    public sealed class BoolProperty : Property<bool> {                                            //__SILP__
         public override string Type {                                                              //__SILP__
             get { return PropertiesConsts.TypeBoolProperty; }                                      //__SILP__
         }                                                                                          //__SILP__

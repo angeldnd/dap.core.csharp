@@ -18,7 +18,39 @@ namespace angeldnd.dap {
         //Partial IList
         int Count { get; }
 
-        IInTableElement GetElement(int index);
+        //Generic Add
+        T1 Add<T1>(Pass pass) where T1 : class, IInTableElement;
+        T1 Add<T1>() where T1 : class, IInTableElement;
+
+        //Generic New With factory
+        T1 New<T1>(string type, Pass pass) where T1 : class, IInTableElement;
+        T1 New<T1>(string type) where T1 : class, IInTableElement;
+
+        //Generic Remove
+        T1 Remove<T1>(Pass pass, int index) where T1 : class, IInTableElement;
+        T1 Remove<T1>(int index) where T1 : class, IInTableElement;
+
+        //Generic Get
+        T1 Get<T1>(int index) where T1 : class, IInTableElement;
+
+        //Is
+        bool Is<T1>(int index) where T1 : class, IInTableElement;
+
+        //Generic Filter
+        void All<T1>(Action<T1> callback) where T1 : class, IInTableElement;
+        List<T1> All<T1>() where T1 : class, IInTableElement;
+
+        //Move
+        bool MoveToHead(Pass pass, int index);
+        bool MoveToHead(int index);
+        bool MoveToTail(Pass pass, int index);
+        bool MoveToTail(int index);
+        bool Swap(Pass pass, int indexA, int indexB);
+        bool Swap(int indexA, int indexB);
+        bool MoveBefore(Pass pass, int index, int anchorIndex);
+        bool MoveBefore(int index, int anchorIndex);
+        bool MoveAfter(Pass pass, int index, int anchorIndex);
+        bool MoveAfter(int index, int anchorIndex);
     }
 
     /*
@@ -35,25 +67,13 @@ namespace angeldnd.dap {
 
         bool Contains(T element);
 
-        //Generic Add
-        T1 Add<T1>(Pass pass) where T1 : class, T;
-        T1 Add<T1>() where T1 : class, T;
-
         //Add
         T Add(Pass pass);
         T Add();
 
-        //Generic New With factory
-        T1 New<T1>(string type, Pass pass) where T1 : class, T;
-        T1 New<T1>(string type) where T1 : class, T;
-
         //New With factory
         T New(string type, Pass pass);
         T New(string type);
-
-        //Generic Remove
-        T1 Remove<T1>(Pass pass, int index) where T1 : class, T;
-        T1 Remove<T1>(int index) where T1 : class, T;
 
         //Remove
         T Remove(Pass pass, int index);
@@ -68,15 +88,7 @@ namespace angeldnd.dap {
         List<T> Clear();
 
         //Get
-        T1 Get<T1>(int index) where T1 : class, T;
         T Get(int index);
-
-        //Is
-        bool Is<T1>(int index) where T1 : class, T;
-
-        //Generic Filter
-        void All<T1>(Action<T1> callback) where T1 : class, T;
-        List<T1> All<T1>() where T1 : class, T;
 
         //Filter
         void All(Action<T> callback);
@@ -102,7 +114,7 @@ namespace angeldnd.dap {
         protected Table(Pass pass) : base(pass) {
         }
 
-        public bool Is<T1>(int index) where T1 : class, T {
+        public bool Is<T1>(int index) where T1 : class, IInTableElement {
             T element = Get(index);
             return Object.Is<T1>(element);
         }

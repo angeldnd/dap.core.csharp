@@ -210,14 +210,14 @@ public IEntity Entity {
 
 protected override void OnElementAdded(${T} element) {
     WeakListHelper.Notify(_Watchers, (ISectionWatcher watcher) => {
-        watcher.OnAspectAdded(element);
+        watcher.OnAspectAdded(this, element);
     });
     Entity.OnAspectAdded(element);
 }
 
 protected override void OnElementRemoved(${T} element) {
     WeakListHelper.Notify(_Watchers, (ISectionWatcher watcher) => {
-        watcher.OnAspectRemoved(element);
+        watcher.OnAspectRemoved(this, element);
     });
     Entity.OnAspectRemoved(element);
 }

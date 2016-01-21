@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace angeldnd.dap {
     public interface IRegistryWatcher {
-        void OnItemAdded(IRegistry entity, IItem item);
-        void OnItemRemoved(IRegistry entity, IItem item);
+        void OnItemAdded(IRegistry registry, IItem item);
+        void OnItemRemoved(IRegistry registry, IItem item);
     }
 
-    public interface IRegistry : IContext, ITree {
+    public interface IRegistry : IInTreeElement<Env>, IContext, ITree {
         int RegistryWatcherCount { get; }
         bool AddRegistryWatcher(IRegistryWatcher watcher);
         bool RemoveRegistryWatcher(IRegistryWatcher watcher);
@@ -24,7 +24,7 @@ namespace angeldnd.dap {
         public const string TypeRegistry = "Registry";
     }
 
-    public sealed class Registry : Registry<Env, IItem> {
+    public sealed class Registry : Registry<IItem> {
         public override string Type {
             get { return RegistryConsts.TypeRegistry; }
         }
@@ -33,10 +33,9 @@ namespace angeldnd.dap {
         }
     }
 
-    public abstract class Registry<TO, T> : TreeInTreeContext<TO, T>, IRegistry<T>
-                                            where TO : ITree
+    public abstract class Registry<T> : TreeInTreeContext<Env, T>, IRegistry<T>
                                             where T : class, IItem {
-        public Registry(TO owner, string path, Pass pass) : base(owner, path, pass) {
+        public Registry(Env owner, string path, Pass pass) : base(owner, path, pass) {
         }
 
         protected override void OnElementAdded(T item) {

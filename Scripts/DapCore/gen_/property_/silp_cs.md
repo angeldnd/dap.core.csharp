@@ -1,6 +1,6 @@
 # PROPERTY_CLASS(type, cs_type) #
 ```C#
-public class ${type}Property : Property<${cs_type}> {
+public sealed class ${type}Property : Property<${cs_type}> {
     public override string Type {
         get { return PropertiesConsts.Type${type}Property; }
     }
