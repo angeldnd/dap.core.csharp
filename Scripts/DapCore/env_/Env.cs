@@ -19,7 +19,7 @@ namespace angeldnd.dap {
         public const string ChannelTick = "_tick";
     }
 
-    public sealed class Env : Tree<Registry> {
+    public sealed class Env : TreeInTreeContext<Env, Registry>, IContext {
         static Env() {
             Bootstrapper bootstrapper = Bootstrapper.Bootstrap();
             if (bootstrapper != null) {
@@ -159,7 +159,7 @@ namespace angeldnd.dap {
             return _Instance.GetOrAdd(name);
         }
 
-        private Env() : base(new Pass().Open) {
+        private Env() : base(null, null, new Pass().Open) {
         }
     }
 }

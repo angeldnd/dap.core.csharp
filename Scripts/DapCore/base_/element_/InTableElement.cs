@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class InTableElement<TO> : Element<TO>, IInTableElement<TO>
+    public abstract class InTableElement<TO> : Element<TO>, IInTableElement
                                             where TO : ITable {
         //SILP: IN_TABLE_MIXIN(InTableElement)
         protected InTableElement(TO owner, int index, Pass pass) : base(owner, pass) {  //__SILP__
             _Index = index;                                                             //__SILP__
+        }                                                                               //__SILP__
+                                                                                        //__SILP__
+        public ITable OwnerAsTable {                                                    //__SILP__
+            get { return Owner; }                                                       //__SILP__
         }                                                                               //__SILP__
                                                                                         //__SILP__
         private int _Index = -1;                                                        //__SILP__

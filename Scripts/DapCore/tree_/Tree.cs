@@ -3,18 +3,16 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public interface IInTreeElement : IElement {
+        ITree OwnerAsTree { get; }
         /*
          * Constructor(TO owner, string path, Pass pass)
          */
         string Path { get; }
     }
 
-    public interface IInTreeElement<TO> : IElement<TO>, IInTreeElement
-                                            where TO : ITree {
-    }
-
     public interface ITree : IOwner {
         char Separator { get; }
+        Type ElementType { get; }
 
         //Partial IDict
         int Count { get; }
@@ -131,6 +129,10 @@ namespace angeldnd.dap {
                                                 where T : class, IInTreeElement {
         public virtual char Separator {
             get { return TreeConsts.Separator; }
+        }
+
+        public Type ElementType {
+            get { return typeof(T); }
         }
 
         private readonly Dictionary<string, T> _Elements = new Dictionary<string, T>();

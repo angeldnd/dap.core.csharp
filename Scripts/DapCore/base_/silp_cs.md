@@ -68,6 +68,10 @@ protected ${class}(TO owner, string path, Pass pass) : base(owner, pass) {
     _Path = path;
 }
 
+public ITree OwnerAsTree {
+    get { return Owner; }
+}
+
 //SILP:IN_TREE_MIXIN_PATH()
 
 public override string RevInfo {
@@ -104,6 +108,10 @@ protected ${class}(TO owner, int index, Pass pass) : base(owner, pass) {
     _Index = index;
 }
 
+public ITable OwnerAsTable {
+    get { return Owner; }
+}
+
 //SILP:IN_TABLE_MIXIN_INDEX()
 
 public override string RevInfo {
@@ -129,11 +137,23 @@ protected ${class}(TO owner, int index, Pass pass) : base(owner, index, pass) {
 # IN_BOTH_MIXIN(class) #
 ```
 protected ${class}(TO owner, string path, Pass pass) : base(owner, pass) {
-    _Path = path;
+    if (owner is ITree) {
+        _Path = path;
+    }
 }
 
 protected ${class}(TO owner, int index, Pass pass) : base(owner, pass) {
-    _Index = index;
+    if (owner is ITable) {
+        _Index = index;
+    }
+}
+
+public ITree OwnerAsTree {
+    get { return Owner as ITree; }
+}
+
+public ITable OwnerAsTable {
+    get { return Owner as ITable; }
 }
 
 //SILP: IN_TREE_MIXIN_PATH()
@@ -151,78 +171,15 @@ public override string RevInfo {
 }
 ```
 
-# ENTITY_MIXIN() #
-```
-public IEntity GetEntity() {
-    return this;
-}
-
-private bool _DebugMode = false;
-public override bool DebugMode {
-    get { return _DebugMode; }
-}
-public void SetDebugMode(bool debugMode) {
-    _DebugMode= debugMode;
-}
-
-private string[] _DebugPatterns = null;
-public override string[] DebugPatterns {
-    get { return _DebugPatterns; }
-}
-public void SetDebugPatterns(string[] patterns) {
-    _DebugPatterns = patterns;
-}
-
-//SILP: DECLARE_LIST(EntityWatcher, watcher, IEntityWatcher, _EntityWatchers)
-
-public virtual void OnAspectAdded(IAspect aspect) {
-    WeakListHelper.Notify(_EntityWatchers, (IEntityWatcher watcher) => {
-        watcher.OnAspectAdded(this, aspect);
-    });
-}
-
-public virtual void OnAspectRemoved(IAspect aspect) {
-    WeakListHelper.Notify(_EntityWatchers, (IEntityWatcher watcher) => {
-        watcher.OnAspectRemoved(this, aspect);
-    });
-}
-```
-
-# IN_ENTITY_ELEMENT_MIXIN() #
-```
-public IEntity GetEntity() {
-    return Owner.GetEntity();
-}
-
-public IEntity Entity {
-    get { return Owner.GetEntity(); }
-}
-```
-
 # ASPECT_MIXIN() #
 ```
-//SILP:IN_ENTITY_ELEMENT_MIXIN()
-```
-
-# SECTION_MIXIN(T) #
-```
-//SILP:IN_ENTITY_ELEMENT_MIXIN()
-
-protected override void OnElementAdded(${T} element) {
-    WeakListHelper.Notify(_Watchers, (ISectionWatcher watcher) => {
-        watcher.OnAspectAdded(this, element);
-    });
-    Entity.OnAspectAdded(element);
+public IContext GetContext() {
+    return Owner.GetContext();
 }
 
-protected override void OnElementRemoved(${T} element) {
-    WeakListHelper.Notify(_Watchers, (ISectionWatcher watcher) => {
-        watcher.OnAspectRemoved(this, element);
-    });
-    Entity.OnAspectRemoved(element);
+public IContext Context {
+    get { return Owner.GetContext(); }
 }
-
-//SILP: DECLARE_LIST(Watcher, watcher, ISectionWatcher, _Watchers)
 ```
 
 # CONTEXT_MIXIN() #
@@ -233,7 +190,7 @@ protected override void OnElementRemoved(${T} element) {
     _Channels = new Channels(this, sectionPass);
     _Handlers = new Handlers(this, sectionPass);
     _Vars = new Vars(this, sectionPass);
-    _Others = new Others(this, sectionPass);
+    _Manners = new Manners(this, sectionPass);
 }
 
 private readonly Properties _Properties;
@@ -256,9 +213,29 @@ public Vars Vars {
     get { return _Vars; }
 }
 
-private readonly Others _Others;
-public Others Others {
-    get { return _Others; }
+private readonly Manners _Manners;
+public Manners Manners {
+    get { return _Manners; }
+}
+
+public IContext GetContext() {
+    return this;
+}
+
+private bool _DebugMode = false;
+public override bool DebugMode {
+    get { return _DebugMode; }
+}
+public void SetDebugMode(bool debugMode) {
+    _DebugMode= debugMode;
+}
+
+private string[] _DebugPatterns = null;
+public override string[] DebugPatterns {
+    get { return _DebugPatterns; }
+}
+public void SetDebugPatterns(string[] patterns) {
+    _DebugPatterns = patterns;
 }
 ```
 
@@ -271,7 +248,7 @@ private ${class}(TO owner, string path, Pass pass) : base(owner, path, pass) {
     _Channels = new Channels(this, sectionPass);
     _Handlers = new Handlers(this, sectionPass);
     _Vars = new Vars(this, sectionPass);
-    _Others = new Others(this, sectionPass);
+    _Manners = new Manners(this, sectionPass);
 }
 
 private ${class}(TO owner, int index, Pass pass) : base(owner, index, pass) {

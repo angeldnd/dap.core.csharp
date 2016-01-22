@@ -37,5 +37,3 @@ namespace angeldnd.dap {
         public virtual void OnRemoved() {}                            //__SILP__
     }
 }
-
-

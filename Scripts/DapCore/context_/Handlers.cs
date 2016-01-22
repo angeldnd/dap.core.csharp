@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class Handlers : TreeSection<IContext, Handler> {
+    public sealed class Handlers : TreeAspect<IContext, Handler> {
         public Handlers(IContext owner, Pass pass) : base(owner, pass) {
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace angeldnd.dap {
-    public class DictProperty<T> : TreeInBothSection<IProperties, T>, ITreeProperties, IProperty
+    public abstract class DictProperty<T> : TreeInBothAspect<IProperties, T>, ITreeProperties, IProperty
                                                 where T : class, IProperty {
         private bool DoEncode(Data data) {
             /*

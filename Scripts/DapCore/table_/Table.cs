@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public interface IInTableElement : IElement {
+        ITable OwnerAsTable { get; }
         /*
          * Constructor(TO owner, int index, Pass pass)
          */
@@ -10,11 +11,9 @@ namespace angeldnd.dap {
         bool SetIndex(Pass pass, int index);
     }
 
-    public interface IInTableElement<TO> : IElement<TO>, IInTableElement
-                                            where TO : ITable {
-    }
-
     public interface ITable : IOwner {
+        Type ElementType { get; }
+
         //Partial IList
         int Count { get; }
 
@@ -109,6 +108,10 @@ namespace angeldnd.dap {
 
     public abstract partial class Table<T> : Object, ITable<T>
                                                 where T : class, IInTableElement {
+        public Type ElementType {
+            get { return typeof(T); }
+        }
+
         private readonly List<T> _Elements = new List<T>();
 
         protected Table(Pass pass) : base(pass) {

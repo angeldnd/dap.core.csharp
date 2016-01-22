@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class Channels : TreeSection<IContext, Channel> {
+    public sealed class Channels : TreeAspect<IContext, Channel> {
         public Channels(IContext owner, Pass pass) : base(owner, pass) {
         }
 

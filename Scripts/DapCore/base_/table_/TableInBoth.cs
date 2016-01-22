@@ -7,11 +7,23 @@ namespace angeldnd.dap {
                                                         where T : class, IInTableElement {
         //SILP:IN_BOTH_MIXIN(TableInBoth)
         protected TableInBoth(TO owner, string path, Pass pass) : base(owner, pass) {  //__SILP__
-            _Path = path;                                                              //__SILP__
+            if (owner is ITree) {                                                      //__SILP__
+                _Path = path;                                                          //__SILP__
+            }                                                                          //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
         protected TableInBoth(TO owner, int index, Pass pass) : base(owner, pass) {    //__SILP__
-            _Index = index;                                                            //__SILP__
+            if (owner is ITable) {                                                     //__SILP__
+                _Index = index;                                                        //__SILP__
+            }                                                                          //__SILP__
+        }                                                                              //__SILP__
+                                                                                       //__SILP__
+        public ITree OwnerAsTree {                                                     //__SILP__
+            get { return Owner as ITree; }                                             //__SILP__
+        }                                                                              //__SILP__
+                                                                                       //__SILP__
+        public ITable OwnerAsTable {                                                   //__SILP__
+            get { return Owner as ITable; }                                            //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
         private readonly string _Path;                                                 //__SILP__

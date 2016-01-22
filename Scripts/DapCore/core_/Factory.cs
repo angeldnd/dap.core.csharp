@@ -7,7 +7,7 @@ namespace angeldnd.dap {
         private static readonly Vars _Factories = new Vars(null, null);
 
         static Factory() {
-            Register<Context>(ContextConsts.TypeContext);
+            Register<Registry>(RegistryConsts.TypeRegistry);
             Register<Item>(ItemConsts.TypeItem);
 
             Register<BoolProperty>(PropertiesConsts.TypeBoolProperty);

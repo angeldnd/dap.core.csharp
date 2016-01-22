@@ -27,7 +27,7 @@ namespace angeldnd.dap {
         public const string KeyValue = "v";
     }
 
-    public sealed class Properties : TreeSection<IContext, IProperty>, ITreeProperties {
+    public sealed class Properties : TreeAspect<IContext, IProperty>, ITreeProperties {
         public Properties(IContext owner, Pass pass) : base(owner, pass) {
         }
     }

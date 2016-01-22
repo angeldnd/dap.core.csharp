@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class TableInTree<TO, T> : TableElement<TO, T>, IInTreeElement<TO>
+    public abstract class TableInTree<TO, T> : TableElement<TO, T>, IInTreeElement
                                                         where TO : ITree
                                                         where T : class, IInTableElement {
         //SILP: IN_TREE_MIXIN(TableInTree)
         protected TableInTree(TO owner, string path, Pass pass) : base(owner, pass) {  //__SILP__
             _Path = path;                                                              //__SILP__
+        }                                                                              //__SILP__
+                                                                                       //__SILP__
+        public ITree OwnerAsTree {                                                     //__SILP__
+            get { return Owner; }                                                      //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
         private readonly string _Path;                                                 //__SILP__

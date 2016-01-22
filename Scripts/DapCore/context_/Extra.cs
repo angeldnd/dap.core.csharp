@@ -11,7 +11,7 @@ namespace angeldnd.dap.binding {
             if (string.IsNullOrEmpty(Key)) {
                 return fragment;
             } else {
-                return string.Format("{0}{1}{2}", Key, EntityConsts.Separator, fragment);
+                return string.Format("{0}{1}{2}", Key, TreeConsts.Separator, fragment);
             }
         }
 
