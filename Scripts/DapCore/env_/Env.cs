@@ -6,11 +6,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace angeldnd.dap {
-    public interface IEnvWatcher {
-        void OnRegistryAdded(Registry registry);
-        void OnRegistryRemoved(Registry registry);
-    }
-
     public static class EnvConsts {
         public const string DefaultLogDir = "dap";
         public const string DefaultLogName = "env";
@@ -19,7 +14,7 @@ namespace angeldnd.dap {
         public const string ChannelTick = "_tick";
     }
 
-    public sealed class Env : TreeInTreeContext<Env, Registry>, IContext {
+    public sealed class Env : DictContext<Env, Registry>, IDictWatcher<Registry> {
         static Env() {
             Bootstrapper bootstrapper = Bootstrapper.Bootstrap();
             if (bootstrapper != null) {
@@ -59,7 +54,6 @@ namespace angeldnd.dap {
             get { return _Bootstrapper; }
         }
 
-        private static Pass _TickPass = new Pass();
 
         private static int _TickCount = 0;
         public static int TickCount {
@@ -79,87 +73,35 @@ namespace angeldnd.dap {
             }
             _TickCount = tickCount;
             _TickDelta = tickDelta;
-            _Instance.All((Registry registry) => {
-                registry.Channels.FireEvent(EnvConsts.ChannelTick, _TickPass);
+            _Instance.Tick();
+        }
+
+        private static readonly Env _Instance = new Env();
+        public static Env Instance {
+            get { return _Instance; }
+        }
+
+        private Env() : base(null, null) {
+            AddDictWatcher(this);
+        }
+
+        public override string LogPrefix {
+            get {
+                return string.Format("[Env] {0} ", RevInfo);
+            }
+        }
+
+        public void OnElementAdded(Registry registry) {
+            registry.Channels.Add(EnvConsts.ChannelTick);
+        }
+
+        public void OnElementRemoved(Registry registry) {
+        }
+
+        private void Tick() {
+            ForEach((Registry registry) => {
+                registry.Channels.FireEvent(EnvConsts.ChannelTick, null);
             });
-        }
-
-        private static Env _Instance = new Env();
-
-        private static WeakList<IEnvWatcher> _Watchers = null;
-
-        public static bool AddWatcher(IEnvWatcher watcher) {
-            return WeakListHelper.Add(ref _Watchers, watcher);
-        }
-
-        public static bool RemoveWatcher(IEnvWatcher watcher) {
-            return WeakListHelper.Remove(_Watchers, watcher);
-        }
-
-        public static bool HasRegistry(string name) {
-            return _Instance.Has(name);
-        }
-
-        public static Registry GetRegistry(string name) {
-            return _Instance.Get(name);
-        }
-
-        public static void AllRegistries(Action<Registry> callback) {
-            _Instance.All(callback);
-        }
-
-        public static Registry AddRegistry(string name, Pass pass, bool setupWithPlugins) {
-            Registry registry = _Instance.Add(name, pass);
-            if (registry != null && setupWithPlugins) {
-                foreach (Plugin plugin in _Bootstrapper.GetPlugins()) {
-                    bool ok = plugin.SetupRegistry(registry);
-                    if (ok) {
-                        registry.Info("Plugin SetupRegistry Succeed: {0}", plugin.GetType().FullName);
-                    } else {
-                        registry.Error("Plugin SetupRegistry Failed: {0}", plugin.GetType().FullName);
-                    }
-                }
-            }
-            if (registry != null) {
-                registry.Channels.AddChannel(EnvConsts.ChannelTick, _TickPass);
-                WeakListHelper.Notify(_Watchers, (IEnvWatcher watcher) => {
-                    watcher.OnRegistryAdded(registry);
-                });
-            }
-            return registry;
-        }
-
-        public static Registry AddRegistry(string name, bool setupWithPlugins) {
-            return AddRegistry(name, new Pass(), setupWithPlugins);
-        }
-
-        public static Registry AddRegistry(string name, Pass pass) {
-            return AddRegistry(name, pass, true);
-        }
-
-        public static Registry AddRegistry(string name) {
-            return AddRegistry(name, new Pass(), true);
-        }
-
-        public static Registry RemoveRegistry(string name, Pass pass) {
-            Registry registry = _Instance.Remove(name, pass);
-            if (registry != null) {
-                WeakListHelper.Notify(_Watchers, (IEnvWatcher watcher) => {
-                    watcher.OnRegistryRemoved(registry);
-                });
-            }
-            return registry;
-        }
-
-        public static Registry RemoveRegistry(string name) {
-            return RemoveRegistry(name, null);
-        }
-
-        public static Registry GetOrAddRegistry(string name) {
-            return _Instance.GetOrAdd(name);
-        }
-
-        private Env() : base(null, null, new Pass().Open) {
         }
     }
 }

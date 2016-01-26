@@ -3,40 +3,20 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Table<T> {
-        public bool MoveToHead(Pass pass, int index) {
-            return MoveToHead(pass, Get(index));
-        }
-
         public bool MoveToHead(int index) {
             return MoveToHead(Get(index));
-        }
-
-        public bool MoveToTail(Pass pass, int index) {
-            return MoveToTail(pass, Get(index));
         }
 
         public bool MoveToTail(int index) {
             return MoveToTail(Get(index));
         }
 
-        public bool Swap(Pass pass, int indexA, int indexB) {
-            return Swap(pass, Get(indexA), Get(indexB));
-        }
-
         public bool Swap(int indexA, int indexB) {
             return Swap(Get(indexA), Get(indexB));
         }
 
-        public bool MoveBefore(Pass pass, int index, int anchorIndex) {
-            return MoveBefore(pass, Get(index), Get(anchorIndex));
-        }
-
         public bool MoveBefore(int index, int anchorIndex) {
             return MoveBefore(Get(index), Get(anchorIndex));
-        }
-
-        public bool MoveAfter(Pass pass, int index, int anchorIndex) {
-            return MoveAfter(pass, Get(index), Get(anchorIndex));
         }
 
         public bool MoveAfter(int index, int anchorIndex) {
@@ -53,8 +33,7 @@ namespace angeldnd.dap {
             return false;
         }
 
-        public bool MoveToHead(Pass pass, T element) {
-            if (!CheckWritePass(pass)) return false;
+        public bool MoveToHead(T element) {
             if (!CheckElement(element)) return false;
 
             if (element.Index != 0) {
@@ -65,12 +44,7 @@ namespace angeldnd.dap {
             return true;
         }
 
-        public bool MoveToHead(T element) {
-            return MoveToHead(null, element);
-        }
-
-        public bool MoveToTail(Pass pass, T element) {
-            if (!CheckWritePass(pass)) return false;
+        public bool MoveToTail(T element) {
             if (!CheckElement(element)) return false;
 
             if (element.Index != _Elements.Count - 1) {
@@ -81,13 +55,8 @@ namespace angeldnd.dap {
             return true;
         }
 
-        public bool MoveToTail(T element) {
-            return MoveToTail(null, element);
-        }
-
-        public bool Swap(Pass pass, T elementA, T elementB) {
+        public bool Swap(T elementA, T elementB) {
             if (elementA == elementB) return false;
-            if (!CheckWritePass(pass)) return false;
             if (!CheckElement(elementA)) return false;
             if (!CheckElement(elementB)) return false;
 
@@ -95,22 +64,17 @@ namespace angeldnd.dap {
             int bIndex = elementB.Index;
 
             _Elements[aIndex] = elementB;
-            elementB.SetIndex(Pass, aIndex);
+            elementB.SetIndex(this, aIndex);
 
             _Elements[bIndex] = elementA;
-            elementA.SetIndex(Pass, bIndex);
+            elementA.SetIndex(this, bIndex);
 
             AdvanceRevision();
             return true;
         }
 
-        public bool Swap(T elementA, T elementB) {
-            return Swap(null, elementA, elementB);
-        }
-
-        public bool MoveBefore(Pass pass, T element, T anchor) {
+        public bool MoveBefore(T element, T anchor) {
             if (element == anchor) return false;
-            if (!CheckWritePass(pass)) return false;
             if (!CheckElement(element)) return false;
             if (!CheckElement(anchor)) return false;
 
@@ -127,13 +91,8 @@ namespace angeldnd.dap {
             return true;
         }
 
-        public bool MoveBefore(T element, T anchor) {
-            return MoveBefore(null, element, anchor);
-        }
-
-        public bool MoveAfter(Pass pass, T element, T anchor) {
+        public bool MoveAfter(T element, T anchor) {
             if (element == anchor) return false;
-            if (!CheckWritePass(pass)) return false;
             if (!CheckElement(element)) return false;
             if (!CheckElement(anchor)) return false;
 
@@ -148,10 +107,6 @@ namespace angeldnd.dap {
                 }
             }
             return true;
-        }
-
-        public bool MoveAfter(T element, T anchor) {
-            return MoveAfter(null, element, anchor);
         }
     }
 }

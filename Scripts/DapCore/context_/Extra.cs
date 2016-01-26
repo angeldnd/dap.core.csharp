@@ -11,14 +11,14 @@ namespace angeldnd.dap.binding {
             if (string.IsNullOrEmpty(Key)) {
                 return fragment;
             } else {
-                return string.Format("{0}{1}{2}", Key, TreeConsts.Separator, fragment);
+                return string.Format("{0}{1}{2}", Key, ContextConsts.AspectSeparator, fragment);
             }
         }
 
-        private Dictionary<string, Pass> _VarPasses;
-        private Dictionary<string, Pass> _PropertyPasses;
-        private Dictionary<string, Pass> _ChannelPasses;
-        private Dictionary<string, Pass> _HandlerPasses;
+        private List<string> _VarKeys;
+        private List<string> _PropertyKeys;
+        private List<string> _ChannelKeys;
+        private List<string> _HandlerKeys;
 
         public delegate void SyncPropertyBlock(string key);
         private Dictionary<string, SyncPropertyBlock> _PropertySyncers;
@@ -27,69 +27,64 @@ namespace angeldnd.dap.binding {
             Key = key;
         }
 
-        private void SaveVarPass(string key, Pass pass) {
-            if (_VarPasses == null) _VarPasses = new Dictionary<string, Pass>();
-            _VarPasses[key] = pass;
+        private void SaveVarKey(string key) {
+            if (_VarKeys == null) _VarKeys = new List<string>();
+            _VarKeys.Add(key);
         }
 
-        private void SavePropertyPass(string key, Pass pass) {
-            if (_PropertyPasses == null) _PropertyPasses = new Dictionary<string, Pass>();
-            _PropertyPasses[key] = pass;
+        private void SavePropertyKey(string key) {
+            if (_PropertyKeys == null) _PropertyKeys = new List<string>();
+            _PropertyKeys.Add(key);
         }
 
-        private void SaveChannelPass(string key, Pass pass) {
-            if (_ChannelPasses == null) _ChannelPasses = new Dictionary<string, Pass>();
-            _ChannelPasses[key] = pass;
+        private void SaveChannelKey(string key) {
+            if (_ChannelKeys == null) _ChannelKeys = new List<string>();
+            _ChannelKeys.Add(key);
         }
 
-        private void SaveHandlerPass(string key, Pass pass) {
-            if (_HandlerPasses == null) _HandlerPasses = new Dictionary<string, Pass>();
-            _HandlerPasses[key] = pass;
+        private void SaveHandlerKey(string key) {
+            if (_HandlerKeys == null) _HandlerKeys = new List<string>();
+            _HandlerKeys.Add(key);
         }
 
         private void SavePropertySyncer<TP, T>(string key, TP property, Func<T> getter) where TP : IProperty<T> {
             if (_PropertySyncers == null) _PropertySyncers = new Dictionary<string, SyncPropertyBlock>();
 
             _PropertySyncers[key] = (string _key) => {
-                Pass pass = null;
-                if (_PropertyPasses.TryGetValue(_key, out pass)) {
-                    T val = getter();
-                    if (!property.SetValue(pass, val)) {
-                        Error("Sync Property Faild: {0}: {1} -> {2}", _key, property.Value, val);
-                    }
-                } else {
-                    Critical("Pass Not Found: {0}", _key);
+                T val = getter();
+                if (!property.SetValue(val)) {
+                    Error("Sync Property Faild: {0}: {1} -> {2}", _key, property.Value, val);
                 }
             };
         }
 
         public void ClearExtra() {
-            if (_HandlerPasses != null) {
-                foreach (var kv in _HandlerPasses) {
-                    Obj.Handlers.Remove(kv.Key, kv.Value);
+            if (_HandlerKeys != null) {
+                foreach (string key in _HandlerKeys) {
+                    Obj.Handlers.Remove(key);
                 }
-                _HandlerPasses.Clear();
+                _HandlerKeys.Clear();
             }
-            if (_ChannelPasses != null) {
-                foreach (var kv in _ChannelPasses) {
-                    Obj.Channels.Remove(kv.Key, kv.Value);
+            if (_ChannelKeys != null) {
+                foreach (string key in _ChannelKeys) {
+                    Obj.Channels.Remove(key);
                 }
-                _ChannelPasses.Clear();
+                _ChannelKeys.Clear();
             }
-            if (_PropertyPasses != null) {
-                foreach (var kv in _PropertyPasses) {
-                    Obj.Properties.Remove(kv.Key, kv.Value);
+            if (_PropertyKeys != null) {
+                foreach (string key in _PropertyKeys) {
+                    Obj.Properties.Remove(key);
                 }
-                _PropertyPasses.Clear();
+                _PropertyKeys.Clear();
             }
             if (_PropertySyncers != null) {
                 _PropertySyncers.Clear();
             }
-            if (_VarPasses != null) {
-                foreach (var kv in _VarPasses) {
-                    Obj.Vars.Remove(kv.Key, kv.Value);
+            if (_VarKeys != null) {
+                foreach (string key in _VarKeys) {
+                    Obj.Vars.Remove(key);
                 }
-                _VarPasses.Clear();
+                _VarKeys.Clear();
             }
         }
 
@@ -101,86 +96,66 @@ namespace angeldnd.dap.binding {
             }
         }
 
-        public Channel SetupChannel(string fragment, Pass pass) {
+        public Channel SetupChannel(string fragment) {
             string key = GetSubKey(fragment);
-            Channel channel = Obj.Channels.AddChannel(key, pass);
+            Channel channel = Obj.Channels.Add(key);
             if (channel != null) {
-                SaveChannelPass(key, pass);
+                SaveChannelKey(key);
             }
             return channel;
         }
 
-        public Channel SetupChannel(string fragment) {
-            return SetupChannel(fragment, null);
-        }
-
-        public Handler SetupHandler(string fragment, Pass pass) {
+        public Handler SetupHandler(string fragment) {
             string key = GetSubKey(fragment);
-            Handler handler = Obj.Handlers.AddHandler(key, pass);
+            Handler handler = Obj.Handlers.Add(key);
             if (handler != null) {
-                SaveHandlerPass(key, pass);
+                SaveHandlerKey(key);
             }
             return handler;
         }
 
-        public Handler SetupHandler(string fragment) {
-            return SetupHandler(fragment, null);
-        }
-
-        public bool FireEvent(string fragment, Pass pass, Data evt) {
-            string key = GetSubKey(fragment);
-            return Obj.Channels.FireEvent(key, pass, evt);
-        }
-
         public bool FireEvent(string fragment, Data evt) {
-            return FireEvent(fragment, null, evt);
-        }
-
-        public Data HandleRequest(string fragment, Pass pass, Data req) {
             string key = GetSubKey(fragment);
-            return Obj.Handlers.HandleRequest(key, pass, req);
+            return Obj.Channels.FireEvent(key, evt);
         }
 
         public Data HandleRequest(string fragment, Data req) {
-            return HandleRequest(fragment, null, req);
+            string key = GetSubKey(fragment);
+            return Obj.Handlers.HandleRequest(key, req);
         }
 
-        public Var<T> SetupVar<T>(string fragment, Pass pass, T val, Action<IVar> watcher) {
+        public Var<T> SetupVar<T>(string fragment, T val, Action<IVar> watcher) {
             string key = GetSubKey(fragment);
-            Var<T> v = Obj.Vars.AddVar<T>(key, pass, val);
+            Var<T> v = Obj.Vars.AddVar<T>(key, val);
             if (v != null) {
-                if (watcher != null && !v.AddVarWatcher(new BlockVarWatcher(this, watcher))) {
+                if (watcher != null && v.AddVarWatcher(this, watcher) == null) {
                     Error("Add Watcher Failed: {0} -> {1}, {2}", this, typeof(T).FullName, fragment);
                 }
             }
             return v;
         }
 
-        public Var<T> SetupVar<T>(string fragment, Pass pass, T val) {
-            return SetupVar<T>(fragment, pass, val, null);
-        }
-
-        public TP SetupProperty<TP, T>(string type, string fragment, Pass pass) where TP : class, IProperty<T> {
+        public TP SetupProperty<TP, T>(string type, string fragment) where TP : class, IProperty<T> {
             string key = GetSubKey(fragment);
-            TP prop = Obj.Properties.New<TP>(type, key, pass);
+            TP prop = Obj.Properties.New<TP>(type, key);
             if (prop != null) {
-                SavePropertyPass(key, pass);
+                SavePropertyKey(key);
             }
             return prop;
         }
 
         public TP SetupProperty<TP, T>(string type, string fragment,
-                Pass pass, Func<T> getter,
+                Func<T> getter,
                 IValueChecker<T> checker,
                 IValueWatcher<T> watcher) 
                     where TP : class, IProperty<T> {
             string key = GetSubKey(fragment);
 
-            TP prop = SetupProperty<TP, T>(type, fragment, pass);
+            TP prop = SetupProperty<TP, T>(type, fragment);
 
             if (prop != null) {
                 T val = getter();
-                prop.Setup(pass, val);
+                prop.Setup(val);
                 SavePropertySyncer<TP, T>(key, prop, getter);
                 if (checker != null && !prop.AddValueChecker(checker)) {
                     Error("Add Checker Failed: {0} -> {1}, {2}", this, type, fragment);

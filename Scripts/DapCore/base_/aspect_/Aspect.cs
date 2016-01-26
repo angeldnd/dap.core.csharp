@@ -2,9 +2,9 @@ using System;
 
 namespace angeldnd.dap {
     public abstract class Aspect<TO> : Element<TO>, IAspect
-                                            where TO : IOwner, IContextAccessor {
+                                            where TO : class, IOwner, IContextAccessor {
         //SILP:ELEMENT_MIXIN_CONSTRUCTOR(Aspect)
-        protected Aspect(TO owner, Pass pass) : base(owner, pass) {   //__SILP__
+        protected Aspect(TO owner) : base(owner) {                    //__SILP__
         }                                                             //__SILP__
 
         //SILP:ASPECT_MIXIN()

@@ -50,10 +50,10 @@ namespace angeldnd.dap {
      * casting in the factory method, so don't want to cast again just for adding
      * the checker later.
      */
-    public delegate bool SpecValueCheckerFactory(IProperty prop, Pass pass, Data spec, string specKey);
+    public delegate bool SpecValueCheckerFactory(IProperty prop, Data spec, string specKey);
 
     public static class Spec {
-        private static Vars _SpecValueCheckerFactories = new Vars(null, null);
+        private static Vars _SpecValueCheckerFactories = new Vars(null);
 
         static Spec() {
             BuiltInSpecFactory.RegistrySpecValueCheckers();
@@ -64,12 +64,12 @@ namespace angeldnd.dap {
             return _SpecValueCheckerFactories.AddVar(factoryKey, factory) != null;
         }
 
-        public static bool FactorySpecValueChecker(IProperty prop, Pass pass, Data spec, string specKey) {
+        public static bool FactorySpecValueChecker(IProperty prop, Data spec, string specKey) {
             string specKind = SpecConsts.GetSpecKind(specKey);
             string factoryKey = string.Format("{0}{1}{2}", prop.Type, SpecConsts.Separator, specKind);
             SpecValueCheckerFactory factory = _SpecValueCheckerFactories.GetValue<SpecValueCheckerFactory>(factoryKey);
             if (factory != null) {
-                return factory(prop, pass, spec, specKey);
+                return factory(prop, spec, specKey);
             } else {
                 Log.Error("Unknown SpecValueChecker Type: {0}, Spec: {1}", factoryKey, spec);
             }

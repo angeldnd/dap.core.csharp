@@ -69,9 +69,9 @@ namespace angeldnd.dap {
         public bool Remove(T element) {
             int index = IndexOf(element);
             if (index >= 0) {
-                if (element is WeakBlock) {
-                    // Got compiler error in Unity if use (WeakBlock)element
-                    (element as WeakBlock).OnRemoved();
+                WeakBlock block = element as WeakBlock;
+                if (block != null) {
+                    block.OnRemoved();
                 }
                 _Elements.RemoveAt(index);
                 return true;
@@ -87,9 +87,9 @@ namespace angeldnd.dap {
         public bool AddElement(T element) {
             if (!Contains(element)) {
                 _Elements.Add(new WeakReference(element));
-                if (element is WeakBlock) {
-                    // Got compiler error in Unity if use (WeakBlock)element
-                    (element as WeakBlock).OnAdded();
+                WeakBlock block = element as WeakBlock;
+                if (block != null) {
+                    block.OnAdded();
                 }
                 return true;
             }

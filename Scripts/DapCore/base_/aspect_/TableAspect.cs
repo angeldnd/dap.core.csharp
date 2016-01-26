@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract class TableAspect<TO, T> : TableElement<TO, T>, IAspect
-                                                        where TO : IOwner, IContextAccessor
+                                                        where TO : class, IOwner, IContextAccessor
                                                         where T : class, IInTableElement {
         //SILP:ELEMENT_MIXIN_CONSTRUCTOR(TableAspect)
-        protected TableAspect(TO owner, Pass pass) : base(owner, pass) {  //__SILP__
-        }                                                                 //__SILP__
+        protected TableAspect(TO owner) : base(owner) {               //__SILP__
+        }                                                             //__SILP__
 
         //SILP: ASPECT_MIXIN()
         public IContext GetContext() {                                //__SILP__

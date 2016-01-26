@@ -8,12 +8,13 @@ namespace angeldnd.dap {
     public interface IElement : IObject {
         IOwner GetOwner();
 
-        void OnAdded();
+        string Key { get; }
+
         void OnRemoved();
     }
 
     public interface IElement<TO> : IElement
-                                        where TO : IOwner {
+                                        where TO : class, IOwner {
         TO Owner { get; }
     }
 }

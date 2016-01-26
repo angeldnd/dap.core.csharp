@@ -5,15 +5,18 @@ public sealed class ${type}Property : Property<${cs_type}> {
         get { return PropertiesConsts.Type${type}Property; }
     }
 
-    public ${type}Property(Properties owner, string path, Pass pass) : base(owner, path, pass) {
+    public ${type}Property(Properties owner, string key) : base(owner, key) {
+    }
+
+    public ${type}Property(Properties owner, int index) : base(owner, index) {
     }
 
     protected override bool DoEncode(Data data) {
         return data.Set${type}(PropertiesConsts.KeyValue, Value);
     }
 
-    protected override bool DoDecode(Pass pass, Data data) {
-        return SetValue(pass, data.Get${type}(PropertiesConsts.KeyValue));
+    protected override bool DoDecode(Data data) {
+        return SetValue(data.Get${type}(PropertiesConsts.KeyValue));
     }
 
     protected override bool NeedUpdate(${cs_type} newVal) {

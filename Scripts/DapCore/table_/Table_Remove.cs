@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Table<T> {
-        public T1 Remove<T1>(Pass pass, int index) where T1 : class, IInTableElement {
-            if (!CheckAdminPass(pass)) return null;
-
+        public T1 Remove<T1>(int index) where T1 : class, IInTableElement {
             if (index >= 0 && index < _Elements.Count) {
                 T element = _Elements[index];
                 T1 _element = As<T1>(element);
@@ -22,14 +20,6 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public T1 Remove<T1>(int index) where T1 : class, IInTableElement {
-            return Remove<T1>(null, index);
-        }
-
-        public T Remove(Pass pass, int index) {
-            return Remove<T>(pass, index);
-        }
-
         public T Remove(int index) {
             return Remove<T>(index);
         }
@@ -41,16 +31,14 @@ namespace angeldnd.dap {
                 } else {
                     AdvanceRevision();
                 }
+                OnElementsRemoved(removed);
                 foreach (T element in removed) {
                     element.OnRemoved();
                 }
-                OnElementsRemoved(removed);
             }
         }
 
-        public List<T> Clear(Pass pass) {
-            if (!CheckAdminPass(pass)) return null;
-
+        public List<T> Clear() {
             List<T> removed = All();
             _Elements.Clear();
 
@@ -58,13 +46,7 @@ namespace angeldnd.dap {
             return removed;
         }
 
-        public List<T> Clear() {
-            return Clear(null);
-        }
-
-        public List<T> RemoveByChecker(Pass pass, Func<T, bool> checker) {
-            if (!CheckAdminPass(pass)) return null;
-
+        public List<T> RemoveByChecker(Func<T, bool> checker) {
             List<T> removed = null;
             /* Must use the list version since need to remove some of them */
             List<T> all = All();
@@ -81,10 +63,6 @@ namespace angeldnd.dap {
             }
             NotifyRemoves(removed, true);
             return removed;
-        }
-
-        public List<T> RemoveByChecker(Func<T, bool> checker) {
-            return RemoveByChecker(null, checker);
         }
     }
 }

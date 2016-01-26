@@ -9,12 +9,12 @@ namespace angeldnd.dap {
         public const string TypeRegistry = "Registry";
     }
 
-    public sealed class Registry : TreeInTreeContext<Env, IInTreeContext> {
+    public sealed class Registry : DictContext<Env, IContext> {
         public override string Type {
             get { return RegistryConsts.TypeRegistry; }
         }
 
-        public Registry(Env owner, string path, Pass pass) : base(owner, path, pass) {
+        public Registry(Env owner, string key) : base(owner, key) {
         }
     }
 }

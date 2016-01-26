@@ -5,18 +5,12 @@ namespace angeldnd.dap {
     public interface IObject : ILogger {
         string Type { get; }
         int Revision { get; }
-
         string RevInfo { get; }
 
         bool DebugMode { get; }
         string[] DebugPatterns { get; }
 
         string LogPrefix { get; }
-
-        bool AdminSecured { get; }
-        bool WriteSecured { get; }
-        bool CheckAdminPass(Pass pass);
-        bool CheckWritePass(Pass pass);
 
         void CriticalFromProxy(string format, params object[] values);
         void ErrorFromProxy(string format, params object[] values);
@@ -33,7 +27,7 @@ namespace angeldnd.dap {
         private readonly static DefaultLogWriter _ProxyDefaultWriter = new DefaultLogWriter(3);
         private readonly static DebugLogWriter _ProxyDebugWriter = new DebugLogWriter(3);
 
-        public static T As<T>(object obj, bool logError) where T : class, IObject {
+        private static T As<T>(object obj, bool logError) where T : class, IObject {
             if (obj == null) return null;
 
             if (!(obj is T)) {
@@ -46,6 +40,11 @@ namespace angeldnd.dap {
             return (T)obj;
         }
 
+        public static bool TryAs<T>(object obj, out T result) where T : class, IObject {
+            result = As<T>(obj, false);
+            return result != null;
+        }
+
         public static T As<T>(object obj) where T : class, IObject {
             return As<T>(obj, true);
         }
@@ -55,16 +54,7 @@ namespace angeldnd.dap {
         }
 
         public virtual string Type {
-            get { return null; }
-        }
-
-        private readonly Pass _Pass;
-        protected Pass Pass {
-            get { return _Pass; }
-        }
-
-        protected Object(Pass pass) {
-            _Pass = pass;
+            get { return GetType().Name; }
         }
 
         private int _Revision = 0;
@@ -82,51 +72,12 @@ namespace angeldnd.dap {
 
         public override string LogPrefix {
             get {
-                return string.Format("[{0}] ({1}) ",
-                            Type != null ? Type : GetType().Name, RevInfo);
+                return string.Format("[{0}] {1} ", Type, RevInfo);
             }
         }
 
-        public bool AdminSecured {
-            get {
-                return Pass != null;
-            }
-        }
-
-        public bool WriteSecured {
-            get {
-                if (Pass == null) return false;
-                if (Pass.Writable) return false;
-                return true;
-            }
-        }
-
-        public bool CheckAdminPass(Pass pass, bool logError) {
-            if (Pass == null) return true;
-            if (Pass.CheckAdminPass(this, pass)) return true;
-
-            if (logError) {
-                Error("Invalid Admin Pass: Pass = {0}, pass = {1}", Pass, pass);
-            }
-            return false;
-        }
-
-        public bool CheckAdminPass(Pass pass) {
-            return CheckAdminPass(pass, true);
-        }
-
-        public bool CheckWritePass(Pass pass, bool logError) {
-            if (Pass == null) return true;
-            if (Pass.CheckWritePass(this, pass)) return true;
-
-            if (logError) {
-                Error("Invalid Write Pass: Pass = {0}, pass = {1}", Pass, pass);
-            }
-            return false;
-        }
-
-        public bool CheckWritePass(Pass pass) {
-            return CheckWritePass(pass, true);
+        public override string ToString() {
+            return string.Format("[{0}: {1}]", Type, RevInfo);
         }
 
         public void CriticalFromProxy(string format, params object[] values) {

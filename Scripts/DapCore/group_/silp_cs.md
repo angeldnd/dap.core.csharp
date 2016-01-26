@@ -1,9 +1,9 @@
 # GROUP_PROPERTY_MIXIN(class) #
 ```
-public ${class}(IProperties owner, string path, Pass pass) : base(owner, path, pass) {
+public ${class}(IProperties owner, string key) : base(owner, key) {
 }
 
-public ${class}(IProperties owner, int index, Pass pass) : base(owner, index, pass) {
+public ${class}(IProperties owner, int index) : base(owner, index) {
 }
 
 //IProperty
@@ -20,35 +20,20 @@ public Data Encode() {
     return null;
 }
 
-public bool Decode(Pass pass, Data data) {
-    if (!CheckWritePass(pass)) return false;
-
+public bool Decode(Data data) {
     string type = data.GetString(ObjectConsts.KeyType);
     if (type == Type) {
-        return DoDecode(pass, data);
+        return DoDecode(data);
     } else {
         Error("Type Mismatched: {0}, {1}", Type, type);
     }
     return false;
 }
 
-public bool Decode(Data data) {
-    return Decode(null, data);
-}
-
 private void FireOnChanged() {
     WeakListHelper.Notify(_VarWatchers, (IVarWatcher watcher) => {
         watcher.OnChanged(this);
     });
-}
-
-public BlockVarWatcher AddBlockVarWatcher(IBlockOwner owner,
-                                                    Action<IVar> _watcher) {
-    BlockVarWatcher watcher = new BlockVarWatcher(owner, _watcher);
-    if (AddVarWatcher(watcher)) {
-        return watcher;
-    }
-    return null;
 }
 
 //IVar
@@ -64,7 +49,6 @@ public int VarWatcherCount {
 
 public bool AddVarWatcher(IVarWatcher watcher) {
     if (WeakListHelper.Add(ref _VarWatchers, watcher)){
-        //_Properties.ResetAllVarWatchers(_PropertiesPass);
         return true;
     }
     return false;
@@ -72,14 +56,25 @@ public bool AddVarWatcher(IVarWatcher watcher) {
 
 public bool RemoveVarWatcher(IVarWatcher watcher) {
     if (WeakListHelper.Remove(_VarWatchers, watcher)) {
-        //_Properties.ResetAllVarWatchers(_PropertiesPass);
         return true;
     }
     return false;
 }
 
+public BlockVarWatcher AddVarWatcher(IBlockOwner owner,
+                                     Action<IVar> _watcher) {
+    BlockVarWatcher watcher = new BlockVarWatcher(owner, _watcher);
+    if (AddVarWatcher(watcher)) {
+        return watcher;
+    }
+    return null;
+}
+
 public int ValueCheckerCount {
     get { return 0; }
+}
+
+public void AllValueCheckers<T1>(Action<T1> callback) where T1 : IValueChecker {
 }
 
 public int ValueWatcherCount {

@@ -140,10 +140,12 @@ namespace angeldnd.dap {
 
             string log = null;
             if (stackTrace != null) {
-                log = string.Format("{0}{1} [{2}] {3}\n{4}", now.ToString(TIMESTAMP_FORMAT), GetExtraTimeStamp(), kind, msg,
-                                    FormatStackTrace(stackTrace, "\t", MAX_STACK_TRACK_NUM));
+                log = string.Format("{0} <{1}> [{2}] {3}\n{4}",
+                            now.ToString(TIMESTAMP_FORMAT), Env.TickCount, kind, msg,
+                            FormatStackTrace(stackTrace, "\t", MAX_STACK_TRACK_NUM));
             } else {
-                log = string.Format("{0}{1} [{2}] {3}", now.ToString(TIMESTAMP_FORMAT), GetExtraTimeStamp(), kind, msg);
+                log = string.Format("{0} <{1}> [{2}] {3}",
+                            now.ToString(TIMESTAMP_FORMAT), Env.TickCount, kind, msg);
             }
 
             if (_LogWriter != null) {
@@ -173,11 +175,6 @@ namespace angeldnd.dap {
         }
 
         protected virtual void OnLog(object source, string log, StackTrace stackTrace) {}
-
-        protected virtual string GetExtraTimeStamp() {
-            return "";
-        }
-
     }
 }
 

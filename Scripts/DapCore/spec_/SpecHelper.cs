@@ -4,11 +4,11 @@ using System.Text;
 
 namespace angeldnd.dap {
     public static class SpecHelper {
-        public static Data EncodeWithSpec<T>(IProperty<T> prop) {
+        public static Data EncodeWithSpec(this IProperty prop) {
             Data data = prop.Encode();
             if (data != null) {
                 Data spec = null;
-                prop.AllValueCheckers<SpecValueChecker<T>>((SpecValueChecker<T> checker) => {
+                prop.AllValueCheckers<ISpecValueChecker>((ISpecValueChecker checker) => {
                     if (spec == null) spec = new Data();
                     checker.DoEncode(spec);
                 });
@@ -19,27 +19,27 @@ namespace angeldnd.dap {
             return data;
         }
 
-        public static void SetPropertyWithSpec(IProperty prop, Pass pass, Data data) {
+        public static void SetPropertyWithSpec(this IProperty prop, Data data) {
             if (prop != null) {
                 Data spec = data.GetData(SpecConsts.KeySpec, null);
                 if (spec != null) {
                     foreach (string key in spec.Keys) {
-                        Spec.FactorySpecValueChecker(prop, pass, spec, key);
+                        Spec.FactorySpecValueChecker(prop, spec, key);
                     }
                 }
             }
         }
 
-        public static IProperty AddPropertyWithSpec(ITreeProperties properties, string path, Pass pass, bool open, Data data) {
-            IProperty prop = properties.AddProperty(path, pass, open, data);
+        public static IProperty AddPropertyWithSpec(this IDictProperties properties, string key, Data data) {
+            IProperty prop = properties.AddProperty(key, data);
             if (prop != null) {
-                SetPropertyWithSpec(prop, pass, data);
+                SetPropertyWithSpec(prop, data);
             }
             return prop;
         }
 
-        public static IProperty AddPropertyWithSpec(IContext context, string path, Pass pass, bool open, Data data) {
-            return AddPropertyWithSpec(context.Properties, path, pass, open, data);
+        public static IProperty AddPropertyWithSpec(this IContext context, string key, Data data) {
+            return AddPropertyWithSpec(context.Properties, key, data);
         }
     }
 }

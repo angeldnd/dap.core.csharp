@@ -5,7 +5,7 @@ namespace angeldnd.dap {
         IContext Context { get; }
     }
 
-    public interface IInTreeAspect : IAspect, IInTreeElement {
+    public interface IInDictAspect : IAspect, IInDictElement {
     }
 
     public interface IInTableAspect : IAspect, IInTableElement {

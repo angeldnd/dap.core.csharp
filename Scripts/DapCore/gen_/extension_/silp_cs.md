@@ -1,197 +1,125 @@
-# CONTEXT_PROPERTIES_HELPER(type, cs_type) #
+# DICT_PROPERTIES_HELPER(type, cs_type) #
 ```C#
-public static ${type}Property Add${type}(this IContext context, string path, Pass propertyPass, ${cs_type} val) {
-    return context.Properties.Add${type}(path, propertyPass, val);
-}
-
-public static ${type}Property Add${type}(this IContext context, string path, ${cs_type} val) {
-    return context.Properties.Add${type}(path, val);
-}
-
-public static ${type}Property Remove${type}(this IContext context, string path, Pass pass) {
-    return context.Properties.Remove${type}(path, pass);
-}
-
-public static ${type}Property Remove${type}(this IContext context, string path) {
-    return context.Properties.Remove${type}(path);
-}
-
-public static bool Is${type}(this IContext context, string path) {
-    return context.Properties.Is${type}(path);
-}
-
-public static ${cs_type} Get${type}(this IContext context, string path) {
-    return context.Properties.Get${type}(path);
-}
-
-public static ${cs_type} Get${type}(this IContext context, string path, ${cs_type} defaultValue) {
-    return context.Properties.Get${type}(path, defaultValue);
-}
-
-public static bool Set${type}(this IContext context, string path, Pass propertyPass, ${cs_type} value) {
-    return context.Properties.Set${type}(path, propertyPass, value);
-}
-
-public static bool Set${type}(this IContext context, string path, ${cs_type} value) {
-    return context.Properties.Set${type}(path, value);
-}
-
-```
-
-# TREE_PROPERTIES_HELPER(type, cs_type) #
-```C#
-public static ${type}Property Add${type}(this ITreeProperties properties, string path, Pass propertyPass, ${cs_type} val) {
-    ${type}Property v = properties.Add<${type}Property>(path, propertyPass);
-    if (v != null && !v.Setup(propertyPass, val)) {
-        properties.Remove<${type}Property>(path);
+public static ${type}Property Add${type}(this IDictProperties properties, string key, ${cs_type} val) {
+    ${type}Property v = properties.Add<${type}Property>(key);
+    if (v != null && !v.Setup(val)) {
+        properties.Remove<${type}Property>(key);
         v = null;
     }
     return v;
 }
 
-public static ${type}Property Add${type}(this ITreeProperties properties, string path, ${cs_type} val) {
-    return properties.Add${type}(path, null, val);
+public static ${type}Property Remove${type}(this IDictProperties properties, string key) {
+    return properties.Remove<${type}Property>(key);
 }
 
-public static ${type}Property Remove${type}(this ITreeProperties properties, string path, Pass propertyPass) {
-    return properties.Remove<${type}Property>(path, propertyPass);
-}
-
-public static ${type}Property Remove${type}(this ITreeProperties properties, string path) {
-    return properties.Remove<${type}Property>(path);
-}
-
-public static bool Add${type}ValueChecker(this ITreeProperties properties, string path, Pass propertyPass, IValueChecker<${cs_type}> checker) {
-    ${type}Property p = properties.Get<${type}Property>(path);
+public static bool Add${type}ValueChecker(this IDictProperties properties, string key, IValueChecker<${cs_type}> checker) {
+    ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
-        return p.AddValueChecker(propertyPass, checker);
+        return p.AddValueChecker(checker);
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return false;
 }
 
-public static bool Add${type}ValueChecker(this ITreeProperties properties, string path, IValueChecker<${cs_type}> checker) {
-    return Add${type}ValueChecker(properties, path, null, checker);
-}
-
-public static bool Remove${type}ValueChecker(this ITreeProperties properties, string path, Pass propertyPass, IValueChecker<${cs_type}> checker) {
-    ${type}Property p = properties.Get<${type}Property>(path);
+public static bool Remove${type}ValueChecker(this IDictProperties properties, string key, IValueChecker<${cs_type}> checker) {
+    ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
-        return p.RemoveValueChecker(propertyPass, checker);
+        return p.RemoveValueChecker(checker);
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return false;
 }
 
-public static bool Remove${type}ValueChecker(this ITreeProperties properties, string path, IValueChecker<${cs_type}> checker) {
-    return Remove${type}ValueChecker(properties, path, null, checker);
-}
-
-public static BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(this ITreeProperties properties, string path, Pass propertyPass,
-                                    IBlockOwner owner, Func<IVar<${cs_type}>, ${cs_type}, bool> checker) {
-    ${type}Property p = properties.Get<${type}Property>(path);
+public static BlockValueChecker<${cs_type}> Add${type}ValueChecker(this IDictProperties properties, string key,
+                                    IBlockOwner owner, Func<IVar<${cs_type}>, ${cs_type}, bool> block) {
+    ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
-        return p.AddBlockValueChecker(propertyPass, owner, checker);
+        return p.AddValueChecker(owner, block);
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return null;
 }
 
-public static BlockValueChecker<${cs_type}> Add${type}BlockValueChecker(this ITreeProperties properties, string path,
-                                    IBlockOwner owner, Func<IVar<${cs_type}>, ${cs_type}, bool> checker) {
-    return Add${type}BlockValueChecker(properties, path, null, owner, checker);
-}
-
-public static bool Add${type}ValueWatcher(this ITreeProperties properties, string path, IValueWatcher<${cs_type}> watcher) {
-    ${type}Property p = properties.Get<${type}Property>(path);
+public static bool Add${type}ValueWatcher(this IDictProperties properties, string key, IValueWatcher<${cs_type}> watcher) {
+    ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
         return p.AddValueWatcher(watcher);
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return false;
 }
 
-public static bool Remove${type}ValueWatcher(this ITreeProperties properties, string path, IValueWatcher<${cs_type}> watcher) {
-    ${type}Property p = properties.Get<${type}Property>(path);
+public static bool Remove${type}ValueWatcher(this IDictProperties properties, string key, IValueWatcher<${cs_type}> watcher) {
+    ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
         return p.RemoveValueWatcher(watcher);
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return false;
 }
 
-public static BlockValueWatcher<${cs_type}> Add${type}BlockValueWatcher(this ITreeProperties properties, string path,
-                                    IBlockOwner owner, Action<IVar<${cs_type}>, ${cs_type}> watcher) {
-    ${type}Property p = properties.Get<${type}Property>(path);
+public static BlockValueWatcher<${cs_type}> Add${type}ValueWatcher(this IDictProperties properties, string key,
+                                    IBlockOwner owner, Action<IVar<${cs_type}>, ${cs_type}> block) {
+    ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
-        return p.AddBlockValueWatcher(owner, watcher);
+        return p.AddValueWatcher(owner, block);
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return null;
 }
 
-public static bool Is${type}(this ITreeProperties properties, string path) {
-    return properties.Is<${type}Property>(path);
+public static bool Is${type}(this IDictProperties properties, string key) {
+    return properties.Is<${type}Property>(key);
 }
 
-public static ${cs_type} Get${type}(this ITreeProperties properties, string path) {
-    ${type}Property v = properties.Get<${type}Property>(path);
+public static ${cs_type} Get${type}(this IDictProperties properties, string key) {
+    ${type}Property v = properties.Get<${type}Property>(key);
     if (v != null) {
         return v.Value;
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return default(${cs_type});
 }
 
-public static ${cs_type} Get${type}(this ITreeProperties properties, string path, ${cs_type} defaultValue) {
-    ${type}Property v = properties.Get<${type}Property>(path);
+public static ${cs_type} Get${type}(this IDictProperties properties, string key, ${cs_type} defaultValue) {
+    ${type}Property v = properties.Get<${type}Property>(key);
     if (v != null) {
         return v.Value;
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return defaultValue;
 }
 
-
-public static bool Set${type}(this ITreeProperties properties, string path, Pass propertyPass, ${cs_type} val) {
-    ${type}Property v = properties.Get<${type}Property>(path);
-    if (v != null) {
-        return v.SetValue(propertyPass, val);
-    } else {
-        properties.Error("Property Not Exist: {0}", path);
-    }
-    return false;
-}
-
-public static bool Set${type}(this ITreeProperties properties, string path, ${cs_type} val) {
-    ${type}Property v = properties.Get<${type}Property>(path);
+public static bool Set${type}(this IDictProperties properties, string key, ${cs_type} val) {
+    ${type}Property v = properties.Get<${type}Property>(key);
     if (v != null) {
         return v.SetValue(val);
     } else {
-        properties.Error("Property Not Exist: {0}", path);
+        properties.Error("Property Not Exist: {0}", key);
     }
     return false;
 }
 ```
 
-# CONTEXT_DEPOSIT_WITHDRAW(name, type, vars, var) #
+# VARS_DEPOSIT_WITHDRAW(name, type, vars, var) #
 ```C#
-public static ${type} Deposit${name}(this IContext context, string key, ${type} ${var}) {
-    string varPath = ContextConsts.GetVarPath(${vars}, key);
-    return context.Vars.DepositValue<${type}>(varPath, null, ${var});
+public static ${type} Deposit${name}(this Vars vars, string key, ${type} ${var}) {
+    string varKey = ContextConsts.GetAspectKey(${vars}, key);
+    return vars.DepositValue<${type}>(varKey, null, ${var});
 }
 
-public static ${type} Withdraw${name}(this IContext context, string key) {
-    string varPath = ContextConsts.GetVarPath(${vars}, key);
-    return context.Vars.WithdrawValue<${type}>(varPath);
+public static ${type} Withdraw${name}(this Vars vars, string key) {
+    string varKey = ContextConsts.GetAspectKey(${vars}, key);
+    return vars.WithdrawValue<${type}>(varKey);
 }
 
 ```
@@ -199,26 +127,26 @@ public static ${type} Withdraw${name}(this IContext context, string key) {
 # EXTRA_SETUP_PROPERTY(type, cs_type) #
 ```C#
 public static ${type}Property Setup${type}Property(this Extra ext,
-        string fragment, Pass propertyPass, Func<${cs_type}> getter,
+        string fragment, Func<${cs_type}> getter,
         Func<IVar<${cs_type}>, ${cs_type}, bool> checker,
         Action<IVar<${cs_type}>, ${cs_type}> watcher) {
     return ext.SetupProperty<${type}Property, ${cs_type}>(PropertiesConsts.Type${type}Property,
-        fragment, propertyPass, getter,
+        fragment, getter,
         checker == null ? null : new BlockValueChecker<${cs_type}>(ext, checker),
         watcher == null ? null : new BlockValueWatcher<${cs_type}>(ext, watcher)
     );
 }
 
 public static ${type}Property Setup${type}Property(this Extra ext,
-        string fragment, Pass propertyPass,
+        string fragment,
         Func<${cs_type}> getter,
         Action<IVar<${cs_type}>, ${cs_type}> watcher) {
-    return Setup${type}Property(ext, fragment, propertyPass, getter, null, watcher);
+    return Setup${type}Property(ext, fragment, getter, null, watcher);
 }
 
 public static ${type}Property Setup${type}Property(this Extra ext,
-        string fragment, Pass propertyPass, Func<${cs_type}> getter) {
-    return Setup${type}Property(ext, fragment, propertyPass, getter, null, null);
+        string fragment, Func<${cs_type}> getter) {
+    return Setup${type}Property(ext, fragment, getter, null, null);
 }
 
 ```

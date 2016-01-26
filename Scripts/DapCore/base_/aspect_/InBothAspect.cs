@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract class InBothAspect<TO> : InBothElement<TO>, IAspect
-                                                where TO : IOwner, IContextAccessor {
+                                                where TO : class, IOwner, IContextAccessor {
         //SILP:IN_BOTH_MIXIN_CONSTRUCTOR(InBothAspect)
-        protected InBothAspect(TO owner, string path, Pass pass) : base(owner, path, pass) {  //__SILP__
-        }                                                                                     //__SILP__
-                                                                                              //__SILP__
-        protected InBothAspect(TO owner, int index, Pass pass) : base(owner, index, pass) {   //__SILP__
-        }                                                                                     //__SILP__
+        protected InBothAspect(TO owner, string key) : base(owner, key) {   //__SILP__
+        }                                                                   //__SILP__
+                                                                            //__SILP__
+        protected InBothAspect(TO owner, int index) : base(owner, index) {  //__SILP__
+        }                                                                   //__SILP__
 
         //SILP: ASPECT_MIXIN()
         public IContext GetContext() {                                //__SILP__

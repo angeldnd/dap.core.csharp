@@ -7,170 +7,170 @@ namespace angeldnd.dap.binding {
     public static class ExtensionExtension {
         //SILP: EXTRA_SETUP_PROPERTY(Bool, bool)
         public static BoolProperty SetupBoolProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass, Func<bool> getter,                       //__SILP__
+                string fragment, Func<bool> getter,                                          //__SILP__
                 Func<IVar<bool>, bool, bool> checker,                                        //__SILP__
                 Action<IVar<bool>, bool> watcher) {                                          //__SILP__
             return ext.SetupProperty<BoolProperty, bool>(PropertiesConsts.TypeBoolProperty,  //__SILP__
-                fragment, propertyPass, getter,                                              //__SILP__
+                fragment, getter,                                                            //__SILP__
                 checker == null ? null : new BlockValueChecker<bool>(ext, checker),          //__SILP__
                 watcher == null ? null : new BlockValueWatcher<bool>(ext, watcher)           //__SILP__
             );                                                                               //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         public static BoolProperty SetupBoolProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass,                                          //__SILP__
+                string fragment,                                                             //__SILP__
                 Func<bool> getter,                                                           //__SILP__
                 Action<IVar<bool>, bool> watcher) {                                          //__SILP__
-            return SetupBoolProperty(ext, fragment, propertyPass, getter, null, watcher);    //__SILP__
+            return SetupBoolProperty(ext, fragment, getter, null, watcher);                  //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         public static BoolProperty SetupBoolProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass, Func<bool> getter) {                     //__SILP__
-            return SetupBoolProperty(ext, fragment, propertyPass, getter, null, null);       //__SILP__
+                string fragment, Func<bool> getter) {                                        //__SILP__
+            return SetupBoolProperty(ext, fragment, getter, null, null);                     //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Int, int)
         public static IntProperty SetupIntProperty(this Extra ext,                        //__SILP__
-                string fragment, Pass propertyPass, Func<int> getter,                     //__SILP__
+                string fragment, Func<int> getter,                                        //__SILP__
                 Func<IVar<int>, int, bool> checker,                                       //__SILP__
                 Action<IVar<int>, int> watcher) {                                         //__SILP__
             return ext.SetupProperty<IntProperty, int>(PropertiesConsts.TypeIntProperty,  //__SILP__
-                fragment, propertyPass, getter,                                           //__SILP__
+                fragment, getter,                                                         //__SILP__
                 checker == null ? null : new BlockValueChecker<int>(ext, checker),        //__SILP__
                 watcher == null ? null : new BlockValueWatcher<int>(ext, watcher)         //__SILP__
             );                                                                            //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         public static IntProperty SetupIntProperty(this Extra ext,                        //__SILP__
-                string fragment, Pass propertyPass,                                       //__SILP__
+                string fragment,                                                          //__SILP__
                 Func<int> getter,                                                         //__SILP__
                 Action<IVar<int>, int> watcher) {                                         //__SILP__
-            return SetupIntProperty(ext, fragment, propertyPass, getter, null, watcher);  //__SILP__
+            return SetupIntProperty(ext, fragment, getter, null, watcher);                //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         public static IntProperty SetupIntProperty(this Extra ext,                        //__SILP__
-                string fragment, Pass propertyPass, Func<int> getter) {                   //__SILP__
-            return SetupIntProperty(ext, fragment, propertyPass, getter, null, null);     //__SILP__
+                string fragment, Func<int> getter) {                                      //__SILP__
+            return SetupIntProperty(ext, fragment, getter, null, null);                   //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Long, long)
         public static LongProperty SetupLongProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass, Func<long> getter,                       //__SILP__
+                string fragment, Func<long> getter,                                          //__SILP__
                 Func<IVar<long>, long, bool> checker,                                        //__SILP__
                 Action<IVar<long>, long> watcher) {                                          //__SILP__
             return ext.SetupProperty<LongProperty, long>(PropertiesConsts.TypeLongProperty,  //__SILP__
-                fragment, propertyPass, getter,                                              //__SILP__
+                fragment, getter,                                                            //__SILP__
                 checker == null ? null : new BlockValueChecker<long>(ext, checker),          //__SILP__
                 watcher == null ? null : new BlockValueWatcher<long>(ext, watcher)           //__SILP__
             );                                                                               //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         public static LongProperty SetupLongProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass,                                          //__SILP__
+                string fragment,                                                             //__SILP__
                 Func<long> getter,                                                           //__SILP__
                 Action<IVar<long>, long> watcher) {                                          //__SILP__
-            return SetupLongProperty(ext, fragment, propertyPass, getter, null, watcher);    //__SILP__
+            return SetupLongProperty(ext, fragment, getter, null, watcher);                  //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         public static LongProperty SetupLongProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass, Func<long> getter) {                     //__SILP__
-            return SetupLongProperty(ext, fragment, propertyPass, getter, null, null);       //__SILP__
+                string fragment, Func<long> getter) {                                        //__SILP__
+            return SetupLongProperty(ext, fragment, getter, null, null);                     //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Float, float)
         public static FloatProperty SetupFloatProperty(this Extra ext,                          //__SILP__
-                string fragment, Pass propertyPass, Func<float> getter,                         //__SILP__
+                string fragment, Func<float> getter,                                            //__SILP__
                 Func<IVar<float>, float, bool> checker,                                         //__SILP__
                 Action<IVar<float>, float> watcher) {                                           //__SILP__
             return ext.SetupProperty<FloatProperty, float>(PropertiesConsts.TypeFloatProperty,  //__SILP__
-                fragment, propertyPass, getter,                                                 //__SILP__
+                fragment, getter,                                                               //__SILP__
                 checker == null ? null : new BlockValueChecker<float>(ext, checker),            //__SILP__
                 watcher == null ? null : new BlockValueWatcher<float>(ext, watcher)             //__SILP__
             );                                                                                  //__SILP__
         }                                                                                       //__SILP__
                                                                                                 //__SILP__
         public static FloatProperty SetupFloatProperty(this Extra ext,                          //__SILP__
-                string fragment, Pass propertyPass,                                             //__SILP__
+                string fragment,                                                                //__SILP__
                 Func<float> getter,                                                             //__SILP__
                 Action<IVar<float>, float> watcher) {                                           //__SILP__
-            return SetupFloatProperty(ext, fragment, propertyPass, getter, null, watcher);      //__SILP__
+            return SetupFloatProperty(ext, fragment, getter, null, watcher);                    //__SILP__
         }                                                                                       //__SILP__
                                                                                                 //__SILP__
         public static FloatProperty SetupFloatProperty(this Extra ext,                          //__SILP__
-                string fragment, Pass propertyPass, Func<float> getter) {                       //__SILP__
-            return SetupFloatProperty(ext, fragment, propertyPass, getter, null, null);         //__SILP__
+                string fragment, Func<float> getter) {                                          //__SILP__
+            return SetupFloatProperty(ext, fragment, getter, null, null);                       //__SILP__
         }                                                                                       //__SILP__
                                                                                                 //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Double, double)
         public static DoubleProperty SetupDoubleProperty(this Extra ext,                           //__SILP__
-                string fragment, Pass propertyPass, Func<double> getter,                           //__SILP__
+                string fragment, Func<double> getter,                                              //__SILP__
                 Func<IVar<double>, double, bool> checker,                                          //__SILP__
                 Action<IVar<double>, double> watcher) {                                            //__SILP__
             return ext.SetupProperty<DoubleProperty, double>(PropertiesConsts.TypeDoubleProperty,  //__SILP__
-                fragment, propertyPass, getter,                                                    //__SILP__
+                fragment, getter,                                                                  //__SILP__
                 checker == null ? null : new BlockValueChecker<double>(ext, checker),              //__SILP__
                 watcher == null ? null : new BlockValueWatcher<double>(ext, watcher)               //__SILP__
             );                                                                                     //__SILP__
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         public static DoubleProperty SetupDoubleProperty(this Extra ext,                           //__SILP__
-                string fragment, Pass propertyPass,                                                //__SILP__
+                string fragment,                                                                   //__SILP__
                 Func<double> getter,                                                               //__SILP__
                 Action<IVar<double>, double> watcher) {                                            //__SILP__
-            return SetupDoubleProperty(ext, fragment, propertyPass, getter, null, watcher);        //__SILP__
+            return SetupDoubleProperty(ext, fragment, getter, null, watcher);                      //__SILP__
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         public static DoubleProperty SetupDoubleProperty(this Extra ext,                           //__SILP__
-                string fragment, Pass propertyPass, Func<double> getter) {                         //__SILP__
-            return SetupDoubleProperty(ext, fragment, propertyPass, getter, null, null);           //__SILP__
+                string fragment, Func<double> getter) {                                            //__SILP__
+            return SetupDoubleProperty(ext, fragment, getter, null, null);                         //__SILP__
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(String, string)
         public static StringProperty SetupStringProperty(this Extra ext,                           //__SILP__
-                string fragment, Pass propertyPass, Func<string> getter,                           //__SILP__
+                string fragment, Func<string> getter,                                              //__SILP__
                 Func<IVar<string>, string, bool> checker,                                          //__SILP__
                 Action<IVar<string>, string> watcher) {                                            //__SILP__
             return ext.SetupProperty<StringProperty, string>(PropertiesConsts.TypeStringProperty,  //__SILP__
-                fragment, propertyPass, getter,                                                    //__SILP__
+                fragment, getter,                                                                  //__SILP__
                 checker == null ? null : new BlockValueChecker<string>(ext, checker),              //__SILP__
                 watcher == null ? null : new BlockValueWatcher<string>(ext, watcher)               //__SILP__
             );                                                                                     //__SILP__
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         public static StringProperty SetupStringProperty(this Extra ext,                           //__SILP__
-                string fragment, Pass propertyPass,                                                //__SILP__
+                string fragment,                                                                   //__SILP__
                 Func<string> getter,                                                               //__SILP__
                 Action<IVar<string>, string> watcher) {                                            //__SILP__
-            return SetupStringProperty(ext, fragment, propertyPass, getter, null, watcher);        //__SILP__
+            return SetupStringProperty(ext, fragment, getter, null, watcher);                      //__SILP__
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         public static StringProperty SetupStringProperty(this Extra ext,                           //__SILP__
-                string fragment, Pass propertyPass, Func<string> getter) {                         //__SILP__
-            return SetupStringProperty(ext, fragment, propertyPass, getter, null, null);           //__SILP__
+                string fragment, Func<string> getter) {                                            //__SILP__
+            return SetupStringProperty(ext, fragment, getter, null, null);                         //__SILP__
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Data, Data)
         public static DataProperty SetupDataProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass, Func<Data> getter,                       //__SILP__
+                string fragment, Func<Data> getter,                                          //__SILP__
                 Func<IVar<Data>, Data, bool> checker,                                        //__SILP__
                 Action<IVar<Data>, Data> watcher) {                                          //__SILP__
             return ext.SetupProperty<DataProperty, Data>(PropertiesConsts.TypeDataProperty,  //__SILP__
-                fragment, propertyPass, getter,                                              //__SILP__
+                fragment, getter,                                                            //__SILP__
                 checker == null ? null : new BlockValueChecker<Data>(ext, checker),          //__SILP__
                 watcher == null ? null : new BlockValueWatcher<Data>(ext, watcher)           //__SILP__
             );                                                                               //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         public static DataProperty SetupDataProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass,                                          //__SILP__
+                string fragment,                                                             //__SILP__
                 Func<Data> getter,                                                           //__SILP__
                 Action<IVar<Data>, Data> watcher) {                                          //__SILP__
-            return SetupDataProperty(ext, fragment, propertyPass, getter, null, watcher);    //__SILP__
+            return SetupDataProperty(ext, fragment, getter, null, watcher);                  //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         public static DataProperty SetupDataProperty(this Extra ext,                         //__SILP__
-                string fragment, Pass propertyPass, Func<Data> getter) {                     //__SILP__
-            return SetupDataProperty(ext, fragment, propertyPass, getter, null, null);       //__SILP__
+                string fragment, Func<Data> getter) {                                        //__SILP__
+            return SetupDataProperty(ext, fragment, getter, null, null);                     //__SILP__
         }                                                                                    //__SILP__
                                                                                              //__SILP__
     }

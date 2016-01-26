@@ -23,9 +23,5 @@ namespace angeldnd.dap {
         protected virtual bool OnInit() {
             return true;
         }
-
-        public virtual bool SetupRegistry(Registry registry) {
-            return true;
-        }
     }
 }

@@ -9,12 +9,12 @@ namespace angeldnd.dap {
         public const string TypeItem = "Item";
     }
 
-    public class Item : InTreeContext<ITreeContext> {
+    public class Item : Context<IDictContext> {
         public override string Type {
             get { return ItemConsts.TypeItem; }
         }
 
-        public Item(Registry owner, string path, Pass pass) : base(owner, path, pass) {
+        public Item(IDictContext owner, string key) : base(owner, key) {
         }
     }
 }

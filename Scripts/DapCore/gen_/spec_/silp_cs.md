@@ -123,11 +123,11 @@ public class Data${type}SpecValueChecker${checker_kind} : Sub${type}SpecValueChe
 # _REGISTER_SPEC_HELPER(type, cs_type, checker_kind) #
 ```C#
 Spec.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
-        (IProperty _prop, Pass pass, Data spec, string specKey) => {
+        (IProperty _prop, Data spec, string specKey) => {
     if (spec == null) return false;
     ${type}Property prop = _prop as ${type}Property;
     if (prop == null) return false;
-    return prop.AddValueChecker(pass, new ${type}SpecValueChecker${checker_kind}(spec.Get${type}(specKey)));
+    return prop.AddValueChecker(new ${type}SpecValueChecker${checker_kind}(spec.Get${type}(specKey)));
 });
 
 ```
@@ -143,7 +143,7 @@ Spec.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.K
 # _REGISTER_SPEC_IN_HELPER(type, cs_type, checker_kind) #
 ```C#
 Spec.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.Kind${checker_kind},
-        (IProperty _prop, Pass pass, Data spec, string specKey) => {
+        (IProperty _prop, Data spec, string specKey) => {
     if (spec == null) return false;
     ${type}Property prop = _prop as ${type}Property;
     if (prop == null) return false;
@@ -156,7 +156,7 @@ Spec.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.K
             values.Add(_values.Get${type}(index));
         }
     }
-    return prop.AddValueChecker(pass, new ${type}SpecValueChecker${checker_kind}(values.ToArray()));
+    return prop.AddValueChecker(new ${type}SpecValueChecker${checker_kind}(values.ToArray()));
 });
 
 ```
@@ -169,7 +169,7 @@ Spec.RegisterSpecValueChecker(PropertiesConsts.Type${type}Property, SpecConsts.K
 # _REGISTER_SPEC_DATA_HELPER(checker_kind) #
 ```C#
 Spec.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
-        (IProperty _prop, Pass pass, Data spec, string specKey) => {
+        (IProperty _prop, Data spec, string specKey) => {
     if (spec == null) return false;
     DataProperty prop = _prop as DataProperty;
     if (prop == null) return false;
@@ -178,16 +178,16 @@ Spec.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind
     DataType valueType = spec.GetValueType(specKey);
     switch (valueType) {
         case DataType.Int:
-            return prop.AddValueChecker(pass,
+            return prop.AddValueChecker(
                     new DataIntSpecValueChecker${checker_kind}(subKey, spec.GetInt(specKey)));
         case DataType.Long:
-            return prop.AddValueChecker(pass,
+            return prop.AddValueChecker(
                     new DataLongSpecValueChecker${checker_kind}(subKey, spec.GetLong(specKey)));
         case DataType.Float:
-            return prop.AddValueChecker(pass,
+            return prop.AddValueChecker(
                     new DataFloatSpecValueChecker${checker_kind}(subKey, spec.GetFloat(specKey)));
         case DataType.Double:
-            return prop.AddValueChecker(pass,
+            return prop.AddValueChecker(
                     new DataDoubleSpecValueChecker${checker_kind}(subKey, spec.GetDouble(specKey)));
     }
     return false;
@@ -205,13 +205,13 @@ Spec.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind
                     ${cs_type}Values.Add(_values.Get${type}(index));
                 }
             }
-            return prop.AddValueChecker(pass, new Data${type}SpecValueChecker${checker_kind}(subKey, ${cs_type}Values.ToArray()));
+            return prop.AddValueChecker(new Data${type}SpecValueChecker${checker_kind}(subKey, ${cs_type}Values.ToArray()));
 ```
 
 # _REGISTER_SPEC_DATA_IN_HELPER(checker_kind) #
 ```C#
 Spec.RegisterSpecValueChecker(PropertiesConsts.TypeDataProperty, SpecConsts.Kind${checker_kind},
-        (IProperty _prop, Pass pass, Data spec, string specKey) => {
+        (IProperty _prop, Data spec, string specKey) => {
     if (spec == null) return false;
     DataProperty prop = _prop as DataProperty;
     if (prop == null) return false;

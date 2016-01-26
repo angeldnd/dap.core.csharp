@@ -17,7 +17,7 @@ public bool Remove${name}(${cs_type} ${var_name}) {
 
 # ELEMENT_MIXIN(class) #
 ```
-protected ${class}(TO owner, Pass pass) : base(pass) {
+protected ${class}(TO owner) {
     _Owner = owner;
 }
 
@@ -27,6 +27,16 @@ public TO Owner {
 }
 public IOwner GetOwner() {
     return _Owner;
+}
+
+public override string RevInfo {
+    get {
+        if (Key != null) {
+            return string.Format("[{0}] ({1}) ", Key, Revision);
+        } else {
+            return base.RevInfo;
+        }
+    }
 }
 
 public override string LogPrefix {
@@ -44,46 +54,43 @@ public override string[] DebugPatterns {
     get { return Owner.DebugPatterns; }
 }
 
-public virtual void OnAdded() {}
+public virtual string Key {
+    get { return null; }
+}
+
 public virtual void OnRemoved() {}
 ```
 
 # ELEMENT_MIXIN_CONSTRUCTOR(class) #
 ```
-protected ${class}(TO owner, Pass pass) : base(owner, pass) {
+protected ${class}(TO owner) : base(owner) {
 }
 ```
 
-# IN_TREE_MIXIN_PATH() #
+# IN_DICT_MIXIN_KEY() #
 ```
-private readonly string _Path;
-public string Path {
-    get { return _Path; }
+private readonly string _Key;
+public override string Key {
+    get { return _Key; }
 }
 ```
 
-# IN_TREE_MIXIN(class) #
+# IN_DICT_MIXIN(class) #
 ```
-protected ${class}(TO owner, string path, Pass pass) : base(owner, pass) {
-    _Path = path;
+protected ${class}(TO owner, string key) : base(owner) {
+    _Key = key;
 }
 
-public ITree OwnerAsTree {
+public IDict OwnerAsDict {
     get { return Owner; }
 }
 
-//SILP:IN_TREE_MIXIN_PATH()
-
-public override string RevInfo {
-    get {
-        return string.Format("[{0}] ({1}) ", _Path, Revision);
-    }
-}
+//SILP:IN_DICT_MIXIN_KEY()
 ```
 
-# IN_TREE_MIXIN_CONSTRUCTOR(class) #
+# IN_DICT_MIXIN_CONSTRUCTOR(class) #
 ```
-protected ${class}(TO owner, string path, Pass pass) : base(owner, path, pass) {
+protected ${class}(TO owner, string key) : base(owner, key) {
 }
 ```
 
@@ -94,8 +101,8 @@ public int Index {
     get { return _Index; }
 }
 
-public bool SetIndex(Pass pass, int index) {
-    if (!CheckAdminPass(pass)) return false;
+public bool SetIndex(IOwner owner, int index) {
+    if (Owner != owner) return false;
 
     _Index = index;
     return true;
@@ -104,7 +111,7 @@ public bool SetIndex(Pass pass, int index) {
 
 # IN_TABLE_MIXIN(class) #
 ```
-protected ${class}(TO owner, int index, Pass pass) : base(owner, pass) {
+protected ${class}(TO owner, int index) : base(owner) {
     _Index = index;
 }
 
@@ -114,58 +121,57 @@ public ITable OwnerAsTable {
 
 //SILP:IN_TABLE_MIXIN_INDEX()
 
-public override string RevInfo {
+public override string Key {
     get {
-        return string.Format("[{0}] ({1}) ", _Index, Revision);
+        return _Index.ToString();
     }
 }
 ```
 
 # IN_TABLE_MIXIN_CONSTRUCTOR(class) #
 ```
-protected ${class}(TO owner, int index, Pass pass) : base(owner, index, pass) {
+protected ${class}(TO owner, int index) : base(owner, index) {
 }
 ```
 
 # IN_BOTH_MIXIN_CONSTRUCTOR(class) #
 ```
-//SILP:IN_TREE_MIXIN_CONSTRUCTOR(${class})
+//SILP:IN_DICT_MIXIN_CONSTRUCTOR(${class})
 
 //SILP:IN_TABLE_MIXIN_CONSTRUCTOR(${class})
 ```
 
 # IN_BOTH_MIXIN(class) #
 ```
-protected ${class}(TO owner, string path, Pass pass) : base(owner, pass) {
-    if (owner is ITree) {
-        _Path = path;
+protected ${class}(TO owner, string key) : base(owner) {
+    if (owner is IDict) {
+        _Key = key;
     }
 }
 
-protected ${class}(TO owner, int index, Pass pass) : base(owner, pass) {
+protected ${class}(TO owner, int index) : base(owner) {
     if (owner is ITable) {
         _Index = index;
     }
 }
 
-public ITree OwnerAsTree {
-    get { return Owner as ITree; }
+public IDict OwnerAsDict {
+    get { return Owner as IDict; }
 }
 
 public ITable OwnerAsTable {
     get { return Owner as ITable; }
 }
 
-//SILP: IN_TREE_MIXIN_PATH()
-
 //SILP: IN_TABLE_MIXIN_INDEX()
 
-public override string RevInfo {
+private readonly string _Key;
+public override string Key {
     get {
-        if (_Path != null) {
-            return string.Format("[{0}] ({1}) ", _Path, Revision);
+        if (_Key != null) {
+            return _Key;
         } else {
-            return string.Format("[{0}] ({1}) ", _Index, Revision);
+            return _Index.ToString();
         }
     }
 }
@@ -184,13 +190,18 @@ public IContext Context {
 
 # CONTEXT_MIXIN() #
 ```
-    Pass sectionPass = Pass.ToOpen(Pass);
+    _Path = ContextConsts.GetContextPath(ContextExtension.GetKeys(this));
 
-    _Properties = new Properties(this, sectionPass);
-    _Channels = new Channels(this, sectionPass);
-    _Handlers = new Handlers(this, sectionPass);
-    _Vars = new Vars(this, sectionPass);
-    _Manners = new Manners(this, sectionPass);
+    _Properties = new Properties(this);
+    _Channels = new Channels(this);
+    _Handlers = new Handlers(this);
+    _Vars = new Vars(this);
+    _Manners = new Manners(this);
+}
+
+private string _Path;
+public string Path {
+    get { return _Path; }
 }
 
 private readonly Properties _Properties;
@@ -237,20 +248,4 @@ public override string[] DebugPatterns {
 public void SetDebugPatterns(string[] patterns) {
     _DebugPatterns = patterns;
 }
-```
-
-# IN_BOTH_CONTEXT_MIXIN(class) #
-```
-private ${class}(TO owner, string path, Pass pass) : base(owner, path, pass) {
-    Pass sectionPass = Pass.ToOpen(Pass);
-
-    _Properties = new Properties(this, sectionPass);
-    _Channels = new Channels(this, sectionPass);
-    _Handlers = new Handlers(this, sectionPass);
-    _Vars = new Vars(this, sectionPass);
-    _Manners = new Manners(this, sectionPass);
-}
-
-private ${class}(TO owner, int index, Pass pass) : base(owner, index, pass) {
-//SILP: CONTEXT_MIXIN()
 ```
