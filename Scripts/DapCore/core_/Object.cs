@@ -7,16 +7,9 @@ namespace angeldnd.dap {
         int Revision { get; }
         string RevInfo { get; }
 
+        string Uri { get; }
         bool DebugMode { get; }
-        string[] DebugPatterns { get; }
-
         string LogPrefix { get; }
-
-        void CriticalFromProxy(string format, params object[] values);
-        void ErrorFromProxy(string format, params object[] values);
-        void InfoFromProxy(string format, params object[] values);
-        void DebugFromProxy(string format, params object[] values);
-        void CustomFromProxy(string kind, string format, params object[] values);
     }
 
     public static class ObjectConsts {
@@ -24,10 +17,7 @@ namespace angeldnd.dap {
     }
 
     public abstract class Object : Logger, IObject, IBlockOwner {
-        private readonly static DefaultLogWriter _ProxyDefaultWriter = new DefaultLogWriter(3);
-        private readonly static DebugLogWriter _ProxyDebugWriter = new DebugLogWriter(3);
-
-        private static T As<T>(object obj, bool logError) where T : class, IObject {
+        public static T As<T>(object obj, bool logError) where T : class, IObject {
             if (obj == null) return null;
 
             if (!(obj is T)) {
@@ -38,11 +28,6 @@ namespace angeldnd.dap {
                 return null;
             }
             return (T)obj;
-        }
-
-        public static bool TryAs<T>(object obj, out T result) where T : class, IObject {
-            result = As<T>(obj, false);
-            return result != null;
         }
 
         public static T As<T>(object obj) where T : class, IObject {
@@ -70,61 +55,18 @@ namespace angeldnd.dap {
             _Revision += 1;
         }
 
+        public virtual string Uri {
+            get { return "n/a"; }
+        }
+
         public override string LogPrefix {
             get {
-                return string.Format("[{0}] {1} ", Type, RevInfo);
+                return string.Format("[{0}] [{1}] {2} ", Type, Uri, RevInfo);
             }
         }
 
         public override string ToString() {
-            return string.Format("[{0}: {1}]", Type, RevInfo);
-        }
-
-        public void CriticalFromProxy(string format, params object[] values) {
-            string msg = GetLogMsg(format, values);
-            if (DebugMode) {
-                _ProxyDebugWriter.CriticalFrom(this, msg);
-            } else {
-                _ProxyDefaultWriter.CriticalFrom(this, msg);
-            }
-        }
-
-        public void ErrorFromProxy(string format, params object[] values) {
-            string msg = GetLogMsg(format, values);
-            if (DebugMode) {
-                _ProxyDebugWriter.ErrorFrom(this, msg);
-            } else {
-                _ProxyDefaultWriter.ErrorFrom(this, msg);
-            }
-        }
-
-        public void InfoFromProxy(string format, params object[] values) {
-            string msg = GetLogMsg(format, values);
-            if (DebugMode) {
-                _ProxyDebugWriter.LogWithPatternsFrom(this, LoggerConsts.INFO, DebugPatterns, msg);
-            } else {
-                _ProxyDefaultWriter.InfoFrom(this, msg);
-            }
-        }
-
-        public void DebugFromProxy(string format, params object[] values) {
-            if (LogDebug) {
-                string msg = GetLogMsg(format, values);
-                if (DebugMode) {
-                    _ProxyDebugWriter.LogWithPatternsFrom(this, LoggerConsts.DEBUG, DebugPatterns, msg);
-                } else {
-                    _ProxyDefaultWriter.DebugFrom(this, msg);
-                }
-            }
-        }
-
-        public void CustomFromProxy(string kind, string format, params object[] values) {
-            string msg = GetLogMsg(format, values);
-            if (DebugMode) {
-                _ProxyDebugWriter.LogWithPatternsFrom(this, kind, DebugPatterns, msg);
-            } else {
-                _ProxyDefaultWriter.CustomFrom(this, kind, msg);
-            }
+            return string.Format("[{0}: {1} {2}]", Type, Uri, RevInfo);
         }
 
         //SILP:BLOCK_OWNER()

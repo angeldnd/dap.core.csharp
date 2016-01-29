@@ -38,10 +38,10 @@ namespace angeldnd.dap {
         }
 
         //SILP: GROUP_PROPERTY_MIXIN(ComboProperty)
-        public ComboProperty(IProperties owner, string key) : base(owner, key) {          //__SILP__
+        public ComboProperty(IDictProperties owner, string key) : base(owner, key) {      //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public ComboProperty(IProperties owner, int index) : base(owner, index) {         //__SILP__
+        public ComboProperty(ITableProperties owner, int index) : base(owner, index) {    //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         //IProperty                                                                       //__SILP__

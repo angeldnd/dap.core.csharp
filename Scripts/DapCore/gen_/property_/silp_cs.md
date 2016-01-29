@@ -5,10 +5,10 @@ public sealed class ${type}Property : Property<${cs_type}> {
         get { return PropertiesConsts.Type${type}Property; }
     }
 
-    public ${type}Property(Properties owner, string key) : base(owner, key) {
+    public ${type}Property(IDictProperties owner, string key) : base(owner, key) {
     }
 
-    public ${type}Property(Properties owner, int index) : base(owner, index) {
+    public ${type}Property(ITableProperties owner, int index) : base(owner, index) {
     }
 
     protected override bool DoEncode(Data data) {

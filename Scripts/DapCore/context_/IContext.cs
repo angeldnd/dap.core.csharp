@@ -15,9 +15,6 @@ namespace angeldnd.dap {
         Vars Vars { get; }
         Manners Manners { get; }
 
-        void SetDebugMode(bool debugMode);
-        void SetDebugPatterns(string[] patterns);
-
         /* ContextExtension.cs
         string[] GetKeys();
          */

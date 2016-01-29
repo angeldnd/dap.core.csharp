@@ -1,9 +1,9 @@
 # GROUP_PROPERTY_MIXIN(class) #
 ```
-public ${class}(IProperties owner, string key) : base(owner, key) {
+public ${class}(IDictProperties owner, string key) : base(owner, key) {
 }
 
-public ${class}(IProperties owner, int index) : base(owner, index) {
+public ${class}(ITableProperties owner, int index) : base(owner, index) {
 }
 
 //IProperty

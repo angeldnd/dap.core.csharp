@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public sealed class Channels : DictAspect<IContext, Channel> {
-        public Channels(IContext owner) : base(owner) {
+        public Channels(IContext owner, string key) : base(owner, key) {
         }
 
         public bool FireEvent(string channelKey, Data evt) {

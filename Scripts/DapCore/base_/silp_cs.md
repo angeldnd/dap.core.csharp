@@ -17,8 +17,14 @@ public bool Remove${name}(${cs_type} ${var_name}) {
 
 # ELEMENT_MIXIN(class) #
 ```
+protected ${class}(TO owner, string key) {
+    _Owner = owner;
+    _Key = key;
+}
+
 protected ${class}(TO owner) {
     _Owner = owner;
+    _Key = string.Format("_{0}", Guid.NewGuid().GetHashCode());
 }
 
 private readonly TO _Owner;
@@ -29,68 +35,46 @@ public IOwner GetOwner() {
     return _Owner;
 }
 
-public override string RevInfo {
-    get {
-        if (Key != null) {
-            return string.Format("[{0}] ({1}) ", Key, Revision);
-        } else {
-            return base.RevInfo;
-        }
-    }
-}
-
-public override string LogPrefix {
-    get {
-        return string.Format("{0}{1}",
-                Owner.LogPrefix, base.LogPrefix);
-    }
+private readonly string _Key;
+public string Key {
+    get { return _Key; }
 }
 
 public override bool DebugMode {
-    get { return Owner.DebugMode; }
+    get { return _Owner == null ? false : _Owner.DebugMode; }
 }
 
-public override string[] DebugPatterns {
-    get { return Owner.DebugPatterns; }
-}
-
-public virtual string Key {
-    get { return null; }
-}
-
+public virtual void OnAdded() {}
 public virtual void OnRemoved() {}
 ```
 
-# ELEMENT_MIXIN_CONSTRUCTOR(class) #
+# ASPECT_MIXIN_CONSTRUCTOR(class) #
 ```
-protected ${class}(TO owner) : base(owner) {
-}
-```
-
-# IN_DICT_MIXIN_KEY() #
-```
-private readonly string _Key;
-public override string Key {
-    get { return _Key; }
+protected ${class}(TO owner, string key) : base(owner, key) {
+    _Context = owner == null ? null : owner.GetContext();
+    _Path = Env.GetAspectPath(this);
+    _Uri = Env.GetAspectUri(this);
+    _DebugMode = Env.GetAspectDebugMode(this);
 }
 ```
 
 # IN_DICT_MIXIN(class) #
 ```
-protected ${class}(TO owner, string key) : base(owner) {
-    _Key = key;
+protected ${class}(TO owner, string key) : base(owner, key) {
 }
 
 public IDict OwnerAsDict {
     get { return Owner; }
 }
-
-//SILP:IN_DICT_MIXIN_KEY()
 ```
 
-# IN_DICT_MIXIN_CONSTRUCTOR(class) #
+# IN_DICT_ASPECT_MIXIN_CONSTRUCTOR(class) #
 ```
 protected ${class}(TO owner, string key) : base(owner, key) {
+    _Context = owner == null ? null : owner.GetContext();
+    _Path = Env.GetAspectPath(this);
+    _Uri = Env.GetAspectUri(this);
+    _DebugMode = Env.GetAspectDebugMode(this);
 }
 ```
 
@@ -121,32 +105,33 @@ public ITable OwnerAsTable {
 
 //SILP:IN_TABLE_MIXIN_INDEX()
 
-public override string Key {
+public override string RevInfo {
     get {
-        return _Index.ToString();
+        return string.Format("[{0}] ({1})", _Index, Revision);
     }
 }
 ```
 
-# IN_TABLE_MIXIN_CONSTRUCTOR(class) #
+# IN_TABLE_ASPECT_MIXIN_CONSTRUCTOR(class) #
 ```
 protected ${class}(TO owner, int index) : base(owner, index) {
+    _Context = owner == null ? null : owner.GetContext();
+    _Path = Env.GetAspectPath(this);
+    _Uri = Env.GetAspectUri(this);
+    _DebugMode = Env.GetAspectDebugMode(this);
 }
 ```
 
-# IN_BOTH_MIXIN_CONSTRUCTOR(class) #
+# IN_BOTH_ASPECT_MIXIN_CONSTRUCTOR(class) #
 ```
-//SILP:IN_DICT_MIXIN_CONSTRUCTOR(${class})
+//SILP:IN_DICT_ASPECT_MIXIN_CONSTRUCTOR(${class})
 
-//SILP:IN_TABLE_MIXIN_CONSTRUCTOR(${class})
+//SILP:IN_TABLE_ASPECT_MIXIN_CONSTRUCTOR(${class})
 ```
 
 # IN_BOTH_MIXIN(class) #
 ```
-protected ${class}(TO owner, string key) : base(owner) {
-    if (owner is IDict) {
-        _Key = key;
-    }
+protected ${class}(TO owner, string key) : base(owner, key) {
 }
 
 protected ${class}(TO owner, int index) : base(owner) {
@@ -165,13 +150,12 @@ public ITable OwnerAsTable {
 
 //SILP: IN_TABLE_MIXIN_INDEX()
 
-private readonly string _Key;
-public override string Key {
+public override string RevInfo {
     get {
-        if (_Key != null) {
-            return _Key;
+        if (_Index >= 0) {
+            return string.Format("[{0}] ({1})", _Index, Revision);
         } else {
-            return _Index.ToString();
+            return string.Format("({0})", Revision);
         }
     }
 }
@@ -179,27 +163,54 @@ public override string Key {
 
 # ASPECT_MIXIN() #
 ```
+private readonly IContext _Context;
 public IContext GetContext() {
-    return Owner.GetContext();
+    return _Context;
 }
 
 public IContext Context {
-    get { return Owner.GetContext(); }
+    get { return _Context; }
+}
+
+private readonly string _Path;
+public string Path {
+    get { return _Path; }
+}
+
+private readonly string _Uri;
+public override sealed string Uri {
+    get {
+        return _Uri;
+    }
+}
+
+private readonly bool _DebugMode = false;
+public override sealed bool DebugMode {
+    get { return _DebugMode; }
+}
+
+public override void OnAdded() {
+    Env.Instance.Hooks._OnAspectAdded(this);
+}
+
+public override void OnRemoved() {
+    Env.Instance.Hooks._OnAspectRemoved(this);
 }
 ```
 
 # CONTEXT_MIXIN() #
 ```
-    _Path = ContextConsts.GetContextPath(ContextExtension.GetKeys(this));
+    _Path = Env.GetContextPath(this);
+    _DebugMode = Env.GetContextDebugMode(this);
 
-    _Properties = new Properties(this);
-    _Channels = new Channels(this);
-    _Handlers = new Handlers(this);
-    _Vars = new Vars(this);
-    _Manners = new Manners(this);
+    _Properties = new Properties(this, ContextConsts.KeyProperties);
+    _Channels = new Channels(this, ContextConsts.KeyChannels);
+    _Handlers = new Handlers(this, ContextConsts.KeyHandlers);
+    _Vars = new Vars(this, ContextConsts.KeyVars);
+    _Manners = new Manners(this, ContextConsts.KeyManners);
 }
 
-private string _Path;
+private readonly string _Path;
 public string Path {
     get { return _Path; }
 }
@@ -233,19 +244,20 @@ public IContext GetContext() {
     return this;
 }
 
-private bool _DebugMode = false;
-public override bool DebugMode {
-    get { return _DebugMode; }
-}
-public void SetDebugMode(bool debugMode) {
-    _DebugMode= debugMode;
+public override sealed string Uri {
+    get { return _Path; }
 }
 
-private string[] _DebugPatterns = null;
-public override string[] DebugPatterns {
-    get { return _DebugPatterns; }
+private bool _DebugMode = false;
+public override sealed bool DebugMode {
+    get { return _DebugMode; }
 }
-public void SetDebugPatterns(string[] patterns) {
-    _DebugPatterns = patterns;
+
+public override void OnAdded() {
+    Env.Instance.Hooks._OnContextAdded(this);
+}
+
+public override void OnRemoved() {
+    Env.Instance.Hooks._OnContextRemoved(this);
 }
 ```

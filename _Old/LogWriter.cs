@@ -91,6 +91,7 @@ namespace angeldnd.dap {
             return string.Format("{0}[{1}]: {2}() ", fileName, lineNumber, method.Name);
         }
 
+        /*
         public void LogWithPatternsFrom(object source, string kind, string[] patterns, string format, params object[] values) {
             string msg = format;
             if (values != null && values.Length > 0) msg = string.Format(format, values);
@@ -175,5 +176,6 @@ namespace angeldnd.dap {
                 return msg.Contains(condition);
             }
         }
+        */
     }
 }

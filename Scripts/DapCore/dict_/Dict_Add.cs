@@ -6,14 +6,14 @@ namespace angeldnd.dap {
         private bool CheckAdd<T1>(string key) where T1 : class, IInDictElement {
             Type t1 = typeof(T1);
             if (t1 != _ElementType && !IsValidElementType(t1)) {
-                Log.Error("Type Mismatched: <{0}> -> {1}",
-                            _ElementType.FullName, t1.FullName);
+                Error("Type Mismatched: <{0}>, {1} -> {2}",
+                            _ElementType.FullName, key, t1.FullName);
                 return false;
             }
 
             T oldElement = null;
             if (_Elements.TryGetValue(key, out oldElement)) {
-                Error("Already Exist: {0}, {1} -> {2}", key, oldElement);
+                Error("Already Exist: {0}, {1}", key, oldElement);
                 return false;
             }
             return true;
@@ -26,10 +26,11 @@ namespace angeldnd.dap {
             if (_element != null) {
                 T element = As<T>(obj);
                 if (element != null) {
-                    OnElementAdded(element);
                     _Elements[element.Key] = element;
 
                     AdvanceRevision();
+                    OnElementAdded(element);
+                    element.OnAdded();
                 }
             }
             return _element;

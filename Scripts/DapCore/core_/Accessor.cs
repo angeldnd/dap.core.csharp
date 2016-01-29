@@ -23,10 +23,20 @@ namespace angeldnd.dap {
         }
 
         protected Accessor(T obj) {
-            if (obj != null) {
+            if (obj == null) {
                 throw new NullReferenceException(LogPrefix + "obj is null");
             }
             _Obj = obj;
+        }
+
+        public override bool DebugMode {
+            get { return _Obj.DebugMode; }
+        }
+
+        public override string LogPrefix {
+            get {
+                return string.Format("[{0}] {1} ", GetType().Name, _Obj);
+            }
         }
 
         //SILP:BLOCK_OWNER()

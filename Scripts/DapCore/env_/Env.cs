@@ -11,10 +11,12 @@ namespace angeldnd.dap {
         public const string DefaultLogName = "env";
         public const bool DefaultLogDebug = true;
 
+        public const string KeyHooks = "Hooks";
+
         public const string ChannelTick = "_tick";
     }
 
-    public sealed class Env : DictContext<Env, Registry>, IDictWatcher<Registry> {
+    public sealed class Env : DictContext<Env, Registry> {
         static Env() {
             Bootstrapper bootstrapper = Bootstrapper.Bootstrap();
             if (bootstrapper != null) {
@@ -22,6 +24,8 @@ namespace angeldnd.dap {
                     _Bootstrapper = bootstrapper;
                     _Version = bootstrapper.GetVersion();
                     _SubVersion = bootstrapper.GetSubVersion();
+                    _DebugMatchers = new List<EnvUriMatcher>();
+                    _Instance = new Env();
 
                     Log.Info("DAP Environment Bootstrapped");
                     Log.Info("Bootstrapper: {0}", _Bootstrapper.GetType().AssemblyQualifiedName);
@@ -39,6 +43,11 @@ namespace angeldnd.dap {
             }
         }
 
+        private static Bootstrapper _Bootstrapper;
+        public static Bootstrapper Bootstrapper {
+            get { return _Bootstrapper; }
+        }
+
         private static int _Version;
         public static int Version {
             get { return _Version; }
@@ -49,11 +58,45 @@ namespace angeldnd.dap {
             get { return _SubVersion; }
         }
 
-        private static Bootstrapper _Bootstrapper;
-        public static Bootstrapper Bootstrapper {
-            get { return _Bootstrapper; }
+        private static List<EnvUriMatcher> _DebugMatchers;
+
+        public void AddDebugPattern(string contextPathPattern, string aspectPathPattern) {
+            _DebugMatchers.Add(new EnvUriMatcher(contextPathPattern, aspectPathPattern));
         }
 
+        public static string GetContextPath(IContext context) {
+            return TreeHelper.GetPath<IContext>(_Instance, context);
+        }
+
+        public static string GetAspectPath(IAspect aspect) {
+            return TreeHelper.GetPath<IAspect>(aspect.Context, aspect);
+        }
+
+        public static string GetAspectUri(IAspect aspect) {
+            IContext context = aspect.Context;
+            return string.Format("{0}{1}{2}",
+                        context == null ? "" : context.Path,
+                        UriConsts.UriSeparator,
+                        aspect.Path);
+        }
+
+        public static bool GetContextDebugMode(IContext context) {
+            for (int i = 0; i < _DebugMatchers.Count; i++) {
+                if (_DebugMatchers[i].IsMatched(context)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool GetAspectDebugMode(IAspect aspect) {
+            for (int i = 0; i < _DebugMatchers.Count; i++) {
+                if (_DebugMatchers[i].IsMatched(aspect)) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private static int _TickCount = 0;
         public static int TickCount {
@@ -65,25 +108,27 @@ namespace angeldnd.dap {
             get { return _TickDelta; }
         }
 
-        public static void Tick(int tickCount, float tickDelta) {
+        public static void Tick(float tickDelta) {
             //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
             //FixedUpdate(), or other timer on other platform.
-            if (tickCount <= _TickCount || tickDelta <= 0.0f) {
-                _Instance.Error("Invalid Tick Param: tickCount = {0}, tickDelta = {1}", tickCount, tickDelta);
+            if (tickDelta <= 0.0f) {
+                _Instance.Error("Invalid Tick Param: tickDelta = {0}", tickDelta);
             }
-            _TickCount = tickCount;
+            _TickCount++;
             _TickDelta = tickDelta;
             _Instance.Tick();
         }
 
-        private static readonly Env _Instance = new Env();
+        private static Env _Instance;
         public static Env Instance {
             get { return _Instance; }
         }
 
         private Env() : base(null, null) {
-            AddDictWatcher(this);
+            Hooks = new Hooks(this, EnvConsts.KeyHooks);
         }
+
+        public readonly Hooks Hooks;
 
         public override string LogPrefix {
             get {
@@ -91,11 +136,12 @@ namespace angeldnd.dap {
             }
         }
 
-        public void OnElementAdded(Registry registry) {
-            registry.Channels.Add(EnvConsts.ChannelTick);
+        public override void OnAdded() {
+            //Do Nothing.
         }
 
-        public void OnElementRemoved(Registry registry) {
+        public override void OnRemoved() {
+            //Do Nothing.
         }
 
         private void Tick() {

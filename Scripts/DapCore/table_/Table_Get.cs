@@ -7,22 +7,56 @@ namespace angeldnd.dap {
             return Get(index);
         }
 
-        public T1 Get<T1>(int index) where T1 : class, IInTableElement {
+        public T1 Get<T1>(int index, bool logError) where T1 : class, IInTableElement {
             if (index >= 0 && index < _Elements.Count) {
-                return As<T1>(_Elements[index]);
+                return As<T1>(_Elements[index], logError);
             } else {
-                Debug("Get<{0}>({1}): Not Found", typeof(T1).FullName, index);
+                if (logError) {
+                    Error("Get<{0}>({1}): Not Found", typeof(T1).FullName, index);
+                } else {
+                    Debug("Get<{0}>({1}): Not Found", typeof(T1).FullName, index);
+                }
             }
             return null;
         }
 
-        public T Get(int index) {
-            if (index >= 0 && index < _Elements.Count) {
-                return _Elements[index];
+        public T1 Get<T1>(int index) where T1 : class, IInTableElement {
+            return Get<T1>(index, true);
+        }
+
+        public T1 Get<T1>(string key, bool logError) where T1 : class, IInTableElement {
+            for (int i = 0; i < _Elements.Count; i++) {
+                T element = _Elements[i];
+                if (element.Key == key) {
+                    return As<T1>(element, logError);
+                }
+            }
+            if (logError) {
+                Error("Get({0}): Not Found", key);
             } else {
-                Debug("Get({0}): Not Found", index);
+                Debug("Get({0}): Not Found", key);
             }
             return null;
+        }
+
+        public T1 Get<T1>(string key) where T1 : class, IInTableElement {
+            return Get<T1>(key, true);
+        }
+
+        public T Get(int index, bool logError) {
+            return Get<T>(index, logError);
+        }
+
+        public T Get(int index) {
+            return Get(index, true);
+        }
+
+        public T Get(string key, bool logError) {
+            return Get<T>(key, logError);
+        }
+
+        public T Get(string key) {
+            return Get(key, true);
         }
     }
 }

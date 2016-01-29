@@ -10,6 +10,7 @@ namespace angeldnd.dap {
 
         string Key { get; }
 
+        void OnAdded();
         void OnRemoved();
     }
 

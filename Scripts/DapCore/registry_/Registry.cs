@@ -15,6 +15,7 @@ namespace angeldnd.dap {
         }
 
         public Registry(Env owner, string key) : base(owner, key) {
+            Channels.Add(EnvConsts.ChannelTick);
         }
     }
 }

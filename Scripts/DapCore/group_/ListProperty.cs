@@ -73,10 +73,10 @@ namespace angeldnd.dap {
         }
 
         //SILP: GROUP_PROPERTY_MIXIN(ListProperty)
-        public ListProperty(IProperties owner, string key) : base(owner, key) {           //__SILP__
+        public ListProperty(IDictProperties owner, string key) : base(owner, key) {       //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public ListProperty(IProperties owner, int index) : base(owner, index) {          //__SILP__
+        public ListProperty(ITableProperties owner, int index) : base(owner, index) {     //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         //IProperty                                                                       //__SILP__

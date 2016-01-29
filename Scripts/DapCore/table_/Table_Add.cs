@@ -6,7 +6,7 @@ namespace angeldnd.dap {
         private bool CheckAdd<T1>() where T1 : class, IInTableElement {
             Type t1 = typeof(T1);
             if (t1 != _ElementType && !IsValidElementType(t1)) {
-                Log.Error("Type Mismatched: <{0}> -> {1}",
+                Error("Type Mismatched: <{0}> -> {1}",
                             _ElementType.FullName, t1.FullName);
                 return false;
             }
@@ -21,10 +21,11 @@ namespace angeldnd.dap {
             if (_element != null) {
                 T element = As<T>(obj);
                 if (element != null) {
-                    OnElementAdded(element);
                     _Elements.Add(element);
 
                     AdvanceRevision();
+                    OnElementAdded(element);
+                    element.OnAdded();
                 }
             }
             return _element;

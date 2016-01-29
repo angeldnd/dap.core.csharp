@@ -27,7 +27,7 @@ namespace angeldnd.dap {
     }
 
     public sealed class Properties : DictAspect<IContext, IProperty>, IDictProperties {
-        public Properties(IContext owner) : base(owner) {
+        public Properties(IContext owner, string key) : base(owner, key) {
         }
     }
 }

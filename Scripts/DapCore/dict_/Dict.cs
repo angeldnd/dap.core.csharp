@@ -34,9 +34,10 @@ namespace angeldnd.dap {
         T1 Remove<T1>(string key) where T1 : class, IInDictElement;
 
         //Generic Get
-        bool TryGet<T1>(string key, out T1 element) where T1 : class, IInDictElement;
+        T1 Get<T1>(string key, bool logError) where T1 : class, IInDictElement;
         T1 Get<T1>(string key) where T1 : class, IInDictElement;
         T1 GetOrAdd<T1>(string key) where T1 : class, IInDictElement;
+        T1 GetOrNew<T1>(string type, string key) where T1 : class, IInDictElement;
 
         //Is
         bool Is<T1>(string key) where T1 : class, IInDictElement;
@@ -75,9 +76,10 @@ namespace angeldnd.dap {
         List<T> Clear();
 
         //Get
-        bool TryGet(string key, out T element);
+        T Get(string key, bool logError);
         T Get(string key);
         T GetOrAdd(string key);
+        T GetOrNew(string type, string key);
 
         //Filter
         void ForEach(PatternMatcher matcher, Action<T> callback);
@@ -113,6 +115,8 @@ namespace angeldnd.dap {
         }
 
         private void OnElementAdded(T element) {
+            if (element.LogDebug) element.Debug("Added");
+
             WeakListHelper.Notify(_Watchers, (IDictWatcher<T> watcher) => {
                 watcher.OnElementAdded(element);
             });
@@ -122,6 +126,8 @@ namespace angeldnd.dap {
         }
 
         private void OnElementRemoved(T element) {
+            if (element.LogDebug) element.Debug("Removed");
+
             WeakListHelper.Notify(_Watchers, (IDictWatcher<T> watcher) => {
                 watcher.OnElementRemoved(element);
             });

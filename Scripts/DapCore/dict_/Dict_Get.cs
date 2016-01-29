@@ -7,39 +7,40 @@ namespace angeldnd.dap {
             return Get(key);
         }
 
-        public bool TryGet<T1>(string key, out T1 element) where T1 : class, IInDictElement {
-            T _element = null;
-            if (_Elements.TryGetValue(key, out _element)) {
-                return TryAs<T1>(_element, out element);
-            } else {
-                Debug("TryGet<{0}>({1}): Not Found", typeof(T1).FullName, key);
-            }
-            element = null;
-            return false;
-        }
-
-        public T1 Get<T1>(string key) where T1 : class, IInDictElement {
+        public T1 Get<T1>(string key, bool logError) where T1 : class, IInDictElement {
             T element = null;
             if (_Elements.TryGetValue(key, out element)) {
-                return As<T1>(element);
+                return As<T1>(element, logError);
             } else {
-                Debug("Get<{0}>({1}): Not Found", typeof(T1).FullName, key);
+                if (logError) {
+                    Error("Get<{0}>({1}): Not Found", typeof(T1).FullName, key);
+                } else {
+                    Debug("Get<{0}>({1}): Not Found", typeof(T1).FullName, key);
+                }
             }
             return null;
         }
 
-        public bool TryGet(string key, out T element) {
-            return _Elements.TryGetValue(key, out element);
+        public T1 Get<T1>(string key) where T1 : class, IInDictElement {
+            return Get<T1>(key, true);
         }
 
-        public T Get(string key) {
+        public T Get(string key, bool logError) {
             T element = null;
             if (_Elements.TryGetValue(key, out element)) {
                 return element;
             } else {
-                Debug("Get({0}): Not Found", key);
+                if (logError) {
+                    Error("Get({0}): Not Found", key);
+                } else {
+                    Debug("Get({0}): Not Found", key);
+                }
             }
             return null;
+        }
+
+        public T Get(string key) {
+            return Get(key, true);
         }
 
         public T1 GetOrAdd<T1>(string key) where T1 : class, IInDictElement {
@@ -51,8 +52,21 @@ namespace angeldnd.dap {
             }
         }
 
+        public T1 GetOrNew<T1>(string type, string key) where T1 : class, IInDictElement {
+            T element = null;
+            if (_Elements.TryGetValue(key, out element)) {
+                return As<T1>(element);
+            } else {
+                return New<T1>(type, key);
+            }
+        }
+
         public T GetOrAdd(string key) {
             return GetOrAdd<T>(key);
+        }
+
+        public T GetOrNew(string type, string key) {
+            return GetOrNew<T>(type, key);
         }
     }
 }

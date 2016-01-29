@@ -6,7 +6,7 @@ namespace angeldnd.dap {
     }
 
     public sealed class Vars : DictAspect<IContext, IVar>, IVars {
-        public Vars(IContext owner) : base(owner) {
+        public Vars(IContext owner, string key) : base(owner, key) {
         }
 
         public Var<T> AddVar<T>(string key, T val) {
@@ -49,8 +49,8 @@ namespace angeldnd.dap {
         }
 
         public bool SetValue<T>(string key, T val) {
-            Var<T> v;
-            if (TryGet<Var<T>>(key, out v)) {
+            Var<T> v = Get<Var<T>>(key, false);
+            if (v != null) {
                 return v.SetValue(val);
             } else {
                 v = AddVar<T>(key, val);
@@ -59,8 +59,8 @@ namespace angeldnd.dap {
         }
 
         public bool DepositValue<T>(string key, T val) {
-            IVar v;
-            if (!TryGet(key, out v)) {
+            Var<T> v = Get<Var<T>>(key, false);
+            if (v == null) {
                 v = AddVar<T>(key, val);
                 return v != null;
             } else {

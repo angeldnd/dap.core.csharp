@@ -4,7 +4,7 @@ namespace angeldnd.dap {
     public delegate IObject DapFactory(params object[] values);
 
     public static class Factory {
-        private static readonly Vars _Factories = new Vars(null);
+        private static readonly Vars _Factories = new Vars(Env.Instance, "Factories");
 
         static Factory() {
             Register<Registry>(RegistryConsts.TypeRegistry);

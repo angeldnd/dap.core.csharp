@@ -3,33 +3,8 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class ContextExtension {
-        public static string[] GetKeys(this IContext context) {
-            List<string> keys = new List<string>();
-            IContext c = context;
-            while (c != null) {
-                if (!string.IsNullOrEmpty(c.Key)) {
-                    keys.Add(c.Key);
-                }
-                c = c.GetOwner() as IContext;
-            }
-            keys.Reverse();
-            return keys.ToArray();
-        }
-
         public static T GetAncestor<T>(this IContext context) where T : class, IContext {
-            IContext c = context;
-            while (c != null) {
-                c = c.GetOwner() as IContext;
-                if (c == null) {
-                    context.Error("Ancestor Not Found: <{0}>", typeof(T).FullName);
-                    return null;
-                }
-                T ancestor = c as T;
-                if (ancestor != null) {
-                    return ancestor;
-                }
-            }
-            return null;
+            return TreeHelper.GetAncestor<T>(context);
         }
 
         public static IContext GetAncestor(this IContext context) {
@@ -38,39 +13,7 @@ namespace angeldnd.dap {
 
         public static T GetDescendant<T>(this IDictContext context, string relPath, bool logError)
                                             where T : class, IContext {
-            string[] keys = relPath.Split(ContextConsts.ContextSeparator);
-            IDictContext dict = context;
-            for (int i = 0; i < keys.Length; i++) {
-                string key = keys[i];
-                IContext element = dict.Get<IContext>(key);
-                if (element == null) {
-                    if (logError) {
-                        dict.Error("Not Found: {0} -> {1}: {2}", relPath, i, key);
-                    }
-                    return null;
-                }
-                if (i == keys.Length - 1) {
-                    T result = element as T;
-                    if (result == null) {
-                        if (logError) {
-                            element.Error("Type Mismatched: <{0}> {1} -> {2}: {3}",
-                                            typeof(T).FullName, relPath, i, key);
-                        }
-                    }
-                    return result;
-                } else {
-                    dict = element as IDictContext;
-                    if (dict == null) {
-                        if (logError) {
-                            element.Error("Not IDictContext: {0} -> {1}: {2}",
-                                            relPath, i, key);
-                        }
-                        return null;
-                    }
-                }
-            }
-            //In case of empty relPath, return itself.
-            return context as T;
+            return TreeHelper.GetDescendant<T>(context, relPath, logError);
         }
 
         public static IContext GetDescendant(this IDictContext context, string relPath, bool logError) {
@@ -89,12 +32,7 @@ namespace angeldnd.dap {
                                                     where T : Manner {
             IContext descendant = GetDescendant<IContext>(context, relPath, logError);
             if (descendant == null) {
-                T manner;
-                if (logError) {
-                    manner = descendant.Manners.Get<T>(mannerKey);
-                } else {
-                    descendant.Manners.TryGet<T>(mannerKey, out manner);
-                }
+                T manner = descendant.Manners.Get<T>(mannerKey, logError);
                 return manner;
             }
             return null;
@@ -106,27 +44,79 @@ namespace angeldnd.dap {
         }
 
         public static string GetRelativePath(this IDictContext context, IContext descendant) {
-            string prefix = context.Path + ContextConsts.ContextSeparator;
-            if (descendant.Path.StartsWith(prefix)) {
-                return descendant.Path.Replace(prefix, "");
-            } else {
-                context.Error("Is Not Desecendant: {0}", descendant);
-            }
-            return null;
+            return PathHelper.GetRelativePath(context.Path, descendant.Path);
+        }
+
+        public static void ForEachDescendants<T>(this IDictContext context, Action<T> callback)
+                                                    where T : class, IContext {
+            TreeHelper.ForEachDescendants<T>(context, callback);
+        }
+
+        public static List<T> GetDescendants<T>(this IDictContext context)
+                                                    where T : class, IContext {
+            return TreeHelper.GetDescendants<T>(context);
         }
 
         public static void ForEachDescendantsWithManner<T>(this IDictContext context, string mannerKey, Action<T> callback)
                                                     where T : Manner {
-            context.ForEach((IContext element) => {
-                T manner;
-                if (element.Manners.TryGet<T>(mannerKey, out manner)) {
+            TreeHelper.ForEachDescendants<IContext>(context, (IContext element) => {
+                T manner = element.Manners.Get<T>(mannerKey, false);
+                if (manner != null) {
                     callback(manner);
                 }
-                IDictContext dict = element as IDictContext;
-                if (dict != null) {
-                    ForEachDescendantsWithManner<T>(dict, mannerKey, callback);
-                }
             });
+        }
+
+        public static List<T> GetDescendantsWithManner<T>(this IDictContext context, string mannerKey)
+                                                    where T : Manner {
+            List<T> result = null;
+            ForEachDescendantsWithManner<T>(context, mannerKey, (T manner) => {
+                if (result == null) {
+                    result = new List<T>();
+                }
+                result.Add(manner);
+            });
+            return result;
+        }
+
+        public static T AddDescendant<TO, T>(this IDictContext context, string relPath)
+                                                    where TO : class, IDictContext
+                                                    where T : class, IContext {
+            return TreeHelper.AddDescendant<TO, T>(context, relPath);
+        }
+
+        public static T AddDescendant<T>(this IDictContext context, string relPath)
+                                                    where T : class, IContext {
+            return TreeHelper.AddDescendant<Items, T>(context, relPath);
+        }
+
+        public static Item AddDescendant(this IDictContext context, string relPath) {
+            return TreeHelper.AddDescendant<Items, Item>(context, relPath);
+        }
+
+        public static T NewDescendant<TO, T>(this IDictContext context, string type, string relPath)
+                                                    where TO : class, IDictContext
+                                                    where T : class, IContext {
+            return TreeHelper.NewDescendant<TO, T>(context, type, relPath);
+        }
+
+        public static T NewDescendant<T>(this IDictContext context, string type, string relPath)
+                                                    where T : class, IContext {
+            return TreeHelper.NewDescendant<Items, T>(context, type, relPath);
+        }
+
+        public static IContext NewDescendant(this IDictContext context, string type, string relPath) {
+            return TreeHelper.NewDescendant<Items, IContext>(context, type, relPath);
+        }
+
+        public static T NewDescendantWithManner<T>(this IDictContext context,
+                                    string type, string relPath, string mannerKey)
+                                                    where T : Manner {
+            IContext descendant = NewDescendant(context, type, relPath);
+            if (descendant != null) {
+                return descendant.Manners.Add<T>(mannerKey);
+            }
+            return null;
         }
     }
 }

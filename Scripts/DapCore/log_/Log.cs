@@ -27,9 +27,14 @@ namespace angeldnd.dap {
             return false;
         }
 
-        public readonly static DefaultLogWriter Default = new DefaultLogWriter(1);
+        public static void AddLog(object source, string kind,
+                                  string format, params object[] values) {
+            _Provider.AddLog(source, kind, null, format, values);
+        }
 
-        public static void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values) {
+        public static void AddLogWithStackTrace(object source, string kind,
+                                                string format, params object[] values) {
+            StackTrace stackTrace = new StackTrace(2, true);
             _Provider.AddLog(source, kind, stackTrace, format, values);
         }
 
@@ -37,48 +42,48 @@ namespace angeldnd.dap {
             _Provider.Flush();
         }
 
-        private readonly static DefaultLogWriter _Default = new DefaultLogWriter(2);
-
         public static void CriticalFrom(object source, string format, params object[] values) {
-            _Default.CriticalFrom(source, format, values);
+            AddLogWithStackTrace(source, LoggerConsts.CRITICAL, format, values);
         }
 
         public static void ErrorFrom(object source, string format, params object[] values) {
-            _Default.ErrorFrom(source, format, values);
+            AddLogWithStackTrace(source, LoggerConsts.ERROR, format, values);
         }
 
         public static void InfoFrom(object source, string format, params object[] values) {
-            _Default.InfoFrom(source, format, values);
+            AddLog(source, LoggerConsts.INFO, format, values);
         }
 
         public static void DebugFrom(object source, string format, params object[] values) {
-            if (LogDebug) _Default.DebugFrom(source, format, values);
+            if (LogDebug) {
+                AddLog(source, LoggerConsts.DEBUG, format, values);
+            }
         }
 
         public static void CustomFrom(object source, string kind, string format, params object[] values) {
-            _Default.CustomFrom(source, kind, format, values);
+            AddLog(source, kind, format, values);
         }
 
         public static void Critical(string format, params object[] values) {
-            _Default.Critical(format, values);
+            AddLogWithStackTrace(null, LoggerConsts.CRITICAL, format, values);
         }
 
         public static void Error(string format, params object[] values) {
-            _Default.Error(format, values);
+            AddLogWithStackTrace(null, LoggerConsts.ERROR, format, values);
         }
 
         public static void Info(string format, params object[] values) {
-            _Default.Info(format, values);
+            AddLog(null, LoggerConsts.INFO, format, values);
         }
 
         public static void Debug(string format, params object[] values) {
             if (LogDebug) {
-                _Default.Debug(format, values);
+                AddLog(null, LoggerConsts.DEBUG, format, values);
             }
         }
 
         public static void Custom(string kind, string format, params object[] values) {
-            _Default.Custom(null, format, values);
+            AddLog(null, kind, format, values);
         }
     }
 }

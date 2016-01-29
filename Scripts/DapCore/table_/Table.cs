@@ -32,7 +32,11 @@ namespace angeldnd.dap {
         T1 Remove<T1>(int index) where T1 : class, IInTableElement;
 
         //Generic Get
+        T1 Get<T1>(int index, bool logError) where T1 : class, IInTableElement;
         T1 Get<T1>(int index) where T1 : class, IInTableElement;
+
+        T1 Get<T1>(string key, bool logError) where T1 : class, IInTableElement;
+        T1 Get<T1>(string key) where T1 : class, IInTableElement;
 
         //Is
         bool Is<T1>(int index) where T1 : class, IInTableElement;
@@ -77,7 +81,10 @@ namespace angeldnd.dap {
         List<T> Clear();
 
         //Get
+        T Get(int index, bool logError);
         T Get(int index);
+        T Get(string key, bool logError);
+        T Get(string key);
 
         //Filter
         void ForEach(Action<T> callback);
@@ -138,6 +145,8 @@ namespace angeldnd.dap {
         }
 
         private void OnElementAdded(T element) {
+            if (element.LogDebug) element.Debug("Added");
+
             WeakListHelper.Notify(_Watchers, (ITableWatcher<T> watcher) => {
                 watcher.OnElementAdded(element);
             });
@@ -147,6 +156,8 @@ namespace angeldnd.dap {
         }
 
         private void OnElementRemoved(T element) {
+            if (element.LogDebug) element.Debug("Removed");
+
             WeakListHelper.Notify(_Watchers, (ITableWatcher<T> watcher) => {
                 watcher.OnElementRemoved(element);
             });

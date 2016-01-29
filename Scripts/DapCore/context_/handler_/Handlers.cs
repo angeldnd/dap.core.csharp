@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public sealed class Handlers : DictAspect<IContext, Handler> {
-        public Handlers(IContext owner) : base(owner) {
+        public Handlers(IContext owner, string key) : base(owner, key) {
         }
 
         public Data HandleRequest(string handlerKey, Data req) {
