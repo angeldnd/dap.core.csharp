@@ -9,11 +9,9 @@ namespace angeldnd.dap {
         public const string TypeItems = "Items";
     }
 
+    [DapType(ItemsConsts.TypeItems)]
+    [DapOrder(-9)]
     public class Items : DictContext<IDictContext, IContext> {
-        public override string Type {
-            get { return ItemsConsts.TypeItems; }
-        }
-
         public Items(IDictContext owner, string key) : base(owner, key) {
         }
     }

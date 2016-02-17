@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace angeldnd.dap {
-    public abstract class Plugin {
+    public abstract class Plugin : Logger {
         private bool _Inited = false;
         public bool Inited {
             get { return _Inited; }

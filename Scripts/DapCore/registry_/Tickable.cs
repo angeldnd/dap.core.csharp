@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class TickableConsts {
-        public const string MannerTickable = "_tickable";
+        public const string MannerTickable = "tickable";
     }
 
     public static class TickableExtension {

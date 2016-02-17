@@ -10,9 +10,9 @@ namespace angeldnd.dap {
         }
 
         public Data Encode() {
-            if (!string.IsNullOrEmpty(Type)) {
+            if (!string.IsNullOrEmpty(DapType)) {
                 Data data = new Data();
-                if (data.SetString(ObjectConsts.KeyType, Type)) {
+                if (data.SetString(ObjectConsts.KeyType, DapType)) {
                     if (DoEncode(data)) {
                         return data;
                     }
@@ -24,10 +24,10 @@ namespace angeldnd.dap {
 
         public virtual bool Decode(Data data) {
             string type = data.GetString(ObjectConsts.KeyType);
-            if (type == Type) {
+            if (type == DapType) {
                 return DoDecode(data);
             } else {
-                Error("Type Mismatched: {0}, {1}", Type, type);
+                Error("Type Mismatched: {0}, {1}", DapType, type);
             }
             return false;
         }

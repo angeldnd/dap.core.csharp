@@ -144,7 +144,7 @@ namespace angeldnd.dap {
                         break;
                     }
                 } else if (garbageIndex < 0) {
-                    Log.Error("Garbage Found: {0}", element.Target);
+                    Log.Debug("Garbage Found: {0}", element.Target);
                     garbageIndex = i;
                 }
             }

@@ -1,10 +1,8 @@
 # PROPERTY_CLASS(type, cs_type) #
 ```C#
+[DapType(PropertiesConsts.Type${type}Property)]
+[DapOrder(-10)]
 public sealed class ${type}Property : Property<${cs_type}> {
-    public override string Type {
-        get { return PropertiesConsts.Type${type}Property; }
-    }
-
     public ${type}Property(IDictProperties owner, string key) : base(owner, key) {
     }
 

@@ -5,6 +5,8 @@ namespace angeldnd.dap {
         IContext Context { get; }
 
         string Path { get; }
+
+        bool Debugging { get; set; }
     }
 
     public interface IInDictAspect : IAspect, IInDictElement {

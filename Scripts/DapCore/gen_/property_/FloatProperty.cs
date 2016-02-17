@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     //SILP: PROPERTY_CLASS(Float, float)
+    [DapType(PropertiesConsts.TypeFloatProperty)]                                       //__SILP__
+    [DapOrder(-10)]                                                                     //__SILP__
     public sealed class FloatProperty : Property<float> {                               //__SILP__
-        public override string Type {                                                   //__SILP__
-            get { return PropertiesConsts.TypeFloatProperty; }                          //__SILP__
-        }                                                                               //__SILP__
-                                                                                        //__SILP__
         public FloatProperty(IDictProperties owner, string key) : base(owner, key) {    //__SILP__
         }                                                                               //__SILP__
                                                                                         //__SILP__

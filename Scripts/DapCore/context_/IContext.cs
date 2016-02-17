@@ -9,6 +9,8 @@ namespace angeldnd.dap {
     public interface IContext : IOwner, IInDictElement, IContextAccessor {
         string Path { get; }
 
+        bool Debugging { get; set; }
+
         Properties Properties { get; }
         Channels Channels { get; }
         Handlers Handlers { get; }

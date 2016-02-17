@@ -45,6 +45,10 @@ namespace angeldnd.dap {
         //Generic Filter
         void ForEach<T1>(PatternMatcher matcher, Action<T1> callback) where T1 : class, IInDictElement;
         void ForEach<T1>(Action<T1> callback) where T1 : class, IInDictElement;
+        bool UntilTrue<T1>(PatternMatcher matcher, Func<T1, bool> callback) where T1 : class, IInDictElement;
+        bool UntilFalse<T1>(PatternMatcher matcher, Func<T1, bool> callback) where T1 : class, IInDictElement;
+        bool UntilTrue<T1>(Func<T1, bool> callback) where T1 : class, IInDictElement;
+        bool UntilFalse<T1>(Func<T1, bool> callback) where T1 : class, IInDictElement;
         List<T1> Matched<T1>(PatternMatcher matcher) where T1 : class, IInDictElement;
         List<T1> All<T1>() where T1 : class, IInDictElement;
     }
@@ -84,6 +88,10 @@ namespace angeldnd.dap {
         //Filter
         void ForEach(PatternMatcher matcher, Action<T> callback);
         void ForEach(Action<T> callback);
+        bool UntilTrue(PatternMatcher matcher, Func<T, bool> callback);
+        bool UntilFalse(PatternMatcher matcher, Func<T, bool> callback);
+        bool UntilTrue(Func<T, bool> callback);
+        bool UntilFalse(Func<T, bool> callback);
         List<T> Matched(PatternMatcher matcher);
         List<T> All();
     }

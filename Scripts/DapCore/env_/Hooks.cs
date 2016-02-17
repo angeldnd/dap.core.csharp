@@ -33,5 +33,13 @@ namespace angeldnd.dap {
                 hook._OnAspectRemoved(aspect);
             });
         }
+
+        public override void OnAdded() {
+            //Do Nothing.
+        }
+
+        public override void OnRemoved() {
+            //Do Nothing.
+        }
     }
 }

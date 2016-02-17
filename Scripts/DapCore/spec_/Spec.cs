@@ -66,7 +66,7 @@ namespace angeldnd.dap {
 
         public static bool FactorySpecValueChecker(IProperty prop, Data spec, string specKey) {
             string specKind = SpecConsts.GetSpecKind(specKey);
-            string factoryKey = string.Format("{0}{1}{2}", prop.Type, SpecConsts.Separator, specKind);
+            string factoryKey = string.Format("{0}{1}{2}", prop.DapType, SpecConsts.Separator, specKind);
             SpecValueCheckerFactory factory = _SpecValueCheckerFactories.GetValue<SpecValueCheckerFactory>(factoryKey);
             if (factory != null) {
                 return factory(prop, spec, specKey);

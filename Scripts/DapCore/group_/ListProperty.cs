@@ -3,72 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace angeldnd.dap {
-    public static class ListPropertyConsts {
-        public const string KeyIndex = "_i";
-    }
-
     public abstract class ListProperty<T> : TableInBothAspect<IProperties, T>, ITableProperties, IProperty
                                                 where T : class, IProperty {
         private bool DoEncode(Data data) {
-            /*
-            for (int i = 0; i < _Elements.Count; i++) {
-                T element = _Elements[i];
+            Data values = new Data();
+            if (!data.SetData(PropertiesConsts.KeyValue, values)) return false;
+
+            return UntilFalse((T element) => {
                 Data subData = element.Encode();
-                if (subData != null) {
-                    if (!subData.SetInt(ListPropertyConsts.KeyIndex, i) || !data.SetData(element.Key, subData)) {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            }
-            */
-            return true;
+                return subData != null && values.SetData(element.Index.ToString(), subData);
+            });
         }
 
         private bool DoDecode(Data data) {
-            /*
-            RemoveByChecker<T>(Pass, (T element) => true);
-            if (_Elements.Count > 0) {
-                Error("Orghan Elements Found: {0}", _Elements.Count);
+            Clear();
+            if (Count > 0) {
+                Error("Orghan Elements Found: {0}", Count);
+                return false;
             }
-            Dictionary<int, string> keyByIndex = new Dictionary<int, string>();
-            Dictionary<int, Data> dataByIndex = new Dictionary<int, Data>();
-            foreach (var key in data.Keys) {
-                if (key == ObjectConsts.KeyType) continue;
-
-                Data subData = data.GetData(key);
+            Data values = data.GetData(PropertiesConsts.KeyValue);
+            if (values == null) {
+                return true;
+            }
+            for (int i = 0; i < values.Count; i++) {
+                string key = i.ToString();
+                Data subData = values.GetData(key);
                 if (subData == null) {
-                    Log.Error("Invalid Elements Data: {0} -> {1}", key, data.GetValue(key));
+                    Error("Invalid Elements Data: {0} -> {1}", key, values.GetValue(key));
                     return false;
                 }
-                int index = subData.GetInt(ListPropertyConsts.KeyIndex, -1);
-                if (index < 0) {
-                    Log.Error("Invalid Elements Index: {0} -> {1}", key, data.GetValue(ListPropertyConsts.KeyIndex));
+                IProperty prop = SpecHelper.AddPropertyWithSpec(this, subData);
+                if (prop == null) {
                     return false;
                 }
-                if (keyByIndex.ContainsKey(index)) {
-                    Log.Error("Duplicated Elements Index: {0} -> {1} -> {2}, {3}",
-                                key, index, keyByIndex[index], dataByIndex[index]);
-                    return false;
-                }
-                keyByIndex[index] = key;
-                dataByIndex[index] = subData;
-            }
-
-            List<int> indexes = keyByIndex.Keys.ToList();
-            indexes.Sort();
-
-            foreach (int index in indexes) {
-                string key = keyByIndex[index];
-                Data subData = dataByIndex[index];
-                Property prop = SpecHelper.AddWithSpec(this, key, Pass, false, subData);
-                if (!(prop is T)) {
-                    Log.Error("Type Mismatched: {0}: {1} -> {2}", key, typeof(T).Name, prop.GetType().FullName);
+                if (prop.Index != i) {
+                    Error("Index Mismatched: {0} -> {1}", key, prop.Index);
                     return false;
                 }
             }
-            */
             return true;
         }
 
@@ -81,9 +53,9 @@ namespace angeldnd.dap {
                                                                                           //__SILP__
         //IProperty                                                                       //__SILP__
         public Data Encode() {                                                            //__SILP__
-            if (!string.IsNullOrEmpty(Type)) {                                            //__SILP__
+            if (!string.IsNullOrEmpty(DapType)) {                                         //__SILP__
                 Data data = new Data();                                                   //__SILP__
-                if (data.SetString(ObjectConsts.KeyType, Type)) {                         //__SILP__
+                if (data.SetString(ObjectConsts.KeyType, DapType)) {                      //__SILP__
                     if (DoEncode(data)) {                                                 //__SILP__
                         return data;                                                      //__SILP__
                     }                                                                     //__SILP__
@@ -95,10 +67,10 @@ namespace angeldnd.dap {
                                                                                           //__SILP__
         public bool Decode(Data data) {                                                   //__SILP__
             string type = data.GetString(ObjectConsts.KeyType);                           //__SILP__
-            if (type == Type) {                                                           //__SILP__
+            if (type == DapType) {                                                        //__SILP__
                 return DoDecode(data);                                                    //__SILP__
             } else {                                                                      //__SILP__
-                Error("Type Mismatched: {0}, {1}", Type, type);                           //__SILP__
+                Error("Type Mismatched: {0}, {1}", DapType, type);                        //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
         }                                                                                 //__SILP__

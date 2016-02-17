@@ -4,37 +4,17 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public abstract class ComboProperty : DictInBothAspect<IProperties, IProperty>, IDictProperties, IProperty {
         private bool DoEncode(Data data) {
-            bool result = true;
-            /*
-            All((IProperty prop) => {
+            return UntilFalse((IProperty prop) => {
                 Data subData = prop.Encode();
-                if (subData != null) {
-                    if (!data.SetData(prop.Key, subData)) {
-                        result = false;
-                    }
-                } else {
-                    result = false;
-                }
+                return subData != null && data.SetData(prop.Key, subData);
             });
-            */
-            return result;
         }
 
         private bool DoDecode(Data data) {
-            bool result = true;
-            /*
-            All((IProperty prop) => {
+            return UntilFalse((IProperty prop) => {
                 Data subData = data.GetData(prop.Key, null);
-                if (subData != null) {
-                    if (!prop.Decode(pass, subData)) {
-                        result = false;
-                    }
-                } else {
-                    result = false;
-                }
+                return subData != null && prop.Decode(subData);
             });
-            */
-            return result;
         }
 
         //SILP: GROUP_PROPERTY_MIXIN(ComboProperty)
@@ -46,9 +26,9 @@ namespace angeldnd.dap {
                                                                                           //__SILP__
         //IProperty                                                                       //__SILP__
         public Data Encode() {                                                            //__SILP__
-            if (!string.IsNullOrEmpty(Type)) {                                            //__SILP__
+            if (!string.IsNullOrEmpty(DapType)) {                                         //__SILP__
                 Data data = new Data();                                                   //__SILP__
-                if (data.SetString(ObjectConsts.KeyType, Type)) {                         //__SILP__
+                if (data.SetString(ObjectConsts.KeyType, DapType)) {                      //__SILP__
                     if (DoEncode(data)) {                                                 //__SILP__
                         return data;                                                      //__SILP__
                     }                                                                     //__SILP__
@@ -60,10 +40,10 @@ namespace angeldnd.dap {
                                                                                           //__SILP__
         public bool Decode(Data data) {                                                   //__SILP__
             string type = data.GetString(ObjectConsts.KeyType);                           //__SILP__
-            if (type == Type) {                                                           //__SILP__
+            if (type == DapType) {                                                        //__SILP__
                 return DoDecode(data);                                                    //__SILP__
             } else {                                                                      //__SILP__
-                Error("Type Mismatched: {0}, {1}", Type, type);                           //__SILP__
+                Error("Type Mismatched: {0}, {1}", DapType, type);                        //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
         }                                                                                 //__SILP__

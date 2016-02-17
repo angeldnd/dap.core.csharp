@@ -43,6 +43,8 @@ namespace angeldnd.dap {
 
         //Generic Filter
         void ForEach<T1>(Action<T1> callback) where T1 : class, IInTableElement;
+        bool UntilTrue<T1>(Func<T1, bool> callback) where T1 : class, IInTableElement;
+        bool UntilFalse<T1>(Func<T1, bool> callback) where T1 : class, IInTableElement;
         List<T1> All<T1>() where T1 : class, IInTableElement;
 
         //Move
@@ -88,6 +90,8 @@ namespace angeldnd.dap {
 
         //Filter
         void ForEach(Action<T> callback);
+        bool UntilTrue(Func<T, bool> callback);
+        bool UntilFalse(Func<T, bool> callback);
         List<T> All();
 
         //Move

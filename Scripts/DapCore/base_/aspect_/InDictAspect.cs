@@ -9,7 +9,6 @@ namespace angeldnd.dap {
             _Context = owner == null ? null : owner.GetContext();          //__SILP__
             _Path = Env.GetAspectPath(this);                               //__SILP__
             _Uri = Env.GetAspectUri(this);                                 //__SILP__
-            _DebugMode = Env.GetAspectDebugMode(this);                     //__SILP__
         }                                                                  //__SILP__
 
         //SILP: ASPECT_MIXIN()
@@ -34,13 +33,22 @@ namespace angeldnd.dap {
             }                                                         //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        private readonly bool _DebugMode = false;                     //__SILP__
+        private bool _Debugging = false;                              //__SILP__
+        public bool Debugging {                                       //__SILP__
+            get { return _Debugging; }                                //__SILP__
+            set { _Debugging = value; }                               //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
         public override sealed bool DebugMode {                       //__SILP__
-            get { return _DebugMode; }                                //__SILP__
+            get { return _Debugging || _Context.DebugMode; }          //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public override void OnAdded() {                              //__SILP__
             Env.Instance.Hooks._OnAspectAdded(this);                  //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public override void OnRemoved() {                            //__SILP__
+            Env.Instance.Hooks._OnAspectRemoved(this);                //__SILP__
         }                                                             //__SILP__
     }
 }

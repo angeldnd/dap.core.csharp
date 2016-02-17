@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public static class PropertiesExtension {
+    public static class DictPropertiesExtension {
         public static IProperty AddProperty(this IDictProperties properties,
                                             string key, Data data) {
             if (data == null) return null;

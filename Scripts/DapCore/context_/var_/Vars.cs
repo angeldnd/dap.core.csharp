@@ -25,11 +25,11 @@ namespace angeldnd.dap {
         }
 
         public bool HasVar<T>(string key) {
-            return Get<Var<T>>(key) != null;
+            return Get<Var<T>>(key, false) != null;
         }
 
         public Var<T> GetVar<T>(string key) {
-            return Get<Var<T>>(key);
+            return Get<Var<T>>(key, false);
         }
 
         public T GetValue<T>(string key, T defaultValue) {
@@ -41,11 +41,7 @@ namespace angeldnd.dap {
         }
 
         public T GetValue<T>(string key) {
-            Var<T> v = GetVar<T>(key);
-            if (v != null) {
-                return v.Value;
-            }
-            return default(T);
+            return GetValue<T>(key, default(T));
         }
 
         public bool SetValue<T>(string key, T val) {

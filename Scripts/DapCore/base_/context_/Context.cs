@@ -7,7 +7,6 @@ namespace angeldnd.dap {
         public Context(TO owner, string key) : base(owner, key) {
         //SILP: CONTEXT_MIXIN()
             _Path = Env.GetContextPath(this);                                 //__SILP__
-            _DebugMode = Env.GetContextDebugMode(this);                       //__SILP__
                                                                               //__SILP__
             _Properties = new Properties(this, ContextConsts.KeyProperties);  //__SILP__
             _Channels = new Channels(this, ContextConsts.KeyChannels);        //__SILP__
@@ -54,13 +53,22 @@ namespace angeldnd.dap {
             get { return _Path; }                                             //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
-        private bool _DebugMode = false;                                      //__SILP__
+        private bool _Debugging = false;                                      //__SILP__
+        public bool Debugging {                                               //__SILP__
+            get { return _Debugging; }                                        //__SILP__
+            set { _Debugging = value; }                                       //__SILP__
+        }                                                                     //__SILP__
+                                                                              //__SILP__
         public override sealed bool DebugMode {                               //__SILP__
-            get { return _DebugMode; }                                        //__SILP__
+            get { return _Debugging; }                                        //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
         public override void OnAdded() {                                      //__SILP__
             Env.Instance.Hooks._OnContextAdded(this);                         //__SILP__
+        }                                                                     //__SILP__
+                                                                              //__SILP__
+        public override void OnRemoved() {                                    //__SILP__
+            Env.Instance.Hooks._OnContextRemoved(this);                       //__SILP__
         }                                                                     //__SILP__
     }
 }

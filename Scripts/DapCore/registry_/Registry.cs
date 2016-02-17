@@ -9,11 +9,9 @@ namespace angeldnd.dap {
         public const string TypeRegistry = "Registry";
     }
 
+    [DapType(RegistryConsts.TypeRegistry)]
+    [DapOrder(-9)]
     public sealed class Registry : DictContext<Env, IContext> {
-        public override string Type {
-            get { return RegistryConsts.TypeRegistry; }
-        }
-
         public Registry(Env owner, string key) : base(owner, key) {
             Channels.Add(EnvConsts.ChannelTick);
         }

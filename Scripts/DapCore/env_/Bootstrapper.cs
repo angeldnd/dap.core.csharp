@@ -44,9 +44,10 @@ namespace angeldnd.dap {
             return bootstrapper;
         }
 
+        public abstract LogProvider GetLogProvider();
         public abstract int GetVersion();
         public abstract int GetSubVersion();
-        public abstract LogProvider GetLogProvider();
+        public abstract Dictionary<string, Type> GetDapTypes();
         public abstract List<Plugin> GetPlugins();
     }
 
@@ -84,6 +85,35 @@ namespace angeldnd.dap {
                 return (LogProvider)Activator.CreateInstance(logType);
             }
             return null;
+        }
+
+        public override Dictionary<string, Type> GetDapTypes() {
+            Dictionary<string, Type> dapTypes = new Dictionary<string, Type>();
+            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly asm in asms) {
+                AddDapTypes(dapTypes, asm);
+            }
+            return dapTypes;
+        }
+
+        private static void AddDapTypes(Dictionary<string, Type> dapTypes, Assembly asm) {
+            Type objectType = typeof(IObject);
+            Type[] types = asm.GetTypes();
+
+            foreach (Type type in types) {
+                if (!objectType.IsAssignableFrom(type)) continue;
+                if (type.IsAbstract) continue;
+
+                string dapType = DapType.GetDapType(type);
+                if (dapType != null) {
+                    if (dapTypes.ContainsKey(dapType)) {
+                        Log.Critical("DapType Conflict: [{0}] {1} -> {2}",
+                                        dapType, dapTypes[dapType].FullName, type.FullName);
+                    } else {
+                        dapTypes[dapType] = type;
+                    }
+                }
+            }
         }
 
         public override List<Plugin> GetPlugins() {

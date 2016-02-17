@@ -38,6 +38,14 @@ namespace angeldnd.dap {
             return prop;
         }
 
+        public static IProperty AddPropertyWithSpec(this ITableProperties properties, Data data) {
+            IProperty prop = properties.AddProperty(data);
+            if (prop != null) {
+                SetPropertyWithSpec(prop, data);
+            }
+            return prop;
+        }
+
         public static IProperty AddPropertyWithSpec(this IContext context, string key, Data data) {
             return AddPropertyWithSpec(context.Properties, key, data);
         }

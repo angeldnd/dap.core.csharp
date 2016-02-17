@@ -42,6 +42,11 @@ namespace angeldnd.dap {
             return Setup(null, null, aspectAddedBlock, aspectRemovedBlock);
         }
 
+        public bool Setup(Action<IContext> contextAddedBlock,
+                          Action<IAspect> aspectAddedBlock) {
+            return Setup(contextAddedBlock, null, aspectAddedBlock, null);
+        }
+
         private List<EnvUriMatcher> _UriMatchers = new List<EnvUriMatcher>();
 
         public void AddUriPattern(string contextPathPattern, string aspectPathPattern) {
@@ -98,6 +103,14 @@ namespace angeldnd.dap {
                     }
                 }
             }
+        }
+
+        public override void OnAdded() {
+            //Do Nothing.
+        }
+
+        public override void OnRemoved() {
+            //Do Nothing.
         }
     }
 }

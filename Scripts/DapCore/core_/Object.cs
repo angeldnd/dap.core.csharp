@@ -3,7 +3,9 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public interface IObject : ILogger {
-        string Type { get; }
+        string DapType { get; }
+        string TypeInfo { get; }
+
         int Revision { get; }
         string RevInfo { get; }
 
@@ -38,8 +40,24 @@ namespace angeldnd.dap {
             return As<T>(obj, false) != null;
         }
 
-        public virtual string Type {
-            get { return GetType().Name; }
+        private string _DapType = null;
+        public string DapType {
+            get {
+                if (_DapType == null) {
+                    _DapType = angeldnd.dap.DapType.GetDapType(GetType());
+                }
+                return _DapType;
+            }
+        }
+
+        public string TypeInfo {
+            get {
+                string dapType = DapType;
+                if (dapType != null) {
+                    return dapType;
+                }
+                return GetType().Name;
+            }
         }
 
         private int _Revision = 0;
@@ -61,12 +79,12 @@ namespace angeldnd.dap {
 
         public override string LogPrefix {
             get {
-                return string.Format("[{0}] [{1}] {2} ", Type, Uri, RevInfo);
+                return string.Format("[{0}] [{1}] {2} ", TypeInfo, Uri, RevInfo);
             }
         }
 
         public override string ToString() {
-            return string.Format("[{0}: {1} {2}]", Type, Uri, RevInfo);
+            return string.Format("[{0}: {1} {2}]", TypeInfo, Uri, RevInfo);
         }
 
         //SILP:BLOCK_OWNER()

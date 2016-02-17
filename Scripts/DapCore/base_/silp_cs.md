@@ -24,7 +24,7 @@ protected ${class}(TO owner, string key) {
 
 protected ${class}(TO owner) {
     _Owner = owner;
-    _Key = string.Format("_{0}", Guid.NewGuid().GetHashCode());
+    _Key = string.Format("{0}", Guid.NewGuid().GetHashCode());
 }
 
 private readonly TO _Owner;
@@ -54,7 +54,6 @@ protected ${class}(TO owner, string key) : base(owner, key) {
     _Context = owner == null ? null : owner.GetContext();
     _Path = Env.GetAspectPath(this);
     _Uri = Env.GetAspectUri(this);
-    _DebugMode = Env.GetAspectDebugMode(this);
 }
 ```
 
@@ -74,7 +73,6 @@ protected ${class}(TO owner, string key) : base(owner, key) {
     _Context = owner == null ? null : owner.GetContext();
     _Path = Env.GetAspectPath(this);
     _Uri = Env.GetAspectUri(this);
-    _DebugMode = Env.GetAspectDebugMode(this);
 }
 ```
 
@@ -118,7 +116,6 @@ protected ${class}(TO owner, int index) : base(owner, index) {
     _Context = owner == null ? null : owner.GetContext();
     _Path = Env.GetAspectPath(this);
     _Uri = Env.GetAspectUri(this);
-    _DebugMode = Env.GetAspectDebugMode(this);
 }
 ```
 
@@ -184,9 +181,14 @@ public override sealed string Uri {
     }
 }
 
-private readonly bool _DebugMode = false;
+private bool _Debugging = false;
+public bool Debugging {
+    get { return _Debugging; }
+    set { _Debugging = value; }
+}
+
 public override sealed bool DebugMode {
-    get { return _DebugMode; }
+    get { return _Debugging || _Context.DebugMode; }
 }
 
 public override void OnAdded() {
@@ -201,7 +203,6 @@ public override void OnRemoved() {
 # CONTEXT_MIXIN() #
 ```
     _Path = Env.GetContextPath(this);
-    _DebugMode = Env.GetContextDebugMode(this);
 
     _Properties = new Properties(this, ContextConsts.KeyProperties);
     _Channels = new Channels(this, ContextConsts.KeyChannels);
@@ -248,9 +249,14 @@ public override sealed string Uri {
     get { return _Path; }
 }
 
-private bool _DebugMode = false;
+private bool _Debugging = false;
+public bool Debugging {
+    get { return _Debugging; }
+    set { _Debugging = value; }
+}
+
 public override sealed bool DebugMode {
-    get { return _DebugMode; }
+    get { return _Debugging; }
 }
 
 public override void OnAdded() {

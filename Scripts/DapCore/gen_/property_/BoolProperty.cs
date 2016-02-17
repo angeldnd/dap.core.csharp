@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     //SILP: PROPERTY_CLASS(Bool, bool)
+    [DapType(PropertiesConsts.TypeBoolProperty)]                                       //__SILP__
+    [DapOrder(-10)]                                                                    //__SILP__
     public sealed class BoolProperty : Property<bool> {                                //__SILP__
-        public override string Type {                                                  //__SILP__
-            get { return PropertiesConsts.TypeBoolProperty; }                          //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
         public BoolProperty(IDictProperties owner, string key) : base(owner, key) {    //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__

@@ -5,6 +5,24 @@ using System.IO;
 
 namespace angeldnd.dap {
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
+    public class DapType: System.Attribute {
+        public static string GetDapType(Type type) {
+            object[] attribs = type.GetCustomAttributes(false);
+            foreach (var attr in attribs) {
+                if (attr is DapType) {
+                    return ((DapType)attr).Type;
+                }
+            }
+            return null;
+        }
+
+        public readonly string Type;
+        public DapType(string type) {
+            Type = type;
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapPriority: System.Attribute {
         public static int GetPriority(Type type) {
             object[] attribs = type.GetCustomAttributes(false);

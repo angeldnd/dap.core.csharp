@@ -12,8 +12,9 @@ namespace angeldnd.dap {
         public const bool DefaultLogDebug = true;
 
         public const string KeyHooks = "Hooks";
+        public const string KeyDebugHook = "debug";
 
-        public const string ChannelTick = "_tick";
+        public const string ChannelTick = "tick";
     }
 
     public sealed class Env : DictContext<Env, Registry> {
@@ -22,14 +23,19 @@ namespace angeldnd.dap {
             if (bootstrapper != null) {
                 if (Log.Init(bootstrapper.GetLogProvider())) {
                     _Bootstrapper = bootstrapper;
+
                     _Version = bootstrapper.GetVersion();
                     _SubVersion = bootstrapper.GetSubVersion();
-                    _DebugMatchers = new List<EnvUriMatcher>();
                     _Instance = new Env();
 
-                    Log.Info("DAP Environment Bootstrapped");
+                    Log.Info("Dap Environment Bootstrapped: Version = {0}, Sub Version = {1}",
+                                _Version, _SubVersion);
                     Log.Info("Bootstrapper: {0}", _Bootstrapper.GetType().AssemblyQualifiedName);
                     Log.Info("Log Provider: {0}", Log.Provider.GetType().FullName);
+
+                    foreach (var kv in bootstrapper.GetDapTypes()) {
+                        Factory.Register(kv.Key, kv.Value);
+                    }
 
                     foreach (Plugin plugin in bootstrapper.GetPlugins()) {
                         bool ok = plugin.Init();
@@ -58,12 +64,6 @@ namespace angeldnd.dap {
             get { return _SubVersion; }
         }
 
-        private static List<EnvUriMatcher> _DebugMatchers;
-
-        public void AddDebugPattern(string contextPathPattern, string aspectPathPattern) {
-            _DebugMatchers.Add(new EnvUriMatcher(contextPathPattern, aspectPathPattern));
-        }
-
         public static string GetContextPath(IContext context) {
             return TreeHelper.GetPath<IContext>(_Instance, context);
         }
@@ -78,24 +78,6 @@ namespace angeldnd.dap {
                         context == null ? "" : context.Path,
                         UriConsts.UriSeparator,
                         aspect.Path);
-        }
-
-        public static bool GetContextDebugMode(IContext context) {
-            for (int i = 0; i < _DebugMatchers.Count; i++) {
-                if (_DebugMatchers[i].IsMatched(context)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static bool GetAspectDebugMode(IAspect aspect) {
-            for (int i = 0; i < _DebugMatchers.Count; i++) {
-                if (_DebugMatchers[i].IsMatched(aspect)) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private static int _TickCount = 0;
@@ -126,6 +108,15 @@ namespace angeldnd.dap {
 
         private Env() : base(null, null) {
             Hooks = new Hooks(this, EnvConsts.KeyHooks);
+            Hook debugHook = Hooks.Add(EnvConsts.KeyDebugHook);
+            debugHook.Setup(
+                (IContext context) => {
+                    context.Debugging = true;
+                },
+                (IAspect aspect) => {
+                    aspect.Debugging = true;
+                }
+            );
         }
 
         public readonly Hooks Hooks;
