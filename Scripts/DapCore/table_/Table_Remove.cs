@@ -20,6 +20,10 @@ namespace angeldnd.dap {
             return null;
         }
 
+        public void Clear() {
+            RemoveAll();
+        }
+
         public T Remove(int index) {
             return Remove<T>(index);
         }
@@ -38,14 +42,6 @@ namespace angeldnd.dap {
             }
         }
 
-        public List<T> Clear() {
-            List<T> removed = All();
-            _Elements.Clear();
-
-            NotifyRemoves(removed, false);
-            return removed;
-        }
-
         public List<T> RemoveByChecker(Func<T, bool> checker) {
             List<T> removed = null;
             /* Must use the list version since need to remove some of them */
@@ -62,6 +58,14 @@ namespace angeldnd.dap {
                 };
             }
             NotifyRemoves(removed, true);
+            return removed;
+        }
+
+        public List<T> RemoveAll() {
+            List<T> removed = All();
+            _Elements.Clear();
+
+            NotifyRemoves(removed, false);
             return removed;
         }
     }

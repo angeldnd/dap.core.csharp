@@ -49,7 +49,7 @@ namespace angeldnd.dap {
             } else {
                 ITable ownerAsTable = owner as ITable;
                 if (ownerAsTable != null) {
-                    child = ownerAsTable.Get<IInTableElement>(key, logError) as T;
+                    child = ownerAsTable.GetByKey<IInTableElement>(key, logError) as T;
                 }
             }
             if (child == null) {

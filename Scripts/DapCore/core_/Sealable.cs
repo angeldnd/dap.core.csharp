@@ -1,12 +1,12 @@
 using System;
 
 namespace angeldnd.dap {
-    public interface Sealable {
+    public interface ISealable {
         bool Sealed { get; }
         void Seal();
     }
 
-    public class BaseSealable : Sealable {
+    public abstract class Sealable : ISealable {
         private bool _Sealed = false;
         public bool Sealed {
             get { return _Sealed; }

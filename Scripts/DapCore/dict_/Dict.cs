@@ -33,6 +33,9 @@ namespace angeldnd.dap {
         //Generic Remove
         T1 Remove<T1>(string key) where T1 : class, IInDictElement;
 
+        //Clear
+        void Clear();
+
         //Generic Get
         T1 Get<T1>(string key, bool logError) where T1 : class, IInDictElement;
         T1 Get<T1>(string key) where T1 : class, IInDictElement;
@@ -76,8 +79,8 @@ namespace angeldnd.dap {
         //Remove By Checker
         List<T> RemoveByChecker(Func<T, bool> checker);
 
-        //Clear
-        List<T> Clear();
+        //Remove All
+        List<T> RemoveAll();
 
         //Get
         T Get(string key, bool logError);

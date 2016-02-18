@@ -24,7 +24,7 @@ namespace angeldnd.dap {
             return Get<T1>(index, true);
         }
 
-        public T1 Get<T1>(string key, bool logError) where T1 : class, IInTableElement {
+        public T1 GetByKey<T1>(string key, bool logError) where T1 : class, IInTableElement {
             for (int i = 0; i < _Elements.Count; i++) {
                 T element = _Elements[i];
                 if (element.Key == key) {
@@ -39,8 +39,8 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public T1 Get<T1>(string key) where T1 : class, IInTableElement {
-            return Get<T1>(key, true);
+        public T1 GetByKey<T1>(string key) where T1 : class, IInTableElement {
+            return GetByKey<T1>(key, true);
         }
 
         public T Get(int index, bool logError) {
@@ -51,12 +51,12 @@ namespace angeldnd.dap {
             return Get(index, true);
         }
 
-        public T Get(string key, bool logError) {
-            return Get<T>(key, logError);
+        public T GetByKey(string key, bool logError) {
+            return GetByKey<T>(key, logError);
         }
 
-        public T Get(string key) {
-            return Get(key, true);
+        public T GetByKey(string key) {
+            return GetByKey(key, true);
         }
     }
 }

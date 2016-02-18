@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Dict<T> {
-        private bool CheckAdd<T1>(string key) where T1 : class, IInDictElement {
-            Type t1 = typeof(T1);
-            if (t1 != _ElementType && !IsValidElementType(t1)) {
+        private bool CheckAdd(Type type, string key) {
+            if (type != _ElementType && !IsValidElementType(type)) {
                 Error("Type Mismatched: <{0}>, {1} -> {2}",
-                            _ElementType.FullName, key, t1.FullName);
+                            _ElementType.FullName, key, type.FullName);
                 return false;
             }
 
@@ -36,21 +35,40 @@ namespace angeldnd.dap {
             return _element;
         }
 
-        public T1 Add<T1>(string key) where T1 : class, IInDictElement {
-            if (!CheckAdd<T1>(key)) return null;
-
+        public object CreateElement(Type type, string key) {
             object element = null;
             try {
-                element = Activator.CreateInstance(typeof(T1), this, key);
+                element = Activator.CreateInstance(type, this, key);
             } catch (Exception e) {
-                Error("CreateInstance Failed: <{0}> {1} -> {2}", typeof(T1).FullName, key, e);
+                Error("CreateInstance Failed: <{0}> {1} -> {2}", type.FullName, key, e);
             }
 
+            return element;
+        }
+
+        public T1 Add<T1>(string key) where T1 : class, IInDictElement {
+            Type t1 = typeof(T1);
+            if (t1.IsInterface) {
+                if (t1 == typeof(IInDictElement)) {
+                    return Add(key) as T1;
+                } else {
+                    Error("Invalid Type: <{0}>, {1} -> {2}",
+                                _ElementType.FullName, key, t1.FullName);
+                    return null;
+                }
+            }
+
+            if (!CheckAdd(t1, key)) return null;
+
+            object element = CreateElement(t1, key);
             return AddElement<T1>(element);
         }
 
         public T Add(string key) {
-            return Add<T>(key);
+            if (!CheckAdd(_ElementType, key)) return null;
+
+            object element = CreateElement(_ElementType, key);
+            return AddElement<T>(element);
         }
     }
 }

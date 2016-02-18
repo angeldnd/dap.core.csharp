@@ -9,6 +9,8 @@ namespace angeldnd.dap {
     [DapPriority(1)]
     public class FileLogProvider : LogProvider {
         public const int MAX_STACK_TRACK_NUM = 12;
+        public const int DEBUG_MAX_STACK_TRACK_NUM = 100;
+
         public const long FLUSH_DURATION = 10 * 1000 * 60; // flush every minute
         public const string TIMESTAMP_FORMAT = "HH:mm:ss.fff";    //http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 
@@ -142,7 +144,8 @@ namespace angeldnd.dap {
             if (stackTrace != null) {
                 log = string.Format("{0} <{1}> [{2}] {3}\n{4}",
                             now.ToString(TIMESTAMP_FORMAT), GetTickMsg(), kind, msg,
-                            FormatStackTrace(stackTrace, "\t", MAX_STACK_TRACK_NUM));
+                            FormatStackTrace(stackTrace, "\t",
+                                LogDebug ? DEBUG_MAX_STACK_TRACK_NUM: MAX_STACK_TRACK_NUM));
             } else {
                 log = string.Format("{0} <{1}> [{2}] {3}",
                             now.ToString(TIMESTAMP_FORMAT), GetTickMsg(), kind, msg);

@@ -37,9 +37,17 @@ namespace angeldnd.dap {
             return Setup(contextAddedBlock, contextRemovedBlock, null, null);
         }
 
+        public bool Setup(Action<IContext> contextAddedBlock) {
+            return Setup(contextAddedBlock, null, null, null);
+        }
+
         public bool Setup(Action<IAspect> aspectAddedBlock,
                           Action<IAspect> aspectRemovedBlock) {
             return Setup(null, null, aspectAddedBlock, aspectRemovedBlock);
+        }
+
+        public bool Setup(Action<IAspect> aspectAddedBlock) {
+            return Setup(null, null, aspectAddedBlock, null);
         }
 
         public bool Setup(Action<IContext> contextAddedBlock,

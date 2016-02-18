@@ -31,12 +31,15 @@ namespace angeldnd.dap {
         //Generic Remove
         T1 Remove<T1>(int index) where T1 : class, IInTableElement;
 
+        //Clear
+        void Clear();
+
         //Generic Get
         T1 Get<T1>(int index, bool logError) where T1 : class, IInTableElement;
         T1 Get<T1>(int index) where T1 : class, IInTableElement;
 
-        T1 Get<T1>(string key, bool logError) where T1 : class, IInTableElement;
-        T1 Get<T1>(string key) where T1 : class, IInTableElement;
+        T1 GetByKey<T1>(string key, bool logError) where T1 : class, IInTableElement;
+        T1 GetByKey<T1>(string key) where T1 : class, IInTableElement;
 
         //Is
         bool Is<T1>(int index) where T1 : class, IInTableElement;
@@ -79,14 +82,15 @@ namespace angeldnd.dap {
         //Remove By Checker
         List<T> RemoveByChecker(Func<T, bool> checker);
 
-        //Clear
-        List<T> Clear();
+        //Remove All
+        List<T> RemoveAll();
 
         //Get
         T Get(int index, bool logError);
         T Get(int index);
-        T Get(string key, bool logError);
-        T Get(string key);
+
+        T GetByKey(string key, bool logError);
+        T GetByKey(string key);
 
         //Filter
         void ForEach(Action<T> callback);

@@ -14,6 +14,10 @@ namespace angeldnd.dap {
         public static Tickable GetTickable(this Manners manners) {
             return manners.Get<Tickable>(TickableConsts.MannerTickable);
         }
+
+        public static Tickable GetOrAddTickable(this Manners manners) {
+            return manners.GetOrAdd<Tickable>(TickableConsts.MannerTickable);
+        }
     }
 
     public class Tickable : Manner {
