@@ -28,6 +28,10 @@ namespace angeldnd.dap {
             return Get<Var<T>>(key, false) != null;
         }
 
+        public Var<T> GetVar<T>(string key, bool logError) {
+            return Get<Var<T>>(key, logError);
+        }
+
         public Var<T> GetVar<T>(string key) {
             return Get<Var<T>>(key, false);
         }
