@@ -135,7 +135,7 @@ namespace angeldnd.dap.binding {
             return v;
         }
 
-        public TP SetupProperty<TP, T>(string type, string fragment) where TP : class, IProperty<T> {
+        public TP SetupProperty<TP>(string type, string fragment) where TP : class, IProperty {
             string key = GetSubKey(fragment);
             TP prop = Obj.Properties.New<TP>(type, key);
             if (prop != null) {
@@ -151,7 +151,7 @@ namespace angeldnd.dap.binding {
                     where TP : class, IProperty<T> {
             string key = GetSubKey(fragment);
 
-            TP prop = SetupProperty<TP, T>(type, fragment);
+            TP prop = SetupProperty<TP>(type, fragment);
 
             if (prop != null) {
                 T val = getter();

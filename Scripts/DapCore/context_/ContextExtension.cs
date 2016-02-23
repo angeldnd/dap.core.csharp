@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class ContextExtension {
+        public static bool RemoveFromOwner(this IContext context) {
+            IDict owner = context.OwnerAsDict;
+            if (owner == null) return false;
+
+            return owner.Remove<IContext>(context.Key) != null;
+        }
+
         public static T GetAncestor<T>(this IContext context) where T : class, IContext {
             return TreeHelper.GetAncestor<T>(context);
         }

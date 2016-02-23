@@ -7,8 +7,12 @@ namespace angeldnd.dap {
 
         public const string PathSeparatorAsString = "/";
 
-        public static string ToKey(string path) {
+        public static string PathToKey(string path) {
             return path.Replace(PathSeparator, DictConsts.KeySeparator);
+        }
+
+        public static string KeyToPath(string key) {
+            return key.Replace(DictConsts.KeySeparator, PathSeparator);
         }
     }
 }
