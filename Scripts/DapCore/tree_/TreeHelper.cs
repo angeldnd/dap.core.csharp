@@ -144,7 +144,7 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public static T AddDescendant<TO, T>(IDict owner, string relPath)
+        private static T GetOrCreateDescendant<TO, T>(IDict owner, string relPath, Func<IDict, string, T> func)
                                                 where TO : class, IDict, IInDictElement
                                                 where T : class, IInDictElement {
             string[] keys = relPath.Split(PathConsts.PathSeparator);
@@ -153,7 +153,7 @@ namespace angeldnd.dap {
                 if (i < keys.Length - 1) {
                     current = current.GetOrAdd<TO>(keys[i]);
                 } else {
-                    return current.GetOrAdd<T>(keys[i]);
+                    return func(current, keys[i]);
                 }
                 if (current == null) {
                     return null;
@@ -162,22 +162,32 @@ namespace angeldnd.dap {
             return null;
         }
 
+        public static T AddDescendant<TO, T>(IDict owner, string relPath)
+                                                where TO : class, IDict, IInDictElement
+                                                where T : class, IInDictElement {
+            return GetOrCreateDescendant<TO, T>(owner, relPath,
+                    (IDict parent, String key) => parent.Add<T>(key));
+        }
+
+        public static T GetOrAddDescendant<TO, T>(IDict owner, string relPath)
+                                                where TO : class, IDict, IInDictElement
+                                                where T : class, IInDictElement {
+            return GetOrCreateDescendant<TO, T>(owner, relPath,
+                    (IDict parent, String key) => parent.GetOrAdd<T>(key));
+        }
+
         public static T NewDescendant<TO, T>(IDict owner, string type, string relPath)
                                                 where TO : class, IDict, IInDictElement
                                                 where T : class, IInDictElement {
-            string[] keys = relPath.Split(PathConsts.PathSeparator);
-            IDict current = owner;
-            for (int i = 0; i < keys.Length; i++) {
-                if (i < keys.Length - 1) {
-                    current = current.GetOrAdd<TO>(keys[i]);
-                } else {
-                    return current.GetOrNew<T>(type, keys[i]);
-                }
-                if (current == null) {
-                    return null;
-                }
-            }
-            return null;
+            return GetOrCreateDescendant<TO, T>(owner, relPath,
+                    (IDict parent, String key) => parent.New<T>(type, key));
+        }
+
+        public static T GetOrNewDescendant<TO, T>(IDict owner, string type, string relPath)
+                                                where TO : class, IDict, IInDictElement
+                                                where T : class, IInDictElement {
+            return GetOrCreateDescendant<TO, T>(owner, relPath,
+                    (IDict parent, String key) => parent.GetOrNew<T>(type, key));
         }
     }
 }

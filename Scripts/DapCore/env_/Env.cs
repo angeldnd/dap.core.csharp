@@ -17,7 +17,7 @@ namespace angeldnd.dap {
         public const string ChannelTick = "tick";
     }
 
-    public sealed class Env : DictContext<Env, Registry> {
+    public sealed class Env : DictContext<Env, Items> {
         static Env() {
             Bootstrapper bootstrapper = Bootstrapper.Bootstrap();
             if (bootstrapper != null) {
@@ -27,6 +27,7 @@ namespace angeldnd.dap {
                     _Version = bootstrapper.GetVersion();
                     _SubVersion = bootstrapper.GetSubVersion();
                     _Instance = new Env();
+                    _Instance.Setup();
 
                     Log.Info("Dap Environment Bootstrapped: Version = {0}, Sub Version = {1}",
                                 _Version, _SubVersion);
@@ -107,6 +108,8 @@ namespace angeldnd.dap {
         }
 
         private Env() : base(null, null) {
+            //Can NOT create any aspects other than Hooks/Hook here.
+
             Hooks = new Hooks(this, EnvConsts.KeyHooks);
             Hook debugHook = Hooks.Add(EnvConsts.KeyDebugHook);
             debugHook.Setup(
@@ -117,6 +120,12 @@ namespace angeldnd.dap {
                     aspect.Debugging = true;
                 }
             );
+        }
+
+        private Channel _TickChannel = null;
+
+        private void Setup() {
+            _TickChannel = Channels.Add(EnvConsts.ChannelTick);
         }
 
         public readonly Hooks Hooks;
@@ -136,9 +145,7 @@ namespace angeldnd.dap {
         }
 
         private void Tick() {
-            ForEach((Registry registry) => {
-                registry.Channels.FireEvent(EnvConsts.ChannelTick, null);
-            });
+            _TickChannel.FireEvent(null);
         }
     }
 }
