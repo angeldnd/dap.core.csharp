@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace angeldnd.dap {
-    public abstract class ListProperty<T> : TableInBothAspect<IProperties, T>, ITableProperties, IProperty
+    public abstract class TableProperty<T> : TableInBothAspect<IProperties, T>, ITableProperties, IProperty
                                                 where T : class, IProperty {
         private bool DoEncode(Data data) {
             Data values = new Data();
@@ -44,11 +44,11 @@ namespace angeldnd.dap {
             return true;
         }
 
-        //SILP: GROUP_PROPERTY_MIXIN(ListProperty)
-        public ListProperty(IDictProperties owner, string key) : base(owner, key) {       //__SILP__
+        //SILP: GROUP_PROPERTY_MIXIN(TableProperty)
+        public TableProperty(IDictProperties owner, string key) : base(owner, key) {      //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        public ListProperty(ITableProperties owner, int index) : base(owner, index) {     //__SILP__
+        public TableProperty(ITableProperties owner, int index) : base(owner, index) {    //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         //IProperty                                                                       //__SILP__
