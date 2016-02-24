@@ -80,10 +80,8 @@ namespace angeldnd.dap {
                 WeakListHelper.Notify(_ValueWatchers, (IValueWatcher<T> watcher) => {
                     watcher.OnChanged(this, lastVal);
                 });
-                return true;
-            } else {
-                return true;
             }
+            return true;
         }
 
         public BlockVarWatcher AddVarWatcher(IBlockOwner owner, Action<IVar> block) {
