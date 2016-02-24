@@ -16,6 +16,7 @@ namespace angeldnd.dap {
         Handlers Handlers { get; }
         Vars Vars { get; }
         Manners Manners { get; }
+        Bus Bus { get; }
 
         /* ContextExtension.cs
         string[] GetKeys();

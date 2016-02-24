@@ -14,6 +14,7 @@ namespace angeldnd.dap {
             _Handlers = new Handlers(this, ContextConsts.KeyHandlers);        //__SILP__
             _Vars = new Vars(this, ContextConsts.KeyVars);                    //__SILP__
             _Manners = new Manners(this, ContextConsts.KeyManners);           //__SILP__
+            _Bus = new Bus(this, ContextConsts.KeyBus);                       //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
         private readonly string _Path;                                        //__SILP__
@@ -44,6 +45,11 @@ namespace angeldnd.dap {
         private readonly Manners _Manners;                                    //__SILP__
         public Manners Manners {                                              //__SILP__
             get { return _Manners; }                                          //__SILP__
+        }                                                                     //__SILP__
+                                                                              //__SILP__
+        private readonly Bus _Bus;                                            //__SILP__
+        public Bus Bus {                                                      //__SILP__
+            get { return _Bus; }                                              //__SILP__
         }                                                                     //__SILP__
                                                                               //__SILP__
         public IContext GetContext() {                                        //__SILP__

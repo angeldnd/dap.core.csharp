@@ -10,6 +10,7 @@ namespace angeldnd.dap {
         public const string KeyHandlers = "Handlers";
         public const string KeyVars = "Vars";
         public const string KeyManners = "Manners";
+        public const string KeyBus = "Bus";
 
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";

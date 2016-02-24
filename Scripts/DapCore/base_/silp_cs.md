@@ -209,6 +209,7 @@ public override void OnRemoved() {
     _Handlers = new Handlers(this, ContextConsts.KeyHandlers);
     _Vars = new Vars(this, ContextConsts.KeyVars);
     _Manners = new Manners(this, ContextConsts.KeyManners);
+    _Bus = new Bus(this, ContextConsts.KeyBus);
 }
 
 private readonly string _Path;
@@ -239,6 +240,11 @@ public Vars Vars {
 private readonly Manners _Manners;
 public Manners Manners {
     get { return _Manners; }
+}
+
+private readonly Bus _Bus;
+public Bus Bus {
+    get { return _Bus; }
 }
 
 public IContext GetContext() {
