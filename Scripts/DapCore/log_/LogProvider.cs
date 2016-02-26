@@ -64,7 +64,7 @@ namespace angeldnd.dap {
                 _StackBuilder.Append(Path.GetFileName(stackFrame.GetFileName()));
                 _StackBuilder.Append("<");
                 _StackBuilder.Append(stackFrame.GetFileLineNumber());
-                _StackBuilder.Append(">");
+                _StackBuilder.Append(">\t");
                 _StackBuilder.Append(method.ReflectedType.Namespace);
                 _StackBuilder.Append(".");
                 _StackBuilder.Append(method.ReflectedType.Name);
