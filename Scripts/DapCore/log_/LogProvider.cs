@@ -68,7 +68,7 @@ namespace angeldnd.dap {
                 _StackBuilder.Append(method.ReflectedType.Namespace);
                 _StackBuilder.Append(".");
                 _StackBuilder.Append(method.ReflectedType.Name);
-                _StackBuilder.Append(":");
+                _StackBuilder.Append("\t");
                 _StackBuilder.Append(method.Name);
                 _StackBuilder.Append("()\n");
             }
