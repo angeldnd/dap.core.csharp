@@ -126,7 +126,7 @@ namespace angeldnd.dap {
         }
 
         private void OnElementAdded(T element) {
-            if (element.LogDebug) element.Debug("Added");
+            if (element.DebugMode) element.Debug("Added");
 
             WeakListHelper.Notify(_Watchers, (IDictWatcher<T> watcher) => {
                 watcher.OnElementAdded(element);
@@ -137,7 +137,7 @@ namespace angeldnd.dap {
         }
 
         private void OnElementRemoved(T element) {
-            if (element.LogDebug) element.Debug("Removed");
+            if (element.DebugMode) element.Debug("Removed");
 
             WeakListHelper.Notify(_Watchers, (IDictWatcher<T> watcher) => {
                 watcher.OnElementRemoved(element);
