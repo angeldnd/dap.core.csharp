@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace angeldnd.dap {
     /*
@@ -24,6 +25,8 @@ namespace angeldnd.dap {
         public bool LogDebug {
             get { return _LogDebug; }
         }
+
+        private StringBuilder _StackBuilder = new StringBuilder(1024);
 
         protected LogProvider(bool logDebug) {
             _LogDebug = logDebug;
@@ -52,21 +55,24 @@ namespace angeldnd.dap {
         }
 
         public string FormatStackTrace(StackTrace stackTrace, string prefix, int max) {
-            StringWriter writer = new StringWriter();
+            _StackBuilder.Length = 0;
             for (int i = 0; i< stackTrace.FrameCount; i++) {
                 if (i >= max) break;
                 StackFrame stackFrame = stackTrace.GetFrame(i);
                 var method = stackFrame.GetMethod();
-                string line = string.Format("{0}{1}<{2}>{3}.{4}:{5}()", prefix,
-                                            Path.GetFileName(stackFrame.GetFileName()),
-                                            stackFrame.GetFileLineNumber(),
-                                            method.ReflectedType.Namespace,
-                                            method.ReflectedType.Name,
-                                            method.Name
-                );
-                writer.WriteLine(line);
+                _StackBuilder.Append(prefix);
+                _StackBuilder.Append(Path.GetFileName(stackFrame.GetFileName()));
+                _StackBuilder.Append("<");
+                _StackBuilder.Append(stackFrame.GetFileLineNumber());
+                _StackBuilder.Append(">");
+                _StackBuilder.Append(method.ReflectedType.Namespace);
+                _StackBuilder.Append(".");
+                _StackBuilder.Append(method.ReflectedType.Name);
+                _StackBuilder.Append(":");
+                _StackBuilder.Append(method.Name);
+                _StackBuilder.Append("()\n");
             }
-            return writer.ToString();
+            return _StackBuilder.ToString();
         }
     }
 }
