@@ -132,13 +132,8 @@ namespace angeldnd.dap {
             }
         }
 
-        public override void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values) {
+        public override void AddLog(object source, string kind, string msg, StackTrace stackTrace) {
             var now = System.DateTime.UtcNow;
-
-            string msg = format;
-            if (values != null && values.Length > 0) {
-                msg = string.Format(format, values);
-            }
 
             string log = null;
             if (stackTrace != null) {

@@ -17,7 +17,7 @@ namespace angeldnd.dap {
     }
     */
     public abstract class LogProvider : ILogger {
-        public abstract void AddLog(object source, string kind, StackTrace stackTrace, string format, params object[] values);
+        public abstract void AddLog(object source, string kind, string msg, StackTrace stackTrace);
         public abstract void Flush();
 
         private bool _LogDebug;
@@ -31,24 +31,24 @@ namespace angeldnd.dap {
 
         public void Critical(string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(1, true);
-            AddLog(this, LoggerConsts.CRITICAL, stackTrace, format, values);
+            AddLog(this, LoggerConsts.CRITICAL, Log.GetMsg(format, values), stackTrace);
         }
 
         public void Error(string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(1, true);
-            AddLog(this, LoggerConsts.ERROR, stackTrace, format, values);
+            AddLog(this, LoggerConsts.ERROR, Log.GetMsg(format, values), stackTrace);
         }
 
         public void Info(string format, params object[] values) {
-            AddLog(this, LoggerConsts.INFO, null, format, values);
+            AddLog(this, LoggerConsts.INFO, Log.GetMsg(format, values), null);
         }
 
         public void Debug(string format, params object[] values) {
-            if (_LogDebug) AddLog(this, LoggerConsts.DEBUG, null, format, values);
+            if (_LogDebug) AddLog(this, LoggerConsts.DEBUG, Log.GetMsg(format, values), null);
         }
 
         public void Custom(string kind, string format, params object[] values) {
-            AddLog(this, kind, null, format, values);
+            AddLog(this, kind, Log.GetMsg(format, values), null);
         }
 
         public string FormatStackTrace(StackTrace stackTrace, string prefix, int max) {

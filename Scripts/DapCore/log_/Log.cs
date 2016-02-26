@@ -27,15 +27,23 @@ namespace angeldnd.dap {
             return false;
         }
 
+        public static string GetMsg(string format, params object[] values) {
+            string msg = format;
+            if (values != null && values.Length > 0) {
+                msg = string.Format(format, values);
+            }
+            return msg;
+        }
+
         public static void AddLog(object source, string kind,
                                   string format, params object[] values) {
-            _Provider.AddLog(source, kind, null, format, values);
+            _Provider.AddLog(source, kind, GetMsg(format, values), null);
         }
 
         public static void AddLogWithStackTrace(object source, string kind,
                                                 string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(2, true);
-            _Provider.AddLog(source, kind, stackTrace, format, values);
+            _Provider.AddLog(source, kind, GetMsg(format, values), stackTrace);
         }
 
         public static void Flush() {
