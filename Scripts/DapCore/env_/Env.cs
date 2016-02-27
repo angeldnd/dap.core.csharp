@@ -15,6 +15,8 @@ namespace angeldnd.dap {
         public const string KeyDebugHook = "debug";
 
         public const string ChannelTick = "tick";
+
+        public const string MsgOnBootstrap = "on_bootstrap";
     }
 
     public sealed class Env : DictContext<Env, Items> {
@@ -46,6 +48,8 @@ namespace angeldnd.dap {
                             Log.Error("Plugin Init Failed: {0}", plugin.GetType().FullName);
                         }
                     }
+
+                    _instance.PublishOnBootstrap();
                 }
             }
         }
@@ -146,6 +150,10 @@ namespace angeldnd.dap {
 
         private void Tick() {
             _TickChannel.FireEvent(null);
+        }
+
+        private void PublishOnBootstrap() {
+            Bus.Publish(EnvConsts.MsgOnBootstrap, this);
         }
     }
 }
