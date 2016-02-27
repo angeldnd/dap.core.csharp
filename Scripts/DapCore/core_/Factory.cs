@@ -42,7 +42,7 @@ namespace angeldnd.dap {
                     Log.Error("Factory.New: <{0}> {1} -> {2}", type, typeof(T).FullName, e);
                 }
             } else {
-                Log.Error("Factory.New: {0} Unknown Type", type);
+                Log.Error("Factory.New: <{0}> Unknown Type", type);
             }
             return null;
         }
