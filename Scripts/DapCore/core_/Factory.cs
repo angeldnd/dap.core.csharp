@@ -1,16 +1,16 @@
 using System;
+using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class Factory {
-        private static readonly Vars _Factories = new Vars(Env.Instance, "Factories");
+        private static readonly Dictionary<string, Type> _Types = new Dictionary<string, Type>();
 
         public static bool Register<T>(string type) where T : class, IObject {
             return Register(type, typeof(T));
         }
 
         public static bool Register(string type, Type newType) {
-            Type oldType = _Factories.GetValue<Type>(type);
-
+            Type oldType = GetDapType(type);
             if (oldType != null) {
                 if (oldType == newType) {
                     return true;
@@ -20,15 +20,20 @@ namespace angeldnd.dap {
                     return false;
                 }
             }
-            return _Factories.AddVar(type, newType) != null;
+            _Types[type] = newType;
+            return true;
         }
 
         public static Type GetDapType(string type) {
-            return _Factories.GetValue<Type>(type);
+            Type oldType;
+            if (_Types.TryGetValue(type, out oldType)) {
+                return oldType;
+            }
+            return null;
         }
 
         public static T New<T>(string type, params object[] values) where T : class, IObject {
-            Type oldType = _Factories.GetValue<Type>(type);
+            Type oldType = GetDapType(type);
             if (oldType != null) {
                 try {
                     object obj = Activator.CreateInstance(oldType, values);

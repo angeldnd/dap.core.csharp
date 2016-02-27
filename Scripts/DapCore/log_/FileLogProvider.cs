@@ -173,7 +173,7 @@ namespace angeldnd.dap {
         }
 
         protected virtual string GetTickMsg() {
-            return Env.TickCount.ToString();
+            return string.Format("{0}:{1}", Env.Round, Env.TickCount);
         }
 
         protected virtual void OnLog(object source, string log, StackTrace stackTrace) {}

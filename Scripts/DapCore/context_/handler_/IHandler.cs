@@ -75,7 +75,7 @@ namespace angeldnd.dap {
         }
     }
 
-    /* The Handler should NOT be weak */
+    /* The BlockRequestHandler should NOT be weak */
     public sealed class BlockRequestHandler : IRequestHandler {
         private readonly Func<Handler, Data, Data> _Block;
 

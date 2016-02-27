@@ -16,7 +16,8 @@ namespace angeldnd.dap {
 
         public const string ChannelTick = "tick";
 
-        public const string MsgOnBootstrap = "on_bootstrap";
+        public const string MsgOnBoot = "on_boot";
+        public const string MsgOnHalt = "on_halt";
     }
 
     public sealed class Env : DictContext<Env, Items> {
@@ -28,36 +29,45 @@ namespace angeldnd.dap {
 
                     _Version = bootstrapper.GetVersion();
                     _SubVersion = bootstrapper.GetSubVersion();
-                    _Instance = new Env();
-                    _Instance.Setup();
-
-                    Log.Info("Dap Environment Bootstrapped: Version = {0}, Sub Version = {1}",
-                                _Version, _SubVersion);
-                    Log.Info("Bootstrapper: {0}", _Bootstrapper.GetType().AssemblyQualifiedName);
-                    Log.Info("Log Provider: {0}", Log.Provider.GetType().FullName);
-
                     foreach (var kv in bootstrapper.GetDapTypes()) {
                         Factory.Register(kv.Key, kv.Value);
                     }
+                    _Plugins = bootstrapper.GetPlugins();
 
-                    foreach (Plugin plugin in bootstrapper.GetPlugins()) {
-                        bool ok = plugin.Init();
-                        if (ok) {
-                            Log.Info("Plugin Init Succeed: {0}", plugin.GetType().FullName);
-                        } else {
-                            Log.Error("Plugin Init Failed: {0}", plugin.GetType().FullName);
-                        }
-                    }
+                    Log.Info("Dap Environment Bootstrapped: Version = {0}, Sub Version = {1}, Round = {2}",
+                                _Version, _SubVersion, _Round);
+                    Log.Info("Bootstrapper: {0}", _Bootstrapper.GetType().AssemblyQualifiedName);
+                    Log.Info("Log Provider: {0}", Log.Provider.GetType().FullName);
 
-                    _instance.PublishOnBootstrap();
+                    StartNewRound();
                 }
             }
         }
 
-        private static Bootstrapper _Bootstrapper;
-        public static Bootstrapper Bootstrapper {
-            get { return _Bootstrapper; }
+        /*
+         * The logic is very simple here, though to make the actually Reset work properly,
+         * Extra work need to be done in all logics that caching values in the old Env.
+         */
+        public static void StartNewRound() {
+            if (_Instance != null) {
+                _Instance.Halt();
+                _Instance = null;
+            }
+
+            _Round++;
+            _TickCount = 0;
+            _TickTime = 0f;
+            _TickDelta = 0f;
+
+            _Instance = new Env();
+            _Instance.Setup();
+            EnvBus._PublishByEnv(_Instance, EnvBusConsts.MsgOnSetup);
+
+            _Instance.Boot();
         }
+
+        private static Bootstrapper _Bootstrapper;
+        private static List<Plugin> _Plugins;
 
         private static int _Version;
         public static int Version {
@@ -67,6 +77,38 @@ namespace angeldnd.dap {
         private static int _SubVersion;
         public static int SubVersion {
             get { return _SubVersion; }
+        }
+
+        private static int _Round = 0;
+        public static int Round {
+            get { return _Round; }
+        }
+
+        private static int _TickCount = 0;
+        public static int TickCount {
+            get { return _TickCount; }
+        }
+
+        public static float _TickTime = 0f;
+        public static float TickTime {
+            get { return _TickTime; }
+        }
+
+        public static float _TickDelta = 0f;
+        public static float TickDelta {
+            get { return _TickDelta; }
+        }
+
+        public static void Tick(float tickDelta) {
+            //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
+            //FixedUpdate(), or other timer on other platform.
+            if (tickDelta <= 0.0f) {
+                _Instance.Error("Invalid Tick Param: tickDelta = {0}", tickDelta);
+            }
+            _TickCount++;
+            _TickDelta = tickDelta;
+            _TickTime = _TickTime + tickDelta;
+            _Instance.Tick();
         }
 
         public static string GetContextPath(IContext context) {
@@ -85,27 +127,6 @@ namespace angeldnd.dap {
                         aspect.Path);
         }
 
-        private static int _TickCount = 0;
-        public static int TickCount {
-            get { return _TickCount; }
-        }
-
-        public static float _TickDelta = 0f;
-        public static float TickDelta {
-            get { return _TickDelta; }
-        }
-
-        public static void Tick(float tickDelta) {
-            //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
-            //FixedUpdate(), or other timer on other platform.
-            if (tickDelta <= 0.0f) {
-                _Instance.Error("Invalid Tick Param: tickDelta = {0}", tickDelta);
-            }
-            _TickCount++;
-            _TickDelta = tickDelta;
-            _Instance.Tick();
-        }
-
         private static Env _Instance;
         public static Env Instance {
             get { return _Instance; }
@@ -113,7 +134,6 @@ namespace angeldnd.dap {
 
         private Env() : base(null, null) {
             //Can NOT create any aspects other than Hooks/Hook here.
-
             Hooks = new Hooks(this, EnvConsts.KeyHooks);
             Hook debugHook = Hooks.Add(EnvConsts.KeyDebugHook);
             debugHook.Setup(
@@ -127,10 +147,6 @@ namespace angeldnd.dap {
         }
 
         private Channel _TickChannel = null;
-
-        private void Setup() {
-            _TickChannel = Channels.Add(EnvConsts.ChannelTick);
-        }
 
         public readonly Hooks Hooks;
 
@@ -152,8 +168,28 @@ namespace angeldnd.dap {
             _TickChannel.FireEvent(null);
         }
 
-        private void PublishOnBootstrap() {
-            Bus.Publish(EnvConsts.MsgOnBootstrap, this);
+        private void Halt() {
+            Log.Info("Dap Environment Halt: Version = {0}, Sub Version = {1}, Round = {2}",
+                        _Version, _SubVersion, _Round);
+            Bus.Publish(EnvConsts.MsgOnHalt, this);
+        }
+
+        private void Setup() {
+            _TickChannel = Channels.Add(EnvConsts.ChannelTick);
+        }
+
+        private void Boot() {
+            foreach (Plugin plugin in _Plugins) {
+                bool ok = plugin.Init();
+                if (ok) {
+                    Info("Plugin Init Succeed: {0}", plugin.GetType().FullName);
+                } else {
+                    Error("Plugin Init Failed: {0}", plugin.GetType().FullName);
+                }
+            }
+            Log.Info("Dap Environment Boot Finished: Version = {0}, Sub Version = {1}, Round = {2}",
+                        _Version, _SubVersion, _Round);
+            Bus.Publish(EnvConsts.MsgOnBoot, this);
         }
     }
 }

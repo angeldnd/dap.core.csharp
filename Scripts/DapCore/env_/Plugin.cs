@@ -7,16 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace angeldnd.dap {
     public abstract class Plugin : Logger {
-        private bool _Inited = false;
-        public bool Inited {
-            get { return _Inited; }
-        }
-
         public bool Init() {
-            if (_Inited) {
-                return false;
-            }
-            _Inited = true;
             return OnInit();
         }
 
