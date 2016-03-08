@@ -30,7 +30,7 @@ namespace angeldnd.dap {
         }
 
         public static Data Clone(Data data) {
-            if (data == null) return new Data();
+            if (data == null) return null;
 
             return data.Clone();
         }

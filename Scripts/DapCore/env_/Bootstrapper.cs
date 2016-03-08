@@ -11,13 +11,17 @@ namespace angeldnd.dap {
          * Note: if more than one valid env assembly are provided, the actual one
          * used is not determined.
          */
-        public const string DAP_ENV_ASSEMBLY = "DapEnv.dll";
-        public const string DAP_UNITY_ASSEMBLY = "Assembly-CSharp.dll";
+        public const string DAP_ENV_ASSEMBLY = "DapEnv";
+        public const string DAP_UNITY_ASSEMBLY = "Assembly-CSharp";
 
         public const string DAP_BOOTSTRAPPER = "DapBootstrapper";
 
         private static bool IsDapEnvAssembly(Assembly asm) {
-            string fileName = System.IO.Path.GetFileName(asm.Location);
+            /*
+             * For Unity3D's IL2CPP to work, need to check CodeBase instead of Location
+             */
+            string fileName = System.IO.Path.GetFileName(asm.CodeBase);
+            fileName = fileName.Replace(".dll", "");
             return fileName == DAP_ENV_ASSEMBLY || fileName == DAP_UNITY_ASSEMBLY;
         }
 
