@@ -39,7 +39,7 @@ namespace angeldnd.dap {
                     Log.Info("Bootstrapper: {0}", _Bootstrapper.GetType().AssemblyQualifiedName);
                     Log.Info("Log Provider: {0}", Log.Provider.GetType().FullName);
 
-                    StartNewRound();
+                    Reboot();
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace angeldnd.dap {
          * The logic is very simple here, though to make the actually Reset work properly,
          * Extra work need to be done in all logics that caching values in the old Env.
          */
-        public static void StartNewRound() {
+        public static void Reboot() {
             if (_Instance != null) {
                 _Instance.Halt();
                 _Instance = null;
