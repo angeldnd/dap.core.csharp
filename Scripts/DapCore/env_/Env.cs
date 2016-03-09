@@ -121,7 +121,7 @@ namespace angeldnd.dap {
 
         public static string GetAspectUri(IAspect aspect) {
             IContext context = aspect.Context;
-            return UriConst.Encode(context == null ? "" : context.Path, aspect.Path);
+            return UriConsts.Encode(context == null ? "" : context.Path, aspect.Path);
         }
 
         private static Env _Instance;
