@@ -22,11 +22,15 @@ namespace angeldnd.dap {
             return data.ToString();
         }
 
-        public static string ToFullString(Data data) {
+        public static string ToFullString(Data data, bool oneLine) {
             if (data == null) {
                 return "null";
             }
-            return data.ToFullString(true);
+            return data.ToFullString(oneLine);
+        }
+
+        public static string ToFullString(Data data) {
+            return ToFullString(data, false);
         }
 
         public static Data Clone(Data data) {

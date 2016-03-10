@@ -18,10 +18,10 @@ namespace angeldnd.dap {
         Manners Manners { get; }
         Bus Bus { get; }
 
-        /* ContextExtension.cs
-        string[] GetKeys();
-         */
+        void ForEachTopAspects(Action<IAspect> callback);
+        void ForEachAspects(Action<IAspect> callback);
     }
+
 
     public interface IDictContext : IContext, IDict {
     }

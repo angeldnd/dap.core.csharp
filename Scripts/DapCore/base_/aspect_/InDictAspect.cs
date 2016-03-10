@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class InDictAspect<TO> : InDictElement<TO>, IInDictAspect
+    public abstract class InDictAspect<TO> : InDictElement<TO>, IAspect
                                                 where TO : class, IDict, IContextAccessor {
         //SILP:IN_DICT_ASPECT_MIXIN_CONSTRUCTOR(InDictAspect)
         protected InDictAspect(TO owner, string key) : base(owner, key) {  //__SILP__

@@ -8,10 +8,4 @@ namespace angeldnd.dap {
 
         bool Debugging { get; set; }
     }
-
-    public interface IInDictAspect : IAspect, IInDictElement {
-    }
-
-    public interface IInTableAspect : IAspect, IInTableElement {
-    }
 }

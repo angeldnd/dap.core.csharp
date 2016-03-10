@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IVar : IInDictAspect, IInTableAspect {
+    public interface IVar : IAspect, IInDictElement, IInTableElement {
         object GetValue();
 
         int VarWatcherCount { get; }

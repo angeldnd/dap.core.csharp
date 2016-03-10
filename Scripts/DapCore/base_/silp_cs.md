@@ -204,12 +204,12 @@ public override void OnRemoved() {
 ```
     _Path = Env.GetContextPath(this);
 
-    _Properties = new Properties(this, ContextConsts.KeyProperties);
-    _Channels = new Channels(this, ContextConsts.KeyChannels);
-    _Handlers = new Handlers(this, ContextConsts.KeyHandlers);
-    _Vars = new Vars(this, ContextConsts.KeyVars);
-    _Manners = new Manners(this, ContextConsts.KeyManners);
-    _Bus = new Bus(this, ContextConsts.KeyBus);
+    _Properties = AddTopAspect<Properties>(ContextConsts.KeyProperties);
+    _Channels = AddTopAspect<Channels>(ContextConsts.KeyChannels);
+    _Handlers = AddTopAspect<Handlers>(ContextConsts.KeyHandlers);
+    _Vars = AddTopAspect<Vars>(ContextConsts.KeyVars);
+    _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);
+    _Bus = AddTopAspect<Bus>(ContextConsts.KeyBus);
 }
 
 private readonly string _Path;
@@ -272,4 +272,36 @@ public override void OnAdded() {
 public override void OnRemoved() {
     Env.Instance.Hooks._OnContextRemoved(this);
 }
+
+private Dictionary<string, IAspect> _TopAspectsDict = new Dictionary<string, IAspect>();
+private List<IAspect> _TopAspectsList = new List<IAspect>();
+
+protected T AddTopAspect<T>(string key) where T : class, IAspect {
+    IAspect oldAspect = null;
+    if (_TopAspectsDict.TryGetValue(key, out oldAspect)) {
+        Critical("Top Aspect Key Conflicted: <{0}>: {1} -> {2}",
+                    typeof(T).FullName, key, oldAspect);
+        return null;
+    }
+    T topAspect = Factory.Create<T>(this, key);
+    if (topAspect != null) {
+        _TopAspectsDict[topAspect.Key] = topAspect;
+        _TopAspectsList.Add(topAspect);
+    }
+    return topAspect;
+}
+
+public void ForEachTopAspects(Action<IAspect> callback) {
+    var en = _TopAspectsList.GetEnumerator();
+    while (en.MoveNext()) {
+        callback(en.Current);
+    }
+}
+
+public void ForEachAspects(Action<IAspect> callback) {
+    ForEachTopAspects((IAspect aspect) => {
+        AspectExtension.ForEachAspects(aspect, callback);
+    });
+}
+
 ```

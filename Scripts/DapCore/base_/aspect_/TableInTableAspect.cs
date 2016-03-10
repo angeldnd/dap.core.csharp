@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class TableInTableAspect<TO, T> : TableInTable<TO, T>, IInTableAspect
+    public abstract class TableInTableAspect<TO, T> : TableInTable<TO, T>, IAspect
                                                         where TO : class, ITable, IContextAccessor
                                                         where T : class, IInTableElement {
         //SILP:IN_TABLE_ASPECT_MIXIN_CONSTRUCTOR(TableInTableAspect)

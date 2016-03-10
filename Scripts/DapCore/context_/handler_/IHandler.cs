@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IHandler : IInDictAspect {
+    public interface IHandler {
         int RequestCheckerCount { get; }
         bool AddRequestChecker(IRequestChecker listener);
         bool RemoveRequestChecker(IRequestChecker listener);

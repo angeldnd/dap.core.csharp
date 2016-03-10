@@ -18,12 +18,9 @@ namespace angeldnd.dap {
             return true;
         }
 
-        private T1 AddElement<T1>(object obj) where T1 : class, IInDictElement {
-            if (obj == null) return null;
-
-            T1 _element = As<T1>(obj);
+        private T1 AddElement<T1>(T1 _element) where T1 : class, IInDictElement {
             if (_element != null) {
-                T element = As<T>(obj);
+                T element = As<T>(_element);
                 if (element != null) {
                     _Elements[element.Key] = element;
 
@@ -33,17 +30,6 @@ namespace angeldnd.dap {
                 }
             }
             return _element;
-        }
-
-        public object CreateElement(Type type, string key) {
-            object element = null;
-            try {
-                element = Activator.CreateInstance(type, this, key);
-            } catch (Exception e) {
-                Error("CreateInstance Failed: <{0}> {1} -> {2}", type.FullName, key, e);
-            }
-
-            return element;
         }
 
         public T1 Add<T1>(string key) where T1 : class, IInDictElement {
@@ -60,15 +46,13 @@ namespace angeldnd.dap {
 
             if (!CheckAdd(t1, key)) return null;
 
-            object element = CreateElement(t1, key);
-            return AddElement<T1>(element);
+            return AddElement<T1>(Factory.Create<T1>(this, key));
         }
 
         public T Add(string key) {
             if (!CheckAdd(_ElementType, key)) return null;
 
-            object element = CreateElement(_ElementType, key);
-            return AddElement<T>(element);
+            return AddElement<T>(Factory.Create<T>(this, key));
         }
     }
 }

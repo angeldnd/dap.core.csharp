@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IChannel : IInDictAspect {
+    public interface IChannel {
         int EventCheckerCount { get; }
         bool AddEventChecker(IEventChecker listener);
         bool RemoveEventChecker(IEventChecker listener);

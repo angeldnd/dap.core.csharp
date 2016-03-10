@@ -59,6 +59,10 @@ namespace angeldnd.dap {
             TreeHelper.ForEachDescendants<T>(context, callback);
         }
 
+        public static void ForEachContexts(this IDictContext context, Action<IContext> callback) {
+            ForEachContexts<IContext>(context, callback);
+        }
+
         public static List<T> GetContexts<T>(this IDictContext context)
                                                     where T : class, IContext {
             return TreeHelper.GetDescendants<T>(context);
