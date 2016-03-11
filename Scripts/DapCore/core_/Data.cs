@@ -141,6 +141,10 @@ namespace angeldnd.dap {
             return builder.ToString();
         }
 
+        public string ToFullString() {
+            return ToFullString(false);
+        }
+
         private void AppendLine(StringBuilder builder, bool oneLine, string prefix, string line) {
             builder.Append(prefix);
             builder.Append(line);

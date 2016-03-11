@@ -67,6 +67,10 @@ namespace angeldnd.dap {
         }
 
         public static string GetRelativeStr(char separator, string ancestorStr, string descendantStr) {
+            if (string.IsNullOrEmpty(ancestorStr)) {
+                return descendantStr;
+            }
+
             string prefix = ancestorStr + separator;
             if (descendantStr.StartsWith(prefix)) {
                 return descendantStr.Replace(prefix, "");

@@ -198,6 +198,12 @@ public override void OnAdded() {
 public override void OnRemoved() {
     Env.Instance.Hooks._OnAspectRemoved(this);
 }
+
+protected override void AddSummaryFields(Data data) {
+    base.AddSummaryFields(data);
+    data.S(ContextConsts.SummaryPath, _Path)
+        .B(ContextConsts.SummaryDebugging, _Debugging);
+}
 ```
 
 # CONTEXT_MIXIN() #
@@ -271,6 +277,12 @@ public override void OnAdded() {
 
 public override void OnRemoved() {
     Env.Instance.Hooks._OnContextRemoved(this);
+}
+
+protected override void AddSummaryFields(Data data) {
+    base.AddSummaryFields(data);
+    data.S(ContextConsts.SummaryPath, _Path)
+        .B(ContextConsts.SummaryDebugging, _Debugging);
 }
 
 private Dictionary<string, IAspect> _TopAspectsDict = new Dictionary<string, IAspect>();

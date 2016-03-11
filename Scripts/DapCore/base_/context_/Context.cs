@@ -77,6 +77,12 @@ namespace angeldnd.dap {
             Env.Instance.Hooks._OnContextRemoved(this);                                           //__SILP__
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
+        protected override void AddSummaryFields(Data data) {                                     //__SILP__
+            base.AddSummaryFields(data);                                                          //__SILP__
+            data.S(ContextConsts.SummaryPath, _Path)                                              //__SILP__
+                .B(ContextConsts.SummaryDebugging, _Debugging);                                   //__SILP__
+        }                                                                                         //__SILP__
+                                                                                                  //__SILP__
         private Dictionary<string, IAspect> _TopAspectsDict = new Dictionary<string, IAspect>();  //__SILP__
         private List<IAspect> _TopAspectsList = new List<IAspect>();                              //__SILP__
                                                                                                   //__SILP__

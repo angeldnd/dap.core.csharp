@@ -131,7 +131,7 @@ namespace angeldnd.dap {
 
         private Env() : base(null, null) {
             //Can NOT create any aspects other than Hooks/Hook here.
-            Hooks = new Hooks(this, EnvConsts.KeyHooks);
+            Hooks = AddTopAspect<Hooks>(EnvConsts.KeyHooks);
             Hook debugHook = Hooks.Add(EnvConsts.KeyDebugHook);
             debugHook.Setup(
                 (IContext context) => {

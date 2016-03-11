@@ -12,6 +12,11 @@ namespace angeldnd.dap {
         public const string KeyManners = "Manners";
         public const string KeyBus = "Bus";
 
+        [DapParam(typeof(string))]
+        public const string SummaryPath = "path";
+        [DapParam(typeof(bool))]
+        public const string SummaryDebugging = "debugging";
+
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";
 
