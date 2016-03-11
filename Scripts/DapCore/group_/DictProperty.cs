@@ -5,6 +5,10 @@ using System.Linq;
 namespace angeldnd.dap {
     public abstract class DictProperty<T> : DictInBothAspect<IProperties, T>, IDictProperties, IProperty
                                                 where T : class, IProperty {
+        public Type ValueType {
+            get { return typeof(T); }
+        }
+
         private bool DoEncode(Data data) {
             Data values = new Data();
             if (!data.SetData(PropertiesConsts.KeyValue, values)) return false;
@@ -50,7 +54,7 @@ namespace angeldnd.dap {
         public Data Encode() {                                                            //__SILP__
             if (!string.IsNullOrEmpty(DapType)) {                                         //__SILP__
                 Data data = new Data();                                                   //__SILP__
-                if (data.SetString(ObjectConsts.KeyType, DapType)) {                      //__SILP__
+                if (data.SetString(ObjectConsts.KeyDapType, DapType)) {                   //__SILP__
                     if (DoEncode(data)) {                                                 //__SILP__
                         return data;                                                      //__SILP__
                     }                                                                     //__SILP__
@@ -61,11 +65,11 @@ namespace angeldnd.dap {
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         public bool Decode(Data data) {                                                   //__SILP__
-            string type = data.GetString(ObjectConsts.KeyType);                           //__SILP__
-            if (type == DapType) {                                                        //__SILP__
+            string dapType = data.GetString(ObjectConsts.KeyDapType);                     //__SILP__
+            if (dapType == DapType) {                                                     //__SILP__
                 return DoDecode(data);                                                    //__SILP__
             } else {                                                                      //__SILP__
-                Error("Type Mismatched: {0}, {1}", DapType, type);                        //__SILP__
+                Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);                 //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
         }                                                                                 //__SILP__

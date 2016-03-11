@@ -36,36 +36,38 @@ namespace angeldnd.dap {
         }
 
         public void Critical(string format, params object[] values) {
-            Log.AddLogWithStackTrace(this, LoggerConsts.CRITICAL, LogPrefix + format, values);
+            Log.AddLogWithStackTrace(this, LoggerConsts.CRITICAL, LogPrefix, format, values);
         }
 
         public void Error(string format, params object[] values) {
-            Log.AddLogWithStackTrace(this, LoggerConsts.ERROR, LogPrefix + format, values);
+            Log.AddLogWithStackTrace(this, LoggerConsts.ERROR, LogPrefix, format, values);
         }
 
         public void Info(string format, params object[] values) {
             if (DebugMode) {
-                Log.AddLogWithStackTrace(this, LoggerConsts.INFO, LogPrefix + format, values);
+                Log.AddLogWithStackTrace(this, LoggerConsts.INFO, LogPrefix, format, values);
             } else {
-                Log.AddLog(this, LoggerConsts.INFO, LogPrefix + format, values);
+                Log.AddLog(this, LoggerConsts.INFO, LogPrefix, format, values);
             }
         }
 
         public void Debug(string format, params object[] values) {
             if (DebugMode) {
-                Log.AddLogWithStackTrace(this, LoggerConsts.DEBUG, LogPrefix + format, values);
+                Log.AddLogWithStackTrace(this, LoggerConsts.DEBUG, LogPrefix, format, values);
             } else {
                 if (LogDebug) {
-                    Log.AddLog(this, LoggerConsts.DEBUG, LogPrefix + format, values);
+                    Log.AddLog(this, LoggerConsts.DEBUG, LogPrefix, format, values);
                 }
             }
         }
 
+        /* Not adding LogPrefix here on purpose, since this is used to create log lines
+         * to be used by other tools, e.g. istatd
+         */
         public void Custom(string kind, string format, params object[] values) {
+            Log.AddLog(this, kind, format, values);
             if (DebugMode) {
-                Log.AddLogWithStackTrace(this, kind, LogPrefix + format, values);
-            } else {
-                Log.AddLog(this, kind, format, values);
+                Log.AddLogWithStackTrace(this, kind, LogPrefix, format, values);
             }
         }
     }

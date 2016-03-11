@@ -35,7 +35,7 @@ namespace angeldnd.dap {
 
         public override string LogPrefix {
             get {
-                return string.Format("[{0}] {1} ", GetType().Name, _Obj);
+                return string.Format("[{0}] {1}", GetType().Name, _Obj.LogPrefix);
             }
         }
 

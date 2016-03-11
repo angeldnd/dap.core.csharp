@@ -35,6 +35,14 @@ namespace angeldnd.dap {
             return msg;
         }
 
+        public static string GetMsg(string prefix, string format, params object[] values) {
+            string msg = format;
+            if (values != null && values.Length > 0) {
+                msg = string.Format(format, values);
+            }
+            return string.Format("{0}{1}", prefix, msg);
+        }
+
         public static void AddLog(object source, string kind,
                                   string format, params object[] values) {
             _Provider.AddLog(source, kind, GetMsg(format, values), null);
@@ -44,6 +52,17 @@ namespace angeldnd.dap {
                                                 string format, params object[] values) {
             StackTrace stackTrace = new StackTrace(2, true);
             _Provider.AddLog(source, kind, GetMsg(format, values), stackTrace);
+        }
+
+        public static void AddLog(object source, string kind, string prefix,
+                                  string format, params object[] values) {
+            _Provider.AddLog(source, kind, GetMsg(prefix, format, values), null);
+        }
+
+        public static void AddLogWithStackTrace(object source, string kind, string prefix,
+                                                string format, params object[] values) {
+            StackTrace stackTrace = new StackTrace(2, true);
+            _Provider.AddLog(source, kind, GetMsg(prefix, format, values), stackTrace);
         }
 
         public static void Flush() {

@@ -10,7 +10,7 @@ public ${class}(ITableProperties owner, int index) : base(owner, index) {
 public Data Encode() {
     if (!string.IsNullOrEmpty(DapType)) {
         Data data = new Data();
-        if (data.SetString(ObjectConsts.KeyType, DapType)) {
+        if (data.SetString(ObjectConsts.KeyDapType, DapType)) {
             if (DoEncode(data)) {
                 return data;
             }
@@ -21,11 +21,11 @@ public Data Encode() {
 }
 
 public bool Decode(Data data) {
-    string type = data.GetString(ObjectConsts.KeyType);
-    if (type == DapType) {
+    string dapType = data.GetString(ObjectConsts.KeyDapType);
+    if (dapType == DapType) {
         return DoDecode(data);
     } else {
-        Error("Type Mismatched: {0}, {1}", DapType, type);
+        Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);
     }
     return false;
 }

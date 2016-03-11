@@ -6,12 +6,12 @@ namespace angeldnd.dap {
         public static IProperty AddProperty(this IDictProperties properties,
                                             string key, Data data) {
             if (data == null) return null;
-            string type = data.GetString(ObjectConsts.KeyType);
-            if (string.IsNullOrEmpty(type)) {
+            string dapType = data.GetString(ObjectConsts.KeyDapType);
+            if (string.IsNullOrEmpty(dapType)) {
                 properties.Error("Invalid Property data: {0}, {1}", key, data);
                 return null;
             }
-            IProperty prop = properties.New<IProperty>(type, key);
+            IProperty prop = properties.New<IProperty>(dapType, key);
             if (prop == null) {
                 properties.Error("Failed to Add Property: {0}, {1}", key, data);
                 return null;

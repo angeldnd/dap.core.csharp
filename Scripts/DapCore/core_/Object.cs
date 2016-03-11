@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public interface IObject : ILogger {
         string DapType { get; }
-        string TypeInfo { get; }
 
         int Revision { get; }
         string RevInfo { get; }
@@ -12,10 +11,25 @@ namespace angeldnd.dap {
         string Uri { get; }
         bool DebugMode { get; }
         string LogPrefix { get; }
+
+        Data Summary { get; }
     }
 
     public static class ObjectConsts {
-        public const string KeyType = "type";
+        public const string KeyDapType = "dap_type";
+
+        [DapParam(typeof(string))]
+        public const string SummaryType = "type";
+        [DapParam(typeof(string))]
+        public const string SummaryDapType = "dap_type";
+        [DapParam(typeof(int))]
+        public const string SummaryRevision = "rev";
+        [DapParam(typeof(string))]
+        public const string SummaryUri = "uri";
+        [DapParam(typeof(bool))]
+        public const string SummaryDebugMode = "debug_mode";
+        [DapParam(typeof(int))]
+        public const string SummaryBlocksCount = "BC";
     }
 
     public abstract class Object : Logger, IObject, IBlockOwner {
@@ -50,16 +64,6 @@ namespace angeldnd.dap {
             }
         }
 
-        public string TypeInfo {
-            get {
-                string dapType = DapType;
-                if (dapType != null) {
-                    return dapType;
-                }
-                return GetType().Name;
-            }
-        }
-
         private int _Revision = 0;
         public int Revision {
             get { return _Revision; }
@@ -74,17 +78,41 @@ namespace angeldnd.dap {
         }
 
         public virtual string Uri {
-            get { return "n/a"; }
+            get { return "_"; }
         }
 
         public override string LogPrefix {
             get {
-                return string.Format("[{0}] [{1}] {2} ", TypeInfo, Uri, RevInfo);
+                string dapType = DapType;
+                if (dapType != null) {
+                    return string.Format("[{0}] [{1}] {2} ", dapType, Uri, RevInfo);
+                }
+                return string.Format("_[{0}] [{1}] {2} ", GetType().FullName, Uri, RevInfo);
             }
         }
 
         public override string ToString() {
-            return string.Format("[{0}: {1} {2}]", TypeInfo, Uri, RevInfo);
+            Data extraSummary = new Data();
+            AddSummaryFields(extraSummary);
+            return string.Format("{0}{1}", LogPrefix, Data.ToFullString(extraSummary, true));
+        }
+
+        protected virtual void AddSummaryFields(Data data) {
+            data.I(ObjectConsts.SummaryBlocksCount, _Blocks == null ? 0 : _Blocks.Count);
+        }
+
+        public Data Summary {
+            get {
+                Data summary = new Data()
+                        .S(ObjectConsts.SummaryType, GetType().FullName)
+                        .S(ObjectConsts.SummaryDapType, DapType)
+                        .I(ObjectConsts.SummaryRevision, _Revision)
+                        .S(ObjectConsts.SummaryUri, Uri)
+                        .B(ObjectConsts.SummaryDebugMode, DebugMode);
+
+                AddSummaryFields(summary);
+                return summary;
+            }
         }
 
         //SILP:BLOCK_OWNER()
