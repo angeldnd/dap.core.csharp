@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public interface IVar : IAspect, IInDictElement, IInTableElement {
+        Type ValueType { get; }
         object GetValue();
 
         int VarWatcherCount { get; }

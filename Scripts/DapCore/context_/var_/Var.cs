@@ -9,6 +9,11 @@ namespace angeldnd.dap {
 
     public abstract class Var<TO, T> : InBothAspect<TO>, IVar<T>
                                             where TO : class, IVars {
+        private readonly Type _ValueType;
+        public Type ValueType {
+            get { return _ValueType; }
+        }
+
         private T _Value;
         public T Value {
             get { return _Value; }
@@ -19,9 +24,11 @@ namespace angeldnd.dap {
         }
 
         public Var(TO owner, string key) : base(owner, key) {
+            _ValueType = typeof(T);
         }
 
         public Var(TO owner, int index) : base(owner, index) {
+            _ValueType = typeof(T);
         }
 
         private bool _Setup = false;
