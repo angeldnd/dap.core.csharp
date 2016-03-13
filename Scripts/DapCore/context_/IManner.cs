@@ -1,7 +1,7 @@
 using System;
 
 namespace angeldnd.dap {
-    public interface IManner {
+    public interface IManner : IInDictElement {
         Properties Properties { get; }
         Channels Channels { get; }
         Handlers Handlers { get; }
