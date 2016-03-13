@@ -14,9 +14,9 @@ namespace angeldnd.dap {
         Properties Properties { get; }
         Channels Channels { get; }
         Handlers Handlers { get; }
+        Bus Bus { get; }
         Vars Vars { get; }
         Manners Manners { get; }
-        Bus Bus { get; }
 
         void ForEachTopAspects(Action<IAspect> callback);
         void ForEachAspects(Action<IAspect> callback);

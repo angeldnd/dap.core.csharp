@@ -213,9 +213,9 @@ protected override void AddSummaryFields(Data data) {
     _Properties = AddTopAspect<Properties>(ContextConsts.KeyProperties);
     _Channels = AddTopAspect<Channels>(ContextConsts.KeyChannels);
     _Handlers = AddTopAspect<Handlers>(ContextConsts.KeyHandlers);
+    _Bus = AddTopAspect<Bus>(ContextConsts.KeyBus);
     _Vars = AddTopAspect<Vars>(ContextConsts.KeyVars);
     _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);
-    _Bus = AddTopAspect<Bus>(ContextConsts.KeyBus);
 }
 
 private readonly string _Path;
@@ -238,6 +238,11 @@ public Handlers Handlers {
     get { return _Handlers; }
 }
 
+private readonly Bus _Bus;
+public Bus Bus {
+    get { return _Bus; }
+}
+
 private readonly Vars _Vars;
 public Vars Vars {
     get { return _Vars; }
@@ -246,11 +251,6 @@ public Vars Vars {
 private readonly Manners _Manners;
 public Manners Manners {
     get { return _Manners; }
-}
-
-private readonly Bus _Bus;
-public Bus Bus {
-    get { return _Bus; }
 }
 
 public IContext GetContext() {

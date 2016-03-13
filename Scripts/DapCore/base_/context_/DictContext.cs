@@ -12,9 +12,9 @@ namespace angeldnd.dap {
             _Properties = AddTopAspect<Properties>(ContextConsts.KeyProperties);                  //__SILP__
             _Channels = AddTopAspect<Channels>(ContextConsts.KeyChannels);                        //__SILP__
             _Handlers = AddTopAspect<Handlers>(ContextConsts.KeyHandlers);                        //__SILP__
+            _Bus = AddTopAspect<Bus>(ContextConsts.KeyBus);                                       //__SILP__
             _Vars = AddTopAspect<Vars>(ContextConsts.KeyVars);                                    //__SILP__
             _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);                           //__SILP__
-            _Bus = AddTopAspect<Bus>(ContextConsts.KeyBus);                                       //__SILP__
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         private readonly string _Path;                                                            //__SILP__
@@ -37,6 +37,11 @@ namespace angeldnd.dap {
             get { return _Handlers; }                                                             //__SILP__
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
+        private readonly Bus _Bus;                                                                //__SILP__
+        public Bus Bus {                                                                          //__SILP__
+            get { return _Bus; }                                                                  //__SILP__
+        }                                                                                         //__SILP__
+                                                                                                  //__SILP__
         private readonly Vars _Vars;                                                              //__SILP__
         public Vars Vars {                                                                        //__SILP__
             get { return _Vars; }                                                                 //__SILP__
@@ -45,11 +50,6 @@ namespace angeldnd.dap {
         private readonly Manners _Manners;                                                        //__SILP__
         public Manners Manners {                                                                  //__SILP__
             get { return _Manners; }                                                              //__SILP__
-        }                                                                                         //__SILP__
-                                                                                                  //__SILP__
-        private readonly Bus _Bus;                                                                //__SILP__
-        public Bus Bus {                                                                          //__SILP__
-            get { return _Bus; }                                                                  //__SILP__
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public IContext GetContext() {                                                            //__SILP__

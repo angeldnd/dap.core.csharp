@@ -1,7 +1,7 @@
 using System;
 
 namespace angeldnd.dap {
-    public abstract class Manner : InDictAspect<Manners> {
+    public abstract class Manner : InDictAspect<Manners>, IManner {
         public Manner(Manners owner, string key) : base(owner, key) {
         }
 
@@ -15,6 +15,10 @@ namespace angeldnd.dap {
 
         public Handlers Handlers {
             get { return Context.Handlers; }
+        }
+
+        public Bus Bus {
+            get { return Context.Bus; }
         }
 
         public Vars Vars {
