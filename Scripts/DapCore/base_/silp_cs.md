@@ -46,6 +46,11 @@ public override bool DebugMode {
 
 public virtual void OnAdded() {}
 public virtual void OnRemoved() {}
+
+protected override void AddSummaryFields(Data data) {
+    base.AddSummaryFields(data);
+    data.S(ElementConsts.SummaryKey, _Key);
+}
 ```
 
 # ASPECT_MIXIN_CONSTRUCTOR(class) #
@@ -88,6 +93,11 @@ public bool SetIndex(IOwner owner, int index) {
 
     _Index = index;
     return true;
+}
+
+protected override void AddSummaryFields(Data data) {
+    base.AddSummaryFields(data);
+    data.I(ElementConsts.SummaryIndex, _Index);
 }
 ```
 

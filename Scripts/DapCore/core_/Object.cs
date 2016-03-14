@@ -29,7 +29,7 @@ namespace angeldnd.dap {
         [DapParam(typeof(bool))]
         public const string SummaryDebugMode = "debug_mode";
         [DapParam(typeof(int))]
-        public const string SummaryBlocksCount = "BC";
+        public const string SummaryBlocksCount = "blocks_count";
     }
 
     public abstract class Object : Logger, IObject, IBlockOwner {

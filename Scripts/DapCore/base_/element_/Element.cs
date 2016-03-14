@@ -34,5 +34,10 @@ namespace angeldnd.dap {
                                                                         //__SILP__
         public virtual void OnAdded() {}                                //__SILP__
         public virtual void OnRemoved() {}                              //__SILP__
+                                                                        //__SILP__
+        protected override void AddSummaryFields(Data data) {           //__SILP__
+            base.AddSummaryFields(data);                                //__SILP__
+            data.S(ElementConsts.SummaryKey, _Key);                     //__SILP__
+        }                                                               //__SILP__
     }
 }
