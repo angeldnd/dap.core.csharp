@@ -313,6 +313,34 @@ protected T AddTopAspect<T>(string key) where T : class, IAspect {
     return topAspect;
 }
 
+public T GetAspect<T>(string aspectPath, bool logError) where T : class, IAspect {
+    string[] keys = aspectPath.Split(PathConsts.PathSeparator);
+    if (keys.Length < 1) {
+        if (logError) {
+            Error("Invalid aspectPath: {0}", aspectPath);
+            return null;
+        }
+    }
+    IAspect topAspect;
+    if (!_TopAspectsDict.TryGetValue(keys[0], out topAspect)) {
+        Error("Not Found: {0}", aspectPath);
+        return null;
+    }
+    if (keys.Length == 1) {
+        return As<T>(topAspect, logError);
+    } else {
+        IOwner asOwner = As<IOwner>(topAspect, logError);
+        if (asOwner != null) {
+            return TreeHelper.GetDescendant<T>(asOwner, keys, 1, logError);
+        }
+    }
+    return null;
+}
+
+public IAspect GetAspect(string aspectPath, bool logError) {
+    return GetAspect<IAspect>(aspectPath, logError);
+}
+
 public void ForEachTopAspects(Action<IAspect> callback) {
     var en = _TopAspectsList.GetEnumerator();
     while (en.MoveNext()) {

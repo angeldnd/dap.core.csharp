@@ -60,11 +60,10 @@ namespace angeldnd.dap {
             return child;
         }
 
-        public static T GetDescendant<T>(IOwner owner, string relPath, bool logError)
+        public static T GetDescendant<T>(IOwner owner, string[] keys, int startIndex, bool logError)
                                             where T : class, IElement {
-            string[] keys = relPath.Split(PathConsts.PathSeparator);
             IObject current = owner;
-            for (int i = 0; i < keys.Length; i++) {
+            for (int i = startIndex; i < keys.Length; i++) {
                 current = GetChild<IElement>(current as IOwner, keys[i], logError);
                 if (current == null) {
                     return null;
@@ -73,11 +72,19 @@ namespace angeldnd.dap {
             T result = current as T;
             if (result == null) {
                 if (logError) {
-                    owner.Error("Type Mismatched: <{0}> {1} -> {2}",
-                                    typeof(T).FullName, relPath, current);
+                    owner.Error("Type Mismatched: <{0}> {1} {2} -> {3}",
+                                    typeof(T).FullName,
+                                    string.Join(PathConsts.PathSeparatorAsString, keys),
+                                    startIndex, current);
                 }
             }
             return result;
+        }
+
+        public static T GetDescendant<T>(IOwner owner, string relPath, bool logError)
+                                            where T : class, IElement {
+            string[] keys = relPath.Split(PathConsts.PathSeparator);
+            return GetDescendant<T>(owner, keys, 0, logError);
         }
 
         public static void ForEachDescendants<T>(IDict owner, Action<T> callback)

@@ -188,5 +188,31 @@ namespace angeldnd.dap {
                         _Version, _SubVersion, _Round);
             Bus.Publish(EnvConsts.MsgOnBoot, this);
         }
+
+        public bool TryGetByUri(string uri, out IContext context, out IAspect aspect) {
+            context = null;
+            aspect = null;
+            if (uri == null) return false;
+
+            string[] segments = uri.Split(UriConsts.PathSeparator);
+            if (segments.Length < 1 || segments.Length > 2) {
+                Error("Invalid Uri: {0} -> {1}", uri, segments.Length);
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(segments[0])) {
+                context = this;
+            } else {
+                context = ContextExtension.GetContext(this, segments[0], false);
+            }
+            if (context == null) return false;
+
+            if (segments.Length == 1) {
+                return true;
+            } else {
+                aspect = context.GetAspect(segments[1], false);
+                return aspect != null;
+            }
+        }
     }
 }
