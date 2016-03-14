@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract class DictAspect<TO, T> : DictElement<TO, T>, IAspect
-                                                        where TO : class, IOwner, IContextAccessor
+                                                        where TO : class, IOwner, IContextElement
                                                         where T : class, IInDictElement {
         //SILP:ASPECT_MIXIN_CONSTRUCTOR(DictAspect)
         protected DictAspect(TO owner, string key) : base(owner, key) {  //__SILP__
@@ -41,7 +41,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public override sealed bool DebugMode {                       //__SILP__
-            get { return _Debugging || _Context.DebugMode; }          //__SILP__
+            get { return _Debugging || Owner.DebugMode; }             //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public override void OnAdded() {                              //__SILP__

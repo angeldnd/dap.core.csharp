@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract class InTableAspect<TO> : InTableElement<TO>, IAspect
-                                                    where TO : class, ITable, IContextAccessor {
+                                                    where TO : class, ITable, IContextElement {
         //SILP:IN_TABLE_ASPECT_MIXIN_CONSTRUCTOR(InTableAspect)
         protected InTableAspect(TO owner, int index) : base(owner, index) {  //__SILP__
             _Context = owner == null ? null : owner.GetContext();            //__SILP__
@@ -40,7 +40,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public override sealed bool DebugMode {                       //__SILP__
-            get { return _Debugging || _Context.DebugMode; }          //__SILP__
+            get { return _Debugging || Owner.DebugMode; }             //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public override void OnAdded() {                              //__SILP__

@@ -2,7 +2,7 @@ using System;
 
 namespace angeldnd.dap {
     public abstract class Aspect<TO> : Element<TO>, IAspect
-                                            where TO : class, IOwner, IContextAccessor {
+                                            where TO : class, IOwner, IContextElement {
         //SILP:ASPECT_MIXIN_CONSTRUCTOR(Aspect)
         protected Aspect(TO owner, string key) : base(owner, key) {   //__SILP__
             _Context = owner == null ? null : owner.GetContext();     //__SILP__
@@ -39,7 +39,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public override sealed bool DebugMode {                       //__SILP__
-            get { return _Debugging || _Context.DebugMode; }          //__SILP__
+            get { return _Debugging || Owner.DebugMode; }             //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public override void OnAdded() {                              //__SILP__

@@ -198,7 +198,7 @@ public bool Debugging {
 }
 
 public override sealed bool DebugMode {
-    get { return _Debugging || _Context.DebugMode; }
+    get { return _Debugging || Owner.DebugMode; }
 }
 
 public override void OnAdded() {

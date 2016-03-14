@@ -2,15 +2,13 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IContextAccessor {
+    public interface IContextElement {
         IContext GetContext();
+        string Path { get; }
+        bool Debugging { get; set; }
     }
 
-    public interface IContext : IOwner, IInDictElement, IContextAccessor {
-        string Path { get; }
-
-        bool Debugging { get; set; }
-
+    public interface IContext : IOwner, IInDictElement, IContextElement {
         Properties Properties { get; }
         Channels Channels { get; }
         Handlers Handlers { get; }
