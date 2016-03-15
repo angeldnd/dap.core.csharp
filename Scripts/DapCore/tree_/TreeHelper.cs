@@ -158,7 +158,11 @@ namespace angeldnd.dap {
             IDict current = owner;
             for (int i = 0; i < keys.Length; i++) {
                 if (i < keys.Length - 1) {
-                    current = current.GetOrAdd<TO>(keys[i]);
+                    if (current.Has(keys[i])) {
+                        current = Object.As<IDict>(current.Get<IInDictElement>(keys[i]));
+                    } else {
+                        current = current.Add<TO>(keys[i]);
+                    }
                 } else {
                     return func(current, keys[i]);
                 }
