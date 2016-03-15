@@ -15,6 +15,10 @@ namespace angeldnd.dap {
             }
         }
 
+        public override string ToString() {
+            return string.Format("[{0}: {1} {2}]", GetType().Name, ContextPathPatternMatcher, AspectPathPatternMatcher);
+        }
+
         public bool IsMatched(IContext context) {
             if (context != null && AspectPathPatternMatcher == null) {
                 return ContextPathPatternMatcher.IsMatched(context.Path);
@@ -24,7 +28,9 @@ namespace angeldnd.dap {
 
         public bool IsMatched(IAspect aspect) {
             if (aspect != null && AspectPathPatternMatcher != null) {
-                return IsMatched(aspect.Context)
+                IContext context = aspect.Context;
+                return context != null
+                        && ContextPathPatternMatcher.IsMatched(context.Path)
                         && AspectPathPatternMatcher.IsMatched(aspect.Path);
             }
             return false;
