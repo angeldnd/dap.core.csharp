@@ -15,9 +15,6 @@ namespace angeldnd.dap {
         public const string KeyDebugHook = "debug";
 
         public const string ChannelTick = "tick";
-
-        public const string MsgOnBoot = "on_boot";
-        public const string MsgOnHalt = "on_halt";
     }
 
     public sealed class Env : DictContext<Env, Items> {
@@ -60,10 +57,7 @@ namespace angeldnd.dap {
             _TickDelta = 0f;
 
             _Instance = new Env();
-            _Instance.Setup();
-            EnvBus._PublishByEnv(_Instance, EnvBusConsts.MsgOnSetup);
-
-            _Instance.Boot();
+            _Instance.Init();
         }
 
         private static Bootstrapper _Bootstrapper;
@@ -165,14 +159,19 @@ namespace angeldnd.dap {
             _TickChannel.FireEvent(null);
         }
 
+        private void Init() {
+            Log.Info("Dap Environment Init: Version = {0}, Sub Version = {1}, Round = {2}",
+                        _Version, _SubVersion, _Round);
+            _TickChannel = Channels.Add(EnvConsts.ChannelTick);
+            EnvBus._PublishByEnv(this, EnvBusConsts.MsgOnInit);
+
+            Boot();
+        }
+
         private void Halt() {
             Log.Info("Dap Environment Halt: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
-            Bus.Publish(EnvConsts.MsgOnHalt, this);
-        }
-
-        private void Setup() {
-            _TickChannel = Channels.Add(EnvConsts.ChannelTick);
+            EnvBus._PublishByEnv(this, EnvBusConsts.MsgOnHalt);
         }
 
         private void Boot() {
@@ -186,7 +185,7 @@ namespace angeldnd.dap {
             }
             Log.Info("Dap Environment Boot Finished: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
-            Bus.Publish(EnvConsts.MsgOnBoot, this);
+            EnvBus._PublishByEnv(this, EnvBusConsts.MsgOnBoot);
         }
 
         public bool TryGetByUri(string uri, out IContext context, out IAspect aspect) {
