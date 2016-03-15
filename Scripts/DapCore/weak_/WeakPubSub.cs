@@ -19,8 +19,23 @@ namespace angeldnd.dap {
         private Dictionary<int, WeakList<TSub>> _InstanceSubscribers = null;
         private WeakList<TSub> _ClassSubscribers = null;
 
+        public int GetSubCount() {
+            return WeakListHelper.Count(_ClassSubscribers);
+        }
+
         public void AddSub(TSub sub) {
             WeakListHelper.Add<TSub>(ref _ClassSubscribers, sub);
+        }
+
+        public int GetSubCount(TPub pub) {
+            if (_InstanceSubscribers != null) {
+                int pubHash = pub.GetHashCode();
+                WeakList<TSub> subs = null;
+                if (_InstanceSubscribers.TryGetValue(pubHash, out subs)) {
+                    return subs.Count;
+                }
+            }
+            return 0;
         }
 
         public void AddSub(TPub pub, TSub sub) {

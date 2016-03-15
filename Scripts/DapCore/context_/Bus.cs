@@ -19,13 +19,20 @@ namespace angeldnd.dap {
     }
 
     public sealed class Bus : Aspect<IContext> {
-        private Dictionary<string, object> _MsgTokens = null;
+        private List<string> _Msgs = null;
         private WeakPubSub<string, IBusSub> _MsgSubs = null;
+        private Dictionary<string, object> _MsgTokens = null;
 
         public Bus(IContext owner, string key) : base(owner, key) {
         }
 
         public void AddSub(string msg, IBusSub sub) {
+            if (_Msgs == null) {
+                _Msgs = new List<string>();
+            }
+            if (!_Msgs.Contains(msg)) {
+                _Msgs.Add(msg);
+            }
             if (_MsgSubs == null) {
                 _MsgSubs = new WeakPubSub<string, IBusSub>();
             }
@@ -57,6 +64,18 @@ namespace angeldnd.dap {
                     sub.OnMsg(this, msg);
                 });
             }
+        }
+
+        protected override void AddSummaryFields(Data summary) {
+            base.AddSummaryFields(summary);
+            Data data = new Data();
+            if (_Msgs != null) {
+                for (int i = 0; i < _Msgs.Count; i++) {
+                    string msg = _Msgs[i];
+                    data.I(msg, _MsgSubs.GetSubCount(msg));
+                }
+            }
+            summary.A(ContextConsts.SummaryData, data);
         }
     }
 }

@@ -17,6 +17,19 @@ namespace angeldnd.dap {
         [DapParam(typeof(bool))]
         public const string SummaryDebugging = "debugging";
 
+        [DapParam(typeof(string))]
+        public const string SummaryValueType = "value_type";
+        [DapParam(typeof(string))]
+        public const string SummaryValue = "value";
+        [DapParam(typeof(Data))]
+        public const string SummaryData = "data";
+        [DapParam(typeof(int))]
+        public const string SummaryCheckerCount = "cherker_count";
+        [DapParam(typeof(int))]
+        public const string SummaryWatcherCount = "watcher_count";
+        [DapParam(typeof(int))]
+        public const string Summary2ndWatcherCount = "2nd_watcher_count";
+
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";
 

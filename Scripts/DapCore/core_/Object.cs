@@ -29,7 +29,7 @@ namespace angeldnd.dap {
         [DapParam(typeof(bool))]
         public const string SummaryDebugMode = "debug_mode";
         [DapParam(typeof(int))]
-        public const string SummaryBlocksCount = "blocks_count";
+        public const string SummaryBlockCount = "block_count";
     }
 
     public abstract class Object : Logger, IObject, IBlockOwner {
@@ -97,8 +97,8 @@ namespace angeldnd.dap {
             return string.Format("{0}{1}", LogPrefix, Data.ToFullString(extraSummary, true));
         }
 
-        protected virtual void AddSummaryFields(Data data) {
-            data.I(ObjectConsts.SummaryBlocksCount, _Blocks == null ? 0 : _Blocks.Count);
+        protected virtual void AddSummaryFields(Data summary) {
+            summary.I(ObjectConsts.SummaryBlockCount, _Blocks == null ? 0 : _Blocks.Count);
         }
 
         public Data Summary {

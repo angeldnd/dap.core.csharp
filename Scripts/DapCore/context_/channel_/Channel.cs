@@ -36,6 +36,12 @@ namespace angeldnd.dap {
             return null;
         }
 
+        protected override void AddSummaryFields(Data summary) {
+            base.AddSummaryFields(summary);
+            summary.I(ContextConsts.SummaryCheckerCount, EventCheckerCount)
+                   .I(ContextConsts.SummaryWatcherCount, EventWatcherCount);
+        }
+
         //SILP: DECLARE_LIST(EventChecker, listener, IEventChecker, _EventCheckers)
         private WeakList<IEventChecker> _EventCheckers = null;        //__SILP__
                                                                       //__SILP__

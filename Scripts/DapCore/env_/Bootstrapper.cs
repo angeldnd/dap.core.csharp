@@ -127,21 +127,7 @@ namespace angeldnd.dap {
                 AddPlugins(plugins, asm);
             }
 
-            Dictionary<Plugin, int> orders = new Dictionary<Plugin, int>();
-
-            foreach (Plugin plugin in plugins) {
-                orders[plugin] = DapOrder.GetOrder(plugin.GetType());
-            }
-
-            plugins.Sort((Plugin a, Plugin b) => {
-                int orderA = orders[a];
-                int orderB = orders[b];
-                if (orderA == orderB) {
-                    return a.GetType().FullName.CompareTo(b.GetType().FullName);
-                } else {
-                    return orderA.CompareTo(orderB);
-                }
-            });
+            DapOrder.SortByOrder(plugins);
             return plugins;
         }
 

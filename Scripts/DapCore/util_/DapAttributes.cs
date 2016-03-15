@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+
 using System.Diagnostics;
 using System.IO;
 //using System.Text.RegularExpressions;
@@ -50,6 +52,24 @@ namespace angeldnd.dap {
                 }
             }
             return 0;
+        }
+
+        public static void SortByOrder<T>(List<T> objs) {
+            Dictionary<T, int> orders = new Dictionary<T, int>();
+
+            foreach (T obj in objs) {
+                orders[obj] = GetOrder(obj.GetType());
+            }
+
+            objs.Sort((T a, T b) => {
+                int orderA = orders[a];
+                int orderB = orders[b];
+                if (orderA == orderB) {
+                    return a.GetType().FullName.CompareTo(b.GetType().FullName);
+                } else {
+                    return orderA.CompareTo(orderB);
+                }
+            });
         }
 
         public readonly int Order;

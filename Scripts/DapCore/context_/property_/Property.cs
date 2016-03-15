@@ -32,6 +32,11 @@ namespace angeldnd.dap {
             return false;
         }
 
+        protected override void AddSummaryFields(Data summary) {
+            base.AddSummaryFields(summary);
+            summary.A(ContextConsts.SummaryData, Encode());
+        }
+
         protected abstract bool DoEncode(Data data);
         protected abstract bool DoDecode(Data data);
     }

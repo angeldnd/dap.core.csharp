@@ -120,6 +120,15 @@ namespace angeldnd.dap {
             });
         }
 
+        protected override void AddSummaryFields(Data summary) {
+            base.AddSummaryFields(summary);
+            summary.S(ContextConsts.SummaryValueType, ValueType.FullName)
+                   .S(ContextConsts.SummaryValue, string.Format("{0}", _Value))
+                   .I(ContextConsts.SummaryCheckerCount, ValueCheckerCount)
+                   .I(ContextConsts.SummaryWatcherCount, ValueWatcherCount)
+                   .I(ContextConsts.Summary2ndWatcherCount, VarWatcherCount);
+        }
+
         //SILP: DECLARE_LIST(VarWatcher, watcher, IVarWatcher, _VarWatchers)
         private WeakList<IVarWatcher> _VarWatchers = null;            //__SILP__
                                                                       //__SILP__

@@ -47,9 +47,9 @@ public override bool DebugMode {
 public virtual void OnAdded() {}
 public virtual void OnRemoved() {}
 
-protected override void AddSummaryFields(Data data) {
-    base.AddSummaryFields(data);
-    data.S(ElementConsts.SummaryKey, _Key);
+protected override void AddSummaryFields(Data summary) {
+    base.AddSummaryFields(summary);
+    summary.S(ElementConsts.SummaryKey, _Key);
 }
 ```
 
@@ -95,9 +95,9 @@ public bool SetIndex(IOwner owner, int index) {
     return true;
 }
 
-protected override void AddSummaryFields(Data data) {
-    base.AddSummaryFields(data);
-    data.I(ElementConsts.SummaryIndex, _Index);
+protected override void AddSummaryFields(Data summary) {
+    base.AddSummaryFields(summary);
+    summary.I(ElementConsts.SummaryIndex, _Index);
 }
 ```
 
@@ -209,10 +209,10 @@ public override void OnRemoved() {
     Env.Instance.Hooks._OnAspectRemoved(this);
 }
 
-protected override void AddSummaryFields(Data data) {
-    base.AddSummaryFields(data);
-    data.S(ContextConsts.SummaryPath, _Path)
-        .B(ContextConsts.SummaryDebugging, _Debugging);
+protected override void AddSummaryFields(Data summary) {
+    base.AddSummaryFields(summary);
+    summary.S(ContextConsts.SummaryPath, _Path)
+           .B(ContextConsts.SummaryDebugging, _Debugging);
 }
 ```
 
@@ -289,10 +289,10 @@ public override void OnRemoved() {
     Env.Instance.Hooks._OnContextRemoved(this);
 }
 
-protected override void AddSummaryFields(Data data) {
-    base.AddSummaryFields(data);
-    data.S(ContextConsts.SummaryPath, _Path)
-        .B(ContextConsts.SummaryDebugging, _Debugging);
+protected override void AddSummaryFields(Data summary) {
+    base.AddSummaryFields(summary);
+    summary.S(ContextConsts.SummaryPath, _Path)
+           .B(ContextConsts.SummaryDebugging, _Debugging);
 }
 
 private Dictionary<string, IAspect> _TopAspectsDict = new Dictionary<string, IAspect>();

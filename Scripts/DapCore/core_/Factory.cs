@@ -32,7 +32,7 @@ namespace angeldnd.dap {
             return null;
         }
 
-        private static T Create<T>(string caller, Type type, params object[] values) where T : class, IObject {
+        private static T Create<T>(string caller, Type type, params object[] values) {
             if (type != null) {
                 try {
                     object obj = Activator.CreateInstance(type, values);
@@ -50,16 +50,19 @@ namespace angeldnd.dap {
                 Log.Error("Factory.{0}: <{1}> {2} -> Unknown Type",
                                 caller, typeof(T).FullName, type);
             }
-            return null;
+            return default(T);
         }
 
-        public static T New<T>(string type, params object[] values) where T : class, IObject {
+        public static T New<T>(string type, params object[] values) where T : IObject {
             return Create<T>("New", GetDapType(type), values);
         }
 
+        public static T Create<T>(Type type, params object[] values) {
+            return Create<T>("Create", type, values);
+        }
 
-        public static T Create<T>(params object[] values) where T : class, IObject {
-            return Create<T>("Create", typeof(T), values);
+        public static T Create<T>(params object[] values) {
+            return Create<T>(typeof(T), values);
         }
     }
 }

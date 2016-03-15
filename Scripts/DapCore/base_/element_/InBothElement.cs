@@ -35,9 +35,9 @@ namespace angeldnd.dap {
             return true;                                                    //__SILP__
         }                                                                   //__SILP__
                                                                             //__SILP__
-        protected override void AddSummaryFields(Data data) {               //__SILP__
-            base.AddSummaryFields(data);                                    //__SILP__
-            data.I(ElementConsts.SummaryIndex, _Index);                     //__SILP__
+        protected override void AddSummaryFields(Data summary) {            //__SILP__
+            base.AddSummaryFields(summary);                                 //__SILP__
+            summary.I(ElementConsts.SummaryIndex, _Index);                  //__SILP__
         }                                                                   //__SILP__
                                                                             //__SILP__
         public override string RevInfo {                                    //__SILP__
