@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class EnvBusConsts {
-        public const string MsgOnInit = "on_init";
-        public const string MsgOnBoot = "on_boot";
-        public const string MsgOnHalt = "on_halt";
+        public const string MsgOnInit = EnvConsts.MsgOnInit;
+        public const string MsgOnBoot = EnvConsts.MsgOnBoot;
+        public const string MsgOnHalt = EnvConsts.MsgOnHalt;
     }
 
     public interface IEnvBusSub {

@@ -15,6 +15,10 @@ namespace angeldnd.dap {
         public const string KeyDebugHook = "debug";
 
         public const string ChannelTick = "tick";
+
+        public const string MsgOnInit = "on_init";
+        public const string MsgOnBoot = "on_boot";
+        public const string MsgOnHalt = "on_halt";
     }
 
     public sealed class Env : DictContext<Env, Items> {
@@ -159,11 +163,17 @@ namespace angeldnd.dap {
             _TickChannel.FireEvent(null);
         }
 
+        private void PublishOnBusAndEnvBus(string msg) {
+            Bus.Publish(msg, this);
+            EnvBus._PublishByEnv(this, msg);
+        }
+
         private void Init() {
             Log.Info("Dap Environment Init: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
             _TickChannel = Channels.Add(EnvConsts.ChannelTick);
-            EnvBus._PublishByEnv(this, EnvBusConsts.MsgOnInit);
+
+            PublishOnBusAndEnvBus(EnvConsts.MsgOnInit);
 
             Boot();
         }
@@ -171,7 +181,7 @@ namespace angeldnd.dap {
         private void Halt() {
             Log.Info("Dap Environment Halt: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
-            EnvBus._PublishByEnv(this, EnvBusConsts.MsgOnHalt);
+            PublishOnBusAndEnvBus(EnvConsts.MsgOnHalt);
         }
 
         private void Boot() {
@@ -185,7 +195,7 @@ namespace angeldnd.dap {
             }
             Log.Info("Dap Environment Boot Finished: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
-            EnvBus._PublishByEnv(this, EnvBusConsts.MsgOnBoot);
+            PublishOnBusAndEnvBus(EnvConsts.MsgOnBoot);
         }
 
         public bool TryGetByUri(string uri, out IContext context, out IAspect aspect) {
