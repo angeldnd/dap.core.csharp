@@ -20,9 +20,21 @@ namespace angeldnd.dap {
         public const string MsgOnBoot = "on_boot";
         public const string MsgOnHalt = "on_halt";
 
+        [DapParam(typeof(int))]
+        public const string SummaryVersion = "version";
+        [DapParam(typeof(int))]
+        public const string SummarySubVersion = "sub_version";
+        [DapParam(typeof(int))]
         public const string SummaryRound = "round";
+        [DapParam(typeof(int))]
         public const string SummaryTickCount = "tick_count";
+        [DapParam(typeof(float))]
         public const string SummaryTickTime = "tick_time";
+        [DapParam(typeof(string))]
+        public const string SummaryBootstrapper = "bootstrapper";
+        [DapParam(typeof(Data))]
+        public const string SummaryPlugins = "plugins";
+        public const string SummaryOk = "ok";
     }
 
     public sealed class Env : DictContext<Env, Items> {
@@ -155,6 +167,8 @@ namespace angeldnd.dap {
             }
         }
 
+        private List<int> _FailedPluginIndexes = new List<int>();
+
         public override void OnAdded() {
             //Do Nothing.
         }
@@ -189,11 +203,13 @@ namespace angeldnd.dap {
         }
 
         private void Boot() {
-            foreach (Plugin plugin in _Plugins) {
+            for (int i = 0; i < _Plugins.Count; i++) {
+                var plugin = _Plugins[i];
                 bool ok = plugin.Init();
                 if (ok) {
                     Info("Plugin Init Succeed: {0}", plugin.GetType().FullName);
                 } else {
+                    _FailedPluginIndexes.Add(i);
                     Error("Plugin Init Failed: {0}", plugin.GetType().FullName);
                 }
             }
@@ -230,9 +246,20 @@ namespace angeldnd.dap {
 
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
-            summary.I(EnvConsts.SummaryRound, _Round)
+            Data plugins = new Data();
+            for (int i = 0; i < _Plugins.Count; i++) {
+                var plugin = _Plugins[i];
+                plugins.A(i.ToString(), new Data()
+                            .S(ObjectConsts.SummaryType, plugin.GetType().FullName)
+                            .B(EnvConsts.SummaryOk, !_FailedPluginIndexes.Contains(i)));
+            }
+            summary.I(EnvConsts.SummaryVersion, _Version)
+                   .I(EnvConsts.SummarySubVersion, _SubVersion)
+                   .I(EnvConsts.SummaryRound, _Round)
                    .I(EnvConsts.SummaryTickCount, _TickCount)
-                   .F(EnvConsts.SummaryTickTime, _TickTime);
+                   .F(EnvConsts.SummaryTickTime, _TickTime)
+                   .S(EnvConsts.SummaryBootstrapper, _Bootstrapper.GetType().FullName)
+                   .A(EnvConsts.SummaryPlugins, plugins);
         }
     }
 }
