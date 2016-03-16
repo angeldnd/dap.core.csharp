@@ -19,6 +19,10 @@ namespace angeldnd.dap {
         public const string MsgOnInit = "on_init";
         public const string MsgOnBoot = "on_boot";
         public const string MsgOnHalt = "on_halt";
+
+        public const string SummaryRound = "round";
+        public const string SummaryTickCount = "tick_count";
+        public const string SummaryTickTime = "tick_time";
     }
 
     public sealed class Env : DictContext<Env, Items> {
@@ -222,6 +226,13 @@ namespace angeldnd.dap {
                 aspect = context.GetAspect(segments[1], false);
                 return aspect != null;
             }
+        }
+
+        protected override void AddSummaryFields(Data summary) {
+            base.AddSummaryFields(summary);
+            summary.I(EnvConsts.SummaryRound, _Round)
+                   .I(EnvConsts.SummaryTickCount, _TickCount)
+                   .F(EnvConsts.SummaryTickTime, _TickTime);
         }
     }
 }
