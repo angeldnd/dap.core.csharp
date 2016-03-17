@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IContextElement {
+    public interface IContextElement : IElement {
         IContext GetContext();
         string Path { get; }
         bool Debugging { get; set; }
