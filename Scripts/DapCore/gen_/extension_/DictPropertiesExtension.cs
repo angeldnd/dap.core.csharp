@@ -16,8 +16,10 @@ namespace angeldnd.dap {
                 properties.Error("Failed to Add Property: {0}, {1}", key, data);
                 return null;
             }
-            if (!prop.Decode(data)) {
-                properties.Error("Failed to Decode Property: {0}, {1} -> {2}", key, data, prop);
+            if (data.HasValue(PropertiesConsts.KeyValue)) {
+                if (!prop.Decode(data)) {
+                    properties.Error("Failed to Decode Property: {0}, {1} -> {2}", key, data, prop);
+                }
             }
 
             return prop;

@@ -104,6 +104,10 @@ namespace angeldnd.dap {
             }
         }
 
+        public bool HasValue(string key) {
+            return _ValueTypes.ContainsKey(key);
+        }
+
         public DataType GetValueType(string key) {
             DataType type;
             if (_ValueTypes.TryGetValue(key, out type)) {
