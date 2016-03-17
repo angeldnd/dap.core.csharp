@@ -14,7 +14,7 @@ namespace angeldnd.dap {
             } else {
                 if (logError) {
                     Error("Get<{0}>({1}): Not Found", typeof(T1).FullName, key);
-                } else {
+                } else if (LogDebug) {
                     Debug("Get<{0}>({1}): Not Found", typeof(T1).FullName, key);
                 }
             }
@@ -32,7 +32,7 @@ namespace angeldnd.dap {
             } else {
                 if (logError) {
                     Error("Get({0}): Not Found", key);
-                } else {
+                } else if (LogDebug) {
                     Debug("Get({0}): Not Found", key);
                 }
             }

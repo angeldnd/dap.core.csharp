@@ -244,6 +244,28 @@ namespace angeldnd.dap {
             }
         }
 
+        public T GetByUri<T>(string uri, bool logError) where T : class, IContextElement {
+            IContext context;
+            IAspect aspect;
+            if (TryGetByUri(uri, out context, out aspect)) {
+                if (aspect != null) {
+                    return Object.As<T>(aspect, logError);
+                } else {
+                    return Object.As<T>(context, logError);
+                }
+            }
+            if (logError) {
+                Error("GetByUri<{0}>({1}): Not Found", typeof(T).FullName, uri);
+            } else if (LogDebug) {
+                Debug("GetByUri<{0}>({1}): Not Found", typeof(T).FullName, uri);
+            }
+            return null;
+        }
+
+        public T GetByUri<T>(string uri) where T : class, IContextElement {
+            return GetByUri<T>(uri, true);
+        }
+
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
             Data plugins = new Data();

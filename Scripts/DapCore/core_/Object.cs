@@ -40,6 +40,9 @@ namespace angeldnd.dap {
                 if (logError) {
                     Log.Error("Type Mismatched: <{0}> -> {1}: {2}",
                                 typeof(T).FullName, obj.GetType().FullName, obj);
+                } else if (Log.LogDebug) {
+                    Log.Debug("Type Mismatched: <{0}> -> {1}: {2}",
+                                typeof(T).FullName, obj.GetType().FullName, obj);
                 }
                 return null;
             }
