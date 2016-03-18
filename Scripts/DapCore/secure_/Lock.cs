@@ -33,32 +33,20 @@ namespace angeldnd.dap {
             }
         }
 
-        public bool CheckAdminPass(Pass pass, bool logError) {
+        public bool CheckAdminPass(Pass pass, bool isDebug = false) {
             if (_Pass == null) return true;
             if (_Pass.CheckAdminPass(this, pass)) return true;
 
-            if (logError) {
-                Error("Invalid Admin Pass: Pass = {0}, pass = {1}", _Pass, pass);
-            }
+            ErrorOrDebug(isDebug, "Invalid Admin Pass: Pass = {0}, pass = {1}", _Pass, pass);
             return false;
         }
 
-        public bool CheckAdminPass(Pass pass) {
-            return CheckAdminPass(pass, true);
-        }
-
-        public bool CheckWritePass(Pass pass, bool logError) {
+        public bool CheckWritePass(Pass pass, bool isDebug = false) {
             if (_Pass == null) return true;
             if (_Pass.CheckWritePass(this, pass)) return true;
 
-            if (logError) {
-                Error("Invalid Write Pass: Pass = {0}, pass = {1}", _Pass, pass);
-            }
+            ErrorOrDebug(isDebug, "Invalid Write Pass: Pass = {0}, pass = {1}", _Pass, pass);
             return false;
-        }
-
-        public bool CheckWritePass(Pass pass) {
-            return CheckWritePass(pass, true);
         }
     }
 }

@@ -18,36 +18,26 @@ namespace angeldnd.dap {
             return GetAncestor<IContext>(context);
         }
 
-        public static T GetContext<T>(this IDictContext context, string relPath, bool logError)
+        public static T GetContext<T>(this IDictContext context, string relPath,
+                                        bool isDebug = false)
                                             where T : class, IContext {
-            return TreeHelper.GetDescendant<T>(context, relPath, logError);
+            return TreeHelper.GetDescendant<T>(context, relPath, isDebug);
         }
 
-        public static IContext GetContext(this IDictContext context, string relPath, bool logError) {
-            return GetContext<IContext>(context, relPath, logError);
+        public static IContext GetContext(this IDictContext context, string relPath,
+                                            bool isDebug = false) {
+            return GetContext<IContext>(context, relPath, isDebug);
         }
 
-        public static T GetContext<T>(this IDictContext context, string relPath) where T : class, IContext {
-            return GetContext<T>(context, relPath, true);
-        }
-
-        public static IContext GetContext(this IDictContext context, string relPath) {
-            return GetContext<IContext>(context, relPath);
-        }
-
-        public static T GetContextManner<T>(this IDictContext context, string relPath, string mannerKey, bool logError)
+        public static T GetContextManner<T>(this IDictContext context, string relPath,
+                                                string mannerKey, bool isDebug = false)
                                                     where T : Manner {
-            IContext descendant = GetContext<IContext>(context, relPath, logError);
+            IContext descendant = GetContext<IContext>(context, relPath, isDebug);
             if (descendant == null) {
-                T manner = descendant.Manners.Get<T>(mannerKey, logError);
+                T manner = descendant.Manners.Get<T>(mannerKey, isDebug);
                 return manner;
             }
             return null;
-        }
-
-        public static T GetContextManner<T>(this IDictContext context, string relPath, string mannerKey)
-                                                    where T : Manner {
-            return GetContextManner<T>(context, relPath, mannerKey, true);
         }
 
         public static string GetRelativePath(this IDictContext context, IContext descendant) {

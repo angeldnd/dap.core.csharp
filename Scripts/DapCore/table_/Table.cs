@@ -35,11 +35,9 @@ namespace angeldnd.dap {
         void Clear();
 
         //Generic Get
-        T1 Get<T1>(int index, bool logError) where T1 : class, IInTableElement;
-        T1 Get<T1>(int index) where T1 : class, IInTableElement;
+        T1 Get<T1>(int index, bool isDebug = false) where T1 : class, IInTableElement;
 
-        T1 GetByKey<T1>(string key, bool logError) where T1 : class, IInTableElement;
-        T1 GetByKey<T1>(string key) where T1 : class, IInTableElement;
+        T1 GetByKey<T1>(string key, bool isDebug = false) where T1 : class, IInTableElement;
 
         //Is
         bool Is<T1>(int index) where T1 : class, IInTableElement;
@@ -86,11 +84,9 @@ namespace angeldnd.dap {
         List<T> RemoveAll();
 
         //Get
-        T Get(int index, bool logError);
-        T Get(int index);
+        T Get(int index, bool isDebug = false);
 
-        T GetByKey(string key, bool logError);
-        T GetByKey(string key);
+        T GetByKey(string key, bool isDebug = false);
 
         //Filter
         void ForEach(Action<T> callback);

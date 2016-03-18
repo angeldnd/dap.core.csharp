@@ -7,7 +7,7 @@ namespace angeldnd.dap {
 
         bool AdminSecured { get; }
         bool WriteSecured { get; }
-        bool CheckAdminPass(Pass pass);
-        bool CheckWritePass(Pass pass);
+        bool CheckAdminPass(Pass pass, bool isDebug = false);
+        bool CheckWritePass(Pass pass, bool isDebug = false);
     }
 }

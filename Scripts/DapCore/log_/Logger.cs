@@ -11,6 +11,8 @@ namespace angeldnd.dap {
         void Info(string format, params object[] values);
         void Debug(string format, params object[] values);
         void Custom(string kind, string format, params object[] values);
+
+        void ErrorOrDebug(bool isDebug, string format, params object[] values);
     }
 
     public static class LoggerConsts {
@@ -54,10 +56,18 @@ namespace angeldnd.dap {
         public void Debug(string format, params object[] values) {
             if (DebugMode) {
                 Log.AddLogWithStackTrace(this, LoggerConsts.DEBUG, LogPrefix, format, values);
-            } else {
-                if (LogDebug) {
-                    Log.AddLog(this, LoggerConsts.DEBUG, LogPrefix, format, values);
-                }
+            } else if (LogDebug) {
+                Log.AddLog(this, LoggerConsts.DEBUG, LogPrefix, format, values);
+            }
+        }
+
+        public void ErrorOrDebug(bool isDebug, string format, params object[] values) {
+            if (!isDebug) {
+                Log.AddLogWithStackTrace(this, LoggerConsts.ERROR, LogPrefix, format, values);
+            } else if (DebugMode) {
+                Log.AddLogWithStackTrace(this, LoggerConsts.DEBUG, LogPrefix, format, values);
+            } else if (LogDebug) {
+                Log.AddLog(this, LoggerConsts.DEBUG, LogPrefix, format, values);
             }
         }
 

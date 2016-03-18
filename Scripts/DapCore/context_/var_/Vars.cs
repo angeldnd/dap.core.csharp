@@ -25,15 +25,11 @@ namespace angeldnd.dap {
         }
 
         public bool HasVar<T>(string key) {
-            return Get<Var<T>>(key, false) != null;
+            return Get<Var<T>>(key, true) != null;
         }
 
-        public Var<T> GetVar<T>(string key, bool logError) {
-            return Get<Var<T>>(key, logError);
-        }
-
-        public Var<T> GetVar<T>(string key) {
-            return Get<Var<T>>(key, false);
+        public Var<T> GetVar<T>(string key, bool isDebug = false) {
+            return Get<Var<T>>(key, isDebug);
         }
 
         public T GetValue<T>(string key, T defaultValue) {
@@ -49,7 +45,7 @@ namespace angeldnd.dap {
         }
 
         public bool SetValue<T>(string key, T val) {
-            Var<T> v = Get<Var<T>>(key, false);
+            Var<T> v = Get<Var<T>>(key, true);
             if (v != null) {
                 return v.SetValue(val);
             } else {
@@ -59,7 +55,7 @@ namespace angeldnd.dap {
         }
 
         public bool DepositValue<T>(string key, T val) {
-            Var<T> v = Get<Var<T>>(key, false);
+            Var<T> v = Get<Var<T>>(key, true);
             if (v == null) {
                 v = AddVar<T>(key, val);
                 return v != null;

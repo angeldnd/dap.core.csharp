@@ -39,52 +39,48 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public static T GetChild<T>(IOwner owner, string key, bool logError) where T : class, IElement {
+        public static T GetChild<T>(IOwner owner, string key, bool isDebug = false) where T : class, IElement {
             if (owner == null) return null;
 
             T child = null;
             IDict ownerAsDict = owner as IDict;
             if (ownerAsDict != null) {
-                child = ownerAsDict.Get<IInDictElement>(key, logError) as T;
+                child = ownerAsDict.Get<IInDictElement>(key, isDebug) as T;
             } else {
                 ITable ownerAsTable = owner as ITable;
                 if (ownerAsTable != null) {
-                    child = ownerAsTable.GetByKey<IInTableElement>(key, logError) as T;
+                    child = ownerAsTable.GetByKey<IInTableElement>(key, isDebug) as T;
                 }
             }
             if (child == null) {
-                if (logError) {
-                    owner.Error("Not Found: {0}", key);
-                }
+                owner.ErrorOrDebug(isDebug, "Not Found: {0}", key);
             }
             return child;
         }
 
-        public static T GetDescendant<T>(IOwner owner, string[] keys, int startIndex, bool logError)
+        public static T GetDescendant<T>(IOwner owner, string[] keys, int startIndex, bool isDebug = false)
                                             where T : class, IElement {
             IObject current = owner;
             for (int i = startIndex; i < keys.Length; i++) {
-                current = GetChild<IElement>(current as IOwner, keys[i], logError);
+                current = GetChild<IElement>(current as IOwner, keys[i], isDebug);
                 if (current == null) {
                     return null;
                 }
             }
             T result = current as T;
             if (result == null) {
-                if (logError) {
-                    owner.Error("Type Mismatched: <{0}> {1} {2} -> {3}",
-                                    typeof(T).FullName,
-                                    string.Join(PathConsts.PathSeparatorAsString, keys),
-                                    startIndex, current);
-                }
+                owner.ErrorOrDebug(isDebug, "Type Mismatched: <{0}> {1} {2} -> {3}",
+                                typeof(T).FullName,
+                                string.Join(PathConsts.PathSeparatorAsString, keys),
+                                startIndex, current);
             }
             return result;
         }
 
-        public static T GetDescendant<T>(IOwner owner, string relPath, bool logError)
+        public static T GetDescendant<T>(IOwner owner, string relPath, bool isDebug = false)
                                             where T : class, IElement {
             string[] keys = relPath.Split(PathConsts.PathSeparator);
-            return GetDescendant<T>(owner, keys, 0, logError);
+            return GetDescendant<T>(owner, keys, 0, isDebug);
         }
 
         public static void ForEachDescendants<T>(IDict owner, Action<T> callback)

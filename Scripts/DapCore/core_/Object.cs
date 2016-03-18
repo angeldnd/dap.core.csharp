@@ -33,28 +33,19 @@ namespace angeldnd.dap {
     }
 
     public abstract class Object : Logger, IObject, IBlockOwner {
-        public static T As<T>(object obj, bool logError) where T : class, IObject {
+        public static T As<T>(object obj, bool isDebug = false) where T : class, IObject {
             if (obj == null) return null;
 
             if (!(obj is T)) {
-                if (logError) {
-                    Log.Error("Type Mismatched: <{0}> -> {1}: {2}",
-                                typeof(T).FullName, obj.GetType().FullName, obj);
-                } else if (Log.LogDebug) {
-                    Log.Debug("Type Mismatched: <{0}> -> {1}: {2}",
-                                typeof(T).FullName, obj.GetType().FullName, obj);
-                }
+                Log.ErrorOrDebug(isDebug, "Type Mismatched: <{0}> -> {1}: {2}",
+                            typeof(T).FullName, obj.GetType().FullName, obj);
                 return null;
             }
             return (T)obj;
         }
 
-        public static T As<T>(object obj) where T : class, IObject {
-            return As<T>(obj, true);
-        }
-
         public static bool Is<T>(object obj) where T : class, IObject {
-            return As<T>(obj, false) != null;
+            return As<T>(obj, true) != null;
         }
 
         private string _DapType = null;

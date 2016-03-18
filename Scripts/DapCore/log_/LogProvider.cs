@@ -47,7 +47,17 @@ namespace angeldnd.dap {
         }
 
         public void Debug(string format, params object[] values) {
-            if (_LogDebug) AddLog(this, LoggerConsts.DEBUG, Log.GetMsg(format, values), null);
+            if (_LogDebug) {
+                AddLog(this, LoggerConsts.DEBUG, Log.GetMsg(format, values), null);
+            }
+        }
+
+        public void ErrorOrDebug(bool isDebug, string format, params object[] values) {
+            if (!isDebug) {
+                AddLog(this, LoggerConsts.ERROR, Log.GetMsg(format, values), null);
+            } else if (_LogDebug) {
+                AddLog(this, LoggerConsts.DEBUG, Log.GetMsg(format, values), null);
+            }
         }
 
         public void Custom(string kind, string format, params object[] values) {

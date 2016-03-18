@@ -37,8 +37,7 @@ namespace angeldnd.dap {
         void Clear();
 
         //Generic Get
-        T1 Get<T1>(string key, bool logError) where T1 : class, IInDictElement;
-        T1 Get<T1>(string key) where T1 : class, IInDictElement;
+        T1 Get<T1>(string key, bool isDebug = false) where T1 : class, IInDictElement;
         T1 GetOrAdd<T1>(string key) where T1 : class, IInDictElement;
         T1 GetOrNew<T1>(string type, string key) where T1 : class, IInDictElement;
 
@@ -83,8 +82,7 @@ namespace angeldnd.dap {
         List<T> RemoveAll();
 
         //Get
-        T Get(string key, bool logError);
-        T Get(string key);
+        T Get(string key, bool isDebug = false);
         T GetOrAdd(string key);
         T GetOrNew(string type, string key);
 
