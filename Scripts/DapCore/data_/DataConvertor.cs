@@ -85,6 +85,8 @@ namespace angeldnd.dap {
         }
 
         public Data Parse(string source, string content) {
+            if (string.IsNullOrEmpty(content) || content == DataConvertorConsts.NullStr) return null;
+
             Stack<Data> dataStack = new Stack<Data>();
             Data lastData = null;
             PartialData partialData = new PartialData();

@@ -57,7 +57,7 @@ namespace angeldnd.dap {
         }
 
         public override bool Parse(string str) {
-            return str == "true";
+            return str != null && str.ToLower() == "true";
         }
     }
 

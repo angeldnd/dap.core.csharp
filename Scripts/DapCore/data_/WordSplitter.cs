@@ -30,6 +30,8 @@ namespace angeldnd.dap {
 
     public static class WordSplitter {
         public static void Split(string source, string content, char[] wordChars, Action<Word> processor) {
+            if (content == null) return;
+
             StringBuilder current = new StringBuilder(1024);
             bool currentIsEmpty = true;
             int currentLine = 0;
