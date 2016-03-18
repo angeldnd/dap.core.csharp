@@ -22,8 +22,8 @@ namespace angeldnd.dap {
             return data.ToString();
         }
 
-        public static string ToFullString(Data data, bool oneLine = false) {
-            return Convertor.DataConvertor.Convert(data, oneLine);
+        public static string ToFullString(Data data, string indent = "\t") {
+            return Convertor.DataConvertor.Convert(data, indent);
         }
 
         public static Data Clone(Data data) {
@@ -44,7 +44,7 @@ namespace angeldnd.dap {
 
         public override string ToString() {
             if (DeepCount <= 12) {
-                return ToFullString(this, true);
+                return ToFullString(this, "\t");
             }
             return string.Format("[Data:{0}]", Count);
         }

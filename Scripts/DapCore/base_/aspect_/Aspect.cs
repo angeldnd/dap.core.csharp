@@ -39,7 +39,7 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public override sealed bool DebugMode {                       //__SILP__
-            get { return _Debugging || Owner.DebugMode; }             //__SILP__
+            get { return _Debugging || base.DebugMode; }              //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public override void OnAdded() {                              //__SILP__

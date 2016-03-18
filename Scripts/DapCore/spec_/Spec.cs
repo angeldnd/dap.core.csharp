@@ -53,7 +53,7 @@ namespace angeldnd.dap {
     public delegate bool SpecValueCheckerFactory(IProperty prop, Data spec, string specKey);
 
     public static class Spec {
-        private static Vars _SpecValueCheckerFactories = new Vars(Env.Instance, "SpecValueCheckerFactories");
+        private static Vars _SpecValueCheckerFactories = new Vars(null, "SpecValueCheckerFactories");
 
         static Spec() {
             BuiltInSpecFactory.RegistrySpecValueCheckers();

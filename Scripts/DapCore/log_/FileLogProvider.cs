@@ -165,7 +165,7 @@ namespace angeldnd.dap {
                     //TODO: maybe try to resume logging to file later.
                 }
             }
-            OnLog(source, log, stackTrace);
+            OnLog(source, kind, log, stackTrace);
         }
 
         protected virtual string GetLogRoot() {
@@ -176,7 +176,7 @@ namespace angeldnd.dap {
             return string.Format("{0}:{1}", Env.Round, Env.TickCount);
         }
 
-        protected virtual void OnLog(object source, string log, StackTrace stackTrace) {}
+        protected virtual void OnLog(object source, string kind, string log, StackTrace stackTrace) {}
     }
 }
 

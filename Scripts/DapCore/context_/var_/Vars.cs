@@ -33,7 +33,7 @@ namespace angeldnd.dap {
         }
 
         public T GetValue<T>(string key, T defaultValue) {
-            Var<T> v = GetVar<T>(key);
+            Var<T> v = GetVar<T>(key, true);
             if (v != null) {
                 return v.Value;
             }

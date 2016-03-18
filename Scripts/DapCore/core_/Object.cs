@@ -86,9 +86,7 @@ namespace angeldnd.dap {
         }
 
         public override string ToString() {
-            Data extraSummary = new Data();
-            AddSummaryFields(extraSummary);
-            return string.Format("{0}{1}", LogPrefix, Data.ToFullString(extraSummary, true));
+            return Data.ToFullString(Summary, null);
         }
 
         protected virtual void AddSummaryFields(Data summary) {

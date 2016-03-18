@@ -2,19 +2,25 @@ using System;
 
 namespace angeldnd.dap {
     public static class Convertor {
+        public readonly static BoolConvertor BoolConvertor = new BoolConvertor();
+        public readonly static IntConvertor IntConvertor = new IntConvertor();
+        public readonly static LongConvertor LongConvertor = new LongConvertor();
+        public readonly static FloatConvertor FloatConvertor = new FloatConvertor();
+        public readonly static DoubleConvertor DoubleConvertor = new DoubleConvertor();
+        public readonly static StringConvertor StringConvertor = new StringConvertor();
         public readonly static DataConvertor DataConvertor = new DataConvertor();
 
         private static Vars _Convertors;
 
         static Convertor() {
-            _Convertors = new Vars(Env.Instance, "Convertors");
+            _Convertors = new Vars(null, "Convertors");
 
-            RegisterConvertor<bool>(new BoolConvertor());
-            RegisterConvertor<int>(new IntConvertor());
-            RegisterConvertor<long>(new LongConvertor());
-            RegisterConvertor<float>(new FloatConvertor());
-            RegisterConvertor<double>(new DoubleConvertor());
-            RegisterConvertor<string>(new StringConvertor());
+            RegisterConvertor<bool>(BoolConvertor);
+            RegisterConvertor<int>(IntConvertor);
+            RegisterConvertor<long>(LongConvertor);
+            RegisterConvertor<float>(FloatConvertor);
+            RegisterConvertor<double>(DoubleConvertor);
+            RegisterConvertor<string>(StringConvertor);
             RegisterConvertor<Data>(DataConvertor);
         }
 

@@ -10,8 +10,7 @@ namespace angeldnd.dap {
         public const char EncloseEndChar = '`';
 
         public readonly static char[] LineSeparators = new char[]{'\n', '\r'};
-        public readonly static char[] WordSeparators = new char[]{' ', ',', '\t'};
-
+        public readonly static char[] WordSeparators = new char[]{' ', '\t'};
         public readonly static char[] EmptyChars = new char[]{' ', '\t', '\n', '\r'};
 
         public static bool IsWordSeparator(char ch) {
@@ -30,7 +29,7 @@ namespace angeldnd.dap {
     }
 
     public static class WordSplitter {
-        public static void Split(string source, string content, char[] charWords, Action<Word> processor) {
+        public static void Split(string source, string content, char[] wordChars, Action<Word> processor) {
             StringBuilder current = new StringBuilder(1024);
             bool currentIsEmpty = true;
             int currentLine = 0;
@@ -85,7 +84,7 @@ namespace angeldnd.dap {
                             enclosed = true;
                         } else if (WordSplitterConsts.IsWordSeparator(ch)) {
                             AddCurrent(i, j);
-                        } else if (charWords != null && IsCharWord(charWords, ch)) {
+                        } else if (wordChars != null && IsCharWord(wordChars, ch)) {
                             AddCurrent(i, j);
                             AppendToCurrent(i, j, ch);
                             AddCurrent(i, j);
@@ -101,18 +100,18 @@ namespace angeldnd.dap {
             AddCurrent(-1, -1);
         }
 
-        private static bool IsCharWord(char[] charWords, char ch) {
-            for (int i = 0; i < charWords.Length; i++) {
-                if (charWords[i] == ch) {
+        private static bool IsCharWord(char[] wordChars, char ch) {
+            for (int i = 0; i < wordChars.Length; i++) {
+                if (wordChars[i] == ch) {
                     return true;
                 }
             }
             return false;
         }
 
-        public static List<Word> Split(string source, string content, char[] charWords) {
+        public static List<Word> Split(string source, string content, char[] wordChars) {
             var result = new List<Word>();
-            Split(source, content, charWords, (Word word) => {
+            Split(source, content, wordChars, (Word word) => {
                 result.Add(word);
             });
             return result;
