@@ -89,7 +89,7 @@ namespace angeldnd.dap {
 
         public static void ErrorOrDebugFrom(bool isDebug, object source, string format, params object[] values) {
             if (!isDebug) {
-                AddLog(source, LoggerConsts.ERROR, format, values);
+                AddLogWithStackTrace(source, LoggerConsts.ERROR, format, values);
             } else if (LogDebug) {
                 AddLog(source, LoggerConsts.DEBUG, format, values);
             }
@@ -119,7 +119,7 @@ namespace angeldnd.dap {
 
         public static void ErrorOrDebug(bool isDebug, string format, params object[] values) {
             if (!isDebug) {
-                AddLog(null, LoggerConsts.ERROR, format, values);
+                AddLogWithStackTrace(null, LoggerConsts.ERROR, format, values);
             } else if (LogDebug) {
                 AddLog(null, LoggerConsts.DEBUG, format, values);
             }

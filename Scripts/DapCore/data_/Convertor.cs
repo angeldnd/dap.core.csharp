@@ -9,6 +9,7 @@ namespace angeldnd.dap {
         public readonly static DoubleConvertor DoubleConvertor = new DoubleConvertor();
         public readonly static StringConvertor StringConvertor = new StringConvertor();
         public readonly static DataConvertor DataConvertor = new DataConvertor();
+        public readonly static DataTypeConvertor DataTypeConvertor = new DataTypeConvertor();
 
         private static Vars _Convertors;
 
@@ -22,6 +23,7 @@ namespace angeldnd.dap {
             RegisterConvertor<double>(DoubleConvertor);
             RegisterConvertor<string>(StringConvertor);
             RegisterConvertor<Data>(DataConvertor);
+            RegisterConvertor<DataType>(DataTypeConvertor);
         }
 
         public static bool RegisterConvertor<T>(Convertor<T> convertor) {

@@ -21,9 +21,52 @@ namespace angeldnd.dap {
             }
             return false;
         }
+
+        public static bool IsWordChar(String str) {
+            foreach (char word in WordChars) {
+                if (word.ToString() == str) return true;
+            }
+            return false;
+        }
+    }
+
+    public class PartialData {
+        public enum ExpectKind {Type = 0, Key, Value};
+
+        public DataType ValueType = DataType.Invalid;
+        public string Key = null;
+
+        public void Clear() {
+            ValueType = DataType.Invalid;
+            Key = null;
+        }
+
+        public ExpectKind GetExpectKind() {
+            if (ValueType == DataType.Invalid) {
+                return ExpectKind.Type;
+            } else if (Key == null) {
+                return ExpectKind.Key;
+            } else {
+                return ExpectKind.Value;
+            }
+        }
     }
 
     public class DataConvertor : Convertor<Data> {
+        public bool TryParse(string source, string content, out Data val, bool isDebug = false) {
+            try {
+                val = Parse(source, content);
+                return true;
+            } catch (Exception e) {
+                Log.ErrorOrDebug(isDebug, "Parse Failed: <{0}> {1}\n\n{2}\n\n{3}",
+                        typeof(Data).FullName,
+                        CaretException.GetMessage(source, e),
+                        e.StackTrace, content);
+            }
+            val = null;
+            return false;
+        }
+
         public string Convert(Data val, string indent) {
             if (val == null) return DataConvertorConsts.NullStr;
             if (indent == "") indent = null;
@@ -38,7 +81,118 @@ namespace angeldnd.dap {
         }
 
         public override Data Parse(string str) {
-            return null;
+            return Parse(string.Empty, str);
+        }
+
+        public Data Parse(string source, string content) {
+            Stack<Data> dataStack = new Stack<Data>();
+            Data lastData = null;
+            PartialData partialData = new PartialData();
+            partialData.ValueType = DataType.Data;
+            partialData.Key = "";
+            Word lastWord = new Word(source, 0, 0, DataConvertorConsts.ValueBegin);
+
+            WordSplitter.Split(source, content, DataConvertorConsts.WordChars, (Word word) => {
+                ProcessWord(dataStack, ref lastData, partialData, lastWord, word);
+                lastWord = word;
+            });
+
+            if (dataStack.Count == 0 && lastData != null) {
+                return lastData;
+            } else {
+                throw new WordException(lastWord, "Data Stack Error: {0}, {1}", dataStack.Count, lastData);
+            }
+        }
+
+        private void ProcessWord(Stack<Data> dataStack, ref Data lastData,
+                                    PartialData partialData,
+                                    Word lastWord, Word word) {
+            bool isWordChar = DataConvertorConsts.IsWordChar(word.Value);
+
+            switch (partialData.GetExpectKind()) {
+                case PartialData.ExpectKind.Type:
+                    ProcessType(dataStack, ref lastData, partialData, lastWord, word);
+                    break;
+                case PartialData.ExpectKind.Key:
+                    ProcessKey(dataStack, partialData, lastWord, word);
+                    break;
+                case PartialData.ExpectKind.Value:
+                    ProcessValue(dataStack, partialData, lastWord, word);
+                    break;
+            }
+        }
+
+        private void ProcessType(Stack<Data> dataStack, ref Data lastData,
+                                    PartialData partialData,
+                                    Word lastWord, Word word) {
+            if (DataConvertorConsts.IsWordChar(word.Value)) {
+                if (word.Value == DataConvertorConsts.DataEnd) {
+                    if (dataStack.Count == 0) {
+                        throw new WordException(word, "Syntax Error");
+                    }
+                    lastData = dataStack.Pop();
+                }
+            } else {
+                partialData.ValueType = Convertor.DataTypeConvertor.Parse(word.Value);
+            }
+        }
+
+        private void ProcessKey(Stack<Data> dataStack, PartialData partialData,
+                                    Word lastWord, Word word) {
+            if (DataConvertorConsts.IsWordChar(word.Value)) {
+                if (lastWord.Value == DataConvertorConsts.KeyBegin
+                        || word.Value != DataConvertorConsts.KeyBegin) {
+                    throw new WordException(word, "Syntax Error");
+                }
+            } else if (lastWord.Value == DataConvertorConsts.KeyBegin) {
+                partialData.Key = word.Value;
+            } else {
+                throw new WordException(word, "Syntax Error");
+            }
+        }
+
+        private void ProcessValue(Stack<Data> dataStack, PartialData partialData,
+                                    Word lastWord, Word word) {
+            Data data = dataStack.Count > 0 ? dataStack.Peek() : null;
+            if (DataConvertorConsts.IsWordChar(word.Value)) {
+                if (word.Value == DataConvertorConsts.DataBegin) {
+                    Data subData = new Data();
+                    dataStack.Push(subData);
+                    if (data != null) {
+                        data.SetData(partialData.Key, subData);
+                    }
+                    partialData.Clear();
+                } else if (lastWord.Value == DataConvertorConsts.ValueBegin
+                        || word.Value != DataConvertorConsts.ValueBegin) {
+                    throw new WordException(word, "Syntax Error");
+                }
+            } else if (lastWord.Value == DataConvertorConsts.ValueBegin) {
+                SetSimpleDataValue(data, partialData, word);
+                partialData.Clear();
+            } else {
+                throw new WordException(word, "Syntax Error");
+            }
+        }
+
+        private bool SetSimpleDataValue(Data data, PartialData partialData, Word word) {
+            if (data == null) {
+                throw new WordException(word, "Syntax Error");
+            }
+            switch (partialData.ValueType) {
+                case DataType.Bool:
+                    return data.SetBool(partialData.Key, Convertor.BoolConvertor.Parse(word.Value));
+                case DataType.Int:
+                    return data.SetInt(partialData.Key, Convertor.IntConvertor.Parse(word.Value));
+                case DataType.Long:
+                    return data.SetLong(partialData.Key, Convertor.LongConvertor.Parse(word.Value));
+                case DataType.Float:
+                    return data.SetFloat(partialData.Key, Convertor.FloatConvertor.Parse(word.Value));
+                case DataType.Double:
+                    return data.SetDouble(partialData.Key, Convertor.DoubleConvertor.Parse(word.Value));
+                case DataType.String:
+                    return data.SetString(partialData.Key, Convertor.StringConvertor.Parse(word.Value));
+            }
+            throw new WordException(word, "Syntax Error");
         }
 
         private void AppendIndents(StringBuilder builder, string indent, int indentLevel) {
@@ -46,32 +200,6 @@ namespace angeldnd.dap {
 
             for (int i = 0; i < indentLevel; i++) {
                 builder.Append(indent);
-            }
-        }
-
-        private void AppendValueType(StringBuilder builder, DataType valueType) {
-            switch (valueType) {
-                case DataType.Bool:
-                    builder.Append("B");
-                    break;
-                case DataType.Int:
-                    builder.Append("I");
-                    break;
-                case DataType.Long:
-                    builder.Append("L");
-                    break;
-                case DataType.Float:
-                    builder.Append("F");
-                    break;
-                case DataType.Double:
-                    builder.Append("D");
-                    break;
-                case DataType.String:
-                    builder.Append("S");
-                    break;
-                case DataType.Data:
-                    builder.Append("A");
-                    break;
             }
         }
 
@@ -115,7 +243,7 @@ namespace angeldnd.dap {
             AppendIndents(builder, indent, indentLevel);
 
             DataType valueType = data.GetValueType(key);
-            AppendValueType(builder, valueType);
+            builder.Append(Convertor.DataTypeConvertor.Convert(valueType));
 
             AppendKeyBegin(builder, indent);
             AppendString(builder, key);
