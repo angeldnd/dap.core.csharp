@@ -23,6 +23,8 @@ namespace angeldnd.dap {
         }
 
         public virtual bool Decode(Data data) {
+            if (data == null) return false;
+
             string dapType = data.GetString(ObjectConsts.KeyDapType);
             if (dapType == DapType) {
                 return DoDecode(data);
@@ -30,6 +32,12 @@ namespace angeldnd.dap {
                 Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);
             }
             return false;
+        }
+
+        public bool DecodeValue(Data data) {
+            if (data == null) return false;
+
+            return DoDecode(data);
         }
 
         protected override void AddSummaryFields(Data summary) {

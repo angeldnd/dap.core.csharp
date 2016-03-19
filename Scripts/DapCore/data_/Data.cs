@@ -71,6 +71,31 @@ namespace angeldnd.dap {
             return clone;
         }
 
+        public bool CopyValueTo(string key, Data toData, string toKey) {
+            if (toData == null) return false;
+
+            DataType valueType = GetValueType(key);
+            if (valueType == DataType.Invalid) return false;
+
+            switch (valueType) {
+                case DataType.Bool:
+                    return toData.SetBool(toKey, GetBool(key));
+                case DataType.Int:
+                    return toData.SetInt(toKey, GetInt(key));
+                case DataType.Long:
+                    return toData.SetLong(toKey, GetLong(key));
+                case DataType.Float:
+                    return toData.SetFloat(toKey, GetFloat(key));
+                case DataType.Double:
+                    return toData.SetDouble(toKey, GetDouble(key));
+                case DataType.String:
+                    return toData.SetString(toKey, GetString(key));
+                case DataType.Data:
+                    return toData.SetData(toKey, GetData(key));
+            }
+            return false;
+        }
+
         public int Count {
             get {
                 return _ValueTypes.Count;
