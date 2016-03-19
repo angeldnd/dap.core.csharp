@@ -132,6 +132,15 @@ namespace angeldnd.dap {
             return null;
         }
 
+        public bool TryGetValue(string key, out object val) {
+            if (HasValue(key)) {
+                val = GetValue(key);
+                return true;
+            }
+            val = null;
+            return false;
+        }
+
         //SILP: DATA_TYPE(Bool, bool)
         public bool IsBool(string key) {                              //__SILP__
             DataType type = GetValueType(key);                        //__SILP__
