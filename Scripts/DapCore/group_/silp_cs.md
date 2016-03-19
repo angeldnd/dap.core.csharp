@@ -21,6 +21,7 @@ public Data Encode() {
 }
 
 public bool Decode(Data data) {
+    if (data == null) return false;
     string dapType = data.GetString(ObjectConsts.KeyDapType);
     if (dapType == DapType) {
         return DoDecode(data);
@@ -28,6 +29,11 @@ public bool Decode(Data data) {
         Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);
     }
     return false;
+}
+
+public bool DecodeValue(Data data) {
+    if (data == null) return false;
+    return DoDecode(data);
 }
 
 private void FireOnChanged() {

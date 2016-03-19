@@ -43,6 +43,7 @@ namespace angeldnd.dap {
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         public bool Decode(Data data) {                                                   //__SILP__
+            if (data == null) return false;                                               //__SILP__
             string dapType = data.GetString(ObjectConsts.KeyDapType);                     //__SILP__
             if (dapType == DapType) {                                                     //__SILP__
                 return DoDecode(data);                                                    //__SILP__
@@ -50,6 +51,11 @@ namespace angeldnd.dap {
                 Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);                 //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public bool DecodeValue(Data data) {                                              //__SILP__
+            if (data == null) return false;                                               //__SILP__
+            return DoDecode(data);                                                        //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         private void FireOnChanged() {                                                    //__SILP__

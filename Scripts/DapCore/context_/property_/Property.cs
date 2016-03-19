@@ -24,7 +24,6 @@ namespace angeldnd.dap {
 
         public virtual bool Decode(Data data) {
             if (data == null) return false;
-
             string dapType = data.GetString(ObjectConsts.KeyDapType);
             if (dapType == DapType) {
                 return DoDecode(data);
@@ -36,7 +35,6 @@ namespace angeldnd.dap {
 
         public bool DecodeValue(Data data) {
             if (data == null) return false;
-
             return DoDecode(data);
         }
 
