@@ -31,11 +31,6 @@ public bool Decode(Data data) {
     return false;
 }
 
-public bool DecodeValue(Data data) {
-    if (data == null) return false;
-    return DoDecode(data);
-}
-
 private void FireOnChanged() {
     WeakListHelper.Notify(_VarWatchers, (IVarWatcher watcher) => {
         watcher.OnChanged(this);

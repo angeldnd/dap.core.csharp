@@ -10,6 +10,11 @@ namespace angeldnd.dap {
             Value = val;
         }
 
+        public Word(Caret caret, string val) {
+            Caret = caret;
+            Value = val;
+        }
+
         public override string ToString() {
             return string.Format("[Word: {0} {1}]", Caret, Value);
         }

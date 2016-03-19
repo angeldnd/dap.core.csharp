@@ -19,7 +19,7 @@ namespace angeldnd.dap {
             });
         }
 
-        private bool DoDecode(Data data) {
+        private bool DecodeElements(Data data, Func<Data, string, IProperty>factory) {
             Clear();
             if (Count > 0) {
                 Error("Orghan Elements Found: {0}", Count);
@@ -30,17 +30,39 @@ namespace angeldnd.dap {
                 return true;
             }
             foreach (var key in data.Keys) {
-                Data subData = values.GetData(key);
-                if (subData == null) {
-                    Error("Invalid Elements Data: {0} -> {1}", key, values.GetValue(key));
-                    return false;
-                }
-                IProperty prop = SpecHelper.AddPropertyWithSpec(this, key, subData);
+                IProperty prop = factory(values, key);
                 if (prop == null) {
                     return false;
                 }
             }
             return true;
+        }
+
+        private bool DoDecode(Data data) {
+            return DecodeElements(data, (Data values, string key) => {
+                Data subData = values.GetData(key);
+                if (subData == null) {
+                    Error("Invalid Elements Data: {0} -> {1}", key, values.GetValue(key));
+                    return null;
+                }
+                return SpecHelper.AddPropertyWithSpec(this, key, subData);
+            });
+        }
+
+        public bool DecodeValue(Data data) {
+            if (data == null) return false;
+
+            return DecodeElements(data, (Data values, string key) => {
+                T element = Add(key);
+                Data valueData = new Data();
+                if (values.CopyValueTo(key, valueData, PropertiesConsts.KeyValue)) {
+                    if (!element.DecodeValue(valueData)) {
+                        element.Error("DecodeValue Failed: {0} ->\n{1}", key,
+                                    Convertor.DataConvertor.Convert(valueData, "\t"));
+                    }
+                }
+                return element;
+            });
         }
 
         //SILP: GROUP_PROPERTY_MIXIN(DictProperty)
@@ -73,11 +95,6 @@ namespace angeldnd.dap {
                 Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);                 //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public bool DecodeValue(Data data) {                                              //__SILP__
-            if (data == null) return false;                                               //__SILP__
-            return DoDecode(data);                                                        //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         private void FireOnChanged() {                                                    //__SILP__

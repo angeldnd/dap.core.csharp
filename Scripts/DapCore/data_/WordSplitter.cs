@@ -122,5 +122,30 @@ namespace angeldnd.dap {
         public static void Split(string source, string content, Action<Word> processor) {
             Split(source, content, null, processor);
         }
+
+        public static string AppendLineNumber(string content, int width = 5, char fill = '\u2588') {
+            string[] lines = content.Split(WordSplitterConsts.LineSeparators);
+
+            int digits = 1;
+            int limit = 10;
+            while (digits < width) {
+                if (lines.Length >= limit) {
+                    digits += 1;
+                    limit *= 10;
+                } else {
+                    break;
+                }
+            }
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i< lines.Length; i++) {
+                builder.Append((i + 1).ToString().PadLeft(digits, '0'));
+                for (int j = digits; j < width; j++) {
+                    builder.Append(fill);
+                }
+                builder.Append(lines[i]);
+                builder.AppendLine();
+            }
+            return builder.ToString();
+        }
     }
 }

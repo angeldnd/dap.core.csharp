@@ -21,6 +21,25 @@ namespace angeldnd.dap {
             });
         }
 
+        public bool DecodeValue(Data data) {
+            if (data == null) return false;
+
+            Data values = data.GetData(PropertiesConsts.KeyValue);
+            if (values == null) return true;
+
+            return UntilFalse((IProperty prop) => {
+                Data valueData = new Data();
+                if (values.CopyValueTo(prop.Key, valueData, PropertiesConsts.KeyValue)) {
+                    if (!prop.DecodeValue(valueData)) {
+                        prop.Error("DecodeValue Failed: {0} ->\n{1}", prop.Key,
+                                    Convertor.DataConvertor.Convert(valueData, "\t"));
+                        return false;
+                    }
+                }
+                return true;
+            });
+        }
+
         //SILP: GROUP_PROPERTY_MIXIN(ComboProperty)
         public ComboProperty(IDictProperties owner, string key) : base(owner, key) {      //__SILP__
         }                                                                                 //__SILP__
@@ -51,11 +70,6 @@ namespace angeldnd.dap {
                 Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);                 //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public bool DecodeValue(Data data) {                                              //__SILP__
-            if (data == null) return false;                                               //__SILP__
-            return DoDecode(data);                                                        //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         private void FireOnChanged() {                                                    //__SILP__
