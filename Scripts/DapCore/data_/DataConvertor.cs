@@ -237,7 +237,9 @@ namespace angeldnd.dap {
                 AppendValue(builder, indent, indentLevel + 1, data, key);
             }
 
-            AppendIndents(builder, indent, indentLevel);
+            if (data.Count > 0) {
+                AppendIndents(builder, indent, indentLevel);
+            }
             builder.Append(DataConvertorConsts.DataEnd);
         }
 
