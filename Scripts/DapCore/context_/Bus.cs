@@ -45,7 +45,7 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public void Publish(string msg, object token) {
+        public bool Publish(string msg, object token) {
             if (_MsgTokens == null) {
                 _MsgTokens = new Dictionary<string, object>();
             }
@@ -53,7 +53,7 @@ namespace angeldnd.dap {
             if (_MsgTokens.TryGetValue(msg, out oldToken)) {
                 if (oldToken != token) {
                     Error("Invalid Token: {0}: {1} -> {2}", msg, oldToken, token);
-                    return;
+                    return false;
                 }
             } else {
                 _MsgTokens[msg] = token;
@@ -64,6 +64,7 @@ namespace angeldnd.dap {
                     sub.OnMsg(this, msg);
                 });
             }
+            return true;
         }
 
         protected override void AddSummaryFields(Data summary) {
