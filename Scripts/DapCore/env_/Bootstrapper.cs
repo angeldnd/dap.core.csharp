@@ -112,7 +112,7 @@ namespace angeldnd.dap {
                 if (dapType != null) {
                     if (dapTypes.ContainsKey(dapType)) {
                         Log.Critical("DapType Conflict: [{0}] {1} -> {2}",
-                                        dapType, dapTypes[dapType].FullName, type.FullName);
+                                        dapType, dapTypes[dapType], type);
                     } else {
                         dapTypes[dapType] = type;
                     }
