@@ -37,7 +37,7 @@ namespace angeldnd.dap {
         public const string SummaryOk = "ok";
     }
 
-    public sealed class Env : DictContext<Env, Items> {
+    public sealed class Env : DictContext<Env, IContext> {
         static Env() {
             Bootstrapper bootstrapper = Bootstrapper.Bootstrap();
             if (bootstrapper != null) {
