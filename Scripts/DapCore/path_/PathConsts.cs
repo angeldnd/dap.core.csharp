@@ -14,5 +14,13 @@ namespace angeldnd.dap {
         public static string KeyToPath(string key) {
             return key.Replace(DictConsts.KeySeparator, PathSeparator);
         }
+
+        public static string Encode(string path, string relPath) {
+            if (string.IsNullOrEmpty(path)) {
+                return relPath;
+            } else {
+                return string.Format("{0}{1}{2}", path, PathSeparator, relPath);
+            }
+        }
     }
 }

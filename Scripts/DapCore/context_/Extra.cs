@@ -8,11 +8,7 @@ namespace angeldnd.dap.binding {
         public readonly string Key;
 
         public string GetSubKey(string fragment) {
-            if (string.IsNullOrEmpty(Key)) {
-                return fragment;
-            } else {
-                return string.Format("{0}{1}{2}", Key, DictConsts.KeySeparator, fragment);
-            }
+            return DictConsts.Encode(Key, fragment);
         }
 
         private List<string> _VarKeys;
