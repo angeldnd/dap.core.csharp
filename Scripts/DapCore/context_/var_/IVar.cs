@@ -5,6 +5,7 @@ namespace angeldnd.dap {
     public interface IVar : IAspect, IInDictElement, IInTableElement {
         Type ValueType { get; }
         object GetValue();
+        bool SetValue(object newValue);
 
         int VarWatcherCount { get; }
         bool AddVarWatcher(IVarWatcher watcher);

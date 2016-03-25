@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IObject : ILogger {
+    public interface IObject : ILogger, IBlockOwner {
         string DapType { get; }
 
         int Revision { get; }
@@ -32,19 +32,19 @@ namespace angeldnd.dap {
         public const string SummaryBlockCount = "block_count";
     }
 
-    public abstract class Object : Logger, IObject, IBlockOwner {
-        public static T As<T>(object obj, bool isDebug = false) where T : class, IObject {
-            if (obj == null) return null;
+    public abstract class Object : Logger, IObject {
+        public static T As<T>(object obj, bool isDebug = false) {
+            if (obj == null) return default(T);
 
             if (!(obj is T)) {
                 Log.ErrorOrDebug(isDebug, "Type Mismatched: <{0}> -> {1}: {2}",
                             typeof(T).FullName, obj.GetType().FullName, obj);
-                return null;
+                return default(T);
             }
             return (T)obj;
         }
 
-        public static bool Is<T>(object obj) where T : class, IObject {
+        public static bool Is<T>(object obj) {
             return As<T>(obj, true) != null;
         }
 

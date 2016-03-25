@@ -22,6 +22,14 @@ namespace angeldnd.dap {
             return _Value;
         }
 
+        public virtual bool SetValue(object _newValue) {
+            T newValue = Object.As<T>(_newValue);
+            if (newValue != null) {
+                return SetValue(newValue);
+            }
+            return false;
+        }
+
         public Var(TO owner, string key) : base(owner, key) {
         }
 

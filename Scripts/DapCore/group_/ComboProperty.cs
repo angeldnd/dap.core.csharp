@@ -80,7 +80,13 @@ namespace angeldnd.dap {
                                                                                           //__SILP__
         //IVar                                                                            //__SILP__
         public object GetValue() {                                                        //__SILP__
+            Error("Not Supported");                                                       //__SILP__
             return null;                                                                  //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public bool SetValue(object newValue) {                                           //__SILP__
+            Error("Not Supported");                                                       //__SILP__
+            return false;                                                                 //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
         private WeakList<IVarWatcher> _VarWatchers = null;                                //__SILP__

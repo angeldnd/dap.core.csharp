@@ -39,7 +39,13 @@ private void FireOnChanged() {
 
 //IVar
 public object GetValue() {
+    Error("Not Supported");
     return null;
+}
+
+public bool SetValue(object newValue) {
+    Error("Not Supported");
+    return false;
 }
 
 private WeakList<IVarWatcher> _VarWatchers = null;
