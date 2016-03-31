@@ -23,8 +23,12 @@ namespace angeldnd.dap {
             return WeakListHelper.Count(_ClassSubscribers);
         }
 
-        public void AddSub(TSub sub) {
-            WeakListHelper.Add<TSub>(ref _ClassSubscribers, sub);
+        public bool AddSub(TSub sub) {
+            return WeakListHelper.Add<TSub>(ref _ClassSubscribers, sub);
+        }
+
+        public bool RemoveSub(TSub sub) {
+            return WeakListHelper.Remove<TSub>(_ClassSubscribers, sub);
         }
 
         public int GetSubCount(TPub pub) {
@@ -38,7 +42,7 @@ namespace angeldnd.dap {
             return 0;
         }
 
-        public void AddSub(TPub pub, TSub sub) {
+        public bool AddSub(TPub pub, TSub sub) {
             if (_InstanceSubscribers == null) {
                 _InstanceSubscribers = new Dictionary<int, WeakList<TSub>>();
             }
@@ -48,7 +52,19 @@ namespace angeldnd.dap {
                 subs = new WeakList<TSub>();
                 _InstanceSubscribers[pubHash] = subs;
             }
-            subs.Add(sub);
+            return subs.AddElement(sub);
+        }
+
+        public bool RemoveSub(TPub pub, TSub sub) {
+            if (_InstanceSubscribers == null) {
+                return false;
+            }
+            int pubHash = pub.GetHashCode();
+            WeakList<TSub> subs = null;
+            if (!_InstanceSubscribers.TryGetValue(pubHash, out subs)) {
+                return false;
+            }
+            return subs.Remove(sub);
         }
 
         public void Publish(TPub pub, Action<TSub> callback) {
