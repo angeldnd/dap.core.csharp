@@ -5,6 +5,8 @@ namespace angeldnd.dap {
     public interface IProperty : IVar {
         Data Encode();
         bool Decode(Data data);
+
+        Data EncodeValue();
         bool DecodeValue(Data data);
     }
 

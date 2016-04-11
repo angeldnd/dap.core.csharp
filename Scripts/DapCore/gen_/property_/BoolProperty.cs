@@ -5,7 +5,7 @@ namespace angeldnd.dap {
     //SILP: PROPERTY_CLASS(Bool, bool)
     [DapType(PropertiesConsts.TypeBoolProperty)]                                       //__SILP__
     [DapOrder(-10)]                                                                    //__SILP__
-    public sealed class BoolProperty : Property<bool> {                                //__SILP__
+    public sealed class BoolProperty : BaseProperty<bool> {                            //__SILP__
         public BoolProperty(IDictProperties owner, string key) : base(owner, key) {    //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__

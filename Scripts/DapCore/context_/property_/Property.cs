@@ -2,48 +2,25 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class Property<T>: Var<IProperties, T>, IProperty<T> {
+    public abstract class Property<T>: BaseProperty<T> {
         public Property(IProperties owner, string key) : base(owner, key) {
         }
 
         public Property(IProperties owner, int index) : base(owner, index) {
         }
 
-        public Data Encode() {
-            if (!string.IsNullOrEmpty(DapType)) {
-                Data data = new Data();
-                if (data.SetString(ObjectConsts.KeyDapType, DapType)) {
-                    if (DoEncode(data)) {
-                        return data;
-                    }
-                }
-            }
-            if (LogDebug) Debug("Not Encodable!");
-            return null;
+        protected override bool DoEncode(Data data) {
+            return data.SetData(PropertiesConsts.KeyValue, DoEncodeValue());
         }
 
-        public virtual bool Decode(Data data) {
-            if (data == null) return false;
-            string dapType = data.GetString(ObjectConsts.KeyDapType);
-            if (dapType == DapType) {
-                return DoDecode(data);
-            } else {
-                Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);
-            }
-            return false;
+        protected override bool DoDecode(Data data) {
+            Data v = data.GetData(PropertiesConsts.KeyValue);
+            if (v == null) return false;
+
+            return DoDecodeValue(v);
         }
 
-        public bool DecodeValue(Data data) {
-            if (data == null) return false;
-            return DoDecode(data);
-        }
-
-        protected override void AddSummaryFields(Data summary) {
-            base.AddSummaryFields(summary);
-            summary.A(ContextConsts.SummaryData, Encode());
-        }
-
-        protected abstract bool DoEncode(Data data);
-        protected abstract bool DoDecode(Data data);
+        protected abstract Data DoEncodeValue();
+        protected abstract bool DoDecodeValue(Data v);
     }
 }

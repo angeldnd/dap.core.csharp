@@ -9,29 +9,28 @@ namespace angeldnd.dap {
             get { return typeof(T); }
         }
 
-        private bool DoEncode(Data data) {
+        private Data DoEncodeValue(bool fullMode) {
             Data values = new Data();
-            if (!data.SetData(PropertiesConsts.KeyValue, values)) return false;
 
-            return UntilFalse((T element) => {
-                Data subData = element.Encode();
+            bool ok = UntilFalse((T element) => {
+                Data subData = fullMode ? element.Encode() : element.EncodeValue();
                 return subData != null && values.SetData(element.Index.ToString(), subData);
             });
+            return ok ? values : null;
         }
 
-        private bool DecodeElements(Data data, Func<Data, string, IProperty>factory) {
+        private bool DecodeElements(Data values, Func<string, IProperty>factory) {
             Clear();
             if (Count > 0) {
                 Error("Orghan Elements Found: {0}", Count);
                 return false;
             }
-            Data values = data.GetData(PropertiesConsts.KeyValue);
             if (values == null) {
                 return true;
             }
             for (int i = 0; i < values.Count; i++) {
                 string key = i.ToString();
-                IProperty prop = factory(values, key);
+                IProperty prop = factory(key);
                 if (prop == null) {
                     return false;
                 }
@@ -43,30 +42,26 @@ namespace angeldnd.dap {
             return true;
         }
 
-        private bool DoDecode(Data data) {
-            return DecodeElements(data, (Data values, string key) => {
-                Data subData = values.GetData(key);
-                if (subData == null) {
-                    Error("Invalid Elements Data: {0} -> {1}", key, values.GetValue(key));
-                    return null;
-                }
-                return SpecHelper.AddPropertyWithSpec(this, subData);
-            });
-        }
-
-        public bool DecodeValue(Data data) {
-            if (data == null) return false;
-
-            return DecodeElements(data, (Data values, string key) => {
-                T element = Add();
-                Data valueData = new Data();
-                if (values.CopyValueTo(key, valueData, PropertiesConsts.KeyValue)) {
-                    if (!element.DecodeValue(valueData)) {
-                        element.Error("DecodeValue Failed: {0} ->\n{1}", key,
-                                    Convertor.DataConvertor.Convert(valueData, "\t"));
+        private bool DoDecodeValue(bool fullMode, Data values) {
+            return DecodeElements(values, (string key) => {
+                if (fullMode) {
+                    Data subData = values.GetData(key);
+                    if (subData == null) {
+                        Error("Invalid Elements Data: {0} -> {1}", key, values.GetValue(key));
+                        return null;
                     }
+                    return SpecHelper.AddPropertyWithSpec(this, subData);
+                } else {
+                    T element = Add();
+                    Data valueData = new Data();
+                    if (values.CopyValueTo(key, valueData, PropertiesConsts.KeyValue)) {
+                        if (!element.DecodeValue(valueData)) {
+                            element.Error("DecodeValue Failed: {0} ->\n{1}", key,
+                                        Convertor.DataConvertor.Convert(valueData, "\t"));
+                        }
+                    }
+                    return element;
                 }
-                return element;
             });
         }
 
@@ -80,22 +75,44 @@ namespace angeldnd.dap {
         //IProperty                                                                       //__SILP__
         public Data Encode() {                                                            //__SILP__
             if (!string.IsNullOrEmpty(DapType)) {                                         //__SILP__
-                Data data = new Data();                                                   //__SILP__
+                Data data = EncodeValue(true);                                            //__SILP__
                 if (data.SetString(ObjectConsts.KeyDapType, DapType)) {                   //__SILP__
-                    if (DoEncode(data)) {                                                 //__SILP__
-                        return data;                                                      //__SILP__
-                    }                                                                     //__SILP__
+                    return data;                                                          //__SILP__
                 }                                                                         //__SILP__
             }                                                                             //__SILP__
             if (LogDebug) Debug("Not Encodable!");                                        //__SILP__
             return null;                                                                  //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
+        private Data EncodeValue(bool fullMode) {                                         //__SILP__
+            Data data = new Data();                                                       //__SILP__
+            if (data.SetData(PropertiesConsts.KeyValue, DoEncodeValue(fullMode))) {       //__SILP__
+                return data;                                                              //__SILP__
+            }                                                                             //__SILP__
+            return null;                                                                  //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public Data EncodeValue() {                                                       //__SILP__
+            return EncodeValue(false);                                                    //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        private bool DecodeValue(bool fullMode, Data data) {                              //__SILP__
+            if (data == null) return false;                                               //__SILP__
+            Data v = data.GetData(PropertiesConsts.KeyValue);                             //__SILP__
+            if (v == null) return false;                                                  //__SILP__
+                                                                                          //__SILP__
+            return DoDecodeValue(fullMode, v);                                            //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
+        public bool DecodeValue(Data data) {                                              //__SILP__
+            return DecodeValue(false, data);                                              //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
         public bool Decode(Data data) {                                                   //__SILP__
             if (data == null) return false;                                               //__SILP__
             string dapType = data.GetString(ObjectConsts.KeyDapType);                     //__SILP__
             if (dapType == DapType) {                                                     //__SILP__
-                return DoDecode(data);                                                    //__SILP__
+                return DecodeValue(true, data);                                           //__SILP__
             } else {                                                                      //__SILP__
                 Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);                 //__SILP__
             }                                                                             //__SILP__

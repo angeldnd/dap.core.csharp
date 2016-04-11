@@ -9,22 +9,44 @@ public ${class}(ITableProperties owner, int index) : base(owner, index) {
 //IProperty
 public Data Encode() {
     if (!string.IsNullOrEmpty(DapType)) {
-        Data data = new Data();
+        Data data = EncodeValue(true);
         if (data.SetString(ObjectConsts.KeyDapType, DapType)) {
-            if (DoEncode(data)) {
-                return data;
-            }
+            return data;
         }
     }
     if (LogDebug) Debug("Not Encodable!");
     return null;
 }
 
+private Data EncodeValue(bool fullMode) {
+    Data data = new Data();
+    if (data.SetData(PropertiesConsts.KeyValue, DoEncodeValue(fullMode))) {
+        return data;
+    }
+    return null;
+}
+
+public Data EncodeValue() {
+    return EncodeValue(false);
+}
+
+private bool DecodeValue(bool fullMode, Data data) {
+    if (data == null) return false;
+    Data v = data.GetData(PropertiesConsts.KeyValue);
+    if (v == null) return false;
+
+    return DoDecodeValue(fullMode, v);
+}
+
+public bool DecodeValue(Data data) {
+    return DecodeValue(false, data);
+}
+
 public bool Decode(Data data) {
     if (data == null) return false;
     string dapType = data.GetString(ObjectConsts.KeyDapType);
     if (dapType == DapType) {
-        return DoDecode(data);
+        return DecodeValue(true, data);
     } else {
         Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);
     }
@@ -89,3 +111,27 @@ public int ValueWatcherCount {
 }
 ```
 
+# GROUP_ENCODE_MIXIN(element_type) #
+```
+private bool DoEncode(Data data) {
+    Data values = new Data();
+    if (!data.SetData(PropertiesConsts.KeyValue, values)) return false;
+
+    return UntilFalse((${element_type} element) => {
+        Data subData = element.Encode();
+        return subData != null && values.SetData(element.Key, subData);
+    });
+}
+
+public Data EncodeValue() {
+    Data data = new Data();
+    Data values = new Data();
+    if (!data.SetData(PropertiesConsts.KeyValue, values)) return false;
+
+    return UntilFalse((${element_type} element) => {
+        Data subData = element.EncodeValue();
+        return subData != null && values.SetData(element.Key, subData);
+    });
+    return data;
+}
+```

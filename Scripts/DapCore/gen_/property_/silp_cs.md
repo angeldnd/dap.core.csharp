@@ -2,7 +2,7 @@
 ```C#
 [DapType(PropertiesConsts.Type${type}Property)]
 [DapOrder(-10)]
-public sealed class ${type}Property : Property<${cs_type}> {
+public sealed class ${type}Property : BaseProperty<${cs_type}> {
     public ${type}Property(IDictProperties owner, string key) : base(owner, key) {
     }
 

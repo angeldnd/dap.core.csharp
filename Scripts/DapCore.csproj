@@ -76,6 +76,7 @@
     <Compile Include="DapCore\context_\handler_\Handler.cs" />                <!--__SILP__-->
     <Compile Include="DapCore\context_\handler_\Handlers.cs" />               <!--__SILP__-->
     <Compile Include="DapCore\context_\handler_\IHandler.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\context_\property_\BaseProperty.cs" />          <!--__SILP__-->
     <Compile Include="DapCore\context_\property_\IProperty.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\context_\property_\Properties.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\property_\Property.cs" />              <!--__SILP__-->
@@ -93,10 +94,14 @@
     <Compile Include="DapCore\core_\Object.cs" />                             <!--__SILP__-->
     <Compile Include="DapCore\core_\Sealable.cs" />                           <!--__SILP__-->
     <Compile Include="DapCore\data_\Caret.cs" />                              <!--__SILP__-->
+    <Compile Include="DapCore\data_\CaretException.cs" />                     <!--__SILP__-->
     <Compile Include="DapCore\data_\Convertor.cs" />                          <!--__SILP__-->
     <Compile Include="DapCore\data_\Data.cs" />                               <!--__SILP__-->
+    <Compile Include="DapCore\data_\DataCodeConvertor.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\data_\DataConvertor.cs" />                      <!--__SILP__-->
+    <Compile Include="DapCore\data_\DataTypeConvertor.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\data_\Word.cs" />                               <!--__SILP__-->
+    <Compile Include="DapCore\data_\WordException.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\data_\WordSplitter.cs" />                       <!--__SILP__-->
     <Compile Include="DapCore\dict_\Dict.cs" />                               <!--__SILP__-->
     <Compile Include="DapCore\dict_\Dict_Add.cs" />                           <!--__SILP__-->
