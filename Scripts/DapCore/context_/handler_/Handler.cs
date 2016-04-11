@@ -21,6 +21,10 @@ namespace angeldnd.dap {
             return false;
         }
 
+        public bool Setup(Func<Handler, Data, bool> block) {
+            return Setup(new BlockRequestHandler(block));
+        }
+
         public Data HandleRequest(Data req) {
             if (_Handler == null) return null;
 
