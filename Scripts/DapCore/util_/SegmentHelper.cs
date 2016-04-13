@@ -25,7 +25,7 @@ namespace angeldnd.dap {
         }
 
         public static string GetParentStr(char separator, string str) {
-            if (string.IsNullOrEmpty(str)) return null;
+            if (string.IsNullOrEmpty(str)) return str == null ? null : "";
 
             string[] segments = str.Split(separator);
             if (segments.Length <= 1) return null;
