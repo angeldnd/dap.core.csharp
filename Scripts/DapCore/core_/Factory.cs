@@ -10,7 +10,7 @@ namespace angeldnd.dap {
         }
 
         public static bool Register(string type, Type newType) {
-            Type oldType = GetDapType(type);
+            Type oldType = GetDapType(type, true);
             if (oldType != null) {
                 if (oldType == newType) {
                     return true;
