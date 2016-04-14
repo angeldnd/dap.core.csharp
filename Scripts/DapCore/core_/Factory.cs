@@ -24,10 +24,12 @@ namespace angeldnd.dap {
             return true;
         }
 
-        public static Type GetDapType(string type) {
+        public static Type GetDapType(string type, bool isDebug = false) {
             Type oldType;
             if (_Types.TryGetValue(type, out oldType)) {
                 return oldType;
+            } else {
+                Log.ErrorOrDebug(isDebug, "DapType Not Found: {0}", type);
             }
             return null;
         }
@@ -54,7 +56,11 @@ namespace angeldnd.dap {
         }
 
         public static T New<T>(string type, params object[] values) where T : IObject {
-            return Create<T>("New", GetDapType(type), values);
+            Type dapType = GetDapType(type);
+            if (dapType != null) {
+                return Create<T>("New", dapType, values);
+            }
+            return default(T);
         }
 
         public static T Create<T>(Type type, params object[] values) {
