@@ -67,23 +67,14 @@ namespace angeldnd.dap {
         public override LogProvider GetLogProvider() {
             int maxPriority = -1;
             Type logType = null;
-            Type LogProviderType = typeof(LogProvider);
 
-            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly asm in asms) {
-                Type[] types = asm.GetTypes();
-
-                foreach (Type type in types) {
-                    if (!type.IsSubclassOf(LogProviderType)) continue;
-                    if (type.IsAbstract) continue;
-
-                    int priority = DapPriority.GetPriority(type);
-                    if (priority > maxPriority) {
-                        maxPriority = priority;
-                        logType = type;
-                    }
+            AssemblyHelper.ForEachSubClass<LogProvider>((Type type) => {
+                int priority = DapPriority.GetPriority(type);
+                if (priority > maxPriority) {
+                    maxPriority = priority;
+                    logType = type;
                 }
-            }
+            });
 
             if (logType != null) {
                 return (LogProvider)Activator.CreateInstance(logType);
@@ -93,57 +84,37 @@ namespace angeldnd.dap {
 
         public override Dictionary<string, Type> GetDapTypes() {
             Dictionary<string, Type> dapTypes = new Dictionary<string, Type>();
-            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly asm in asms) {
-                AddDapTypes(dapTypes, asm);
-            }
+
+            AssemblyHelper.ForEachInterface<IObject>((Type type) => {
+                AddDapType(dapTypes, type);
+            });
             return dapTypes;
         }
 
-        private static void AddDapTypes(Dictionary<string, Type> dapTypes, Assembly asm) {
-            Type objectType = typeof(IObject);
-            Type[] types = asm.GetTypes();
-
-            foreach (Type type in types) {
-                if (!objectType.IsAssignableFrom(type)) continue;
-                if (type.IsAbstract) continue;
-
-                string dapType = DapType.GetDapType(type);
-                if (dapType != null) {
-                    if (dapTypes.ContainsKey(dapType)) {
-                        Log.Critical("DapType Conflict: [{0}] {1} -> {2}",
-                                        dapType, dapTypes[dapType], type);
-                    } else {
-                        dapTypes[dapType] = type;
-                    }
+        private static void AddDapType(Dictionary<string, Type> dapTypes, Type type) {
+            string dapType = DapType.GetDapType(type);
+            if (dapType != null) {
+                if (dapTypes.ContainsKey(dapType)) {
+                    Log.Critical("DapType Conflict: [{0}] {1} -> {2}",
+                                    dapType, dapTypes[dapType], type);
+                } else {
+                    dapTypes[dapType] = type;
                 }
             }
         }
 
         public override List<Plugin> GetPlugins() {
             List<Plugin> plugins = new List<Plugin>();
-            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly asm in asms) {
-                AddPlugins(plugins, asm);
-            }
 
-            DapOrder.SortByOrder(plugins);
-            return plugins;
-        }
-
-        private static void AddPlugins(List<Plugin> plugins, Assembly asm) {
-            Type pluginType = typeof(Plugin);
-            Type[] types = asm.GetTypes();
-
-            foreach (Type type in types) {
-                if (!type.IsSubclassOf(pluginType)) continue;
-                if (type.IsAbstract) continue;
-
+            AssemblyHelper.ForEachSubClass<Plugin>((Type type) => {
                 Plugin plugin = (Plugin)Activator.CreateInstance(type);
                 if (plugin != null) {
                     plugins.Add(plugin);
                 }
-            }
+            });
+
+            DapOrder.SortByOrder(plugins);
+            return plugins;
         }
     }
 }
