@@ -54,6 +54,25 @@ namespace angeldnd.dap {
             ForEachType(CheckMode.Assignable, typeof(T), callback);
         }
 
+        private static List<T> CreateInstances<T>(CheckMode mode) {
+            var result = new List<T>();
+            ForEachType(mode, typeof(T), (Type type) => {
+                T instance = Factory.Create<T>(type);
+                if (instance != null) {
+                    result.Add(instance);
+                }
+            });
+            return result;
+        }
+
+        public static List<T> CreateInstancesOfSubClass<T>() {
+            return CreateInstances<T>(CheckMode.SubClass);
+        }
+
+        public static List<T> CreateInstancesOfInterface<T>() {
+            return CreateInstances<T>(CheckMode.Interface);
+        }
+
         public static Type GetType(string fullName) {
             Type result = null;
             foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies()) {

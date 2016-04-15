@@ -104,14 +104,7 @@ namespace angeldnd.dap {
         }
 
         public override List<Plugin> GetPlugins() {
-            List<Plugin> plugins = new List<Plugin>();
-
-            AssemblyHelper.ForEachSubClass<Plugin>((Type type) => {
-                Plugin plugin = (Plugin)Activator.CreateInstance(type);
-                if (plugin != null) {
-                    plugins.Add(plugin);
-                }
-            });
+            List<Plugin> plugins = AssemblyHelper.CreateInstancesOfSubClass<Plugin>();
 
             DapOrder.SortByOrder(plugins);
             return plugins;
