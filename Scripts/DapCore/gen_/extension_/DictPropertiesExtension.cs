@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class DictPropertiesExtension {
+        public static T GetProperty<T>(this IDictProperties properties,
+                                            string propertyPath, bool isDebug = false)
+                                                where T : class, IProperty {
+            return TreeHelper.GetDescendant<T>(properties, propertyPath, isDebug);
+        }
+
         public static IProperty AddProperty(this IDictProperties properties,
                                             string key, Data data) {
             if (data == null) return null;
