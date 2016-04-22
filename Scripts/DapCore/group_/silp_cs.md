@@ -53,7 +53,7 @@ public bool Decode(Data data) {
     return false;
 }
 
-private void FireOnChanged() {
+public void FireOnChanged() {
     WeakListHelper.Notify(_VarWatchers, (IVarWatcher watcher) => {
         watcher.OnChanged(this);
     });
@@ -78,6 +78,7 @@ public int VarWatcherCount {
 
 public bool AddVarWatcher(IVarWatcher watcher) {
     if (WeakListHelper.Add(ref _VarWatchers, watcher)){
+        CheckWatcherWrapper();
         return true;
     }
     return false;

@@ -60,6 +60,19 @@ namespace angeldnd.dap {
             });
         }
 
+        private IDictWatcher<T> _WatcherWrapper = null;
+
+        private void CheckWatcherWrapper() {
+            if (_WatcherWrapper == null) {
+                _WatcherWrapper = new BlockDictWatcher<T>(this, OnPropertyChanged, OnPropertyChanged);
+                AddDictWatcher(_WatcherWrapper);
+            }
+        }
+
+        private void OnPropertyChanged(IProperty prop) {
+            FireOnChanged();
+        }
+
         //SILP: GROUP_PROPERTY_MIXIN(DictProperty)
         public DictProperty(IDictProperties owner, string key) : base(owner, key) {       //__SILP__
         }                                                                                 //__SILP__
@@ -114,7 +127,7 @@ namespace angeldnd.dap {
             return false;                                                                 //__SILP__
         }                                                                                 //__SILP__
                                                                                           //__SILP__
-        private void FireOnChanged() {                                                    //__SILP__
+        public void FireOnChanged() {                                                     //__SILP__
             WeakListHelper.Notify(_VarWatchers, (IVarWatcher watcher) => {                //__SILP__
                 watcher.OnChanged(this);                                                  //__SILP__
             });                                                                           //__SILP__
@@ -139,6 +152,7 @@ namespace angeldnd.dap {
                                                                                           //__SILP__
         public bool AddVarWatcher(IVarWatcher watcher) {                                  //__SILP__
             if (WeakListHelper.Add(ref _VarWatchers, watcher)){                           //__SILP__
+                CheckWatcherWrapper();                                                    //__SILP__
                 return true;                                                              //__SILP__
             }                                                                             //__SILP__
             return false;                                                                 //__SILP__
