@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 //using System.Text.RegularExpressions;
 
 namespace angeldnd.dap {
@@ -78,11 +79,23 @@ namespace angeldnd.dap {
         }
     }
 
-    /*
-     * DapParam is only used as more structured comments ATM
-     */
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapParam : System.Attribute {
+        public const string DefaultSuffix = "_Default";
+        public static string GetDefaultFieldName(string fieldName) {
+            return string.Format("{0}{1}", fieldName, DefaultSuffix);
+        }
+
+        public static DapParam GetDapParam(FieldInfo field) {
+            object[] attribs = field.GetCustomAttributes(false);
+            foreach (var attr in attribs) {
+                if (attr is DapParam) {
+                    return (DapParam)attr;
+                }
+            }
+            return null;
+        }
+
         public readonly System.Type ParamType;
         public readonly bool Optional;
 
@@ -92,5 +105,38 @@ namespace angeldnd.dap {
         }
 
         public DapParam(System.Type t) : this(t, false) {}
+    }
+
+    public static class DataDapParamExtension {
+        public static Data AddParamHint(this Data data, Type type, string fieldName) {
+            FieldInfo field = type.GetField(fieldName,
+                                    BindingFlags.Public | BindingFlags.Static);
+            if (field == null) {
+                Log.Error("public static field not found: {0}.{1}", type.FullName, fieldName);
+                return data;
+            }
+
+            DapParam dapParam = DapParam.GetDapParam(field);
+            if (dapParam == null) {
+                Log.Error("DapParam attribute not found: {0}.{1}", type.FullName, fieldName);
+                return data;
+            }
+
+            string hint = string.Format("{0}", dapParam.ParamType.FullName);
+            if (dapParam.Optional) {
+                FieldInfo defaultField = type.GetField(DapParam.GetDefaultFieldName(fieldName),
+                                        BindingFlags.Public | BindingFlags.Static);
+                if (field == null) {
+                    Log.Error("public static default field not found: {0}.{1}",
+                                type.FullName, DapParam.GetDefaultFieldName(fieldName));
+                    hint = string.Format("{0} = N/A", hint);
+                } else {
+                    hint = string.Format("{0} = {1}", hint, defaultField.GetValue(null));
+                }
+            }
+            data.SetString(field.GetValue(null).ToString(), hint);
+
+            return data;
+        }
     }
 }
