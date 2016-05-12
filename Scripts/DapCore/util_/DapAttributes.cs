@@ -108,34 +108,69 @@ namespace angeldnd.dap {
     }
 
     public static class DataDapParamExtension {
-        public static Data AddParamHint(this Data data, Type type, string fieldName) {
+        private static FieldInfo GetFieldInfo(Type type, string fieldName) {
             FieldInfo field = type.GetField(fieldName,
                                     BindingFlags.Public | BindingFlags.Static);
             if (field == null) {
                 Log.Error("public static field not found: {0}.{1}", type.FullName, fieldName);
-                return data;
+            }
+            return field;
+        }
+
+        private static bool GetParamHint(Type type, string fieldName, ref string key, ref string hint) {
+            FieldInfo field = type.GetField(fieldName,
+                                    BindingFlags.Public | BindingFlags.Static);
+            if (field == null) {
+                return false;
             }
 
             DapParam dapParam = DapParam.GetDapParam(field);
             if (dapParam == null) {
                 Log.Error("DapParam attribute not found: {0}.{1}", type.FullName, fieldName);
-                return data;
+                return false;
             }
 
-            string hint = string.Format("{0}", dapParam.ParamType.FullName);
+            key = field.GetValue(null).ToString();
+            hint = string.Format("{0}", dapParam.ParamType.FullName);
             if (dapParam.Optional) {
                 FieldInfo defaultField = type.GetField(DapParam.GetDefaultFieldName(fieldName),
                                         BindingFlags.Public | BindingFlags.Static);
                 if (field == null) {
-                    Log.Error("public static default field not found: {0}.{1}",
-                                type.FullName, DapParam.GetDefaultFieldName(fieldName));
                     hint = string.Format("{0} = N/A", hint);
                 } else {
                     hint = string.Format("{0} = {1}", hint, defaultField.GetValue(null));
                 }
             }
-            data.SetString(field.GetValue(null).ToString(), hint);
 
+            return true;
+        }
+
+        public static Data AddParamHint(this Data data, Type type, string fieldName) {
+            string key = null, hint = null;
+            if (GetParamHint(type, fieldName, ref key, ref hint)) {
+                data.SetString(key, hint);
+            }
+            return data;
+        }
+
+        public static Data AddOneOfParamHint(this Data data, Type type, params string[] fieldNames) {
+            string key = "";
+            string hint = "";
+
+            foreach (string fieldName in fieldNames) {
+                string oneKey = null, oneHint = null;
+                if (GetParamHint(type, fieldName, ref oneKey, ref oneHint)) {
+                    if (!string.IsNullOrEmpty(key)) {
+                        key += " | ";
+                        hint += ", ";
+                    }
+                    key += oneKey;
+                    hint += oneHint;
+                }
+            }
+            if (!string.IsNullOrEmpty(key)) {
+                data.SetString(key, hint);
+            }
             return data;
         }
     }
