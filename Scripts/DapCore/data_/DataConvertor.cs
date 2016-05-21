@@ -109,8 +109,6 @@ namespace angeldnd.dap {
         private void ProcessWord(Stack<Data> dataStack, ref Data lastData,
                                     PartialData partialData,
                                     Word lastWord, Word word) {
-            bool isWordChar = DataConvertorConsts.IsWordChar(word.Value);
-
             switch (partialData.GetExpectKind()) {
                 case PartialData.ExpectKind.Type:
                     ProcessType(dataStack, ref lastData, partialData, lastWord, word);

@@ -298,14 +298,14 @@ protected override void AddSummaryFields(Data summary) {
 private Dictionary<string, IAspect> _TopAspectsDict = new Dictionary<string, IAspect>();
 private List<IAspect> _TopAspectsList = new List<IAspect>();
 
-protected T AddTopAspect<T>(string key) where T : class, IAspect {
+protected TA AddTopAspect<TA>(string key) where TA : class, IAspect {
     IAspect oldAspect = null;
     if (_TopAspectsDict.TryGetValue(key, out oldAspect)) {
         Critical("Top Aspect Key Conflicted: <{0}>: {1} -> {2}",
-                    typeof(T).FullName, key, oldAspect);
+                    typeof(TA).FullName, key, oldAspect);
         return null;
     }
-    T topAspect = Factory.Create<T>(this, key);
+    TA topAspect = Factory.Create<TA>(this, key);
     if (topAspect != null) {
         _TopAspectsDict[topAspect.Key] = topAspect;
         _TopAspectsList.Add(topAspect);
@@ -313,7 +313,7 @@ protected T AddTopAspect<T>(string key) where T : class, IAspect {
     return topAspect;
 }
 
-public T GetAspect<T>(string aspectPath, bool isDebug = false) where T : class, IAspect {
+public TA GetAspect<TA>(string aspectPath, bool isDebug = false) where TA : class, IAspect {
     string[] keys = aspectPath.Split(PathConsts.PathSeparator);
     if (keys.Length < 1) {
         ErrorOrDebug(isDebug, "Invalid aspectPath: {0}", aspectPath);
@@ -325,11 +325,11 @@ public T GetAspect<T>(string aspectPath, bool isDebug = false) where T : class, 
         return null;
     }
     if (keys.Length == 1) {
-        return As<T>(topAspect, isDebug);
+        return As<TA>(topAspect, isDebug);
     } else {
         IOwner asOwner = As<IOwner>(topAspect, isDebug);
         if (asOwner != null) {
-            return TreeHelper.GetDescendant<T>(asOwner, keys, 1, isDebug);
+            return TreeHelper.GetDescendant<TA>(asOwner, keys, 1, isDebug);
         }
     }
     return null;

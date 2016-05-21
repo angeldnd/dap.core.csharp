@@ -167,6 +167,7 @@
     <Compile Include="DapCore\table_\TableWatcher.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\tree_\TreeHelper.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\uri_\UriConsts.cs" />                           <!--__SILP__-->
+    <Compile Include="DapCore\util_\AssemblyHelper.cs" />                     <!--__SILP__-->
     <Compile Include="DapCore\util_\DapAttributes.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\util_\SegmentHelper.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\weak_\WeakBlock.cs" />                          <!--__SILP__-->
