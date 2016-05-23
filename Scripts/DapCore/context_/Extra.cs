@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using angeldnd.dap;
 
-namespace angeldnd.dap.binding {
+namespace angeldnd.dap {
     public sealed class Extra : Accessor<IContext>, IBlockOwner {
         public readonly string Key;
 

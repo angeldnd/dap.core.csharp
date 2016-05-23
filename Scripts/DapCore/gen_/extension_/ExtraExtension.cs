@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using angeldnd.dap;
 
-namespace angeldnd.dap.binding {
+namespace angeldnd.dap {
     public static class ExtensionExtension {
         //SILP: EXTRA_SETUP_PROPERTY(Bool, bool)
         public static BoolProperty SetupBoolProperty(this Extra ext,                         //__SILP__
