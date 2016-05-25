@@ -22,17 +22,22 @@ namespace angeldnd.dap {
         private List<string> _Msgs = null;
         private WeakPubSub<string, IBusSub> _MsgSubs = null;
         private Dictionary<string, object> _MsgTokens = null;
+        private Dictionary<string, int> _MsgCounts = null;
 
         public Bus(IContext owner, string key) : base(owner, key) {
         }
 
-        public void AddSub(string msg, IBusSub sub) {
+        private void TryAddMsg(string msg) {
             if (_Msgs == null) {
                 _Msgs = new List<string>();
             }
             if (!_Msgs.Contains(msg)) {
                 _Msgs.Add(msg);
             }
+        }
+
+        public void AddSub(string msg, IBusSub sub) {
+            TryAddMsg(msg);
             if (_MsgSubs == null) {
                 _MsgSubs = new WeakPubSub<string, IBusSub>();
             }
@@ -46,8 +51,10 @@ namespace angeldnd.dap {
         }
 
         public bool Publish(string msg, object token) {
+            TryAddMsg(msg);
             if (_MsgTokens == null) {
                 _MsgTokens = new Dictionary<string, object>();
+                _MsgCounts = new Dictionary<string, int>();
             }
             object oldToken;
             if (_MsgTokens.TryGetValue(msg, out oldToken)) {
@@ -57,6 +64,7 @@ namespace angeldnd.dap {
                 }
             } else {
                 _MsgTokens[msg] = token;
+                _MsgCounts[msg] = GetMsgCount(msg) + 1;
             }
 
             if (_MsgSubs != null) {
@@ -64,7 +72,34 @@ namespace angeldnd.dap {
                     sub.OnMsg(this, msg);
                 });
             }
+            if (LogDebug) {
+                Debug("Publish {0}: sub_count = {1}, msg_count = {2}",
+                         msg, GetSubCount(msg), GetMsgCount(msg));
+            }
             return true;
+        }
+
+        public int GetSubCount(string msg) {
+            if (_MsgSubs != null) {
+                return _MsgSubs.GetSubCount(msg);
+            }
+            return 0;
+        }
+
+        public object GetMsgToken(string msg) {
+            object token;
+            if (_MsgTokens.TryGetValue(msg, out token)) {
+                return token;
+            }
+            return null;
+        }
+
+        public int GetMsgCount(string msg) {
+            int count;
+            if (_MsgCounts.TryGetValue(msg, out count)) {
+                return count;
+            }
+            return 0;
         }
 
         protected override void AddSummaryFields(Data summary) {
@@ -73,7 +108,10 @@ namespace angeldnd.dap {
             if (_Msgs != null) {
                 for (int i = 0; i < _Msgs.Count; i++) {
                     string msg = _Msgs[i];
-                    data.I(msg, _MsgSubs.GetSubCount(msg));
+                    Data msgData = new Data();
+                    msgData.I(ContextConsts.SummarySubCount, GetSubCount(msg));
+                    msgData.I(ContextConsts.SummaryMsgCount, GetMsgCount(msg));
+                    data.A(msg, msgData);
                 }
             }
             summary.A(ContextConsts.SummaryData, data);

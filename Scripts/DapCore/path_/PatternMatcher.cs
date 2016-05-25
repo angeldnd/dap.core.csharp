@@ -9,16 +9,19 @@ namespace angeldnd.dap {
     public class PatternMatcher {
         public readonly char Separator;
         public readonly string Pattern;
+        public readonly bool CaseSensitive;
 
         public string[] Segments;
 
-        public PatternMatcher(char separator, string pattern) {
+        public PatternMatcher(char separator, string pattern, bool caseSensitive=false) {
             Separator = separator;
             Pattern = pattern;
-            if (Pattern == PatternMatcherConsts.WildcastSegments) {
+            CaseSensitive = caseSensitive;
+
+            if (Pattern == null || Pattern == PatternMatcherConsts.WildcastSegments) {
                 Segments = null;
             } else {
-                Segments = Pattern.Split(Separator);
+                Segments = (CaseSensitive ? Pattern : Pattern.ToLower()).Split(Separator);
             }
         }
 
@@ -69,11 +72,14 @@ namespace angeldnd.dap {
         }
 
         public bool IsMatched(string path) {
+            if (Pattern == null || path == null) {
+                return false;
+            }
             if (Pattern == PatternMatcherConsts.WildcastSegments) {
                 return true;
             }
 
-            string[] pathSegments = path.Split(Separator);
+            string[] pathSegments = (CaseSensitive ? path : path.ToLower()).Split(Separator);
             bool result = IsMatched(0, 0, pathSegments);
             return result;
         }

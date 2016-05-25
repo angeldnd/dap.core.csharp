@@ -2,16 +2,18 @@ using System;
 
 namespace angeldnd.dap {
     public class EnvUriMatcher {
+        public static bool CaseSensitive = false;
+
         public readonly PatternMatcher ContextPathPatternMatcher = null;
         public readonly PatternMatcher AspectPathPatternMatcher = null;
 
         public EnvUriMatcher(string contextPathPattern, string aspectPathPattern) {
-            if (string.IsNullOrEmpty(contextPathPattern)) {
+            if (contextPathPattern == null) {
                 throw new NullReferenceException("Invalid contextPathPattern");
             }
-            ContextPathPatternMatcher = new PatternMatcher(PathConsts.PathSeparator, contextPathPattern);
+            ContextPathPatternMatcher = new PatternMatcher(PathConsts.PathSeparator, contextPathPattern, CaseSensitive);
             if (!string.IsNullOrEmpty(aspectPathPattern)) {
-                AspectPathPatternMatcher = new PatternMatcher(PathConsts.PathSeparator, aspectPathPattern);
+                AspectPathPatternMatcher = new PatternMatcher(PathConsts.PathSeparator, aspectPathPattern, CaseSensitive);
             }
         }
 
