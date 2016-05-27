@@ -6,7 +6,7 @@ dap-version = "0.5.0"
 [[dap-core.files]]
 from = "Releases/${dap-version}"
 to = "${dap-root}"
-include = "DapCore-*.*"
+include = "DapCore.*"
 
 [dap-core-src]
 [[dap-core-src.folders]]
