@@ -70,8 +70,8 @@ namespace angeldnd.dap {
             return WeakListHelper.IsValid(_ValueCheckers, (IValueChecker<T> checker) => {
                 if (!checker.IsValid(this, newValue)) {
                     if (LogDebug) {
-                        Debug("Check Not Passed: {0} -> {1} => {2}",
-                                Value, newValue, checker);
+                        Debug("Invalid Value: {0} => {1} -> {2}",
+                                checker, Value, newValue);
                     }
                     return false;
                 }
@@ -92,6 +92,9 @@ namespace angeldnd.dap {
                 WeakListHelper.Notify(_ValueWatchers, (IValueWatcher<T> watcher) => {
                     watcher.OnChanged(this, lastVal);
                 });
+                if (LogDebug) {
+                    Debug("SetValue: {0} -> {1}", lastVal, newValue);
+                }
             }
             return true;
         }

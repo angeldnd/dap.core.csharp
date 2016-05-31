@@ -7,9 +7,11 @@ namespace angeldnd.dap {
         }
 
         private IRequestHandler _Handler = null;
+        private int _SucceedCount = 0;
+        private int _FailedCount = 0;
 
         public bool IsValid {
-            get { return _Handler == null; }
+            get { return _Handler != null; }
         }
 
         public bool Setup(IRequestHandler handler) {
@@ -26,11 +28,19 @@ namespace angeldnd.dap {
         }
 
         public Data HandleRequest(Data req) {
-            if (_Handler == null) return null;
+            if (!IsValid) {
+                Error("Invalid Handler: {0}", req);
+                return null;
+            }
 
+            IRequestChecker lastChecker = null;
             if (!WeakListHelper.IsValid(_RequestCheckers, (IRequestChecker checker) => {
+                lastChecker = checker;
                 return checker.IsValidRequest(this, req);
             })) {
+                if (LogDebug) {
+                    Debug("Invalid Request: {0} => {1}", lastChecker, Data.ToFullString(req));
+                }
                 return null;
             }
 
@@ -44,6 +54,9 @@ namespace angeldnd.dap {
             WeakListHelper.Notify(_ResponseWatchers, (IResponseWatcher listener) => {
                 listener.OnResponse(this, req, res);
             });
+            if (LogDebug) {
+                Debug("HandleRequest: {0} -> {1}", Data.ToFullString(req), Data.ToFullString(res));
+            }
             return res;
         }
 
@@ -73,7 +86,8 @@ namespace angeldnd.dap {
 
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
-            summary.I(ContextConsts.SummaryCheckerCount, RequestCheckerCount)
+            summary.B(ContextConsts.SummaryIsValid, IsValid)
+                   .I(ContextConsts.SummaryCheckerCount, RequestCheckerCount)
                    .I(ContextConsts.SummaryWatcherCount, RequestWatcherCount)
                    .I(ContextConsts.Summary2ndWatcherCount, ResponseWatcherCount);
         }

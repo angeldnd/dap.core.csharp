@@ -23,6 +23,8 @@ namespace angeldnd.dap {
         public const string SummaryValue = "value";
         [DapParam(typeof(Data))]
         public const string SummaryData = "data";
+        [DapParam(typeof(bool))]
+        public const string SummaryIsValid = "is_valid";
         [DapParam(typeof(int))]
         public const string SummarySubCount = "sub_count";
         [DapParam(typeof(int))]

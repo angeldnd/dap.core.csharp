@@ -87,21 +87,17 @@ namespace angeldnd.dap {
         }
 
         public object GetMsgToken(string msg) {
-            if (_MsgTokens != null) {
-                object token;
-                if (_MsgTokens.TryGetValue(msg, out token)) {
-                    return token;
-                }
+            object token;
+            if (_MsgTokens.TryGetValue(msg, out token)) {
+                return token;
             }
             return null;
         }
 
         public int GetMsgCount(string msg) {
-            if (_MsgCounts != null) {
-                int count;
-                if (_MsgCounts.TryGetValue(msg, out count)) {
-                    return count;
-                }
+            int count;
+            if (_MsgCounts.TryGetValue(msg, out count)) {
+                return count;
             }
             return 0;
         }

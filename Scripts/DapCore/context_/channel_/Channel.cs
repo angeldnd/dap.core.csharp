@@ -7,9 +7,14 @@ namespace angeldnd.dap {
         }
 
         public bool FireEvent(Data evt) {
+            IEventChecker lastChecker = null;
             if (!WeakListHelper.IsValid(_EventCheckers, (IEventChecker checker) => {
+                lastChecker = checker;
                 return checker.IsValidEvent(this, evt);
             })) {
+                if (LogDebug) {
+                    Debug("Invalid Event: {0} => {1}", lastChecker, Data.ToFullString(evt));
+                }
                 return false;
             }
             AdvanceRevision();
@@ -17,6 +22,9 @@ namespace angeldnd.dap {
             WeakListHelper.Notify(_EventWatchers, (IEventWatcher listener) => {
                 listener.OnEvent(this, evt);
             });
+            if (LogDebug) {
+                Debug("FireEvent: {0}", Data.ToFullString(evt));
+            }
             return true;
         }
 

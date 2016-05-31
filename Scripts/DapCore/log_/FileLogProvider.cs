@@ -120,7 +120,7 @@ namespace angeldnd.dap {
                     Directory.CreateDirectory(dir);
                 }
                 _LogWriter = File.AppendText(_LogFilePath);
-                Info("Start Logging: {0}", _LogFilePath);
+                Info("Start {0}Logging: {1}", LogDebug ? "Debug " : "", _LogFilePath);
 
                 //Probably can't use AutoFlush here due to performance issue
                 //need to check whether the system level cache make this workable
