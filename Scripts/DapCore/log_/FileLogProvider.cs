@@ -69,6 +69,10 @@ namespace angeldnd.dap {
             SetupLogWriter();
         }
 
+        public override bool AutoFlush {
+            get { return _LogAutoFlush; }
+        }
+
         public override void Flush() {
             if (!_LogAutoFlush && _LogWriter != null) {
                 _LogWriter.Flush();

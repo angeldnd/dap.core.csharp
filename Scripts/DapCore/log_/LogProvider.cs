@@ -19,7 +19,11 @@ namespace angeldnd.dap {
     */
     public abstract class LogProvider : ILogger {
         public abstract void AddLog(object source, string kind, string msg, StackTrace stackTrace);
-        public abstract void Flush();
+
+        public virtual bool AutoFlush {
+            get { return true; }
+        }
+        public virtual void Flush() {}
 
         private bool _LogDebug;
         public bool LogDebug {
