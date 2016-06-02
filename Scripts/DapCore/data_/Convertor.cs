@@ -2,6 +2,9 @@ using System;
 
 namespace angeldnd.dap {
     public static class Convertor {
+        public const string Null = "null";
+        public const string UnknownType = "[N/A]";
+
         public readonly static BoolConvertor BoolConvertor = new BoolConvertor();
         public readonly static IntConvertor IntConvertor = new IntConvertor();
         public readonly static LongConvertor LongConvertor = new LongConvertor();
@@ -36,9 +39,91 @@ namespace angeldnd.dap {
         public static Convertor<T> GetConvertor<T>() {
             return _Convertors.GetValue<Convertor<T>>(typeof(T).FullName);
         }
+
+        private static InternalConvertor GetInternalConvertor(Type type) {
+            if (type == null) return null;
+            IVar v = _Convertors.Get(type.FullName);
+            if (v != null) {
+                return angeldnd.dap.Object.As<InternalConvertor>(v.GetValue());
+            }
+            return null;
+        }
+
+        public static string GetTypeStr(object val) {
+            if (val == null) return Convertor.UnknownType;
+            return val.GetType().FullName;
+        }
+
+        public static string GetTypeStr(Type type) {
+            return type == null ? UnknownType : type.FullName;
+        }
+
+        public static bool TryParse(Type type, string str, out object val, bool isDebug = false) {
+            InternalConvertor convertor = GetInternalConvertor(type);
+            if (convertor != null) {
+                return convertor._TryParseInternal(str, out val, isDebug);
+            } else {
+                val = null;
+                Log.ErrorOrDebug(isDebug, "Parse Failed, Unknown Type: <{0}> {1}",
+                                            GetTypeStr(type), str);
+            }
+            return false;
+        }
+
+        public static object Parse(Type type, string str) {
+            InternalConvertor convertor = GetInternalConvertor(type);
+            if (convertor != null) {
+                return convertor._ParseInternal(str);
+            } else {
+                throw new Exception(string.Format("Parse Failed, Unknown Type: <{0}> {1}",
+                                            GetTypeStr(type), str));
+            }
+        }
+
+        public static string Convert(object val) {
+            if (val == null) return Convertor.Null;
+
+            InternalConvertor convertor = GetInternalConvertor(val.GetType());
+            if (convertor != null) {
+                return convertor._ConvertInternal(val);
+            }
+            return Convertor.UnknownType;
+        }
     }
 
-    public abstract class Convertor<T> {
+    public interface IConvertor<T> {
+        bool TryParse(string str, out T val, bool isDebug = false);
+        T Parse(string str);
+        string Convert(T val);
+    }
+
+    public abstract class InternalConvertor {
+        internal abstract bool _TryParseInternal(string str, out object val, bool isDebug = false);
+        internal abstract object _ParseInternal(string str);
+        internal abstract string _ConvertInternal(object val);
+    }
+
+    public abstract class Convertor<T> : InternalConvertor, IConvertor<T> {
+        internal override bool _TryParseInternal(string str, out object val, bool isDebug = false) {
+            try {
+                val = _ParseInternal(str);
+                return true;
+            } catch (Exception e) {
+                Log.ErrorOrDebug(isDebug, "Parse Failed: <{0}> {1} -> \n{2}", typeof(T).FullName, str, e);
+            }
+            val = default(T);
+            return false;
+        }
+
+        internal override object _ParseInternal(string str) {
+            return Parse(str);
+        }
+
+        internal override string _ConvertInternal(object val) {
+            T _val = angeldnd.dap.Object.As<T>(val);
+            return Convert(_val);
+        }
+
         public bool TryParse(string str, out T val, bool isDebug = false) {
             try {
                 val = Parse(str);
@@ -106,7 +191,7 @@ namespace angeldnd.dap {
 
     public class StringConvertor : Convertor<string> {
         public override string Convert(string val) {
-            return val == null ? "null" : val.ToString();
+            return val == null ? Convertor.Null : val.ToString();
         }
 
         public override string Parse(string str) {

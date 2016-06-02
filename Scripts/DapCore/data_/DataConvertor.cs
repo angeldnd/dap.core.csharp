@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class DataConvertorConsts {
-        public const string NullStr = "null";
-
         public const string DataBegin = "{";
         public const string DataEnd = "}";
         public const string KeyBegin = ":";
@@ -68,7 +66,7 @@ namespace angeldnd.dap {
         }
 
         public string Convert(Data val, string indent) {
-            if (val == null) return DataConvertorConsts.NullStr;
+            if (val == null) return Convertor.Null;
             if (indent == "") indent = null;
 
             System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -85,7 +83,7 @@ namespace angeldnd.dap {
         }
 
         public Data Parse(string source, string content) {
-            if (string.IsNullOrEmpty(content) || content == DataConvertorConsts.NullStr) return null;
+            if (string.IsNullOrEmpty(content) || content == Convertor.Null) return null;
 
             Stack<Data> dataStack = new Stack<Data>();
             Data lastData = null;
@@ -250,7 +248,7 @@ namespace angeldnd.dap {
 
         private void AppendData(StringBuilder builder, string indent, int indentLevel, Data data) {
             if (data == null) {
-                builder.Append(DataConvertorConsts.NullStr);
+                builder.Append(Convertor.Null);
                 return;
             }
 
