@@ -14,6 +14,7 @@ namespace angeldnd.dap {
         bool IsValidElementType(Type type);
 
         //Watcher
+        int GenericDictWatcherCount { get; }
         bool AddDictWatcher<T1>(IDictWatcher<T1> watcher) where T1 : class, IInDictElement;
         bool RemoveDictWatcher<T1>(IDictWatcher<T1> watcher) where T1 : class, IInDictElement;
 
@@ -58,6 +59,7 @@ namespace angeldnd.dap {
     public interface IDict<T> : IDict
                                     where T : class, IInDictElement {
         //Watcher
+        int DictWatcherCount { get; }
         bool AddDictWatcher(IDictWatcher<T> watcher);
         bool RemoveDictWatcher(IDictWatcher<T> watcher);
 

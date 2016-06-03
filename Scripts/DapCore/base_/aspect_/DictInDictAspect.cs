@@ -51,11 +51,13 @@ namespace angeldnd.dap {
         public override void OnRemoved() {                            //__SILP__
             Env.Instance.Hooks._OnAspectRemoved(this);                //__SILP__
         }                                                             //__SILP__
-                                                                      //__SILP__
-        protected override void AddSummaryFields(Data summary) {      //__SILP__
-            base.AddSummaryFields(summary);                           //__SILP__
-            summary.S(ContextConsts.SummaryPath, _Path)               //__SILP__
-                   .B(ContextConsts.SummaryDebugging, _Debugging);    //__SILP__
-        }                                                             //__SILP__
+        //SILP: DICT_ASPECT_MIXIN()
+        protected override void AddSummaryFields(Data summary) {                       //__SILP__
+            base.AddSummaryFields(summary);                                            //__SILP__
+            summary.S(ContextConsts.SummaryPath, _Path)                                //__SILP__
+                   .B(ContextConsts.SummaryDebugging, _Debugging)                      //__SILP__
+                   .I(ContextConsts.SummaryWatcherCount, DictWatcherCount)             //__SILP__
+                   .I(ContextConsts.Summary2ndWatcherCount, GenericDictWatcherCount);  //__SILP__
+        }                                                                              //__SILP__
     }
 }

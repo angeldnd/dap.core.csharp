@@ -103,7 +103,7 @@ namespace angeldnd.dap {
             });
         }
 
-        private int CollectAllGarbage() {
+        public int CollectAllGarbage() {
             int count = 0;
             while (CollectOneGarbage()) {
                 count++;
@@ -111,12 +111,15 @@ namespace angeldnd.dap {
             return count;
         }
 
-        private bool CollectOneGarbage() {
+        public bool CollectOneGarbage() {
             int garbageIndex = -1;
 
             for (int i = 0; i < _Elements.Count; i++) {
                 WeakReference element = _Elements[i];
                 if (!element.IsAlive) {
+                    if (Log.LogDebug) {
+                        Log.Debug("Garbage Item In WeakList Found: {0}, {1}", this, element.Target);
+                    }
                     garbageIndex = i;
                     break;
                 }
@@ -144,7 +147,9 @@ namespace angeldnd.dap {
                         break;
                     }
                 } else if (garbageIndex < 0) {
-                    Log.Debug("Garbage Found: {0}", element.Target);
+                    if (Log.LogDebug) {
+                        Log.Debug("Garbage Item In WeakList Found: {0}, {1}", this, element.Target);
+                    }
                     garbageIndex = i;
                 }
             }

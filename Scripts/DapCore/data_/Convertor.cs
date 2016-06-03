@@ -40,6 +40,39 @@ namespace angeldnd.dap {
             return _Convertors.GetValue<Convertor<T>>(typeof(T).FullName);
         }
 
+        public static bool TryParse<T>(string str, out T val, bool isDebug = false) {
+            Convertor<T> convertor = GetConvertor<T>();
+            if (convertor != null) {
+                return convertor.TryParse(str, out val, isDebug);
+            } else {
+                val = default(T);
+                Log.ErrorOrDebug(isDebug, "Parse Failed, Unknown Type: <{0}> {1}",
+                                            GetTypeStr(typeof(T)), str);
+            }
+            return false;
+        }
+
+        public static T Parse<T>(string str) {
+            Convertor<T> convertor = GetConvertor<T>();
+            if (convertor != null) {
+                return convertor.Parse(str);
+            } else {
+                throw new Exception(string.Format("Parse Failed, Unknown Type: <{0}> {1}",
+                                            GetTypeStr(typeof(T)), str));
+            }
+        }
+
+        public static string Convert<T>(T val) {
+            Convertor<T> convertor = GetConvertor<T>();
+            if (convertor != null) {
+                return convertor.Convert(val);
+            } else {
+                Log.Error("Convert Failed, Unknown Type: <{0}> {1}",
+                                            GetTypeStr(typeof(T)), val);
+            }
+            return UnknownType;
+        }
+
         private static InternalConvertor GetInternalConvertor(Type type) {
             if (type == null) return null;
             IVar v = _Convertors.Get(type.FullName);
@@ -50,7 +83,7 @@ namespace angeldnd.dap {
         }
 
         public static string GetTypeStr(object val) {
-            if (val == null) return Convertor.UnknownType;
+            if (val == null) return UnknownType;
             return val.GetType().FullName;
         }
 
@@ -81,13 +114,16 @@ namespace angeldnd.dap {
         }
 
         public static string Convert(object val) {
-            if (val == null) return Convertor.Null;
+            if (val == null) return Null;
 
             InternalConvertor convertor = GetInternalConvertor(val.GetType());
             if (convertor != null) {
                 return convertor._ConvertInternal(val);
+            } else {
+                Log.Error("Convert Failed, Unknown Type: <{0}> {1}",
+                                            GetTypeStr(val), val);
             }
-            return Convertor.UnknownType;
+            return UnknownType;
         }
     }
 

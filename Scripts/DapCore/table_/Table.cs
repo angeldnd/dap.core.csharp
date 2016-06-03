@@ -16,6 +16,7 @@ namespace angeldnd.dap {
         bool IsValidElementType(Type type);
 
         //Watcher
+        int GenericTableWatcherCount { get; }
         bool AddTableWatcher<T1>(ITableWatcher<T1> watcher) where T1 : class, IInTableElement;
         bool RemoveTableWatcher<T1>(ITableWatcher<T1> watcher) where T1 : class, IInTableElement;
 
@@ -59,6 +60,7 @@ namespace angeldnd.dap {
     public interface ITable<T> : ITable
                                     where T : class, IInTableElement {
         //Watcher
+        int TableWatcherCount { get; }
         bool AddTableWatcher(ITableWatcher<T> watcher);
         bool RemoveTableWatcher(ITableWatcher<T> watcher);
 

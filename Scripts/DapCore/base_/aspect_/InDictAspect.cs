@@ -50,7 +50,7 @@ namespace angeldnd.dap {
         public override void OnRemoved() {                            //__SILP__
             Env.Instance.Hooks._OnAspectRemoved(this);                //__SILP__
         }                                                             //__SILP__
-                                                                      //__SILP__
+        //SILP:ASPECT_SUMMARY_MIXIN()
         protected override void AddSummaryFields(Data summary) {      //__SILP__
             base.AddSummaryFields(summary);                           //__SILP__
             summary.S(ContextConsts.SummaryPath, _Path)               //__SILP__

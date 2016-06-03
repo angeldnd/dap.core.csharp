@@ -208,11 +208,36 @@ public override void OnAdded() {
 public override void OnRemoved() {
     Env.Instance.Hooks._OnAspectRemoved(this);
 }
+```
 
+# ASPECT_SUMMARY_MIXIN() #
+```
 protected override void AddSummaryFields(Data summary) {
     base.AddSummaryFields(summary);
     summary.S(ContextConsts.SummaryPath, _Path)
            .B(ContextConsts.SummaryDebugging, _Debugging);
+}
+```
+
+# DICT_ASPECT_MIXIN() #
+```
+protected override void AddSummaryFields(Data summary) {
+    base.AddSummaryFields(summary);
+    summary.S(ContextConsts.SummaryPath, _Path)
+           .B(ContextConsts.SummaryDebugging, _Debugging)
+           .I(ContextConsts.SummaryWatcherCount, DictWatcherCount)
+           .I(ContextConsts.Summary2ndWatcherCount, GenericDictWatcherCount);
+}
+```
+
+# TABLE_ASPECT_MIXIN() #
+```
+protected override void AddSummaryFields(Data summary) {
+    base.AddSummaryFields(summary);
+    summary.S(ContextConsts.SummaryPath, _Path)
+           .B(ContextConsts.SummaryDebugging, _Debugging)
+           .I(ContextConsts.SummaryWatcherCount, TableWatcherCount)
+           .I(ContextConsts.Summary2ndWatcherCount, GenericTableWatcherCount);
 }
 ```
 

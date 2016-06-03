@@ -54,7 +54,7 @@ namespace angeldnd.dap {
             ForEachType(CheckMode.Assignable, typeof(T), callback);
         }
 
-        private static List<T> CreateInstances<T>(CheckMode mode) {
+        private static List<T> CreateInstances<T>(CheckMode mode, bool sortByOrder) {
             var result = new List<T>();
             ForEachType(mode, typeof(T), (Type type) => {
                 T instance = Factory.Create<T>(type);
@@ -62,15 +62,18 @@ namespace angeldnd.dap {
                     result.Add(instance);
                 }
             });
+            if (sortByOrder) {
+                DapOrder.SortByOrder(result);
+            }
             return result;
         }
 
-        public static List<T> CreateInstancesOfSubClass<T>() {
-            return CreateInstances<T>(CheckMode.SubClass);
+        public static List<T> CreateInstancesOfSubClass<T>(bool sortByOrder = false) {
+            return CreateInstances<T>(CheckMode.SubClass, sortByOrder);
         }
 
-        public static List<T> CreateInstancesOfInterface<T>() {
-            return CreateInstances<T>(CheckMode.Interface);
+        public static List<T> CreateInstancesOfInterface<T>(bool sortByOrder = false) {
+            return CreateInstances<T>(CheckMode.Interface, sortByOrder);
         }
 
         public static Type GetType(string fullName) {

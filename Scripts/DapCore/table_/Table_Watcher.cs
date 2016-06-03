@@ -8,6 +8,14 @@ namespace angeldnd.dap {
 
         private WeakList<ITableWatcher<T>> _Watchers = null;
 
+        public int GenericTableWatcherCount {
+            get { return WeakListHelper.Count(_GenericWatchers); }
+        }
+
+        public int TableWatcherCount {
+            get { return WeakListHelper.Count(_Watchers); }
+        }
+
         private ITableWatcher<T> GetWrapperWatcher(ITableWatcher watcher) {
             ITableWatcher<T> wrapper = null;
             if (_GenericWatcherMapping.TryGetValue(watcher, out wrapper)) {

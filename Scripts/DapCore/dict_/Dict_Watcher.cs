@@ -8,6 +8,14 @@ namespace angeldnd.dap {
 
         private WeakList<IDictWatcher<T>> _Watchers = null;
 
+        public int GenericDictWatcherCount {
+            get { return WeakListHelper.Count(_GenericWatchers); }
+        }
+
+        public int DictWatcherCount {
+            get { return WeakListHelper.Count(_Watchers); }
+        }
+
         private IDictWatcher<T> GetWrapperWatcher(IDictWatcher watcher) {
             IDictWatcher<T> wrapper = null;
             if (_GenericWatcherMapping.TryGetValue(watcher, out wrapper)) {

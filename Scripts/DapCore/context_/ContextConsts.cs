@@ -30,7 +30,7 @@ namespace angeldnd.dap {
         [DapParam(typeof(int))]
         public const string SummaryMsgCount = "msg_count";
         [DapParam(typeof(int))]
-        public const string SummaryCheckerCount = "cherker_count";
+        public const string SummaryCheckerCount = "checker_count";
         [DapParam(typeof(int))]
         public const string SummaryWatcherCount = "watcher_count";
         [DapParam(typeof(int))]
