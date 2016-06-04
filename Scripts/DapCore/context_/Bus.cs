@@ -87,6 +87,8 @@ namespace angeldnd.dap {
         }
 
         public object GetMsgToken(string msg) {
+            if (_MsgTokens == null) return null;
+
             object token;
             if (_MsgTokens.TryGetValue(msg, out token)) {
                 return token;
@@ -95,6 +97,8 @@ namespace angeldnd.dap {
         }
 
         public int GetMsgCount(string msg) {
+            if (_MsgCounts == null) return 0;
+
             int count;
             if (_MsgCounts.TryGetValue(msg, out count)) {
                 return count;
