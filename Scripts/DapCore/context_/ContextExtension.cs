@@ -29,6 +29,10 @@ namespace angeldnd.dap {
             return GetContext<IContext>(context, relPath, isDebug);
         }
 
+        public static bool HasContext(this IDictContext context, string relPath) {
+            return GetContext<IContext>(context, relPath, true) != null;
+        }
+
         public static T GetContextManner<T>(this IDictContext context, string relPath,
                                                 string mannerKey, bool isDebug = false)
                                                     where T : Manner {
