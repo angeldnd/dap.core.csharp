@@ -24,7 +24,7 @@ protected ${class}(TO owner, string key) {
 
 protected ${class}(TO owner) {
     _Owner = owner;
-    _Key = string.Format("{0}", Guid.NewGuid().GetHashCode());
+    _Key = string.Format("{0}", Guid.NewGuid().ToString());
 }
 
 private readonly TO _Owner;
