@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class Hooks : DictAspect<IContext, Hook> {
+    public sealed class Hooks : TableAspect<IContext, Hook> {
         public Hooks(IContext owner, string key) : base(owner, key) {
         }
 

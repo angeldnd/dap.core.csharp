@@ -12,7 +12,6 @@ namespace angeldnd.dap {
         public const bool DefaultLogDebug = true;
 
         public const string KeyHooks = "Hooks";
-        public const string KeyDebugHook = "debug";
 
         public const string ChannelTick = "tick";
 
@@ -143,11 +142,18 @@ namespace angeldnd.dap {
             get { return _Instance; }
         }
 
+        private string _KeyDebugHook = null;
+        public string KeyDebugHook {
+            get { return _KeyDebugHook; }
+        }
+
         private Env() : base(null, null) {
             //Can NOT create any aspects other than Hooks/Hook here.
             Hooks = AddTopAspect<Hooks>(EnvConsts.KeyHooks);
-            Hook debugHook = Hooks.Add(EnvConsts.KeyDebugHook);
+            Hook debugHook = Hooks.Add();
+            _KeyDebugHook = debugHook.Key;
             debugHook.Setup(
+                "DebugHook",
                 (IContext context) => {
                     context.Debugging = true;
                 },

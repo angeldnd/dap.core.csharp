@@ -35,6 +35,8 @@ namespace angeldnd.dap {
         public const string SummaryWatcherCount = "watcher_count";
         [DapParam(typeof(int))]
         public const string Summary2ndWatcherCount = "2nd_watcher_count";
+        [DapParam(typeof(string))]
+        public const string SummaryDescription = "description";
 
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";

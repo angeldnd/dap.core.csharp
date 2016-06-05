@@ -2,22 +2,29 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class Hook : InDictAspect<Hooks> {
+    public sealed class Hook : InTableAspect<Hooks> {
         private bool _Setup = false;
+
+        private string _Description = null;
+        public string Description {
+            get { return _Description; }
+        }
         private Action<IContext> _ContextAddedBlock;
         private Action<IContext> _ContextRemovedBlock;
         private Action<IAspect> _AspectAddedBlock;
         private Action<IAspect> _AspectRemovedBlock;
 
-        public Hook(Hooks owner, string key) : base(owner, key) {
+        public Hook(Hooks owner, int index) : base(owner, index) {
         }
 
-        public bool Setup(Action<IContext> contextAddedBlock,
+        public bool Setup(string description,
+                          Action<IContext> contextAddedBlock,
                           Action<IContext> contextRemovedBlock,
                           Action<IAspect> aspectAddedBlock,
                           Action<IAspect> aspectRemovedBlock) {
             if (!_Setup) {
                 _Setup = true;
+                _Description = description;
                 _ContextAddedBlock = contextAddedBlock;
                 _ContextRemovedBlock = contextRemovedBlock;
                 _AspectAddedBlock = aspectAddedBlock;
@@ -32,27 +39,32 @@ namespace angeldnd.dap {
             return false;
         }
 
-        public bool Setup(Action<IContext> contextAddedBlock,
+        public bool Setup(string description,
+                          Action<IContext> contextAddedBlock,
                           Action<IContext> contextRemovedBlock) {
-            return Setup(contextAddedBlock, contextRemovedBlock, null, null);
+            return Setup(description, contextAddedBlock, contextRemovedBlock, null, null);
         }
 
-        public bool Setup(Action<IContext> contextAddedBlock) {
-            return Setup(contextAddedBlock, null, null, null);
+        public bool Setup(string description,
+                          Action<IContext> contextAddedBlock) {
+            return Setup(description, contextAddedBlock, null, null, null);
         }
 
-        public bool Setup(Action<IAspect> aspectAddedBlock,
+        public bool Setup(string description,
+                          Action<IAspect> aspectAddedBlock,
                           Action<IAspect> aspectRemovedBlock) {
-            return Setup(null, null, aspectAddedBlock, aspectRemovedBlock);
+            return Setup(description, null, null, aspectAddedBlock, aspectRemovedBlock);
         }
 
-        public bool Setup(Action<IAspect> aspectAddedBlock) {
-            return Setup(null, null, aspectAddedBlock, null);
-        }
-
-        public bool Setup(Action<IContext> contextAddedBlock,
+        public bool Setup(string description,
                           Action<IAspect> aspectAddedBlock) {
-            return Setup(contextAddedBlock, null, aspectAddedBlock, null);
+            return Setup(description, null, null, aspectAddedBlock, null);
+        }
+
+        public bool Setup(string description,
+                          Action<IContext> contextAddedBlock,
+                          Action<IAspect> aspectAddedBlock) {
+            return Setup(description, contextAddedBlock, null, aspectAddedBlock, null);
         }
 
         private List<EnvUriMatcher> _UriMatchers = new List<EnvUriMatcher>();
@@ -119,6 +131,11 @@ namespace angeldnd.dap {
 
         public override void OnRemoved() {
             //Do Nothing.
+        }
+
+        protected override void AddSummaryFields(Data summary) {
+            base.AddSummaryFields(summary);
+            summary.S(ContextConsts.SummaryDescription, _Description);
         }
     }
 }
