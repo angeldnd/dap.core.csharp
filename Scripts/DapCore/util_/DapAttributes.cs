@@ -135,7 +135,7 @@ namespace angeldnd.dap {
             if (dapParam.Optional) {
                 FieldInfo defaultField = type.GetField(DapParam.GetDefaultFieldName(fieldName),
                                         BindingFlags.Public | BindingFlags.Static);
-                if (field == null) {
+                if (defaultField == null) {
                     hint = string.Format("{0} = N/A", hint);
                 } else {
                     hint = string.Format("{0} = {1}", hint, defaultField.GetValue(null));
