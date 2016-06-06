@@ -20,6 +20,11 @@ namespace angeldnd.dap {
             return DoDecodeValue(v);
         }
 
+        public override bool DecodeValue(Data v) {
+            if (v == null) return false;
+            return DoDecodeValue(v);
+        }
+
         protected abstract Data DoEncodeValue();
         protected abstract bool DoDecodeValue(Data v);
     }

@@ -39,7 +39,7 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public bool DecodeValue(Data data) {
+        public virtual bool DecodeValue(Data data) {
             if (data == null) return false;
             return DoDecode(data);
         }

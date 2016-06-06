@@ -72,15 +72,15 @@ namespace angeldnd.dap {
                         AppendToCurrent(i, j, ch);
                         escaped = false;
                     } else {
-                        if (ch == WordSplitterConsts.EscapeChar) {
-                            escaped = true;
-                        } else if (enclosed) {
+                        if (enclosed) {
                             if (ch == WordSplitterConsts.EncloseEndChar) {
                                 AddCurrent(i, j);
                                 enclosed = false;
                             } else {
                                 AppendToCurrent(i, j, ch);
                             }
+                        } else if (ch == WordSplitterConsts.EscapeChar) {
+                            escaped = true;
                         } else if (ch == WordSplitterConsts.EncloseBeginChar) {
                             AddCurrent(i, j);
                             enclosed = true;
