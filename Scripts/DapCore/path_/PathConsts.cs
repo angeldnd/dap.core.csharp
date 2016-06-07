@@ -22,7 +22,11 @@ namespace angeldnd.dap {
         }
 
         public static string Join(List<string> segments) {
-            return string.Join(SegmentSeparatorAsString, segments.ToArray());
+            return Join(segments.ToArray());
+        }
+
+        public static string Join(params string[] segments) {
+            return string.Join(SegmentSeparatorAsString, segments);
         }
 
         public static string PathToKey(string path) {
