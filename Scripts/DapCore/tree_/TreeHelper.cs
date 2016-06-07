@@ -3,23 +3,23 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class TreeHelper {
-        public static string[] GetKeys<T>(IOwner root, T element) where T : class, IElement {
-            List<string> keys = new List<string>();
+        public static List<string> GetSegments<T>(IOwner root, T element) where T : class, IElement {
+            List<string> segments = new List<string>();
             T current = element;
             while (current != null) {
-                keys.Add(current.Key);
+                segments.Add(current.Key);
                 IOwner owner = current.GetOwner();
                 if (owner == root) {
                     break;
                 }
                 current = owner as T;
             }
-            keys.Reverse();
-            return keys.ToArray();
+            segments.Reverse();
+            return segments;
         }
 
         public static string GetPath<T>(IOwner root, T element) where T : class, IElement {
-            return string.Join(PathConsts.PathSeparatorAsString, GetKeys<T>(root, element));
+            return PathConsts.Join(GetSegments<T>(root, element));
         }
 
         public static T GetAncestor<T>(IElement element) where T : class, IOwner {
@@ -58,11 +58,11 @@ namespace angeldnd.dap {
             return child;
         }
 
-        public static T GetDescendant<T>(IOwner owner, string[] keys, int startIndex, bool isDebug = false)
+        public static T GetDescendant<T>(IOwner owner, List<string> segments, int startIndex, bool isDebug = false)
                                             where T : class, IElement {
             IObject current = owner;
-            for (int i = startIndex; i < keys.Length; i++) {
-                current = GetChild<IElement>(current as IOwner, keys[i], isDebug);
+            for (int i = startIndex; i < segments.Count; i++) {
+                current = GetChild<IElement>(current as IOwner, segments[i], isDebug);
                 if (current == null) {
                     return null;
                 }
@@ -71,7 +71,7 @@ namespace angeldnd.dap {
             if (result == null) {
                 owner.ErrorOrDebug(isDebug, "Type Mismatched: <{0}> {1} {2} -> {3}",
                                 typeof(T).FullName,
-                                string.Join(PathConsts.PathSeparatorAsString, keys),
+                                PathConsts.Join(segments),
                                 startIndex, current);
             }
             return result;
@@ -79,8 +79,8 @@ namespace angeldnd.dap {
 
         public static T GetDescendant<T>(IOwner owner, string relPath, bool isDebug = false)
                                             where T : class, IElement {
-            string[] keys = relPath.Split(PathConsts.PathSeparator);
-            return GetDescendant<T>(owner, keys, 0, isDebug);
+            List<string> segments = PathConsts.Split(relPath);
+            return GetDescendant<T>(owner, segments, 0, isDebug);
         }
 
         public static void ForEachDescendants<T>(IDict owner, Action<T> callback)
@@ -150,17 +150,17 @@ namespace angeldnd.dap {
         private static T GetOrCreateDescendant<TO, T>(IDict owner, string relPath, Func<IDict, string, T> func)
                                                 where TO : class, IDict, IInDictElement
                                                 where T : class, IInDictElement {
-            string[] keys = relPath.Split(PathConsts.PathSeparator);
+            List<string> segments = PathConsts.Split(relPath);
             IDict current = owner;
-            for (int i = 0; i < keys.Length; i++) {
-                if (i < keys.Length - 1) {
-                    if (current.Has(keys[i])) {
-                        current = Object.As<IDict>(current.Get<IInDictElement>(keys[i]));
+            for (int i = 0; i < segments.Count; i++) {
+                if (i < segments.Count - 1) {
+                    if (current.Has(segments[i])) {
+                        current = Object.As<IDict>(current.Get<IInDictElement>(segments[i]));
                     } else {
-                        current = current.Add<TO>(keys[i]);
+                        current = current.Add<TO>(segments[i]);
                     }
                 } else {
-                    return func(current, keys[i]);
+                    return func(current, segments[i]);
                 }
                 if (current == null) {
                     return null;

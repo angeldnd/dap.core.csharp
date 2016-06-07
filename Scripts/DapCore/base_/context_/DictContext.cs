@@ -103,22 +103,22 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public TA GetAspect<TA>(string aspectPath, bool isDebug = false) where TA : class, IAspect {  //__SILP__
-            string[] keys = aspectPath.Split(PathConsts.PathSeparator);                               //__SILP__
-            if (keys.Length < 1) {                                                                    //__SILP__
+            List<string> segments = PathConsts.Split(aspectPath);                                     //__SILP__
+            if (segments.Count < 1) {                                                                 //__SILP__
                 ErrorOrDebug(isDebug, "Invalid aspectPath: {0}", aspectPath);                         //__SILP__
                 return null;                                                                          //__SILP__
             }                                                                                         //__SILP__
             IAspect topAspect;                                                                        //__SILP__
-            if (!_TopAspectsDict.TryGetValue(keys[0], out topAspect)) {                               //__SILP__
+            if (!_TopAspectsDict.TryGetValue(segments[0], out topAspect)) {                           //__SILP__
                 ErrorOrDebug(isDebug, "Not Found: {0}", aspectPath);                                  //__SILP__
                 return null;                                                                          //__SILP__
             }                                                                                         //__SILP__
-            if (keys.Length == 1) {                                                                   //__SILP__
+            if (segments.Count == 1) {                                                                //__SILP__
                 return As<TA>(topAspect, isDebug);                                                    //__SILP__
             } else {                                                                                  //__SILP__
                 IOwner asOwner = As<IOwner>(topAspect, isDebug);                                      //__SILP__
                 if (asOwner != null) {                                                                //__SILP__
-                    return TreeHelper.GetDescendant<TA>(asOwner, keys, 1, isDebug);                   //__SILP__
+                    return TreeHelper.GetDescendant<TA>(asOwner, segments, 1, isDebug);               //__SILP__
                 }                                                                                     //__SILP__
             }                                                                                         //__SILP__
             return null;                                                                              //__SILP__

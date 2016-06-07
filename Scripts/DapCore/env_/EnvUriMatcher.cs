@@ -11,9 +11,9 @@ namespace angeldnd.dap {
             if (contextPathPattern == null) {
                 throw new NullReferenceException("Invalid contextPathPattern");
             }
-            ContextPathPatternMatcher = new PatternMatcher(PathConsts.PathSeparator, contextPathPattern, CaseSensitive);
+            ContextPathPatternMatcher = new PatternMatcher(PathConsts.SegmentSeparator, contextPathPattern, CaseSensitive);
             if (!string.IsNullOrEmpty(aspectPathPattern)) {
-                AspectPathPatternMatcher = new PatternMatcher(PathConsts.PathSeparator, aspectPathPattern, CaseSensitive);
+                AspectPathPatternMatcher = new PatternMatcher(PathConsts.SegmentSeparator, aspectPathPattern, CaseSensitive);
             }
         }
 

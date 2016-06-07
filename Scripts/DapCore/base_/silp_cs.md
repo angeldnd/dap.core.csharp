@@ -339,22 +339,22 @@ protected TA AddTopAspect<TA>(string key) where TA : class, IAspect {
 }
 
 public TA GetAspect<TA>(string aspectPath, bool isDebug = false) where TA : class, IAspect {
-    string[] keys = aspectPath.Split(PathConsts.PathSeparator);
-    if (keys.Length < 1) {
+    List<string> segments = PathConsts.Split(aspectPath);
+    if (segments.Count < 1) {
         ErrorOrDebug(isDebug, "Invalid aspectPath: {0}", aspectPath);
         return null;
     }
     IAspect topAspect;
-    if (!_TopAspectsDict.TryGetValue(keys[0], out topAspect)) {
+    if (!_TopAspectsDict.TryGetValue(segments[0], out topAspect)) {
         ErrorOrDebug(isDebug, "Not Found: {0}", aspectPath);
         return null;
     }
-    if (keys.Length == 1) {
+    if (segments.Count == 1) {
         return As<TA>(topAspect, isDebug);
     } else {
         IOwner asOwner = As<IOwner>(topAspect, isDebug);
         if (asOwner != null) {
-            return TreeHelper.GetDescendant<TA>(asOwner, keys, 1, isDebug);
+            return TreeHelper.GetDescendant<TA>(asOwner, segments, 1, isDebug);
         }
     }
     return null;

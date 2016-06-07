@@ -229,23 +229,22 @@ namespace angeldnd.dap {
             aspect = null;
             if (uri == null) return false;
 
-            string[] segments = uri.Split(UriConsts.PathSeparator);
-            if (segments.Length < 1 || segments.Length > 2) {
-                Error("Invalid Uri: {0} -> {1}", uri, segments.Length);
+            string contextPath, aspectPath;
+            if (!UriConsts.Decode(uri, out contextPath, out aspectPath)) {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(segments[0])) {
+            if (string.IsNullOrEmpty(contextPath)) {
                 context = this;
             } else {
-                context = ContextExtension.GetContext(this, segments[0], false);
+                context = ContextExtension.GetContext(this, contextPath, false);
             }
             if (context == null) return false;
 
-            if (segments.Length == 1) {
+            if (string.IsNullOrEmpty(aspectPath)) {
                 return true;
             } else {
-                aspect = context.GetAspect(segments[1], false);
+                aspect = context.GetAspect(aspectPath, false);
                 return aspect != null;
             }
         }

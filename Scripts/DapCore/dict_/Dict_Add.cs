@@ -4,6 +4,10 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public abstract partial class Dict<T> {
         private bool CheckAdd(Type type, string key) {
+            if (string.IsNullOrEmpty(key)) {
+                Error("Invalid Key: {0}", key);
+                return false;
+            }
             if (type != _ElementType && !IsValidElementType(type)) {
                 Error("Type Mismatched: <{0}>, {1} -> {2}",
                             _ElementType.FullName, key, type.FullName);
