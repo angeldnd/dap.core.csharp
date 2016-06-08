@@ -23,6 +23,10 @@ namespace angeldnd.dap {
         Data HandleRequest(Data req);
     }
 
+    public interface ISetupWatcher {
+        void OnSetup(Handler handler);
+    }
+
     public interface IRequestChecker {
         bool IsValidRequest(Handler handler, Data req);
     }
@@ -37,6 +41,18 @@ namespace angeldnd.dap {
 
     public interface IRequestHandler {
         Data DoHandle(Handler handler, Data req);
+    }
+
+    public sealed class BlockSetupWatcher : WeakBlock, ISetupWatcher {
+        private readonly Action<Handler> _Block;
+
+        public BlockSetupWatcher(IBlockOwner owner, Action<Handler> block) : base(owner) {
+            _Block = block;
+        }
+
+        public void OnSetup(Handler handler) {
+            _Block(handler);
+        }
     }
 
     public sealed class BlockRequestChecker : WeakBlock, IRequestChecker {

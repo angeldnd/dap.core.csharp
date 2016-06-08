@@ -40,7 +40,7 @@ namespace angeldnd.dap {
 
         //SILP: ADD_REMOVE_HELPER(RequestChecker, handlerKey, handler, Handler, RequestChecker, checker, IRequestChecker)
         public bool AddRequestChecker(string handlerKey, IRequestChecker checker) {     //__SILP__
-            Handler handler = Get<Handler>(handlerKey);                                 //__SILP__
+            Handler handler = Get(handlerKey);                                          //__SILP__
             if (handler != null) {                                                      //__SILP__
                 return handler.AddRequestChecker(checker);                              //__SILP__
             }                                                                           //__SILP__
@@ -48,7 +48,7 @@ namespace angeldnd.dap {
         }                                                                               //__SILP__
                                                                                         //__SILP__
         public bool RemoveRequestChecker(string handlerKey, IRequestChecker checker) {  //__SILP__
-            Handler handler = Get<Handler>(handlerKey);                                 //__SILP__
+            Handler handler = Get(handlerKey);                                          //__SILP__
             if (handler != null) {                                                      //__SILP__
                 return handler.RemoveRequestChecker(checker);                           //__SILP__
             }                                                                           //__SILP__
@@ -57,7 +57,7 @@ namespace angeldnd.dap {
 
         //SILP: ADD_REMOVE_HELPER(RequestWatcher, handlerKey, handler, Handler, RequestWatcher, listener, IRequestWatcher)
         public bool AddRequestWatcher(string handlerKey, IRequestWatcher listener) {     //__SILP__
-            Handler handler = Get<Handler>(handlerKey);                                  //__SILP__
+            Handler handler = Get(handlerKey);                                           //__SILP__
             if (handler != null) {                                                       //__SILP__
                 return handler.AddRequestWatcher(listener);                              //__SILP__
             }                                                                            //__SILP__
@@ -65,7 +65,7 @@ namespace angeldnd.dap {
         }                                                                                //__SILP__
                                                                                          //__SILP__
         public bool RemoveRequestWatcher(string handlerKey, IRequestWatcher listener) {  //__SILP__
-            Handler handler = Get<Handler>(handlerKey);                                  //__SILP__
+            Handler handler = Get(handlerKey);                                           //__SILP__
             if (handler != null) {                                                       //__SILP__
                 return handler.RemoveRequestWatcher(listener);                           //__SILP__
             }                                                                            //__SILP__
@@ -74,7 +74,7 @@ namespace angeldnd.dap {
 
         //SILP: ADD_REMOVE_HELPER(ResponseWatcher, handlerKey, handler, Handler, ResponseWatcher, listener, IResponseWatcher)
         public bool AddResponseWatcher(string handlerKey, IResponseWatcher listener) {     //__SILP__
-            Handler handler = Get<Handler>(handlerKey);                                    //__SILP__
+            Handler handler = Get(handlerKey);                                             //__SILP__
             if (handler != null) {                                                         //__SILP__
                 return handler.AddResponseWatcher(listener);                               //__SILP__
             }                                                                              //__SILP__
@@ -82,7 +82,7 @@ namespace angeldnd.dap {
         }                                                                                  //__SILP__
                                                                                            //__SILP__
         public bool RemoveResponseWatcher(string handlerKey, IResponseWatcher listener) {  //__SILP__
-            Handler handler = Get<Handler>(handlerKey);                                    //__SILP__
+            Handler handler = Get(handlerKey);                                             //__SILP__
             if (handler != null) {                                                         //__SILP__
                 return handler.RemoveResponseWatcher(listener);                            //__SILP__
             }                                                                              //__SILP__

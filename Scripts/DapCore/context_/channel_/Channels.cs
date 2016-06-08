@@ -32,7 +32,7 @@ namespace angeldnd.dap {
 
         //SILP: ADD_REMOVE_HELPER(EventChecker, channelKey, channel, Channel, EventChecker, checker, IEventChecker)
         public bool AddEventChecker(string channelKey, IEventChecker checker) {     //__SILP__
-            Channel channel = Get<Channel>(channelKey);                             //__SILP__
+            Channel channel = Get(channelKey);                                      //__SILP__
             if (channel != null) {                                                  //__SILP__
                 return channel.AddEventChecker(checker);                            //__SILP__
             }                                                                       //__SILP__
@@ -40,7 +40,7 @@ namespace angeldnd.dap {
         }                                                                           //__SILP__
                                                                                     //__SILP__
         public bool RemoveEventChecker(string channelKey, IEventChecker checker) {  //__SILP__
-            Channel channel = Get<Channel>(channelKey);                             //__SILP__
+            Channel channel = Get(channelKey);                                      //__SILP__
             if (channel != null) {                                                  //__SILP__
                 return channel.RemoveEventChecker(checker);                         //__SILP__
             }                                                                       //__SILP__
@@ -49,7 +49,7 @@ namespace angeldnd.dap {
 
         //SILP: ADD_REMOVE_HELPER(EventWatcher, channelKey, channel, Channel, EventWatcher, listener, IEventWatcher)
         public bool AddEventWatcher(string channelKey, IEventWatcher listener) {     //__SILP__
-            Channel channel = Get<Channel>(channelKey);                              //__SILP__
+            Channel channel = Get(channelKey);                                       //__SILP__
             if (channel != null) {                                                   //__SILP__
                 return channel.AddEventWatcher(listener);                            //__SILP__
             }                                                                        //__SILP__
@@ -57,7 +57,7 @@ namespace angeldnd.dap {
         }                                                                            //__SILP__
                                                                                      //__SILP__
         public bool RemoveEventWatcher(string channelKey, IEventWatcher listener) {  //__SILP__
-            Channel channel = Get<Channel>(channelKey);                              //__SILP__
+            Channel channel = Get(channelKey);                                       //__SILP__
             if (channel != null) {                                                   //__SILP__
                 return channel.RemoveEventWatcher(listener);                         //__SILP__
             }                                                                        //__SILP__

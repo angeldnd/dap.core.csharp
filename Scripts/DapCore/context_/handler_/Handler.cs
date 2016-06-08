@@ -17,6 +17,9 @@ namespace angeldnd.dap {
         public bool Setup(IRequestHandler handler) {
             if (_Handler == null) {
                 _Handler = handler;
+                WeakListHelper.Notify(_SetupWatchers, (ISetupWatcher watcher) => {
+                    watcher.OnSetup(this);
+                });
                 return true;
             }
             Error("Alread Setup: {0} -> {1}", _Handler, handler);
@@ -44,15 +47,15 @@ namespace angeldnd.dap {
                 return null;
             }
 
-            WeakListHelper.Notify(_RequestWatchers, (IRequestWatcher listener) => {
-                listener.OnRequest(this, req);
+            WeakListHelper.Notify(_RequestWatchers, (IRequestWatcher watcher) => {
+                watcher.OnRequest(this, req);
             });
 
             Data res = _Handler.DoHandle(this, req);
             AdvanceRevision();
 
-            WeakListHelper.Notify(_ResponseWatchers, (IResponseWatcher listener) => {
-                listener.OnResponse(this, req, res);
+            WeakListHelper.Notify(_ResponseWatchers, (IResponseWatcher watcher) => {
+                watcher.OnResponse(this, req, res);
             });
             if (LogDebug) {
                 Debug("HandleRequest: {0} -> {1}", Data.ToFullString(req), Data.ToFullString(res));
@@ -89,8 +92,24 @@ namespace angeldnd.dap {
             summary.B(ContextConsts.SummaryIsValid, IsValid)
                    .I(ContextConsts.SummaryCheckerCount, RequestCheckerCount)
                    .I(ContextConsts.SummaryWatcherCount, RequestWatcherCount)
-                   .I(ContextConsts.Summary2ndWatcherCount, ResponseWatcherCount);
+                   .I(ContextConsts.Summary2ndWatcherCount, ResponseWatcherCount)
+                   .I(ContextConsts.Summary3rdWatcherCount, SetupWatcherCount);
         }
+
+        //SILP: DECLARE_LIST(SetupWatcher, watcher, ISetupWatcher, _SetupWatchers)
+        private WeakList<ISetupWatcher> _SetupWatchers = null;        //__SILP__
+                                                                      //__SILP__
+        public int SetupWatcherCount {                                //__SILP__
+            get { return WeakListHelper.Count(_SetupWatchers); }      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool AddSetupWatcher(ISetupWatcher watcher) {          //__SILP__
+            return WeakListHelper.Add(ref _SetupWatchers, watcher);   //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool RemoveSetupWatcher(ISetupWatcher watcher) {       //__SILP__
+            return WeakListHelper.Remove(_SetupWatchers, watcher);    //__SILP__
+        }                                                             //__SILP__
 
         //SILP: DECLARE_LIST(RequestChecker, checker, IRequestChecker, _RequestCheckers)
         private WeakList<IRequestChecker> _RequestCheckers = null;     //__SILP__
@@ -107,34 +126,34 @@ namespace angeldnd.dap {
             return WeakListHelper.Remove(_RequestCheckers, checker);   //__SILP__
         }                                                              //__SILP__
 
-        //SILP: DECLARE_LIST(RequestWatcher, listener, IRequestWatcher, _RequestWatchers)
-        private WeakList<IRequestWatcher> _RequestWatchers = null;      //__SILP__
-                                                                        //__SILP__
-        public int RequestWatcherCount {                                //__SILP__
-            get { return WeakListHelper.Count(_RequestWatchers); }      //__SILP__
-        }                                                               //__SILP__
-                                                                        //__SILP__
-        public bool AddRequestWatcher(IRequestWatcher listener) {       //__SILP__
-            return WeakListHelper.Add(ref _RequestWatchers, listener);  //__SILP__
-        }                                                               //__SILP__
-                                                                        //__SILP__
-        public bool RemoveRequestWatcher(IRequestWatcher listener) {    //__SILP__
-            return WeakListHelper.Remove(_RequestWatchers, listener);   //__SILP__
-        }                                                               //__SILP__
+        //SILP: DECLARE_LIST(RequestWatcher, watcher, IRequestWatcher, _RequestWatchers)
+        private WeakList<IRequestWatcher> _RequestWatchers = null;     //__SILP__
+                                                                       //__SILP__
+        public int RequestWatcherCount {                               //__SILP__
+            get { return WeakListHelper.Count(_RequestWatchers); }     //__SILP__
+        }                                                              //__SILP__
+                                                                       //__SILP__
+        public bool AddRequestWatcher(IRequestWatcher watcher) {       //__SILP__
+            return WeakListHelper.Add(ref _RequestWatchers, watcher);  //__SILP__
+        }                                                              //__SILP__
+                                                                       //__SILP__
+        public bool RemoveRequestWatcher(IRequestWatcher watcher) {    //__SILP__
+            return WeakListHelper.Remove(_RequestWatchers, watcher);   //__SILP__
+        }                                                              //__SILP__
 
-        //SILP: DECLARE_LIST(ResponseWatcher, listener, IResponseWatcher, _ResponseWatchers)
-        private WeakList<IResponseWatcher> _ResponseWatchers = null;     //__SILP__
-                                                                         //__SILP__
-        public int ResponseWatcherCount {                                //__SILP__
-            get { return WeakListHelper.Count(_ResponseWatchers); }      //__SILP__
-        }                                                                //__SILP__
-                                                                         //__SILP__
-        public bool AddResponseWatcher(IResponseWatcher listener) {      //__SILP__
-            return WeakListHelper.Add(ref _ResponseWatchers, listener);  //__SILP__
-        }                                                                //__SILP__
-                                                                         //__SILP__
-        public bool RemoveResponseWatcher(IResponseWatcher listener) {   //__SILP__
-            return WeakListHelper.Remove(_ResponseWatchers, listener);   //__SILP__
-        }                                                                //__SILP__
+        //SILP: DECLARE_LIST(ResponseWatcher, watcher, IResponseWatcher, _ResponseWatchers)
+        private WeakList<IResponseWatcher> _ResponseWatchers = null;    //__SILP__
+                                                                        //__SILP__
+        public int ResponseWatcherCount {                               //__SILP__
+            get { return WeakListHelper.Count(_ResponseWatchers); }     //__SILP__
+        }                                                               //__SILP__
+                                                                        //__SILP__
+        public bool AddResponseWatcher(IResponseWatcher watcher) {      //__SILP__
+            return WeakListHelper.Add(ref _ResponseWatchers, watcher);  //__SILP__
+        }                                                               //__SILP__
+                                                                        //__SILP__
+        public bool RemoveResponseWatcher(IResponseWatcher watcher) {   //__SILP__
+            return WeakListHelper.Remove(_ResponseWatchers, watcher);   //__SILP__
+        }                                                               //__SILP__
     }
 }
