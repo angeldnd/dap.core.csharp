@@ -110,17 +110,17 @@ namespace angeldnd.dap {
             return handler;
         }
 
-        public bool FireEvent(string fragment, Data evt) {
+        public bool FireEvent(string fragment, Data evt = null) {
             string key = GetSubKey(fragment);
             return Obj.Channels.FireEvent(key, evt);
         }
 
-        public Data HandleRequest(string fragment, Data req) {
+        public Data HandleRequest(string fragment, Data req = null) {
             string key = GetSubKey(fragment);
             return Obj.Handlers.HandleRequest(key, req);
         }
 
-        public Var<T> SetupVar<T>(string fragment, T val, Action<IVar> watcher) {
+        public Var<T> SetupVar<T>(string fragment, T val, Action<IVar> watcher = null) {
             string key = GetSubKey(fragment);
             Var<T> v = Obj.Vars.AddVar<T>(key, val);
             if (v != null) {
