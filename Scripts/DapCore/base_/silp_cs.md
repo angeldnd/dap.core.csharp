@@ -202,11 +202,15 @@ public override sealed bool DebugMode {
 }
 
 public override void OnAdded() {
-    Env.Instance.Hooks._OnAspectAdded(this);
+    if (_Context != null) {
+        Env.Instance.Hooks._OnAspectAdded(this);
+    }
 }
 
 public override void OnRemoved() {
-    Env.Instance.Hooks._OnAspectRemoved(this);
+    if (_Context != null) {
+        Env.Instance.Hooks._OnAspectRemoved(this);
+    }
 }
 ```
 

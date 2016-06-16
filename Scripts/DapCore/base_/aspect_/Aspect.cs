@@ -43,11 +43,15 @@ namespace angeldnd.dap {
         }                                                             //__SILP__
                                                                       //__SILP__
         public override void OnAdded() {                              //__SILP__
-            Env.Instance.Hooks._OnAspectAdded(this);                  //__SILP__
+            if (_Context != null) {                                   //__SILP__
+                Env.Instance.Hooks._OnAspectAdded(this);              //__SILP__
+            }                                                         //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
         public override void OnRemoved() {                            //__SILP__
-            Env.Instance.Hooks._OnAspectRemoved(this);                //__SILP__
+            if (_Context != null) {                                   //__SILP__
+                Env.Instance.Hooks._OnAspectRemoved(this);            //__SILP__
+            }                                                         //__SILP__
         }                                                             //__SILP__
         //SILP:ASPECT_SUMMARY_MIXIN()
         protected override void AddSummaryFields(Data summary) {      //__SILP__
