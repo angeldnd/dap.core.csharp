@@ -50,8 +50,7 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public bool Publish(string msg, object token) {
-            TryAddMsg(msg);
+        private bool CheckToken(string msg, object token) {
             if (_MsgTokens == null) {
                 _MsgTokens = new Dictionary<string, object>();
                 _MsgCounts = new Dictionary<string, int>();
@@ -64,8 +63,16 @@ namespace angeldnd.dap {
                 }
             } else {
                 _MsgTokens[msg] = token;
-                _MsgCounts[msg] = GetMsgCount(msg) + 1;
             }
+            return true;
+        }
+
+        public bool Publish(string msg, object token) {
+            TryAddMsg(msg);
+            if (!CheckToken(msg, token)) {
+                return false;
+            }
+            _MsgCounts[msg] = GetMsgCount(msg) + 1;
 
             if (_MsgSubs != null) {
                 _MsgSubs.Publish(msg, (IBusSub sub) => {
@@ -76,6 +83,14 @@ namespace angeldnd.dap {
                 Debug("Publish {0}: sub_count = {1}, msg_count = {2}",
                          msg, GetSubCount(msg), GetMsgCount(msg));
             }
+            return true;
+        }
+
+        public bool Clear(string msg, object token) {
+            if (!CheckToken(msg, token)) {
+                return false;
+            }
+            _MsgCounts[msg] = 0;
             return true;
         }
 
