@@ -14,6 +14,9 @@ namespace angeldnd.dap {
 
         public void Seal() {
             _Sealed = true;
+            OnSeal();
         }
+
+        protected virtual void OnSeal() {}
     }
 }

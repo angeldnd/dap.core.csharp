@@ -9,7 +9,7 @@ namespace angeldnd.dap {
     public static class EnvConsts {
         public const string DefaultLogDir = "dap";
         public const string DefaultLogName = "env";
-        public const bool DefaultLogDebug = true;
+        public const bool DefaultLogDebug = false;
 
         public const string KeyHooks = "Hooks";
 
