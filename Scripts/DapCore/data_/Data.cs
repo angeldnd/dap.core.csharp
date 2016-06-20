@@ -9,7 +9,7 @@ namespace angeldnd.dap {
 
     public enum DataType : byte {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
-    public static class DataExtention {
+    public static class DataExtension {
         public static string ToFullString(this Data data, string indent = "\t") {
             return Convertor.DataConvertor.Convert(data, indent);
         }
