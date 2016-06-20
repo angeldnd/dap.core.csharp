@@ -13,7 +13,7 @@ namespace angeldnd.dap {
                 return checker.IsValidEvent(this, evt);
             })) {
                 if (LogDebug) {
-                    Debug("Invalid Event: {0} => {1}", lastChecker, Data.ToFullString(evt));
+                    Debug("Invalid Event: {0} => {1}", lastChecker, evt.ToFullString());
                 }
                 return false;
             }
@@ -23,7 +23,7 @@ namespace angeldnd.dap {
                 listener.OnEvent(this, evt);
             });
             if (LogDebug) {
-                Debug("FireEvent: {0}", Data.ToFullString(evt));
+                Debug("FireEvent: {0}", evt.ToFullString());
             }
             return true;
         }

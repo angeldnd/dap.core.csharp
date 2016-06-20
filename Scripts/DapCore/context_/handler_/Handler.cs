@@ -42,7 +42,7 @@ namespace angeldnd.dap {
                 return checker.IsValidRequest(this, req);
             })) {
                 if (LogDebug) {
-                    Debug("Invalid Request: {0} => {1}", lastChecker, Data.ToFullString(req));
+                    Debug("Invalid Request: {0} => {1}", lastChecker, req.ToFullString());
                 }
                 return null;
             }
@@ -58,7 +58,7 @@ namespace angeldnd.dap {
                 watcher.OnResponse(this, req, res);
             });
             if (LogDebug) {
-                Debug("HandleRequest: {0} -> {1}", Data.ToFullString(req), Data.ToFullString(res));
+                Debug("HandleRequest: {0} -> {1}", req.ToFullString(), res.ToFullString());
             }
             return res;
         }

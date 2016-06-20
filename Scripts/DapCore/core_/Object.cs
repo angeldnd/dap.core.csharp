@@ -86,7 +86,7 @@ namespace angeldnd.dap {
         }
 
         public override string ToString() {
-            return Data.ToFullString(Summary, null);
+            return Summary.ToFullString(null);
         }
 
         protected virtual void AddSummaryFields(Data summary) {

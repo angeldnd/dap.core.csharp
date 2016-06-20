@@ -9,21 +9,18 @@ namespace angeldnd.dap {
 
     public enum DataType : byte {Invalid = 0, Bool, Int, Long, Float, Double, String, Data};
 
+    public static class DataExtention {
+        public static string ToFullString(this Data data, string indent = "\t") {
+            return Convertor.DataConvertor.Convert(data, indent);
+        }
+    }
+
     public sealed class Data : Sealable {
+        public static int MaxFullStringKeyCount = 12;
+
         public const string VarPrefix = "$";
         public static string GetVarKey(string key) {
             return VarPrefix + key;
-        }
-
-        public static string ToString(Data data) {
-            if (data == null) {
-                return "null";
-            }
-            return data.ToString();
-        }
-
-        public static string ToFullString(Data data, string indent = "\t") {
-            return Convertor.DataConvertor.Convert(data, indent);
         }
 
         public static Data Clone(Data data) {
@@ -43,8 +40,8 @@ namespace angeldnd.dap {
         private Dictionary<string, Data> _DataValues = null;
 
         public override string ToString() {
-            if (DeepCount <= 12) {
-                return ToFullString(this, "\t");
+            if (DeepCount <= MaxFullStringKeyCount) {
+                return this.ToFullString(null);
             }
             return string.Format("[Data:{0}]", Count);
         }
