@@ -57,11 +57,11 @@ namespace angeldnd.dap {
 
     public class AssemblyBootstrapper : Bootstrapper {
         public override int GetVersion() {
-            return -1;
+            return 0;
         }
 
         public override int GetSubVersion() {
-            return -1;
+            return 0;
         }
 
         public override LogProvider GetLogProvider() {
