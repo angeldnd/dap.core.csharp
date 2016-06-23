@@ -11,7 +11,7 @@ namespace angeldnd.dap {
 
     [DapType(ItemsConsts.TypeItems)]
     [DapOrder(-9)]
-    public sealed class Items : DictContext<IDictContext, IContext> {
+    public class Items : DictContext<IDictContext, IContext> {
         public Items(IDictContext owner, string key) : base(owner, key) {
         }
     }

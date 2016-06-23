@@ -36,7 +36,7 @@ namespace angeldnd.dap {
     }
 
     public class DataCodeConvertor : Convertor<Data> {
-        public void Convert(Data val, string prefix, string suffix, string linePrefix, string indent, Action<string> callback) {
+        public void Convert(Data val, string prefix, string suffix, string linePrefix, string indent, Action<string> callback, List<string> ignoreKeys=null) {
             if (val == null) {
                 callback(string.Format("{0}{1}null;", linePrefix, prefix));
                 return;
@@ -48,7 +48,7 @@ namespace angeldnd.dap {
                 builder.Length = 0;
             };
             builder.Append(string.Format("{0}{1}", linePrefix, prefix));
-            AppendData(builder, appendLine, linePrefix, indent, 0, val);
+            AppendData(builder, appendLine, linePrefix, indent, 0, val, ignoreKeys);
             builder.Append(suffix);
             appendLine();
         }
@@ -78,7 +78,7 @@ namespace angeldnd.dap {
         }
 
         private void AppendData(StringBuilder builder, Action appendLine,
-                                string linePrefix, string indent, int indentLevel, Data data) {
+                                string linePrefix, string indent, int indentLevel, Data data, List<string> ignoreKeys=null) {
             if (data == null) {
                 builder.Append(DataCodeConvertorConsts.NullStr);
                 return;
@@ -87,6 +87,9 @@ namespace angeldnd.dap {
             builder.Append(DataCodeConvertorConsts.DataBegin);
             if (data.Count > 0) {
                 foreach (string key in data.Keys) {
+                    if (ignoreKeys != null && ignoreKeys.Contains(key)) {
+                        continue;
+                    }
                     appendLine();
                     AppendValue(builder, appendLine, linePrefix, indent, indentLevel + 1, data, key);
                 }
