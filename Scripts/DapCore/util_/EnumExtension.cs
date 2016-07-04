@@ -10,7 +10,7 @@ namespace angeldnd.dap {
         public static bool SetValueAsEnum<T>(this IVar<int> v, T newValue) where T : struct, IConvertible {
             Type valueType = typeof(T);
             if (valueType.IsEnum) {
-                return v.SetValue((int)val);
+                return v.SetValue(System.Convert.ToInt32(newValue));
             } else {
                 Log.Error("Invalid Enum Type: {0}", valueType);
             }
@@ -20,7 +20,7 @@ namespace angeldnd.dap {
         public static bool SetupAsEnum<T>(this IVar<int> v, T defaultValue) where T : struct, IConvertible {
             Type valueType = typeof(T);
             if (valueType.IsEnum) {
-                return v.Setup((int)defaultValue);
+                return v.Setup(System.Convert.ToInt32(defaultValue));
             } else {
                 Log.Error("Invalid Enum Type: {0}", valueType);
             }
