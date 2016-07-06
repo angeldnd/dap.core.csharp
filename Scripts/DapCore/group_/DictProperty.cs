@@ -6,7 +6,7 @@ namespace angeldnd.dap {
     public abstract class DictProperty<T> : DictInBothAspect<IProperties, T>, IDictProperties, IProperty
                                                 where T : class, IProperty {
         public Type ValueType {
-            get { return typeof(T); }
+            get { return GetType(); }
         }
 
         private Data DoEncodeValue(bool fullMode) {

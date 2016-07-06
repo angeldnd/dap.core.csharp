@@ -7,8 +7,7 @@ namespace angeldnd.dap {
         }
 
         private IRequestHandler _Handler = null;
-        private int _SucceedCount = 0;
-        private int _FailedCount = 0;
+        private int _CheckFailedCount = 0;
 
         public bool IsValid {
             get { return _Handler != null; }
@@ -44,6 +43,7 @@ namespace angeldnd.dap {
                 if (LogDebug) {
                     Debug("Invalid Request: {0} => {1}", lastChecker, req.ToFullString());
                 }
+                _CheckFailedCount++;
                 return null;
             }
 
@@ -93,7 +93,8 @@ namespace angeldnd.dap {
                    .I(ContextConsts.SummaryCheckerCount, RequestCheckerCount)
                    .I(ContextConsts.SummaryWatcherCount, RequestWatcherCount)
                    .I(ContextConsts.Summary2ndWatcherCount, ResponseWatcherCount)
-                   .I(ContextConsts.Summary3rdWatcherCount, SetupWatcherCount);
+                   .I(ContextConsts.Summary3rdWatcherCount, SetupWatcherCount)
+                   .I(ContextConsts.SummaryCheckFailedCount, _CheckFailedCount);
         }
 
         //SILP: DECLARE_LIST(SetupWatcher, watcher, ISetupWatcher, _SetupWatchers)

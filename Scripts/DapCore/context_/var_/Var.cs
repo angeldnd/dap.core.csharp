@@ -30,6 +30,8 @@ namespace angeldnd.dap {
             return false;
         }
 
+        private int _CheckFailedCount = 0;
+
         public Var(TO owner, string key) : base(owner, key) {
         }
 
@@ -82,6 +84,7 @@ namespace angeldnd.dap {
         public virtual bool SetValue(T newValue) {
             if (NeedUpdate(newValue)) {
                 if (!CheckNewValue(newValue)) {
+                    _CheckFailedCount++;
                     return false;
                 }
                 T lastVal = Value;
@@ -137,7 +140,8 @@ namespace angeldnd.dap {
                    .S(ContextConsts.SummaryValue, string.Format("{0}", _Value))
                    .I(ContextConsts.SummaryCheckerCount, ValueCheckerCount)
                    .I(ContextConsts.SummaryWatcherCount, ValueWatcherCount)
-                   .I(ContextConsts.Summary2ndWatcherCount, VarWatcherCount);
+                   .I(ContextConsts.Summary2ndWatcherCount, VarWatcherCount)
+                   .I(ContextConsts.SummaryCheckFailedCount, _CheckFailedCount);
         }
 
         //SILP: DECLARE_LIST(VarWatcher, watcher, IVarWatcher, _VarWatchers)
