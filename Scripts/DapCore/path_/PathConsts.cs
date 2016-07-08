@@ -8,6 +8,7 @@ namespace angeldnd.dap {
         public const string SegmentSeparatorAsString = "/";
 
         public static List<string> Split(string path) {
+            if (path == null) return null;
             string[] segments = path.Split(SegmentSeparator);
 
             List<string> result = new List<string>();
@@ -22,6 +23,7 @@ namespace angeldnd.dap {
         }
 
         public static string Join(List<string> segments) {
+            if (segments == null) return null;
             return Join(segments.ToArray());
         }
 
@@ -30,21 +32,17 @@ namespace angeldnd.dap {
         }
 
         public static string PathToKey(string path) {
-            if (path == null) return string.Empty;
-
+            if (path == null) return null;
             return path.Replace(SegmentSeparator, DictConsts.KeySeparator);
         }
 
         public static string KeyToPath(string key) {
-            if (key == null) return string.Empty;
-
+            if (key == null) return null;
             return key.Replace(DictConsts.KeySeparator, SegmentSeparator);
         }
 
         public static string Encode(string path, string relPath) {
             if (string.IsNullOrEmpty(path)) {
-                if (relPath == null) return string.Empty;
-
                 return relPath;
             } else {
                 return string.Format("{0}{1}{2}", path, SegmentSeparator, relPath);

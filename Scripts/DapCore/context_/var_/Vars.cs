@@ -20,6 +20,10 @@ namespace angeldnd.dap {
             return result;
         }
 
+        public Var<T> AddVar<T>(string key) {
+            return AddVar<T>(key, default(T));
+        }
+
         public Var<T> RemoveVar<T>(string key) {
             return Remove<Var<T>>(key);
         }

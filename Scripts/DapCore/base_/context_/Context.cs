@@ -102,6 +102,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public TA GetAspect<TA>(string aspectPath, bool isDebug = false) where TA : class, IAspect {  //__SILP__
+            if (aspectPath == null) return null;                                                      //__SILP__
             List<string> segments = PathConsts.Split(aspectPath);                                     //__SILP__
             if (segments.Count < 1) {                                                                 //__SILP__
                 ErrorOrDebug(isDebug, "Invalid aspectPath: {0}", aspectPath);                         //__SILP__

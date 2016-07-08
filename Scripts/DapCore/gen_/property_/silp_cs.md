@@ -18,7 +18,7 @@ public sealed class ${type}Property : BaseProperty<${cs_type}> {
     }
 
     protected override bool NeedUpdate(${cs_type} newVal) {
-        return base.NeedUpdate(newVal) || (Value != newVal);
+        return base.NeedSetup() || (Value != newVal);
     }
 }
 ```

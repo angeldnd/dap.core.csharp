@@ -8,12 +8,11 @@ namespace angeldnd.dap {
         public readonly PatternMatcher AspectPathPatternMatcher = null;
 
         public EnvUriMatcher(string contextPathPattern, string aspectPathPattern) {
-            if (contextPathPattern == null) {
-                throw new NullReferenceException("Invalid contextPathPattern");
-            }
-            ContextPathPatternMatcher = new PatternMatcher(PathConsts.SegmentSeparator, contextPathPattern, CaseSensitive);
-            if (!string.IsNullOrEmpty(aspectPathPattern)) {
-                AspectPathPatternMatcher = new PatternMatcher(PathConsts.SegmentSeparator, aspectPathPattern, CaseSensitive);
+            if (contextPathPattern != null) {
+                ContextPathPatternMatcher = new PatternMatcher(PathConsts.SegmentSeparator, contextPathPattern, CaseSensitive);
+                if (!string.IsNullOrEmpty(aspectPathPattern)) {
+                    AspectPathPatternMatcher = new PatternMatcher(PathConsts.SegmentSeparator, aspectPathPattern, CaseSensitive);
+                }
             }
         }
 
@@ -22,6 +21,8 @@ namespace angeldnd.dap {
         }
 
         public bool IsMatched(IContext context) {
+            if (ContextPathPatternMatcher == null) return false;
+
             if (context != null && AspectPathPatternMatcher == null) {
                 return ContextPathPatternMatcher.IsMatched(context.Path);
             }
@@ -29,6 +30,8 @@ namespace angeldnd.dap {
         }
 
         public bool IsMatched(IAspect aspect) {
+            if (ContextPathPatternMatcher == null) return false;
+
             if (aspect != null && AspectPathPatternMatcher != null) {
                 IContext context = aspect.Context;
                 return context != null

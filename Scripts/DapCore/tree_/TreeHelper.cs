@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public static class TreeHelper {
         public static List<string> GetSegments<T>(IOwner root, T element) where T : class, IElement {
+            if (element == null) return null;
             List<string> segments = new List<string>();
             T current = element;
             while (current != null) {
@@ -23,6 +24,7 @@ namespace angeldnd.dap {
         }
 
         public static T GetAncestor<T>(IElement element) where T : class, IOwner {
+            if (element == null) return null;
             IObject current = element.GetOwner();
             while (current != null) {
                 T ancestor = current as T;
@@ -41,7 +43,6 @@ namespace angeldnd.dap {
 
         public static T GetChild<T>(IOwner owner, string key, bool isDebug = false) where T : class, IElement {
             if (owner == null) return null;
-
             T child = null;
             IDict ownerAsDict = owner as IDict;
             if (ownerAsDict != null) {
@@ -60,6 +61,8 @@ namespace angeldnd.dap {
 
         public static T GetDescendant<T>(IOwner owner, List<string> segments, int startIndex, bool isDebug = false)
                                             where T : class, IElement {
+            if (owner == null) return null;
+            if (segments == null) return null;
             IObject current = owner;
             for (int i = startIndex; i < segments.Count; i++) {
                 current = GetChild<IElement>(current as IOwner, segments[i], isDebug);
@@ -79,12 +82,15 @@ namespace angeldnd.dap {
 
         public static T GetDescendant<T>(IOwner owner, string relPath, bool isDebug = false)
                                             where T : class, IElement {
+            if (owner == null) return null;
+            if (relPath == null) return null;
             List<string> segments = PathConsts.Split(relPath);
             return GetDescendant<T>(owner, segments, 0, isDebug);
         }
 
         public static void ForEachDescendants<T>(IDict owner, Action<T> callback)
                                                     where T : class, IElement {
+            if (owner == null) return;
             owner.ForEach((IInDictElement element) => {
                 T elementAsT = element as T;
                 if (elementAsT != null) {
@@ -105,6 +111,7 @@ namespace angeldnd.dap {
 
         public static void ForEachDescendants<T>(ITable owner, Action<T> callback)
                                                     where T : class, IElement {
+            if (owner == null) return;
             owner.ForEach((IInTableElement element) => {
                 T elementAsT = element as T;
                 if (elementAsT != null) {
@@ -125,6 +132,7 @@ namespace angeldnd.dap {
 
         public static List<T> GetDescendants<T>(IDict owner)
                                                     where T : class, IElement {
+            if (owner == null) return null;
             List<T> result = null;
             ForEachDescendants<T>(owner, (T element) => {
                 if (result == null) {
@@ -137,6 +145,7 @@ namespace angeldnd.dap {
 
         public static List<T> GetDescendants<T>(ITable owner)
                                                     where T : class, IElement {
+            if (owner == null) return null;
             List<T> result = null;
             ForEachDescendants<T>(owner, (T element) => {
                 if (result == null) {
@@ -150,6 +159,8 @@ namespace angeldnd.dap {
         private static T GetOrCreateDescendant<TO, T>(IDict owner, string relPath, Func<IDict, string, T> func)
                                                 where TO : class, IDict, IInDictElement
                                                 where T : class, IInDictElement {
+            if (owner == null) return null;
+            if (relPath == null) return null;
             List<string> segments = PathConsts.Split(relPath);
             IDict current = owner;
             for (int i = 0; i < segments.Count; i++) {

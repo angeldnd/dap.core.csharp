@@ -40,10 +40,17 @@ namespace angeldnd.dap {
 
         private bool _Setup = false;
 
-        public virtual bool Setup(T defaultValue) {
+        public bool NeedSetup() {
+            return !_Setup;
+        }
+
+        public bool Setup(T defaultValue) {
             if (!_Setup) {
                 _Setup = true;
                 UpdateValue(defaultValue);
+                if (LogDebug) {
+                    Debug("Setup: {0}", defaultValue);
+                }
                 return true;
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
@@ -51,12 +58,16 @@ namespace angeldnd.dap {
             }
         }
 
-        protected virtual T GetDefaultValue() {
-            return default(T);
-        }
-
         protected virtual bool NeedUpdate(T newValue) {
-            return !_Setup;
+            if (NeedSetup()) return true;
+
+            if (Object.ReferenceEquals(Value, newValue)) return false;
+
+            if (Value == null) {
+                return !newValue.Equals(Value);
+            } else {
+                return Value.Equals(newValue);
+            }
         }
 
         private void UpdateValue(T newValue) {
@@ -81,7 +92,7 @@ namespace angeldnd.dap {
             });
         }
 
-        public virtual bool SetValue(T newValue) {
+        public bool SetValue(T newValue) {
             if (NeedUpdate(newValue)) {
                 if (!CheckNewValue(newValue)) {
                     _CheckFailedCount++;
@@ -89,8 +100,11 @@ namespace angeldnd.dap {
                 }
                 T lastVal = Value;
 
-                if (!_Setup) Setup(GetDefaultValue());
-                UpdateValue(newValue);
+                if (!_Setup) {
+                    Setup(newValue);
+                } else {
+                    UpdateValue(newValue);
+                }
 
                 WeakListHelper.Notify(_ValueWatchers, (IValueWatcher<T> watcher) => {
                     watcher.OnChanged(this, lastVal);

@@ -343,6 +343,7 @@ protected TA AddTopAspect<TA>(string key) where TA : class, IAspect {
 }
 
 public TA GetAspect<TA>(string aspectPath, bool isDebug = false) where TA : class, IAspect {
+    if (aspectPath == null) return null;
     List<string> segments = PathConsts.Split(aspectPath);
     if (segments.Count < 1) {
         ErrorOrDebug(isDebug, "Invalid aspectPath: {0}", aspectPath);

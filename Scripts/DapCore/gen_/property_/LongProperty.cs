@@ -21,7 +21,7 @@ namespace angeldnd.dap {
         }                                                                              //__SILP__
                                                                                        //__SILP__
         protected override bool NeedUpdate(long newVal) {                              //__SILP__
-            return base.NeedUpdate(newVal) || (Value != newVal);                       //__SILP__
+            return base.NeedSetup() || (Value != newVal);                              //__SILP__
         }                                                                              //__SILP__
     }                                                                                  //__SILP__
 }
