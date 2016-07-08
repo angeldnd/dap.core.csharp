@@ -34,6 +34,11 @@ namespace angeldnd.dap {
         [DapParam(typeof(Data))]
         public const string SummaryPlugins = "plugins";
         public const string SummaryOk = "ok";
+
+        [DapParam(typeof(int))]
+        public const string KeyTickCount = "tick_count";
+        [DapParam(typeof(float))]
+        public const string KeyTickTime = "tick_time";
     }
 
     public sealed class Env : DictContext<Env, IContext> {
@@ -110,6 +115,12 @@ namespace angeldnd.dap {
         public static float _TickDelta = 0f;
         public static float TickDelta {
             get { return _TickDelta; }
+        }
+
+        public static Data NewTickData() {
+            return new Data()
+                    .I(EnvConsts.KeyTickCount, _TickCount)
+                    .F(EnvConsts.KeyTickTime, _TickTime);
         }
 
         public static void Tick(float tickDelta) {
