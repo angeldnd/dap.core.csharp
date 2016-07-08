@@ -117,7 +117,7 @@ namespace angeldnd.dap {
             get { return _TickDelta; }
         }
 
-        public static Data NewTickData() {
+        public static Data NewTickEvt() {
             return new Data()
                     .I(EnvConsts.KeyTickCount, _TickCount)
                     .F(EnvConsts.KeyTickTime, _TickTime);
@@ -132,7 +132,7 @@ namespace angeldnd.dap {
             _TickCount++;
             _TickDelta = tickDelta;
             _TickTime = _TickTime + tickDelta;
-            _Instance.Tick();
+            _Instance.Tick(NewTickEvt());
         }
 
         public static string GetContextPath(IContext context) {
@@ -194,8 +194,8 @@ namespace angeldnd.dap {
             //Do Nothing.
         }
 
-        private void Tick() {
-            _TickChannel.FireEvent(null);
+        private void Tick(Data evt) {
+            _TickChannel.FireEvent(evt);
         }
 
         private void PublishOnBusAndEnvBus(string msg) {
