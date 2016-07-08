@@ -171,6 +171,8 @@
     <Compile Include="DapCore\uri_\UriConsts.cs" />                           <!--__SILP__-->
     <Compile Include="DapCore\util_\AssemblyHelper.cs" />                     <!--__SILP__-->
     <Compile Include="DapCore\util_\DapAttributes.cs" />                      <!--__SILP__-->
+    <Compile Include="DapCore\util_\EnumExtension.cs" />                      <!--__SILP__-->
+    <Compile Include="DapCore\util_\EnumHelper.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\util_\SegmentHelper.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\weak_\WeakBlock.cs" />                          <!--__SILP__-->
     <Compile Include="DapCore\weak_\WeakList.cs" />                           <!--__SILP__-->
