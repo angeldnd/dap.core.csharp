@@ -47,6 +47,7 @@ namespace angeldnd.dap {
         void ForEach<T1>(Action<T1> callback) where T1 : class, IInTableElement;
         bool UntilTrue<T1>(Func<T1, bool> callback) where T1 : class, IInTableElement;
         bool UntilFalse<T1>(Func<T1, bool> callback) where T1 : class, IInTableElement;
+        T1 First<T1>(Func<T1, bool> callback, bool isDebug = false) where T1 : class, IInTableElement;
         List<T1> All<T1>() where T1 : class, IInTableElement;
 
         //Move
@@ -94,6 +95,7 @@ namespace angeldnd.dap {
         void ForEach(Action<T> callback);
         bool UntilTrue(Func<T, bool> callback);
         bool UntilFalse(Func<T, bool> callback);
+        T First(Func<T, bool> callback, bool isDebug = false);
         List<T> All();
 
         //Move

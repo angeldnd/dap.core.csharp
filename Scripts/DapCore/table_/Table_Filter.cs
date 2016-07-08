@@ -33,6 +33,22 @@ namespace angeldnd.dap {
             return Until(callback, false);
         }
 
+        public T1 First<T1>(Func<T1, bool> callback, bool isDebug = false)
+                                    where T1 : class, IInTableElement {
+            T1 result = null;
+            UntilTrue<T1>((T1 element) => {
+                if (callback(element)) {
+                    result = element;
+                    return true;
+                }
+                return false;
+            });
+            if (result == null) {
+                ErrorOrDebug(isDebug, "First<{0}>({1}): Not Found", typeof(T1).FullName, callback);
+            }
+            return result;
+        }
+
         public List<T1> All<T1>() where T1 : class, IInTableElement {
             List<T1> result = null;
             ForEach<T1>((T1 element) => {
@@ -52,6 +68,10 @@ namespace angeldnd.dap {
 
         public bool UntilFalse(Func<T, bool> callback) {
             return Until<T>(callback, false);
+        }
+
+        public T First(Func<T, bool> callback, bool isDebug = false) {
+            return First<T>(callback);
         }
 
         public List<T> All() {
