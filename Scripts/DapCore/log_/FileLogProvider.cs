@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace angeldnd.dap {
     [DapPriority(1)]
     public class FileLogProvider : LogProvider {
-        public static int MAX_STACK_TRACK_NUM = 24;
+        public static int MAX_STACK_TRACK_NUM = 32;
         public static int DEBUG_MAX_STACK_TRACK_NUM = 128;
 
         public static long FLUSH_DURATION = 10 * 1000 * 60; // flush every minute
