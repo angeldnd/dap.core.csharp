@@ -12,9 +12,47 @@ namespace angeldnd.dap {
         }
 
         private List<string> _VarKeys;
+        public int VarsCount {
+            get { return _VarKeys == null ? 0 : _VarKeys.Count; }
+        }
+
         private List<string> _PropertyKeys;
+        public int PropertiesCount {
+            get { return _PropertyKeys == null ? 0 : _PropertyKeys.Count; }
+        }
+
         private List<string> _ChannelKeys;
+        public int ChannelsCount {
+            get { return _ChannelKeys == null ? 0 : _ChannelKeys.Count; }
+        }
+
         private List<string> _HandlerKeys;
+        public int HandlersCount {
+            get { return _HandlerKeys == null ? 0 : _HandlerKeys.Count; }
+        }
+
+        private void AddAspectPathes(List<string> pathes, IDict topAspect, List<string> keys) {
+            if (keys != null) {
+                foreach (string key in keys) {
+                    var element = topAspect.Get<IInDictElement>(key);
+                    if (element != null) {
+                        IAspect aspect = Object.As<IAspect>(element);
+                        if (aspect != null) {
+                            pathes.Add(aspect.Path);
+                        }
+                    }
+                }
+            }
+        }
+
+        public List<string> GetAspectPathes() {
+            List<string> result = new List<string>();
+            AddAspectPathes(result, Obj.Vars, _VarKeys);
+            AddAspectPathes(result, Obj.Properties, _PropertyKeys);
+            AddAspectPathes(result, Obj.Channels, _ChannelKeys);
+            AddAspectPathes(result, Obj.Handlers, _HandlerKeys);
+            return result;
+        }
 
         public delegate void SyncPropertyBlock(string key);
         private Dictionary<string, SyncPropertyBlock> _PropertySyncers;
@@ -124,6 +162,7 @@ namespace angeldnd.dap {
             string key = GetSubKey(fragment);
             Var<T> v = Obj.Vars.AddVar<T>(key, val);
             if (v != null) {
+                SaveVarKey(key);
                 if (watcher != null && v.AddVarWatcher(this, watcher) == null) {
                     Error("Add Watcher Failed: {0} -> {1}, {2}", this, typeof(T).FullName, fragment);
                 }
