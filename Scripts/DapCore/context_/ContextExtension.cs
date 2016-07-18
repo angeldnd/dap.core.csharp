@@ -65,7 +65,7 @@ namespace angeldnd.dap {
         public static void ForEachContextsWithManner<T>(this IDictContext context, string mannerKey, Action<T> callback)
                                                     where T : Manner {
             TreeHelper.ForEachDescendants<IContext>(context, (IContext element) => {
-                T manner = element.Manners.Get<T>(mannerKey, false);
+                T manner = element.Manners.Get<T>(mannerKey, true);
                 if (manner != null) {
                     callback(manner);
                 }
