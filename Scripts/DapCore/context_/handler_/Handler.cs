@@ -31,8 +31,7 @@ namespace angeldnd.dap {
 
         public Data HandleRequest(Data req) {
             if (!IsValid) {
-                Error("Invalid Handler: {0}", req);
-                return null;
+                return ResponseHelper.InternalError(this, req, "Invalid Handler");
             }
 
             IRequestChecker lastChecker = null;
@@ -44,7 +43,7 @@ namespace angeldnd.dap {
                     Debug("Invalid Request: {0} => {1}", lastChecker, req.ToFullString());
                 }
                 _CheckFailedCount++;
-                return null;
+                return ResponseHelper.BadRequest(this, req, "Invalid Request");
             }
 
             WeakListHelper.Notify(_RequestWatchers, (IRequestWatcher watcher) => {
