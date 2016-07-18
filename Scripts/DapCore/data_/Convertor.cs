@@ -75,7 +75,7 @@ namespace angeldnd.dap {
 
         private static InternalConvertor GetInternalConvertor(Type type) {
             if (type == null) return null;
-            IVar v = _Convertors.Get(type.FullName);
+            IVar v = _Convertors.Get(type.FullName, true);
             if (v != null) {
                 return angeldnd.dap.Object.As<InternalConvertor>(v.GetValue());
             }
@@ -113,17 +113,17 @@ namespace angeldnd.dap {
             }
         }
 
-        public static string Convert(object val) {
+        public static string Convert(object val, bool isDebug = false) {
             if (val == null) return Null;
 
             InternalConvertor convertor = GetInternalConvertor(val.GetType());
             if (convertor != null) {
                 return convertor._ConvertInternal(val);
             } else {
-                Log.Error("Convert Failed, Unknown Type: <{0}> {1}",
+                Log.ErrorOrDebug(isDebug, "Convert Failed, Unknown Type: <{0}> {1}",
                                             GetTypeStr(val), val);
+                return val.ToString();
             }
-            return UnknownType;
         }
     }
 
