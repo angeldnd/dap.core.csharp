@@ -37,7 +37,7 @@ namespace angeldnd.dap {
                                                 string mannerKey, bool isDebug = false)
                                                     where T : Manner {
             IContext descendant = GetContext<IContext>(context, relPath, isDebug);
-            if (descendant == null) {
+            if (descendant != null) {
                 T manner = descendant.Manners.Get<T>(mannerKey, isDebug);
                 return manner;
             }
