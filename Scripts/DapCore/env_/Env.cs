@@ -159,8 +159,11 @@ namespace angeldnd.dap {
         }
 
         private Env() : base(null, null) {
-            //Can NOT create any aspects other than Hooks/Hook here.
+            //Can NOT create any aspects other than Hooks here.
             Hooks = AddTopAspect<Hooks>(EnvConsts.KeyHooks);
+        }
+
+        private void InitHooks() {
             Hook debugHook = Hooks.Add();
             _KeyDebugHook = debugHook.Key;
             debugHook.Setup(
@@ -195,6 +198,12 @@ namespace angeldnd.dap {
         }
 
         private void Tick(Data evt) {
+            //This is for timing issue, e.g. if not delay to next tick,
+            //if create aspects in context's constructor, Env.GetByUri() will
+            //not work in aspect's hooks, since the context itself is not added
+            //to to owner yet, which is quite hard to maintain.
+            Hooks._HandlePendingEvents();
+
             _TickChannel.FireEvent(evt);
         }
 
@@ -207,6 +216,7 @@ namespace angeldnd.dap {
             Log.Info("Dap Environment Init: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
             _TickChannel = Channels.Add(EnvConsts.ChannelTick);
+            InitHooks();
 
             PublishOnBusAndEnvBus(EnvConsts.MsgOnInit);
 
@@ -248,14 +258,14 @@ namespace angeldnd.dap {
             if (string.IsNullOrEmpty(contextPath)) {
                 context = this;
             } else {
-                context = ContextExtension.GetContext(this, contextPath, false);
+                context = ContextExtension.GetContext(this, contextPath, true);
             }
             if (context == null) return false;
 
             if (string.IsNullOrEmpty(aspectPath)) {
                 return true;
             } else {
-                aspect = context.GetAspect(aspectPath, false);
+                aspect = context.GetAspect(aspectPath, true);
                 return aspect != null;
             }
         }

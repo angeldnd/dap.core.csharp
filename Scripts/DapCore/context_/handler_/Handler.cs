@@ -62,6 +62,14 @@ namespace angeldnd.dap {
             return res;
         }
 
+        public BlockSetupWatcher AddSetupWatcher(IBlockOwner owner, Action<Handler> block) {
+            BlockSetupWatcher result = new BlockSetupWatcher(owner, block);
+            if (AddSetupWatcher(result)) {
+                return result;
+            }
+            return null;
+        }
+
         public BlockRequestChecker AddRequestChecker(IBlockOwner owner, Func<Handler, Data, bool> block) {
             BlockRequestChecker result = new BlockRequestChecker(owner, block);
             if (AddRequestChecker(result)) {
