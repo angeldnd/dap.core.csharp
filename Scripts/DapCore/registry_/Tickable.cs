@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class TickableConsts {
+        public const string TypeTickable = "Tickable";
+
         public const string MannerTickable = "tickable";
     }
 
@@ -20,6 +22,8 @@ namespace angeldnd.dap {
         }
     }
 
+    [DapType(TickableConsts.TypeTickable)]
+    [DapOrder(-9)]
     public class Tickable : Manner {
         public Tickable(Manners owner, string key) : base(owner, key) {
             IContext contextOwner = Context.GetOwner() as IContext;
