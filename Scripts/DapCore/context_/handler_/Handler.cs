@@ -30,6 +30,8 @@ namespace angeldnd.dap {
         }
 
         public Data HandleRequest(Data req) {
+            if (req != null) req.Seal();
+
             if (!IsValid) {
                 return ResponseHelper.InternalError(this, req, "Invalid Handler");
             }
@@ -51,12 +53,16 @@ namespace angeldnd.dap {
             });
 
             Data res = _Handler.DoHandle(this, req);
+            if (res != null) res.Seal();
             AdvanceRevision();
 
             WeakListHelper.Notify(_ResponseWatchers, (IResponseWatcher watcher) => {
                 watcher.OnResponse(this, req, res);
             });
-            if (LogDebug) {
+
+            if (ResponseHelper.IsResFailed(res)) {
+                Error("HandleRequest Failed: {0} -> {1}", req.ToFullString(), res.ToFullString());
+            } else if (LogDebug) {
                 Debug("HandleRequest: {0} -> {1}", req.ToFullString(), res.ToFullString());
             }
             return res;

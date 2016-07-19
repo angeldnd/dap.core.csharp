@@ -61,9 +61,12 @@ namespace angeldnd.dap {
 
         private Dictionary<string, T> CloneDictionary<T>(Dictionary<string, T> src) {
             if (src == null) return null;
-            Dictionary<string, T> clone = new Dictionary<string, T>();
+            Dictionary<string, T> clone = null;
             foreach (var kv in src) {
-                clone[kv.Key] = kv.Value;
+                if (!kv.Key.StartsWith(VarPrefix)) {
+                    if (clone == null) clone = new Dictionary<string, T>();
+                    clone[kv.Key] = kv.Value;
+                }
             }
             return clone;
         }
@@ -164,292 +167,313 @@ namespace angeldnd.dap {
         }
 
         //SILP: DATA_TYPE(Bool, bool)
-        public bool IsBool(string key) {                              //__SILP__
-            DataType type = GetValueType(key);                        //__SILP__
-            return type == DataType.Bool;                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool GetBool(string key) {                             //__SILP__
-            if (_BoolValues != null && IsBool(key)) {                 //__SILP__
-                bool result;                                          //__SILP__
-                if (_BoolValues.TryGetValue(key, out result)) {       //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return default(bool);                                     //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool GetBool(string key, bool defaultValue) {          //__SILP__
-            if (_BoolValues != null && IsBool(key)) {                 //__SILP__
-                bool result;                                          //__SILP__
-                if (_BoolValues.TryGetValue(key, out result)) {       //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return defaultValue;                                      //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool SetBool(string key, bool val) {                   //__SILP__
-            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
-                return false;                                         //__SILP__
-            }                                                         //__SILP__
-            if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
-                _ValueTypes[key] = DataType.Bool;                     //__SILP__
-                if (_BoolValues == null) {                            //__SILP__
-                    _BoolValues = new Dictionary<string, bool>();     //__SILP__
-                }                                                     //__SILP__
-                _BoolValues[key] = val;                               //__SILP__
-                return true;                                          //__SILP__
-            }                                                         //__SILP__
-            return false;                                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
+        public bool IsBool(string key) {                                         //__SILP__
+            DataType type = GetValueType(key);                                   //__SILP__
+            return type == DataType.Bool;                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool GetBool(string key) {                                        //__SILP__
+            if (_BoolValues != null && IsBool(key)) {                            //__SILP__
+                bool result;                                                     //__SILP__
+                if (_BoolValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                               //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return default(bool);                                                //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool GetBool(string key, bool defaultValue) {                     //__SILP__
+            if (_BoolValues != null && IsBool(key)) {                            //__SILP__
+                bool result;                                                     //__SILP__
+                if (_BoolValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                               //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return defaultValue;                                                 //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool SetBool(string key, bool val) {                              //__SILP__
+            bool isVar = key.StartsWith(VarPrefix);                              //__SILP__
+            if (Sealed && !isVar) {                                              //__SILP__
+                Log.Error("Already Sealed: {0} -> {1}", key, val);               //__SILP__
+                return false;                                                    //__SILP__
+            }                                                                    //__SILP__
+            if (isVar || !_ValueTypes.ContainsKey(key)) {                        //__SILP__
+                _ValueTypes[key] = DataType.Bool;                                //__SILP__
+                if (_BoolValues == null) {                                       //__SILP__
+                    _BoolValues = new Dictionary<string, bool>();                //__SILP__
+                }                                                                //__SILP__
+                _BoolValues[key] = val;                                          //__SILP__
+                return true;                                                     //__SILP__
+            }                                                                    //__SILP__
+            Log.Error("Key Exist: {0} {1} -> {2}", key, _BoolValues[key], val);  //__SILP__
+            return false;                                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
         //SILP: DATA_TYPE(Int, int)
-        public bool IsInt(string key) {                               //__SILP__
-            DataType type = GetValueType(key);                        //__SILP__
-            return type == DataType.Int;                              //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public int GetInt(string key) {                               //__SILP__
-            if (_IntValues != null && IsInt(key)) {                   //__SILP__
-                int result;                                           //__SILP__
-                if (_IntValues.TryGetValue(key, out result)) {        //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return default(int);                                      //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public int GetInt(string key, int defaultValue) {             //__SILP__
-            if (_IntValues != null && IsInt(key)) {                   //__SILP__
-                int result;                                           //__SILP__
-                if (_IntValues.TryGetValue(key, out result)) {        //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return defaultValue;                                      //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool SetInt(string key, int val) {                     //__SILP__
-            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
-                return false;                                         //__SILP__
-            }                                                         //__SILP__
-            if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
-                _ValueTypes[key] = DataType.Int;                      //__SILP__
-                if (_IntValues == null) {                             //__SILP__
-                    _IntValues = new Dictionary<string, int>();       //__SILP__
-                }                                                     //__SILP__
-                _IntValues[key] = val;                                //__SILP__
-                return true;                                          //__SILP__
-            }                                                         //__SILP__
-            return false;                                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
+        public bool IsInt(string key) {                                         //__SILP__
+            DataType type = GetValueType(key);                                  //__SILP__
+            return type == DataType.Int;                                        //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
+        public int GetInt(string key) {                                         //__SILP__
+            if (_IntValues != null && IsInt(key)) {                             //__SILP__
+                int result;                                                     //__SILP__
+                if (_IntValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                              //__SILP__
+                }                                                               //__SILP__
+            }                                                                   //__SILP__
+            return default(int);                                                //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
+        public int GetInt(string key, int defaultValue) {                       //__SILP__
+            if (_IntValues != null && IsInt(key)) {                             //__SILP__
+                int result;                                                     //__SILP__
+                if (_IntValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                              //__SILP__
+                }                                                               //__SILP__
+            }                                                                   //__SILP__
+            return defaultValue;                                                //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
+        public bool SetInt(string key, int val) {                               //__SILP__
+            bool isVar = key.StartsWith(VarPrefix);                             //__SILP__
+            if (Sealed && !isVar) {                                             //__SILP__
+                Log.Error("Already Sealed: {0} -> {1}", key, val);              //__SILP__
+                return false;                                                   //__SILP__
+            }                                                                   //__SILP__
+            if (isVar || !_ValueTypes.ContainsKey(key)) {                       //__SILP__
+                _ValueTypes[key] = DataType.Int;                                //__SILP__
+                if (_IntValues == null) {                                       //__SILP__
+                    _IntValues = new Dictionary<string, int>();                 //__SILP__
+                }                                                               //__SILP__
+                _IntValues[key] = val;                                          //__SILP__
+                return true;                                                    //__SILP__
+            }                                                                   //__SILP__
+            Log.Error("Key Exist: {0} {1} -> {2}", key, _IntValues[key], val);  //__SILP__
+            return false;                                                       //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
         //SILP: DATA_TYPE(Long, long)
-        public bool IsLong(string key) {                              //__SILP__
-            DataType type = GetValueType(key);                        //__SILP__
-            return type == DataType.Long;                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public long GetLong(string key) {                             //__SILP__
-            if (_LongValues != null && IsLong(key)) {                 //__SILP__
-                long result;                                          //__SILP__
-                if (_LongValues.TryGetValue(key, out result)) {       //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return default(long);                                     //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public long GetLong(string key, long defaultValue) {          //__SILP__
-            if (_LongValues != null && IsLong(key)) {                 //__SILP__
-                long result;                                          //__SILP__
-                if (_LongValues.TryGetValue(key, out result)) {       //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return defaultValue;                                      //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool SetLong(string key, long val) {                   //__SILP__
-            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
-                return false;                                         //__SILP__
-            }                                                         //__SILP__
-            if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
-                _ValueTypes[key] = DataType.Long;                     //__SILP__
-                if (_LongValues == null) {                            //__SILP__
-                    _LongValues = new Dictionary<string, long>();     //__SILP__
-                }                                                     //__SILP__
-                _LongValues[key] = val;                               //__SILP__
-                return true;                                          //__SILP__
-            }                                                         //__SILP__
-            return false;                                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
+        public bool IsLong(string key) {                                         //__SILP__
+            DataType type = GetValueType(key);                                   //__SILP__
+            return type == DataType.Long;                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public long GetLong(string key) {                                        //__SILP__
+            if (_LongValues != null && IsLong(key)) {                            //__SILP__
+                long result;                                                     //__SILP__
+                if (_LongValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                               //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return default(long);                                                //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public long GetLong(string key, long defaultValue) {                     //__SILP__
+            if (_LongValues != null && IsLong(key)) {                            //__SILP__
+                long result;                                                     //__SILP__
+                if (_LongValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                               //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return defaultValue;                                                 //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool SetLong(string key, long val) {                              //__SILP__
+            bool isVar = key.StartsWith(VarPrefix);                              //__SILP__
+            if (Sealed && !isVar) {                                              //__SILP__
+                Log.Error("Already Sealed: {0} -> {1}", key, val);               //__SILP__
+                return false;                                                    //__SILP__
+            }                                                                    //__SILP__
+            if (isVar || !_ValueTypes.ContainsKey(key)) {                        //__SILP__
+                _ValueTypes[key] = DataType.Long;                                //__SILP__
+                if (_LongValues == null) {                                       //__SILP__
+                    _LongValues = new Dictionary<string, long>();                //__SILP__
+                }                                                                //__SILP__
+                _LongValues[key] = val;                                          //__SILP__
+                return true;                                                     //__SILP__
+            }                                                                    //__SILP__
+            Log.Error("Key Exist: {0} {1} -> {2}", key, _LongValues[key], val);  //__SILP__
+            return false;                                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
         //SILP: DATA_TYPE(Float, float)
-        public bool IsFloat(string key) {                             //__SILP__
-            DataType type = GetValueType(key);                        //__SILP__
-            return type == DataType.Float;                            //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public float GetFloat(string key) {                           //__SILP__
-            if (_FloatValues != null && IsFloat(key)) {               //__SILP__
-                float result;                                         //__SILP__
-                if (_FloatValues.TryGetValue(key, out result)) {      //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return default(float);                                    //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public float GetFloat(string key, float defaultValue) {       //__SILP__
-            if (_FloatValues != null && IsFloat(key)) {               //__SILP__
-                float result;                                         //__SILP__
-                if (_FloatValues.TryGetValue(key, out result)) {      //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return defaultValue;                                      //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool SetFloat(string key, float val) {                 //__SILP__
-            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
-                return false;                                         //__SILP__
-            }                                                         //__SILP__
-            if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
-                _ValueTypes[key] = DataType.Float;                    //__SILP__
-                if (_FloatValues == null) {                           //__SILP__
-                    _FloatValues = new Dictionary<string, float>();   //__SILP__
-                }                                                     //__SILP__
-                _FloatValues[key] = val;                              //__SILP__
-                return true;                                          //__SILP__
-            }                                                         //__SILP__
-            return false;                                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
+        public bool IsFloat(string key) {                                         //__SILP__
+            DataType type = GetValueType(key);                                    //__SILP__
+            return type == DataType.Float;                                        //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public float GetFloat(string key) {                                       //__SILP__
+            if (_FloatValues != null && IsFloat(key)) {                           //__SILP__
+                float result;                                                     //__SILP__
+                if (_FloatValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                                //__SILP__
+                }                                                                 //__SILP__
+            }                                                                     //__SILP__
+            return default(float);                                                //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public float GetFloat(string key, float defaultValue) {                   //__SILP__
+            if (_FloatValues != null && IsFloat(key)) {                           //__SILP__
+                float result;                                                     //__SILP__
+                if (_FloatValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                                //__SILP__
+                }                                                                 //__SILP__
+            }                                                                     //__SILP__
+            return defaultValue;                                                  //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public bool SetFloat(string key, float val) {                             //__SILP__
+            bool isVar = key.StartsWith(VarPrefix);                               //__SILP__
+            if (Sealed && !isVar) {                                               //__SILP__
+                Log.Error("Already Sealed: {0} -> {1}", key, val);                //__SILP__
+                return false;                                                     //__SILP__
+            }                                                                     //__SILP__
+            if (isVar || !_ValueTypes.ContainsKey(key)) {                         //__SILP__
+                _ValueTypes[key] = DataType.Float;                                //__SILP__
+                if (_FloatValues == null) {                                       //__SILP__
+                    _FloatValues = new Dictionary<string, float>();               //__SILP__
+                }                                                                 //__SILP__
+                _FloatValues[key] = val;                                          //__SILP__
+                return true;                                                      //__SILP__
+            }                                                                     //__SILP__
+            Log.Error("Key Exist: {0} {1} -> {2}", key, _FloatValues[key], val);  //__SILP__
+            return false;                                                         //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
         //SILP: DATA_TYPE(Double, double)
-        public bool IsDouble(string key) {                             //__SILP__
-            DataType type = GetValueType(key);                         //__SILP__
-            return type == DataType.Double;                            //__SILP__
-        }                                                              //__SILP__
-                                                                       //__SILP__
-        public double GetDouble(string key) {                          //__SILP__
-            if (_DoubleValues != null && IsDouble(key)) {              //__SILP__
-                double result;                                         //__SILP__
-                if (_DoubleValues.TryGetValue(key, out result)) {      //__SILP__
-                    return result;                                     //__SILP__
-                }                                                      //__SILP__
-            }                                                          //__SILP__
-            return default(double);                                    //__SILP__
-        }                                                              //__SILP__
-                                                                       //__SILP__
-        public double GetDouble(string key, double defaultValue) {     //__SILP__
-            if (_DoubleValues != null && IsDouble(key)) {              //__SILP__
-                double result;                                         //__SILP__
-                if (_DoubleValues.TryGetValue(key, out result)) {      //__SILP__
-                    return result;                                     //__SILP__
-                }                                                      //__SILP__
-            }                                                          //__SILP__
-            return defaultValue;                                       //__SILP__
-        }                                                              //__SILP__
-                                                                       //__SILP__
-        public bool SetDouble(string key, double val) {                //__SILP__
-            if (Sealed && !key.StartsWith(VarPrefix)) {                //__SILP__
-                return false;                                          //__SILP__
-            }                                                          //__SILP__
-            if (!_ValueTypes.ContainsKey(key)) {                       //__SILP__
-                _ValueTypes[key] = DataType.Double;                    //__SILP__
-                if (_DoubleValues == null) {                           //__SILP__
-                    _DoubleValues = new Dictionary<string, double>();  //__SILP__
-                }                                                      //__SILP__
-                _DoubleValues[key] = val;                              //__SILP__
-                return true;                                           //__SILP__
-            }                                                          //__SILP__
-            return false;                                              //__SILP__
-        }                                                              //__SILP__
-                                                                       //__SILP__
+        public bool IsDouble(string key) {                                         //__SILP__
+            DataType type = GetValueType(key);                                     //__SILP__
+            return type == DataType.Double;                                        //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public double GetDouble(string key) {                                      //__SILP__
+            if (_DoubleValues != null && IsDouble(key)) {                          //__SILP__
+                double result;                                                     //__SILP__
+                if (_DoubleValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                                 //__SILP__
+                }                                                                  //__SILP__
+            }                                                                      //__SILP__
+            return default(double);                                                //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public double GetDouble(string key, double defaultValue) {                 //__SILP__
+            if (_DoubleValues != null && IsDouble(key)) {                          //__SILP__
+                double result;                                                     //__SILP__
+                if (_DoubleValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                                 //__SILP__
+                }                                                                  //__SILP__
+            }                                                                      //__SILP__
+            return defaultValue;                                                   //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public bool SetDouble(string key, double val) {                            //__SILP__
+            bool isVar = key.StartsWith(VarPrefix);                                //__SILP__
+            if (Sealed && !isVar) {                                                //__SILP__
+                Log.Error("Already Sealed: {0} -> {1}", key, val);                 //__SILP__
+                return false;                                                      //__SILP__
+            }                                                                      //__SILP__
+            if (isVar || !_ValueTypes.ContainsKey(key)) {                          //__SILP__
+                _ValueTypes[key] = DataType.Double;                                //__SILP__
+                if (_DoubleValues == null) {                                       //__SILP__
+                    _DoubleValues = new Dictionary<string, double>();              //__SILP__
+                }                                                                  //__SILP__
+                _DoubleValues[key] = val;                                          //__SILP__
+                return true;                                                       //__SILP__
+            }                                                                      //__SILP__
+            Log.Error("Key Exist: {0} {1} -> {2}", key, _DoubleValues[key], val);  //__SILP__
+            return false;                                                          //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
         //SILP: DATA_TYPE(String, string)
-        public bool IsString(string key) {                             //__SILP__
-            DataType type = GetValueType(key);                         //__SILP__
-            return type == DataType.String;                            //__SILP__
-        }                                                              //__SILP__
-                                                                       //__SILP__
-        public string GetString(string key) {                          //__SILP__
-            if (_StringValues != null && IsString(key)) {              //__SILP__
-                string result;                                         //__SILP__
-                if (_StringValues.TryGetValue(key, out result)) {      //__SILP__
-                    return result;                                     //__SILP__
-                }                                                      //__SILP__
-            }                                                          //__SILP__
-            return default(string);                                    //__SILP__
-        }                                                              //__SILP__
-                                                                       //__SILP__
-        public string GetString(string key, string defaultValue) {     //__SILP__
-            if (_StringValues != null && IsString(key)) {              //__SILP__
-                string result;                                         //__SILP__
-                if (_StringValues.TryGetValue(key, out result)) {      //__SILP__
-                    return result;                                     //__SILP__
-                }                                                      //__SILP__
-            }                                                          //__SILP__
-            return defaultValue;                                       //__SILP__
-        }                                                              //__SILP__
-                                                                       //__SILP__
-        public bool SetString(string key, string val) {                //__SILP__
-            if (Sealed && !key.StartsWith(VarPrefix)) {                //__SILP__
-                return false;                                          //__SILP__
-            }                                                          //__SILP__
-            if (!_ValueTypes.ContainsKey(key)) {                       //__SILP__
-                _ValueTypes[key] = DataType.String;                    //__SILP__
-                if (_StringValues == null) {                           //__SILP__
-                    _StringValues = new Dictionary<string, string>();  //__SILP__
-                }                                                      //__SILP__
-                _StringValues[key] = val;                              //__SILP__
-                return true;                                           //__SILP__
-            }                                                          //__SILP__
-            return false;                                              //__SILP__
-        }                                                              //__SILP__
-                                                                       //__SILP__
+        public bool IsString(string key) {                                         //__SILP__
+            DataType type = GetValueType(key);                                     //__SILP__
+            return type == DataType.String;                                        //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public string GetString(string key) {                                      //__SILP__
+            if (_StringValues != null && IsString(key)) {                          //__SILP__
+                string result;                                                     //__SILP__
+                if (_StringValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                                 //__SILP__
+                }                                                                  //__SILP__
+            }                                                                      //__SILP__
+            return default(string);                                                //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public string GetString(string key, string defaultValue) {                 //__SILP__
+            if (_StringValues != null && IsString(key)) {                          //__SILP__
+                string result;                                                     //__SILP__
+                if (_StringValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                                 //__SILP__
+                }                                                                  //__SILP__
+            }                                                                      //__SILP__
+            return defaultValue;                                                   //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public bool SetString(string key, string val) {                            //__SILP__
+            bool isVar = key.StartsWith(VarPrefix);                                //__SILP__
+            if (Sealed && !isVar) {                                                //__SILP__
+                Log.Error("Already Sealed: {0} -> {1}", key, val);                 //__SILP__
+                return false;                                                      //__SILP__
+            }                                                                      //__SILP__
+            if (isVar || !_ValueTypes.ContainsKey(key)) {                          //__SILP__
+                _ValueTypes[key] = DataType.String;                                //__SILP__
+                if (_StringValues == null) {                                       //__SILP__
+                    _StringValues = new Dictionary<string, string>();              //__SILP__
+                }                                                                  //__SILP__
+                _StringValues[key] = val;                                          //__SILP__
+                return true;                                                       //__SILP__
+            }                                                                      //__SILP__
+            Log.Error("Key Exist: {0} {1} -> {2}", key, _StringValues[key], val);  //__SILP__
+            return false;                                                          //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
         //SILP: DATA_TYPE(Data, Data)
-        public bool IsData(string key) {                              //__SILP__
-            DataType type = GetValueType(key);                        //__SILP__
-            return type == DataType.Data;                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public Data GetData(string key) {                             //__SILP__
-            if (_DataValues != null && IsData(key)) {                 //__SILP__
-                Data result;                                          //__SILP__
-                if (_DataValues.TryGetValue(key, out result)) {       //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return default(Data);                                     //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public Data GetData(string key, Data defaultValue) {          //__SILP__
-            if (_DataValues != null && IsData(key)) {                 //__SILP__
-                Data result;                                          //__SILP__
-                if (_DataValues.TryGetValue(key, out result)) {       //__SILP__
-                    return result;                                    //__SILP__
-                }                                                     //__SILP__
-            }                                                         //__SILP__
-            return defaultValue;                                      //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
-        public bool SetData(string key, Data val) {                   //__SILP__
-            if (Sealed && !key.StartsWith(VarPrefix)) {               //__SILP__
-                return false;                                         //__SILP__
-            }                                                         //__SILP__
-            if (!_ValueTypes.ContainsKey(key)) {                      //__SILP__
-                _ValueTypes[key] = DataType.Data;                     //__SILP__
-                if (_DataValues == null) {                            //__SILP__
-                    _DataValues = new Dictionary<string, Data>();     //__SILP__
-                }                                                     //__SILP__
-                _DataValues[key] = val;                               //__SILP__
-                return true;                                          //__SILP__
-            }                                                         //__SILP__
-            return false;                                             //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
+        public bool IsData(string key) {                                         //__SILP__
+            DataType type = GetValueType(key);                                   //__SILP__
+            return type == DataType.Data;                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public Data GetData(string key) {                                        //__SILP__
+            if (_DataValues != null && IsData(key)) {                            //__SILP__
+                Data result;                                                     //__SILP__
+                if (_DataValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                               //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return default(Data);                                                //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public Data GetData(string key, Data defaultValue) {                     //__SILP__
+            if (_DataValues != null && IsData(key)) {                            //__SILP__
+                Data result;                                                     //__SILP__
+                if (_DataValues.TryGetValue(key, out result)) {                  //__SILP__
+                    return result;                                               //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return defaultValue;                                                 //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool SetData(string key, Data val) {                              //__SILP__
+            bool isVar = key.StartsWith(VarPrefix);                              //__SILP__
+            if (Sealed && !isVar) {                                              //__SILP__
+                Log.Error("Already Sealed: {0} -> {1}", key, val);               //__SILP__
+                return false;                                                    //__SILP__
+            }                                                                    //__SILP__
+            if (isVar || !_ValueTypes.ContainsKey(key)) {                        //__SILP__
+                _ValueTypes[key] = DataType.Data;                                //__SILP__
+                if (_DataValues == null) {                                       //__SILP__
+                    _DataValues = new Dictionary<string, Data>();                //__SILP__
+                }                                                                //__SILP__
+                _DataValues[key] = val;                                          //__SILP__
+                return true;                                                     //__SILP__
+            }                                                                    //__SILP__
+            Log.Error("Key Exist: {0} {1} -> {2}", key, _DataValues[key], val);  //__SILP__
+            return false;                                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
 
         //SILP: DATA_QUICK_SETTER(B, Bool, bool)
         public Data B(string key, bool val) {                         //__SILP__

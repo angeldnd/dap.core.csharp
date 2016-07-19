@@ -36,47 +36,14 @@ namespace angeldnd.dap {
     public static class ResponseHelper {
         private static Data Result(Handler handler, Data req, int status, Data result) {
             Data res = new Data();
+            res.SetInt(ResponseConsts.KeyStatus, status);
             res.SetString(ResponseConsts.KeyUri, handler.Uri);
-            if (req != null) {
-                res.SetData(ResponseConsts.KeyReq, req);
-            }
-            res.SetInt(ResponseConsts.KeyStatus, status);
             if (result != null) {
                 res.SetData(ResponseConsts.KeyResult, result);
             }
-            if (handler.LogDebug) {
-                string logStr = null;
-                if (result != null) {
-                    logStr = string.Format("Response: {0} {1} -> [{2}]\n{3}",
-                                handler.Key, req.ToFullString(), status,
-                                result.ToFullString());
-                } else {
-                    logStr = string.Format("Response: {0} {1} -> [{2}]",
-                                handler.Key, req.ToFullString(), status);
-                }
-                handler.Debug(logStr);
-            }
-            return res;
-        }
-
-        private static Data Error(Handler handler, Data req, int status, Data result, bool isDebug) {
-            Data res = new Data();
             if (req != null) {
                 res.SetData(ResponseConsts.KeyReq, req);
             }
-            res.SetInt(ResponseConsts.KeyStatus, status);
-            if (result != null) {
-                res.SetData(ResponseConsts.KeyResult, result);
-            }
-            string logStr = null;
-            if (result != null) {
-                logStr = string.Format("Error Response: {0} {1} -> [{2}]\n{3}",
-                            handler.Key, req.ToFullString(), status, result.ToFullString());
-            } else {
-                logStr = string.Format("Error Response: {0} {1} -> [{2}]",
-                            handler.Key, req.ToFullString(), status);
-            }
-            handler.ErrorOrDebug(isDebug, "{0}", logStr);
             return res;
         }
 
@@ -97,7 +64,7 @@ namespace angeldnd.dap {
         }
 
         public static Data BadRequest(Handler handler, Data req, Data result = null) {
-            return Error(handler, req, ResponseConsts.BAD_REQ, result, false);
+            return Result(handler, req, ResponseConsts.BAD_REQ, result);
         }
 
         public static Data BadRequest(Handler handler, Data req, string format, params object[] values) {
@@ -111,7 +78,7 @@ namespace angeldnd.dap {
         }
 
         public static Data NotFound(Handler handler, Data req, Data data = null) {
-            return Error(handler, req, ResponseConsts.NOT_FOUND, data, false);
+            return Result(handler, req, ResponseConsts.NOT_FOUND, data);
         }
 
         public static Data NotFound(Handler handler, Data req, string format, params object[] values) {
@@ -119,7 +86,7 @@ namespace angeldnd.dap {
         }
 
         public static Data InternalError(Handler handler, Data req, Data data = null) {
-            return Error(handler, req, ResponseConsts.INTERNAL_ERROR, data, false);
+            return Result(handler, req, ResponseConsts.INTERNAL_ERROR, data);
         }
 
         public static Data InternalError(Handler handler, Data req, string format, params object[] values) {
@@ -127,7 +94,7 @@ namespace angeldnd.dap {
         }
 
         public static Data NotImplemented(Handler handler, Data req, Data data = null) {
-            return Error(handler, req, ResponseConsts.NOT_IMPLEMENTED, data, false);
+            return Result(handler, req, ResponseConsts.NOT_IMPLEMENTED, data);
         }
 
         public static Data NotImplemented(Handler handler, Data req, string format, params object[] values) {

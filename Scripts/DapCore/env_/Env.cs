@@ -153,28 +153,9 @@ namespace angeldnd.dap {
             get { return _Instance; }
         }
 
-        private string _KeyDebugHook = null;
-        public string KeyDebugHook {
-            get { return _KeyDebugHook; }
-        }
-
         private Env() : base(null, null) {
             //Can NOT create any aspects other than Hooks here.
             Hooks = AddTopAspect<Hooks>(EnvConsts.KeyHooks);
-        }
-
-        private void InitHooks() {
-            Hook debugHook = Hooks.Add();
-            _KeyDebugHook = debugHook.Key;
-            debugHook.Setup(
-                "DebugHook",
-                (IContext context) => {
-                    context.Debugging = true;
-                },
-                (IAspect aspect) => {
-                    aspect.Debugging = true;
-                }
-            );
         }
 
         private Channel _TickChannel = null;
@@ -216,7 +197,6 @@ namespace angeldnd.dap {
             Log.Info("Dap Environment Init: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
             _TickChannel = Channels.Add(EnvConsts.ChannelTick);
-            InitHooks();
 
             PublishOnBusAndEnvBus(EnvConsts.MsgOnInit);
 

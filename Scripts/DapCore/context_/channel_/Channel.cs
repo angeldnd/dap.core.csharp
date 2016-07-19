@@ -7,6 +7,8 @@ namespace angeldnd.dap {
         }
 
         public bool FireEvent(Data evt) {
+            if (evt != null) evt.Seal();
+
             IEventChecker lastChecker = null;
             if (!WeakListHelper.IsValid(_EventCheckers, (IEventChecker checker) => {
                 lastChecker = checker;
