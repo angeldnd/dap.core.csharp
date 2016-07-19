@@ -84,24 +84,24 @@ namespace angeldnd.dap {
             return Result(handler, req, ResponseConsts.OK, result);
         }
 
-        public static Data Ok(Handler handler, Data req, string msg) {
-            return Ok(handler, req, new Data().S(ResponseConsts.KeyMsg, msg));
+        public static Data Ok(Handler handler, Data req, string format, params object[] values) {
+            return Ok(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data Accepted(Handler handler, Data req, Data result = null) {
             return Result(handler, req, ResponseConsts.ACCEPTED, result);
         }
 
-        public static Data Accepted(Handler handler, Data req, string msg) {
-            return Accepted(handler, req, new Data().S(ResponseConsts.KeyMsg, msg));
+        public static Data Accepted(Handler handler, Data req, string format, params object[] values) {
+            return Accepted(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data BadRequest(Handler handler, Data req, Data result = null) {
             return Error(handler, req, ResponseConsts.BAD_REQ, result, false);
         }
 
-        public static Data BadRequest(Handler handler, Data req, string msg) {
-            return BadRequest(handler, req, new Data().S(ResponseConsts.KeyMsg, msg));
+        public static Data BadRequest(Handler handler, Data req, string format, params object[] values) {
+            return BadRequest(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data InvalidParams(Handler handler, Data req, Data paramsHint) {
@@ -114,24 +114,24 @@ namespace angeldnd.dap {
             return Error(handler, req, ResponseConsts.NOT_FOUND, data, false);
         }
 
-        public static Data NotFound(Handler handler, Data req, string msg) {
-            return NotFound(handler, req, new Data().S(ResponseConsts.KeyMsg, msg));
+        public static Data NotFound(Handler handler, Data req, string format, params object[] values) {
+            return NotFound(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data InternalError(Handler handler, Data req, Data data = null) {
             return Error(handler, req, ResponseConsts.INTERNAL_ERROR, data, false);
         }
 
-        public static Data InternalError(Handler handler, Data req, string msg) {
-            return InternalError(handler, req, new Data().S(ResponseConsts.KeyMsg, msg));
+        public static Data InternalError(Handler handler, Data req, string format, params object[] values) {
+            return InternalError(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data NotImplemented(Handler handler, Data req, Data data = null) {
             return Error(handler, req, ResponseConsts.NOT_IMPLEMENTED, data, false);
         }
 
-        public static Data NotImplemented(Handler handler, Data req, string msg) {
-            return NotImplemented(handler, req, new Data().S(ResponseConsts.KeyMsg, msg));
+        public static Data NotImplemented(Handler handler, Data req, string format, params object[] values) {
+            return NotImplemented(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data GetReq(Data response) {
