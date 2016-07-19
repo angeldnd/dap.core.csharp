@@ -179,12 +179,6 @@ namespace angeldnd.dap {
         }
 
         private void Tick(Data evt) {
-            //This is for timing issue, e.g. if not delay to next tick,
-            //if create aspects in context's constructor, Env.GetByUri() will
-            //not work in aspect's hooks, since the context itself is not added
-            //to to owner yet, which is quite hard to maintain.
-            Hooks._HandlePendingEvents();
-
             _TickChannel.FireEvent(evt);
         }
 
@@ -225,6 +219,10 @@ namespace angeldnd.dap {
             PublishOnBusAndEnvBus(EnvConsts.MsgOnBoot);
         }
 
+        /*
+         * Note that this call is not working in constructors (since elements are added
+         * to owner after)
+         */
         public bool TryGetByUri(string uri, out IContext context, out IAspect aspect) {
             context = null;
             aspect = null;
