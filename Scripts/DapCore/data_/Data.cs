@@ -18,9 +18,9 @@ namespace angeldnd.dap {
     public sealed class Data : Sealable {
         public static int MaxFullStringKeyCount = 12;
 
-        public const string VarPrefix = "$";
-        public static string GetVarKey(string key) {
-            return VarPrefix + key;
+        public const string TempPrefix = "_";
+        public static bool IsTempKey(string key) {
+            return key.StartsWith(TempPrefix);
         }
 
         public static Data Clone(Data data) {
@@ -63,7 +63,7 @@ namespace angeldnd.dap {
             if (src == null) return null;
             Dictionary<string, T> clone = null;
             foreach (var kv in src) {
-                if (!kv.Key.StartsWith(VarPrefix)) {
+                if (!IsTempKey(kv.Key)) {
                     if (clone == null) clone = new Dictionary<string, T>();
                     clone[kv.Key] = kv.Value;
                 }
@@ -193,12 +193,12 @@ namespace angeldnd.dap {
         }                                                                        //__SILP__
                                                                                  //__SILP__
         public bool SetBool(string key, bool val) {                              //__SILP__
-            bool isVar = key.StartsWith(VarPrefix);                              //__SILP__
-            if (Sealed && !isVar) {                                              //__SILP__
+            bool isTempKey = IsTempKey(key);                                     //__SILP__
+            if (Sealed && !isTempKey) {                                          //__SILP__
                 Log.Error("Already Sealed: {0} -> {1}", key, val);               //__SILP__
                 return false;                                                    //__SILP__
             }                                                                    //__SILP__
-            if (isVar || !_ValueTypes.ContainsKey(key)) {                        //__SILP__
+            if (isTempKey || !_ValueTypes.ContainsKey(key)) {                    //__SILP__
                 _ValueTypes[key] = DataType.Bool;                                //__SILP__
                 if (_BoolValues == null) {                                       //__SILP__
                     _BoolValues = new Dictionary<string, bool>();                //__SILP__
@@ -237,12 +237,12 @@ namespace angeldnd.dap {
         }                                                                       //__SILP__
                                                                                 //__SILP__
         public bool SetInt(string key, int val) {                               //__SILP__
-            bool isVar = key.StartsWith(VarPrefix);                             //__SILP__
-            if (Sealed && !isVar) {                                             //__SILP__
+            bool isTempKey = IsTempKey(key);                                    //__SILP__
+            if (Sealed && !isTempKey) {                                         //__SILP__
                 Log.Error("Already Sealed: {0} -> {1}", key, val);              //__SILP__
                 return false;                                                   //__SILP__
             }                                                                   //__SILP__
-            if (isVar || !_ValueTypes.ContainsKey(key)) {                       //__SILP__
+            if (isTempKey || !_ValueTypes.ContainsKey(key)) {                   //__SILP__
                 _ValueTypes[key] = DataType.Int;                                //__SILP__
                 if (_IntValues == null) {                                       //__SILP__
                     _IntValues = new Dictionary<string, int>();                 //__SILP__
@@ -281,12 +281,12 @@ namespace angeldnd.dap {
         }                                                                        //__SILP__
                                                                                  //__SILP__
         public bool SetLong(string key, long val) {                              //__SILP__
-            bool isVar = key.StartsWith(VarPrefix);                              //__SILP__
-            if (Sealed && !isVar) {                                              //__SILP__
+            bool isTempKey = IsTempKey(key);                                     //__SILP__
+            if (Sealed && !isTempKey) {                                          //__SILP__
                 Log.Error("Already Sealed: {0} -> {1}", key, val);               //__SILP__
                 return false;                                                    //__SILP__
             }                                                                    //__SILP__
-            if (isVar || !_ValueTypes.ContainsKey(key)) {                        //__SILP__
+            if (isTempKey || !_ValueTypes.ContainsKey(key)) {                    //__SILP__
                 _ValueTypes[key] = DataType.Long;                                //__SILP__
                 if (_LongValues == null) {                                       //__SILP__
                     _LongValues = new Dictionary<string, long>();                //__SILP__
@@ -325,12 +325,12 @@ namespace angeldnd.dap {
         }                                                                         //__SILP__
                                                                                   //__SILP__
         public bool SetFloat(string key, float val) {                             //__SILP__
-            bool isVar = key.StartsWith(VarPrefix);                               //__SILP__
-            if (Sealed && !isVar) {                                               //__SILP__
+            bool isTempKey = IsTempKey(key);                                      //__SILP__
+            if (Sealed && !isTempKey) {                                           //__SILP__
                 Log.Error("Already Sealed: {0} -> {1}", key, val);                //__SILP__
                 return false;                                                     //__SILP__
             }                                                                     //__SILP__
-            if (isVar || !_ValueTypes.ContainsKey(key)) {                         //__SILP__
+            if (isTempKey || !_ValueTypes.ContainsKey(key)) {                     //__SILP__
                 _ValueTypes[key] = DataType.Float;                                //__SILP__
                 if (_FloatValues == null) {                                       //__SILP__
                     _FloatValues = new Dictionary<string, float>();               //__SILP__
@@ -369,12 +369,12 @@ namespace angeldnd.dap {
         }                                                                          //__SILP__
                                                                                    //__SILP__
         public bool SetDouble(string key, double val) {                            //__SILP__
-            bool isVar = key.StartsWith(VarPrefix);                                //__SILP__
-            if (Sealed && !isVar) {                                                //__SILP__
+            bool isTempKey = IsTempKey(key);                                       //__SILP__
+            if (Sealed && !isTempKey) {                                            //__SILP__
                 Log.Error("Already Sealed: {0} -> {1}", key, val);                 //__SILP__
                 return false;                                                      //__SILP__
             }                                                                      //__SILP__
-            if (isVar || !_ValueTypes.ContainsKey(key)) {                          //__SILP__
+            if (isTempKey || !_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.Double;                                //__SILP__
                 if (_DoubleValues == null) {                                       //__SILP__
                     _DoubleValues = new Dictionary<string, double>();              //__SILP__
@@ -413,12 +413,12 @@ namespace angeldnd.dap {
         }                                                                          //__SILP__
                                                                                    //__SILP__
         public bool SetString(string key, string val) {                            //__SILP__
-            bool isVar = key.StartsWith(VarPrefix);                                //__SILP__
-            if (Sealed && !isVar) {                                                //__SILP__
+            bool isTempKey = IsTempKey(key);                                       //__SILP__
+            if (Sealed && !isTempKey) {                                            //__SILP__
                 Log.Error("Already Sealed: {0} -> {1}", key, val);                 //__SILP__
                 return false;                                                      //__SILP__
             }                                                                      //__SILP__
-            if (isVar || !_ValueTypes.ContainsKey(key)) {                          //__SILP__
+            if (isTempKey || !_ValueTypes.ContainsKey(key)) {                      //__SILP__
                 _ValueTypes[key] = DataType.String;                                //__SILP__
                 if (_StringValues == null) {                                       //__SILP__
                     _StringValues = new Dictionary<string, string>();              //__SILP__
@@ -457,12 +457,12 @@ namespace angeldnd.dap {
         }                                                                        //__SILP__
                                                                                  //__SILP__
         public bool SetData(string key, Data val) {                              //__SILP__
-            bool isVar = key.StartsWith(VarPrefix);                              //__SILP__
-            if (Sealed && !isVar) {                                              //__SILP__
+            bool isTempKey = IsTempKey(key);                                     //__SILP__
+            if (Sealed && !isTempKey) {                                          //__SILP__
                 Log.Error("Already Sealed: {0} -> {1}", key, val);               //__SILP__
                 return false;                                                    //__SILP__
             }                                                                    //__SILP__
-            if (isVar || !_ValueTypes.ContainsKey(key)) {                        //__SILP__
+            if (isTempKey || !_ValueTypes.ContainsKey(key)) {                    //__SILP__
                 _ValueTypes[key] = DataType.Data;                                //__SILP__
                 if (_DataValues == null) {                                       //__SILP__
                     _DataValues = new Dictionary<string, Data>();                //__SILP__

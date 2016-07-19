@@ -26,12 +26,12 @@ public ${cs_type} Get${type}(string key, ${cs_type} defaultValue) {
 }
 
 public bool Set${type}(string key, ${cs_type} val) {
-    bool isVar = key.StartsWith(VarPrefix);
-    if (Sealed && !isVar) {
+    bool isTempKey = IsTempKey(key);
+    if (Sealed && !isTempKey) {
         Log.Error("Already Sealed: {0} -> {1}", key, val);
         return false;
     }
-    if (isVar || !_ValueTypes.ContainsKey(key)) {
+    if (isTempKey || !_ValueTypes.ContainsKey(key)) {
         _ValueTypes[key] = DataType.${type};
         if (_${type}Values == null) {
             _${type}Values = new Dictionary<string, ${cs_type}>();
