@@ -37,15 +37,19 @@ namespace angeldnd.dap {
             int currentLine = 0;
             int currentColumn = 0;
 
-            Action<int, int> AddCurrent = (int lineZeroBase, int columnZeroBase) => {
-                string word = current.ToString().Trim();
-                if (!string.IsNullOrEmpty(word)) {
+            Action<int, int, bool> _AddCurrent = (int lineZeroBase, int columnZeroBase, bool allowEmpty) => {
+                string word = current.ToString();
+                if (allowEmpty || !string.IsNullOrEmpty(word)) {
                     processor(new Word(source, currentLine, currentColumn, word));
                 }
                 currentIsEmpty = true;
                 currentLine = lineZeroBase + 1;
                 currentColumn = columnZeroBase + 1;
                 current.Length = 0;
+            };
+
+            Action<int, int> AddCurrent = (int lineZeroBase, int columnZeroBase) => {
+                _AddCurrent(lineZeroBase, columnZeroBase, false);
             };
 
             Action<int, int, char> AppendToCurrent = (int lineZeroBase, int columnZeroBase, char ch) => {
@@ -74,7 +78,7 @@ namespace angeldnd.dap {
                     } else {
                         if (enclosed) {
                             if (ch == WordSplitterConsts.EncloseEndChar) {
-                                AddCurrent(i, j);
+                                _AddCurrent(i, j, true);
                                 enclosed = false;
                             } else {
                                 AppendToCurrent(i, j, ch);

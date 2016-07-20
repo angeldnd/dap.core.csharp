@@ -268,11 +268,10 @@ namespace angeldnd.dap {
         }
 
         public void AppendValue(StringBuilder builder, string indent, int indentLevel, Data data, string key) {
-            AppendIndents(builder, indent, indentLevel);
-
             DataType valueType = data.GetValueType(key);
-            builder.Append(Convertor.DataTypeConvertor.Convert(valueType));
 
+            AppendIndents(builder, indent, indentLevel);
+            builder.Append(Convertor.DataTypeConvertor.Convert(valueType));
             AppendKeyBegin(builder, indent);
             AppendString(builder, key);
 
@@ -309,7 +308,11 @@ namespace angeldnd.dap {
         }
 
         public void AppendString(StringBuilder builder, string str) {
-            if (string.IsNullOrEmpty(str)) return;
+            if (string.IsNullOrEmpty(str)) {
+                builder.Append(WordSplitterConsts.EncloseBeginChar);
+                builder.Append(WordSplitterConsts.EncloseEndChar);
+                return;
+            };
 
             for (int i = 0; i < str.Length; i++) {
                 char ch = str[i];
