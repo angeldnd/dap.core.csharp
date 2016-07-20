@@ -51,12 +51,15 @@ namespace angeldnd.dap {
                 if (LogDebug) {
                     Debug("Setup: {0}", defaultValue);
                 }
+                OnSetup();
                 return true;
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
                 return false;
             }
         }
+
+        protected virtual void OnSetup() {}
 
         protected virtual bool NeedUpdate(T newValue) {
             if (NeedSetup()) return true;
