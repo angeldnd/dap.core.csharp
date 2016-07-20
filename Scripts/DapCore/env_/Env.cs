@@ -117,13 +117,16 @@ namespace angeldnd.dap {
             get { return _TickDelta; }
         }
 
+        private static Data _TickData = null;
+
         public static Data NewTickEvt() {
-            return new Data()
+            Data evt = _TickData == null ? new Data() : _TickData.Clone();
+            return evt
                     .I(EnvConsts.KeyTickCount, _TickCount)
                     .F(EnvConsts.KeyTickTime, _TickTime);
         }
 
-        public static void Tick(float tickDelta) {
+        public static void Tick(float tickDelta, Data tickData) {
             //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
             //FixedUpdate(), or other timer on other platform.
             if (tickDelta <= 0.0f) {
@@ -132,6 +135,7 @@ namespace angeldnd.dap {
             _TickCount++;
             _TickDelta = tickDelta;
             _TickTime = _TickTime + tickDelta;
+            _TickData = tickData;
             _Instance.Tick(NewTickEvt());
         }
 
