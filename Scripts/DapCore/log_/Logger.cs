@@ -38,7 +38,9 @@ namespace angeldnd.dap {
         }
 
         public void Critical(string format, params object[] values) {
-            Log.AddLogWithStackTrace(this, LoggerConsts.CRITICAL, LogPrefix, format, values);
+            string msg = Log.GetMsg(format, values);
+            Log.AddLogWithStackTrace(this, LoggerConsts.CRITICAL, LogPrefix, msg);
+            throw new DapException(msg);
         }
 
         public void Error(string format, params object[] values) {

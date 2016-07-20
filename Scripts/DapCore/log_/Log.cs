@@ -70,7 +70,9 @@ namespace angeldnd.dap {
         }
 
         public static void CriticalFrom(object source, string format, params object[] values) {
-            AddLogWithStackTrace(source, LoggerConsts.CRITICAL, format, values);
+            string msg = GetMsg(format, values);
+            AddLogWithStackTrace(source, LoggerConsts.CRITICAL, msg);
+            throw new DapException(msg);
         }
 
         public static void ErrorFrom(object source, string format, params object[] values) {
@@ -100,7 +102,9 @@ namespace angeldnd.dap {
         }
 
         public static void Critical(string format, params object[] values) {
+            string msg = GetMsg(format, values);
             AddLogWithStackTrace(null, LoggerConsts.CRITICAL, format, values);
+            throw new DapException(msg);
         }
 
         public static void Error(string format, params object[] values) {

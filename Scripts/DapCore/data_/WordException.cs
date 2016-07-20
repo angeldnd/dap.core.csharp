@@ -13,13 +13,13 @@ namespace angeldnd.dap {
         }
 
         public WordException(Word word, string format, params object[] values)
-                    : base(Log.GetMsg(format, values)) {
+                    : base(format, values) {
             Word = word;
         }
 
         public WordException(Word word, Exception innerException,
                                 string format, params object[] values)
-                    : base(Log.GetMsg(format, values), innerException) {
+                    : base(innerException, format, values) {
             Word = word;
         }
     }

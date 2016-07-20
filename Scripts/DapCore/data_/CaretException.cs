@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class CaretException : Exception {
+    public abstract class CaretException : DapException {
         public static string GetMessage(string source, Exception e) {
             if (e == null) return source;
             string msg;
@@ -22,12 +22,13 @@ namespace angeldnd.dap {
             get { return ""; }
         }
 
-        public CaretException(string msg)
-                    : base(msg) {
+        public CaretException(string format, params object[] values)
+                    : base(format, values) {
         }
 
-        public CaretException(string msg, Exception innerException)
-                    : base(msg, innerException) {
+        public CaretException(Exception innerException,
+                                string format, params object[] values)
+                    : base(innerException, format, values) {
         }
 
         public string MessageWithCaret {
