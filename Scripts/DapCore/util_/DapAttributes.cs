@@ -8,10 +8,24 @@ using System.Reflection;
 
 namespace angeldnd.dap {
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
+    public class DapTypeByName: System.Attribute {
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
+    public class DapTypeByFullName: System.Attribute {
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapType: System.Attribute {
         public static string GetDapType(Type type) {
             object[] attribs = type.GetCustomAttributes(false);
             foreach (var attr in attribs) {
+                if (attr is DapTypeByName) {
+                    return type.Name;
+                }
+                if (attr is DapTypeByFullName) {
+                    return type.FullName;
+                }
                 if (attr is DapType) {
                     return ((DapType)attr).Type;
                 }
