@@ -57,8 +57,8 @@ namespace angeldnd.dap {
             if (convertor != null) {
                 return convertor.Parse(str);
             } else {
-                throw new Exception(string.Format("Parse Failed, Unknown Type: <{0}> {1}",
-                                            GetTypeStr(typeof(T)), str));
+                throw new DapException("Parse Failed, Unknown Type: <{0}> {1}",
+                                        GetTypeStr(typeof(T)), str);
             }
         }
 
@@ -108,8 +108,8 @@ namespace angeldnd.dap {
             if (convertor != null) {
                 return convertor._ParseInternal(str);
             } else {
-                throw new Exception(string.Format("Parse Failed, Unknown Type: <{0}> {1}",
-                                            GetTypeStr(type), str));
+                throw new DapException("Parse Failed, Unknown Type: <{0}> {1}",
+                                        GetTypeStr(type), str);
             }
         }
 

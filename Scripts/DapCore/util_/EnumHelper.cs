@@ -27,5 +27,34 @@ namespace angeldnd.dap {
             }
             return -1;
         }
+
+        public static T FromString<T>(string val) where T : struct, IConvertible {
+            Type valueType = typeof(T);
+            if (valueType.IsEnum) {
+                try {
+                    T result = (T)Enum.Parse(valueType, val, true); //Case Insensitive here.
+                    if (Enum.IsDefined(valueType, val)) {
+                        return result;
+                    } else {
+                        Log.Error("Invalid Enum Value: {0} -> {1}", valueType, val);
+                    }
+                } catch (Exception e) {
+                    Log.Error("Invalid Enum Value: {0} -> {1} -> {2}", valueType, val, e);
+                }
+            } else {
+                Log.Error("Invalid Enum Type: {0}", valueType);
+            }
+            return default(T);
+        }
+
+        public static string ToString<T>(T val) where T : struct, IConvertible {
+            Type valueType = typeof(T);
+            if (valueType.IsEnum) {
+                return val.ToString();
+            } else {
+                Log.Error("Invalid Enum Type: {0}", valueType);
+            }
+            return "";
+        }
     }
 }
