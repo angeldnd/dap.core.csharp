@@ -68,11 +68,16 @@ namespace angeldnd.dap {
             return DoEncode(data, key, val);
         }
 
+        public abstract string GetDapType();
         protected abstract T DoDecode(Data data, string key);
         protected abstract bool DoEncode(Data data, string key, T val);
     }
 
     public class BoolEncoder : Encoder<bool> {
+        public override string GetDapType() {
+            return PropertiesConsts.TypeBoolProperty;
+        }
+
         protected override bool DoEncode(Data data, string key, bool val) {
             return data.SetBool(key, val);
         }
@@ -83,6 +88,10 @@ namespace angeldnd.dap {
     }
 
     public class IntEncoder : Encoder<int> {
+        public override string GetDapType() {
+            return PropertiesConsts.TypeIntProperty;
+        }
+
         protected override bool DoEncode(Data data, string key, int val) {
             return data.SetInt(key, val);
         }
@@ -93,6 +102,10 @@ namespace angeldnd.dap {
     }
 
     public class LongEncoder : Encoder<long> {
+        public override string GetDapType() {
+            return PropertiesConsts.TypeLongProperty;
+        }
+
         protected override bool DoEncode(Data data, string key, long val) {
             return data.SetLong(key, val);
         }
@@ -103,6 +116,10 @@ namespace angeldnd.dap {
     }
 
     public class FloatEncoder : Encoder<float> {
+        public override string GetDapType() {
+            return PropertiesConsts.TypeFloatProperty;
+        }
+
         protected override bool DoEncode(Data data, string key, float val) {
             return data.SetFloat(key, val);
         }
@@ -113,6 +130,10 @@ namespace angeldnd.dap {
     }
 
     public class DoubleEncoder : Encoder<double> {
+        public override string GetDapType() {
+            return PropertiesConsts.TypeDoubleProperty;
+        }
+
         protected override bool DoEncode(Data data, string key, double val) {
             return data.SetDouble(key, val);
         }
@@ -123,6 +144,10 @@ namespace angeldnd.dap {
     }
 
     public class StringEncoder : Encoder<string> {
+        public override string GetDapType() {
+            return PropertiesConsts.TypeStringProperty;
+        }
+
         protected override bool DoEncode(Data data, string key, string val) {
             return data.SetString(key, val);
         }
@@ -148,6 +173,10 @@ namespace angeldnd.dap {
     }
 
     public class DataEncoder : DataEncoder<Data> {
+        public override string GetDapType() {
+            return PropertiesConsts.TypeDataProperty;
+        }
+
         protected override Data EncodeValue(Data val) {
             return val;
         }

@@ -13,7 +13,7 @@ namespace angeldnd.dap {
             get { return typeof(T); }
         }
 
-        private T _Value;
+        private T _Value = default(T);
         public T Value {
             get { return _Value; }
         }
