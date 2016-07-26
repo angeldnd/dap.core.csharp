@@ -5,7 +5,7 @@
     "NETStandard.Library": "1.6.0"
   },
   "frameworks": {
-    "netstandard1.5": {
+    "netstandard1.6": {
       "buildOptions": {
         "define": ["DOTNET_CORE"]
       },
@@ -13,7 +13,8 @@
         "System.Diagnostics.StackTrace": "4.0.1",
         "System.Reflection": "4.1.0",
         "System.Reflection.TypeExtensions": "4.1.0",
-        "System.Runtime": "4.1.0"
+        "System.Runtime": "4.1.0",
+        "Microsoft.Extensions.DependencyModel": "1.0.0"
       }
     }
   }

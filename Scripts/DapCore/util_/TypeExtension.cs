@@ -52,5 +52,13 @@ namespace angeldnd.dap {
             return type.GetCustomAttributes(inherit);
 #endif
         }
+
+        public static object[] _GetCustomAttributes(this FieldInfo field, bool inherit) {
+#if DOTNET_CORE
+            return field.GetCustomAttributes(inherit).ToArray();
+#else
+            return field.GetCustomAttributes(inherit);
+#endif
+        }
     }
 }

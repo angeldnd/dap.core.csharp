@@ -6,6 +6,11 @@ using System.Text;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+#if DOTNET_CORE
+using Microsoft.Extensions.DependencyModel;
+using Microsoft.DotNet.InternalAbstractions;
+#endif
+
 namespace angeldnd.dap {
     public static class AssemblyHelper {
         private enum CheckMode {SubClass, Interface, Assignable};
@@ -23,18 +28,36 @@ namespace angeldnd.dap {
             return false;
         }
 
-        private static void ForEachType(CheckMode mode, Type baseType, Action<Type> callback) {
+        private static void ForEachAssembly(Action<Assembly> callback) {
+#if DOTNET_CORE
+            var libs = DependencyContext.Default.CompileLibraries;
+            foreach (var lib in libs) {
+                Assembly asm = Assembly.Load(new AssemblyName(lib.Name));
+#else
             Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly asm in asms) {
+#endif
+                callback(asm);
+            }
+        }
+
+        private static void ForEachType(Action<Type> callback) {
+            ForEachAssembly((Assembly asm) => {
                 Type[] types = asm.GetTypes();
 
                 foreach (Type type in types) {
-                    if (type._IsAbstract()) continue;
-                    if (!IsValidType(mode, baseType, type)) continue;
-
                     callback(type);
                 }
-            }
+            });
+        }
+
+        private static void ForEachType(CheckMode mode, Type baseType, Action<Type> callback) {
+            ForEachType((Type type) => {
+                if (type._IsAbstract()) return;
+                if (!IsValidType(mode, baseType, type)) return;
+
+                callback(type);
+            });
         }
 
         public static void ForEachSubClass<T>(Action<Type> callback) where T : class {
@@ -78,8 +101,8 @@ namespace angeldnd.dap {
 
         public static Type GetType(string fullName) {
             Type result = null;
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies()) {
-                Type t = a.GetType(fullName);
+            ForEachAssembly((Assembly asm) => {
+                Type t = asm.GetType(fullName);
                 if (t != null){
                     if (result == null) {
                         result = t;
@@ -87,7 +110,7 @@ namespace angeldnd.dap {
                         Log.Critical("Type Conflicted: {0}: {1} -> {2}", fullName, result, t);
                     }
                 }
-            }
+            });
             return result;
         }
     }

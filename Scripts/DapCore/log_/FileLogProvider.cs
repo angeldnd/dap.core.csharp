@@ -82,7 +82,7 @@ namespace angeldnd.dap {
         public void StopLogging() {
             if (_LogWriter != null) {
                 _LogWriter.Flush();
-                _LogWriter.Close();
+                _LogWriter.Dispose();
                 _LogWriter = null;
             }
         }
