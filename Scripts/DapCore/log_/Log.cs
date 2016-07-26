@@ -4,6 +4,10 @@ using System.IO;
 
 namespace angeldnd.dap {
     public static class Log {
+#if DOTNET_CORE
+        public static StackTrace FakeStackTrace = new StackTrace(new Exception("FakeStackTrace"), false);
+#endif
+
         private static LogProvider _Provider = new FileLogProvider();
         public static LogProvider Provider {
             get { return _Provider; }
@@ -50,7 +54,11 @@ namespace angeldnd.dap {
 
         public static void AddLogWithStackTrace(object source, string kind,
                                                 string format, params object[] values) {
+#if DOTNET_CORE
+            StackTrace stackTrace = FakeStackTrace;
+#else
             StackTrace stackTrace = new StackTrace(2, true);
+#endif
             _Provider.AddLog(source, kind, GetMsg(format, values), stackTrace);
         }
 
@@ -61,7 +69,11 @@ namespace angeldnd.dap {
 
         public static void AddLogWithStackTrace(object source, string kind, string prefix,
                                                 string format, params object[] values) {
+#if DOTNET_CORE
+            StackTrace stackTrace = FakeStackTrace;
+#else
             StackTrace stackTrace = new StackTrace(2, true);
+#endif
             _Provider.AddLog(source, kind, GetMsg(prefix, format, values), stackTrace);
         }
 
@@ -103,7 +115,7 @@ namespace angeldnd.dap {
 
         public static void Critical(string format, params object[] values) {
             string msg = GetMsg(format, values);
-            AddLogWithStackTrace(null, LoggerConsts.CRITICAL, format, values);
+            AddLogWithStackTrace(null, LoggerConsts.CRITICAL, msg);
             throw new DapException(msg);
         }
 
