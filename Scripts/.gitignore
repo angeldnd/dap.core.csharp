@@ -18,3 +18,4 @@ sysinfo.txt
 
 *.userprefs
 bin
+project.lock.json
