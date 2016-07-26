@@ -18,7 +18,7 @@ namespace angeldnd.dap {
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapType: System.Attribute {
         public static string GetDapType(Type type) {
-            object[] attribs = type.GetCustomAttributes(false);
+            object[] attribs = type._GetCustomAttributes(false);
             foreach (var attr in attribs) {
                 if (attr is DapTypeByName) {
                     return type.Name;
@@ -42,7 +42,7 @@ namespace angeldnd.dap {
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapPriority: System.Attribute {
         public static int GetPriority(Type type) {
-            object[] attribs = type.GetCustomAttributes(false);
+            object[] attribs = type._GetCustomAttributes(false);
             foreach (var attr in attribs) {
                 if (attr is DapPriority) {
                     return ((DapPriority)attr).Priority;
@@ -60,7 +60,7 @@ namespace angeldnd.dap {
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapOrder: System.Attribute {
         public static int GetOrder(Type type) {
-            object[] attribs = type.GetCustomAttributes(false);
+            object[] attribs = type._GetCustomAttributes(false);
             foreach (var attr in attribs) {
                 if (attr is DapOrder) {
                     return ((DapOrder)attr).Order;
@@ -101,7 +101,7 @@ namespace angeldnd.dap {
         }
 
         public static DapParam GetDapParam(FieldInfo field) {
-            object[] attribs = field.GetCustomAttributes(false);
+            object[] attribs = field._GetCustomAttributes(false);
             foreach (var attr in attribs) {
                 if (attr is DapParam) {
                     return (DapParam)attr;

@@ -38,7 +38,7 @@ namespace angeldnd.dap {
 
         public T1 Add<T1>(string key) where T1 : class, IInDictElement {
             Type t1 = typeof(T1);
-            if (t1.IsInterface()) {
+            if (t1._IsInterface()) {
                 if (t1 == typeof(IInDictElement)) {
                     return Add(key) as T1;
                 } else {

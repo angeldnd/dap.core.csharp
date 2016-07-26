@@ -14,11 +14,11 @@ namespace angeldnd.dap {
             if (type == null || baseType == null) return false;
             switch (mode) {
                 case CheckMode.SubClass:
-                    return type.IsSubclassOf(baseType);
+                    return type._IsSubclassOf(baseType);
                 case CheckMode.Interface:
                     return type.GetInterfaces().Contains(baseType);
                 case CheckMode.Assignable:
-                    return baseType.IsAssignableFrom(type);
+                    return baseType._IsAssignableFrom(type);
             }
             return false;
         }
@@ -29,7 +29,7 @@ namespace angeldnd.dap {
                 Type[] types = asm.GetTypes();
 
                 foreach (Type type in types) {
-                    if (type.IsAbstract) continue;
+                    if (type._IsAbstract()) continue;
                     if (!IsValidType(mode, baseType, type)) continue;
 
                     callback(type);

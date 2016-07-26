@@ -114,7 +114,7 @@ namespace angeldnd.dap {
         }
 
         public bool IsValidElementType(Type type) {
-            return type != null && _ElementType.IsAssignableFrom(type);
+            return type != null && _ElementType._IsAssignableFrom(type);
         }
 
         private readonly List<T> _Elements = new List<T>();

@@ -107,7 +107,7 @@ namespace angeldnd.dap {
         }
 
         public bool IsValidElementType(Type type) {
-            return type != null && _ElementType.IsAssignableFrom(type);
+            return type != null && _ElementType._IsAssignableFrom(type);
         }
 
         private readonly Dictionary<string, T> _Elements = new Dictionary<string, T>();

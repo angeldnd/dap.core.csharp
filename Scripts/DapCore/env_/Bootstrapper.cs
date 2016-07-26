@@ -7,6 +7,20 @@ using System.Runtime.InteropServices;
 
 namespace angeldnd.dap {
     public abstract class Bootstrapper {
+#if DOTNET_CORE
+        private static Bootstrapper _Bootstrapper = null;
+        public static bool SetBootstrapper(Bootstrapper bootstrapper) {
+            if (_Bootstrapper == null) {
+                _Bootstrapper = bootstrapper;
+                return true;
+            }
+            return false;
+        }
+
+        public static Bootstrapper Bootstrap() {
+            return _Bootstrapper;
+        }
+#else
         /*
          * Note: if more than one valid env assembly are provided, the actual one
          * used is not determined.
@@ -33,7 +47,7 @@ namespace angeldnd.dap {
             foreach (Assembly asm in asms) {
                 if (IsDapEnvAssembly(asm)) {
                     Type type = asm.GetType(DAP_BOOTSTRAPPER);
-                    if (type != null && type.IsSubclassOf(BootstrapperType)) {
+                    if (type != null && type._IsSubclassOf(BootstrapperType)) {
                         bootstrapper = (Bootstrapper)Activator.CreateInstance(type);
                         if (bootstrapper != null) {
                             break;
@@ -47,6 +61,7 @@ namespace angeldnd.dap {
             }
             return bootstrapper;
         }
+#endif
 
         public abstract LogProvider GetLogProvider();
         public abstract int GetVersion();

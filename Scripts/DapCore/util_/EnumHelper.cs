@@ -6,7 +6,7 @@ namespace angeldnd.dap {
     public static class EnumHelper {
         public static T FromInt<T>(int val) where T : struct, IConvertible {
             Type valueType = typeof(T);
-            if (valueType.IsEnum()) {
+            if (valueType._IsEnum()) {
                 if (Enum.IsDefined(valueType, val)) {
                     return (T)Enum.ToObject(valueType, val);
                 } else {
@@ -20,7 +20,7 @@ namespace angeldnd.dap {
 
         public static int ToInt<T>(T val) where T : struct, IConvertible {
             Type valueType = typeof(T);
-            if (valueType.IsEnum()) {
+            if (valueType._IsEnum()) {
                 return System.Convert.ToInt32(val);
             } else {
                 Log.Error("Invalid Enum Type: {0}", valueType);
@@ -30,7 +30,7 @@ namespace angeldnd.dap {
 
         public static T FromString<T>(string val) where T : struct, IConvertible {
             Type valueType = typeof(T);
-            if (valueType.IsEnum()) {
+            if (valueType._IsEnum()) {
                 try {
                     T result = (T)Enum.Parse(valueType, val, true); //Case Insensitive here.
                     if (Enum.IsDefined(valueType, val)) {
@@ -49,7 +49,7 @@ namespace angeldnd.dap {
 
         public static string ToString<T>(T val) where T : struct, IConvertible {
             Type valueType = typeof(T);
-            if (valueType.IsEnum()) {
+            if (valueType._IsEnum()) {
                 return val.ToString();
             } else {
                 Log.Error("Invalid Enum Type: {0}", valueType);
