@@ -7,8 +7,9 @@ namespace angeldnd.dap {
         public static T FromInt<T>(int val) where T : struct, IConvertible {
             Type valueType = typeof(T);
             if (valueType._IsEnum()) {
-                if (Enum.IsDefined(valueType, val)) {
-                    return (T)Enum.ToObject(valueType, val);
+                T result = (T)Enum.ToObject(valueType, val);
+                if (Enum.IsDefined(valueType, result)) {
+                    return result;
                 } else {
                     Log.Error("Invalid Enum Value: {0} -> {1}", valueType, val);
                 }
