@@ -2,6 +2,22 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
+    public interface IBusWatcher {
+        void OnBusMsg(Bus bus, string msg);
+    }
+
+    public sealed class BlockBusWatcher : WeakBlock, IBusWatcher {
+        private readonly Action<Bus, string> _Block;
+
+        public BlockBusWatcher(IBlockOwner owner, Action<Bus, string> block) : base(owner) {
+            _Block = block;
+        }
+
+        public void OnBusMsg(Bus bus, string msg) {
+            _Block(bus, msg);
+        }
+    }
+
     public interface IBusSub {
         void OnMsg(Bus bus, string msg);
     }
@@ -34,6 +50,14 @@ namespace angeldnd.dap {
             if (!_Msgs.Contains(msg)) {
                 _Msgs.Add(msg);
             }
+        }
+
+        public BlockBusWatcher AddBusWatcher(IBlockOwner owner, Action<Bus, string> block) {
+            BlockBusWatcher result = new BlockBusWatcher(owner, block);
+            if (AddBusWatcher(result)) {
+                return result;
+            }
+            return null;
         }
 
         public void AddSub(string msg, IBusSub sub) {
@@ -79,6 +103,11 @@ namespace angeldnd.dap {
                     sub.OnMsg(this, msg);
                 });
             }
+
+            WeakListHelper.Notify(_BusWatchers, (IBusWatcher watcher) => {
+                watcher.OnBusMsg(this, msg);
+            });
+
             if (LogDebug) {
                 Debug("Publish {0}: sub_count = {1}, msg_count = {2}",
                          msg, GetSubCount(msg), GetMsgCount(msg));
@@ -135,5 +164,20 @@ namespace angeldnd.dap {
             }
             summary.A(ContextConsts.SummaryData, data);
         }
+
+        //SILP: DECLARE_LIST(BusWatcher, listener, IBusWatcher, _BusWatchers)
+        private WeakList<IBusWatcher> _BusWatchers = null;            //__SILP__
+                                                                      //__SILP__
+        public int BusWatcherCount {                                  //__SILP__
+            get { return WeakListHelper.Count(_BusWatchers); }        //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool AddBusWatcher(IBusWatcher listener) {             //__SILP__
+            return WeakListHelper.Add(ref _BusWatchers, listener);    //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool RemoveBusWatcher(IBusWatcher listener) {          //__SILP__
+            return WeakListHelper.Remove(_BusWatchers, listener);     //__SILP__
+        }                                                             //__SILP__
     }
 }
