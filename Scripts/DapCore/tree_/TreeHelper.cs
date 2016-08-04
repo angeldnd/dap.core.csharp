@@ -23,13 +23,15 @@ namespace angeldnd.dap {
             return PathConsts.Join(GetSegments<T>(root, element));
         }
 
-        public static T GetAncestor<T>(IElement element) where T : class, IOwner {
+        public static T GetAncestor<T>(IElement element, Func<T, bool> checker = null) where T : class, IOwner {
             if (element == null) return null;
             IObject current = element.GetOwner();
             while (current != null) {
                 T ancestor = current as T;
                 if (ancestor != null) {
-                    return ancestor;
+                    if (checker == null || checker(ancestor)) {
+                        return ancestor;
+                    }
                 }
                 IElement currentAsElement = current as IElement;
                 if (currentAsElement == null) {

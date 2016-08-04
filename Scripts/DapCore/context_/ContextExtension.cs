@@ -10,12 +10,18 @@ namespace angeldnd.dap {
             return owner.Remove<IContext>(context.Key) != null;
         }
 
-        public static T GetAncestor<T>(this IContext context) where T : class, IContext {
-            return TreeHelper.GetAncestor<T>(context);
+        public static T GetAncestor<T>(this IContext context, Func<T, bool> checker = null) where T : class, IContext {
+            return TreeHelper.GetAncestor<T>(context, checker);
         }
 
-        public static IContext GetAncestor(this IContext context) {
-            return GetAncestor<IContext>(context);
+        public static T GetAncestorWithManner<T>(this IContext context, string mannerKey)
+                                                    where T : Manner {
+            T result = null;
+            GetAncestor<IContext>(context, (IContext ancestor) => {
+                result = ancestor.Manners.Get<T>(mannerKey, true);
+                return result != null;
+            });
+            return result;
         }
 
         public static T GetContext<T>(this IDictContext context, string relPath,
