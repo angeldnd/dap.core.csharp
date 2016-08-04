@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     //SILP: PROPERTY_CLASS(Data, Data)
     [DapType(PropertiesConsts.TypeDataProperty)]                                       //__SILP__
-    [DapOrder(-10)]                                                                    //__SILP__
+    [DapOrder(DapOrders.Property)]                                                     //__SILP__
     public sealed class DataProperty : Property<Data> {                                //__SILP__
         public DataProperty(IDictProperties owner, string key) : base(owner, key) {    //__SILP__
         }                                                                              //__SILP__

@@ -1,7 +1,7 @@
 # PROPERTY_CLASS(type, cs_type) #
 ```C#
 [DapType(PropertiesConsts.Type${type}Property)]
-[DapOrder(-10)]
+[DapOrder(DapOrders.Property)]
 public sealed class ${type}Property : Property<${cs_type}> {
     public ${type}Property(IDictProperties owner, string key) : base(owner, key) {
     }

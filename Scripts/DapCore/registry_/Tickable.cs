@@ -23,7 +23,7 @@ namespace angeldnd.dap {
     }
 
     [DapType(TickableConsts.TypeTickable)]
-    [DapOrder(-9)]
+    [DapOrder(DapOrders.Manner)]
     public class Tickable : Manner {
         public Tickable(Manners owner, string key) : base(owner, key) {
             IContext contextOwner = Context.GetOwner() as IContext;

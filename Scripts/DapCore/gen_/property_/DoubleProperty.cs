@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     //SILP: PROPERTY_CLASS(Double, double)
     [DapType(PropertiesConsts.TypeDoubleProperty)]                                       //__SILP__
-    [DapOrder(-10)]                                                                      //__SILP__
+    [DapOrder(DapOrders.Property)]                                                       //__SILP__
     public sealed class DoubleProperty : Property<double> {                              //__SILP__
         public DoubleProperty(IDictProperties owner, string key) : base(owner, key) {    //__SILP__
         }                                                                                //__SILP__

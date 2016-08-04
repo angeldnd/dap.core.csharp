@@ -10,7 +10,7 @@ namespace angeldnd.dap {
     }
 
     [DapType(ItemsConsts.TypeItems)]
-    [DapOrder(-9)]
+    [DapOrder(DapOrders.Context)]
     public class Items : DictContext<IDictContext, IContext> {
         public Items(IDictContext owner, string key) : base(owner, key) {
         }
