@@ -29,5 +29,13 @@ namespace angeldnd.dap {
     public sealed class Properties : DictAspect<IContext, IProperty>, IDictProperties {
         public Properties(IContext owner, string key) : base(owner, key) {
         }
+
+        public bool WaitProperty(string key, Action<IProperty, bool> callback) {
+            return Context.Utils.WaitElement(this, key, callback);
+        }
+
+        public bool WaitProperty<T>(string key, Action<IProperty<T>, bool> callback) {
+            return Context.Utils.WaitElement(this, key, callback);
+        }
     }
 }

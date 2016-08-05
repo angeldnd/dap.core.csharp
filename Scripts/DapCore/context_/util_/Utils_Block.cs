@@ -39,14 +39,14 @@ namespace angeldnd.dap {
             return false;
         }
 
-        public bool WaitElement<T>(IDict<T> dict, string key, Action<T, bool> callback) where T : class, IInDictElement {
-            T existElement = dict.Get(key, true);
+        public bool WaitElement<T>(IDict dict, string key, Action<T, bool> callback) where T : class, IInDictElement {
+            T existElement = dict.Get<T>(key, true);
             if (existElement != null) {
                 callback(existElement, false);
                 return false;
             }
             BlockOwner owner = RetainBlockOwner();
-            dict.AddDictWatcher(new BlockDictElementAddedWatcher<T>(owner, (T element) => {
+            dict.AddDictWatcher<T>(new BlockDictElementAddedWatcher<T>(owner, (T element) => {
                 if (owner == null) return;
                 if (element.Key == key) {
                     if (ReleaseBlockOwner(ref owner)) {
