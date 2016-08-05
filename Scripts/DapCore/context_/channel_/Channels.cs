@@ -25,7 +25,7 @@ namespace angeldnd.dap {
         }
 
         public bool FireEvent(string channelKey, Data evt) {
-            IChannel channel = Get(channelKey);
+            Channel channel = Get(channelKey);
             if (channel != null) {
                 return channel.FireEvent(evt);
             }
