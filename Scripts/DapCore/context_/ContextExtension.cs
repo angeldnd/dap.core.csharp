@@ -50,7 +50,8 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public static string GetRelativePath(this IDictContext context, IContext descendant) {
+        //Note: Use IContext here so no need to cast to IDictContext
+        public static string GetRelativePath(this IContext context, IContext descendant) {
             return PathHelper.GetRelativePath(context.Path, descendant.Path);
         }
 
