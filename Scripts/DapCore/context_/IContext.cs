@@ -14,6 +14,7 @@ namespace angeldnd.dap {
         Handlers Handlers { get; }
         Bus Bus { get; }
         Vars Vars { get; }
+        Utils Utils { get; }
         Manners Manners { get; }
 
         T GetAspect<T>(string aspectPath, bool isDebug = false) where T : class, IAspect;

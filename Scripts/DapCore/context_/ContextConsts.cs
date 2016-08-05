@@ -9,6 +9,7 @@ namespace angeldnd.dap {
         public const string KeyChannels = "Channels";
         public const string KeyHandlers = "Handlers";
         public const string KeyVars = "Vars";
+        public const string KeyUtils = "Utils";
         public const string KeyManners = "Manners";
         public const string KeyBus = "Bus";
 

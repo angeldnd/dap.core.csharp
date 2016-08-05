@@ -13,6 +13,7 @@ namespace angeldnd.dap {
             _Handlers = AddTopAspect<Handlers>(ContextConsts.KeyHandlers);                            //__SILP__
             _Bus = AddTopAspect<Bus>(ContextConsts.KeyBus);                                           //__SILP__
             _Vars = AddTopAspect<Vars>(ContextConsts.KeyVars);                                        //__SILP__
+            _Utils = AddTopAspect<Utils>(ContextConsts.KeyUtils);                                     //__SILP__
             _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);                               //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
@@ -44,6 +45,11 @@ namespace angeldnd.dap {
         private readonly Vars _Vars;                                                                  //__SILP__
         public Vars Vars {                                                                            //__SILP__
             get { return _Vars; }                                                                     //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        private readonly Utils _Utils;                                                                //__SILP__
+        public Utils Utils {                                                                          //__SILP__
+            get { return _Utils; }                                                                    //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         private readonly Manners _Manners;                                                            //__SILP__

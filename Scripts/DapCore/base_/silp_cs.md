@@ -254,6 +254,7 @@ protected override void AddSummaryFields(Data summary) {
     _Handlers = AddTopAspect<Handlers>(ContextConsts.KeyHandlers);
     _Bus = AddTopAspect<Bus>(ContextConsts.KeyBus);
     _Vars = AddTopAspect<Vars>(ContextConsts.KeyVars);
+    _Utils = AddTopAspect<Utils>(ContextConsts.KeyUtils);
     _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);
 }
 
@@ -285,6 +286,11 @@ public Bus Bus {
 private readonly Vars _Vars;
 public Vars Vars {
     get { return _Vars; }
+}
+
+private readonly Utils _Utils;
+public Utils Utils {
+    get { return _Utils; }
 }
 
 private readonly Manners _Manners;

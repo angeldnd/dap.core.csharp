@@ -43,6 +43,20 @@ namespace angeldnd.dap {
         public Bus(IContext owner, string key) : base(owner, key) {
         }
 
+        public bool WaitMsg(string msg, Action<string, bool> callback) {
+            if (GetMsgCount(msg) > 0) {
+                callback(msg, false);
+                return false;
+            }
+            BlockOwner owner = Owner.Utils.RetainBlockOwner();
+            AddSub(msg, owner, (Bus bus, string _msg) => {
+                if (Owner.Utils.ReleaseBlockOwner(ref owner)) {
+                    callback(msg, true);
+                }
+            });
+            return true;
+        }
+
         private void TryAddMsg(string msg) {
             if (_Msgs == null) {
                 _Msgs = new List<string>();
