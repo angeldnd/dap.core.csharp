@@ -7,21 +7,7 @@ namespace angeldnd.dap {
         }
 
         public bool WaitChannel(string channelKey, Action<Channel, bool> callback) {
-            Channel existChannel = Get(channelKey, true);
-            if (existChannel != null) {
-                callback(existChannel, false);
-                return false;
-            }
-            BlockOwner owner = Owner.Utils.RetainBlockOwner();
-            AddDictWatcher(new BlockDictElementAddedWatcher<Channel>(owner, (Channel channel) => {
-                if (owner == null) return;
-                if (channel.Key == channelKey) {
-                    if (Owner.Utils.ReleaseBlockOwner(ref owner)) {
-                        callback(channel, true);
-                    }
-                }
-            }));
-            return true;
+            return Owner.Utils.WaitElement(this, channelKey, callback);
         }
 
         public bool FireEvent(string channelKey, Data evt) {
