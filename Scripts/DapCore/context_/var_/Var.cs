@@ -69,7 +69,7 @@ namespace angeldnd.dap {
             if (Value == null) {
                 return !newValue.Equals(Value);
             } else {
-                return Value.Equals(newValue);
+                return !Value.Equals(newValue);
             }
         }
 
