@@ -9,6 +9,14 @@ namespace angeldnd.dap {
         public Vars(IContext owner, string key) : base(owner, key) {
         }
 
+        public bool WaitVar(string key, Action<IVar, bool> callback) {
+            return Context.Utils.WaitElement(this, key, callback);
+        }
+
+        public bool WaitVar<T>(string key, Action<IVar<T>, bool> callback) {
+            return Context.Utils.WaitElement(this, key, callback);
+        }
+
         public Var<T> AddVar<T>(string key, T val) {
             Var<T> result = Add<Var<T>>(key);
             if (result != null) {
