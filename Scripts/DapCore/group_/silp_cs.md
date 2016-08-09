@@ -110,6 +110,28 @@ public void AllValueCheckers<T1>(Action<T1> callback) where T1 : IValueChecker {
 public int ValueWatcherCount {
     get { return 0; }
 }
+
+//ISetupAspect
+public int SetupWatcherCount {
+    get { return 0; }
+}
+
+public bool AddSetupWatcher(ISetupWatcher watcher) {
+    return false;
+}
+
+public bool RemoveSetupWatcher(ISetupWatcher watcher) {
+    return false;
+}
+
+public BlockSetupWatcher AddSetupWatcher(IBlockOwner owner, Action<ISetupAspect> block) {
+    return null;
+}
+
+public bool NeedSetup() {
+    return false;
+}
+
 ```
 
 # GROUP_ENCODE_MIXIN(element_type) #

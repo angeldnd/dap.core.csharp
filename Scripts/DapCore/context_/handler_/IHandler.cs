@@ -4,27 +4,23 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public interface IHandler {
         int RequestCheckerCount { get; }
-        bool AddRequestChecker(IRequestChecker listener);
-        bool RemoveRequestChecker(IRequestChecker listener);
+        bool AddRequestChecker(IRequestChecker checker);
+        bool RemoveRequestChecker(IRequestChecker checker);
         BlockRequestChecker AddRequestChecker(IBlockOwner owner, Func<Handler, Data, bool> block);
 
         int RequestWatcherCount { get; }
-        bool AddRequestWatcher(IRequestWatcher listener);
-        bool RemoveRequestWatcher(IRequestWatcher listener);
+        bool AddRequestWatcher(IRequestWatcher watcher);
+        bool RemoveRequestWatcher(IRequestWatcher watcher);
         BlockRequestWatcher AddRequestWatcher(IBlockOwner owner, Action<Handler, Data> block);
 
         int ResponseWatcherCount { get; }
-        bool AddResponseWatcher(IResponseWatcher listener);
-        bool RemoveResponseWatcher(IResponseWatcher listener);
+        bool AddResponseWatcher(IResponseWatcher watcher);
+        bool RemoveResponseWatcher(IResponseWatcher watcher);
         BlockResponseWatcher AddResponseWatcher(IBlockOwner owner, Action<Handler, Data, Data> block);
 
         bool IsValid { get; }
         bool Setup(IRequestHandler handler);
         Data HandleRequest(Data req);
-    }
-
-    public interface ISetupWatcher {
-        void OnSetup(Handler handler);
     }
 
     public interface IRequestChecker {
@@ -41,18 +37,6 @@ namespace angeldnd.dap {
 
     public interface IRequestHandler {
         Data DoHandle(Handler handler, Data req);
-    }
-
-    public sealed class BlockSetupWatcher : WeakBlock, ISetupWatcher {
-        private readonly Action<Handler> _Block;
-
-        public BlockSetupWatcher(IBlockOwner owner, Action<Handler> block) : base(owner) {
-            _Block = block;
-        }
-
-        public void OnSetup(Handler handler) {
-            _Block(handler);
-        }
     }
 
     public sealed class BlockRequestChecker : WeakBlock, IRequestChecker {

@@ -56,5 +56,24 @@ namespace angeldnd.dap {
             }));
             return true;
         }
+
+        public bool WaitSetupAspect<T>(IDict dict, string key, Action<T, bool> callback, bool waitSetup = true)
+                                                                                    where T : class, IInDictElement, ISetupAspect {
+            bool waitingForSetup = false;
+            bool waitingForAspect = WaitElement(dict, key, (T aspect, bool isNew) => {
+                if (!aspect.NeedSetup() || !waitSetup) {
+                    callback(aspect, isNew);
+                    return;
+                }
+                BlockOwner setupOwner = RetainBlockOwner();
+                aspect.AddSetupWatcher(new BlockSetupWatcher(setupOwner, (ISetupAspect _aspect) => {
+                    if (ReleaseBlockOwner(ref setupOwner)) {
+                        callback(aspect, isNew);
+                    }
+                }));
+                waitingForSetup = true;
+            });
+            return waitingForAspect || waitingForSetup;
+        }
     }
 }

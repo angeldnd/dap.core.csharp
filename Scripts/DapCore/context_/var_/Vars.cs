@@ -9,12 +9,12 @@ namespace angeldnd.dap {
         public Vars(IContext owner, string key) : base(owner, key) {
         }
 
-        public bool WaitVar(string key, Action<IVar, bool> callback) {
-            return Context.Utils.WaitElement(this, key, callback);
+        public bool WaitVar(string key, Action<IVar, bool> callback, bool waitSetup = true) {
+            return Owner.Utils.WaitSetupAspect(this, key, callback, waitSetup);
         }
 
-        public bool WaitVar<T>(string key, Action<IVar<T>, bool> callback) {
-            return Context.Utils.WaitElement(this, key, callback);
+        public bool WaitVar<T>(string key, Action<IVar<T>, bool> callback, bool waitSetup = true) {
+            return Owner.Utils.WaitSetupAspect(this, key, callback, waitSetup);
         }
 
         public Var<T> AddVar<T>(string key, T val) {

@@ -30,12 +30,12 @@ namespace angeldnd.dap {
         public Properties(IContext owner, string key) : base(owner, key) {
         }
 
-        public bool WaitProperty(string key, Action<IProperty, bool> callback) {
-            return Context.Utils.WaitElement(this, key, callback);
+        public bool WaitProperty(string key, Action<IProperty, bool> callback, bool waitSetup = true) {
+            return Owner.Utils.WaitSetupAspect(this, key, callback, waitSetup);
         }
 
-        public bool WaitProperty<T>(string key, Action<IProperty<T>, bool> callback) {
-            return Context.Utils.WaitElement(this, key, callback);
+        public bool WaitProperty<T>(string key, Action<IProperty<T>, bool> callback, bool waitSetup = true) {
+            return Owner.Utils.WaitSetupAspect(this, key, callback, waitSetup);
         }
     }
 }

@@ -52,6 +52,9 @@ namespace angeldnd.dap {
                     Debug("Setup: {0}", defaultValue);
                 }
                 OnSetup();
+                WeakListHelper.Notify(_SetupWatchers, (ISetupWatcher watcher) => {
+                    watcher.OnSetup(this);
+                });
                 return true;
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
@@ -119,6 +122,14 @@ namespace angeldnd.dap {
             return true;
         }
 
+        public BlockSetupWatcher AddSetupWatcher(IBlockOwner owner, Action<ISetupAspect> block) {
+            BlockSetupWatcher result = new BlockSetupWatcher(owner, block);
+            if (AddSetupWatcher(result)) {
+                return result;
+            }
+            return null;
+        }
+
         public BlockVarWatcher AddVarWatcher(IBlockOwner owner, Action<IVar> block) {
             BlockVarWatcher result = new BlockVarWatcher(owner, block);
             if (AddVarWatcher(result)) {
@@ -160,6 +171,21 @@ namespace angeldnd.dap {
                    .I(ContextConsts.Summary2ndWatcherCount, VarWatcherCount)
                    .I(ContextConsts.SummaryCheckFailedCount, _CheckFailedCount);
         }
+
+        //SILP: DECLARE_LIST(SetupWatcher, watcher, ISetupWatcher, _SetupWatchers)
+        private WeakList<ISetupWatcher> _SetupWatchers = null;        //__SILP__
+                                                                      //__SILP__
+        public int SetupWatcherCount {                                //__SILP__
+            get { return WeakListHelper.Count(_SetupWatchers); }      //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool AddSetupWatcher(ISetupWatcher watcher) {          //__SILP__
+            return WeakListHelper.Add(ref _SetupWatchers, watcher);   //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
+        public bool RemoveSetupWatcher(ISetupWatcher watcher) {       //__SILP__
+            return WeakListHelper.Remove(_SetupWatchers, watcher);    //__SILP__
+        }                                                             //__SILP__
 
         //SILP: DECLARE_LIST(VarWatcher, watcher, IVarWatcher, _VarWatchers)
         private WeakList<IVarWatcher> _VarWatchers = null;            //__SILP__

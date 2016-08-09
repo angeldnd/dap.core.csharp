@@ -7,21 +7,7 @@ namespace angeldnd.dap {
         }
 
         public bool WaitHandler(string handlerKey, Action<Handler, bool> callback, bool waitSetup = true) {
-            bool waitingForSetup = false;
-            bool waitingForHandler = Owner.Utils.WaitElement(this, handlerKey, (Handler handler, bool isNew) => {
-                if (handler.IsValid || !waitSetup) {
-                    callback(handler, isNew);
-                    return;
-                }
-                BlockOwner setupOwner = Owner.Utils.RetainBlockOwner();
-                handler.AddSetupWatcher(new BlockSetupWatcher(setupOwner, (Handler _handler) => {
-                    if (Owner.Utils.ReleaseBlockOwner(ref setupOwner)) {
-                        callback(handler, isNew);
-                    }
-                }));
-                waitingForSetup = true;
-            });
-            return waitingForHandler || waitingForSetup;
+            return Owner.Utils.WaitSetupAspect(this, handlerKey, callback, waitSetup);
         }
 
         public Data HandleRequest(string handlerKey, Data req) {

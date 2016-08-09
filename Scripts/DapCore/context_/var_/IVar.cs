@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IVar : IAspect, IInDictElement, IInTableElement {
+    public interface IVar : ISetupAspect, IInDictElement, IInTableElement {
         Type ValueType { get; }
         object GetValue();
         bool SetValue(object newValue);

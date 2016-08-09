@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class Handler : InDictAspect<Handlers>, IHandler {
+    public sealed class Handler : InDictAspect<Handlers>, IHandler, ISetupAspect {
         public Handler(Handlers owner, string key) : base(owner, key) {
         }
 
@@ -11,6 +11,10 @@ namespace angeldnd.dap {
 
         public bool IsValid {
             get { return _Handler != null; }
+        }
+
+        public bool NeedSetup() {
+            return _Handler == null;
         }
 
         public bool Setup(IRequestHandler handler) {
@@ -68,7 +72,7 @@ namespace angeldnd.dap {
             return res;
         }
 
-        public BlockSetupWatcher AddSetupWatcher(IBlockOwner owner, Action<Handler> block) {
+        public BlockSetupWatcher AddSetupWatcher(IBlockOwner owner, Action<ISetupAspect> block) {
             BlockSetupWatcher result = new BlockSetupWatcher(owner, block);
             if (AddSetupWatcher(result)) {
                 return result;
