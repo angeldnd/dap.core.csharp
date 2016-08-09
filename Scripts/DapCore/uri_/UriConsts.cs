@@ -34,5 +34,10 @@ namespace angeldnd.dap {
         public static string EncodeRelUri(string path) {
             return string.Format("{0}{1}", PathSeparator, path);
         }
+
+        public static string EncodeAbsUri(string path, string relUri) {
+            string relPath = GetPathFromRelUri(relUri);
+            return PathConsts.Encode(path, relPath);
+        }
     }
 }
