@@ -64,6 +64,7 @@ namespace angeldnd.dap {
 #endif
 
         public abstract LogProvider GetLogProvider();
+        public abstract string GetAppId();
         public abstract int GetVersion();
         public abstract int GetSubVersion();
         public abstract Dictionary<string, Type> GetDapTypes();
@@ -71,6 +72,10 @@ namespace angeldnd.dap {
     }
 
     public class AssemblyBootstrapper : Bootstrapper {
+        public override string GetAppId() {
+            return "N/A";
+        }
+
         public override int GetVersion() {
             return 0;
         }

@@ -19,6 +19,8 @@ namespace angeldnd.dap {
         public const string MsgOnBoot = "on_boot";
         public const string MsgOnHalt = "on_halt";
 
+        [DapParam(typeof(string))]
+        public const string SummaryAppId = "app_id";
         [DapParam(typeof(int))]
         public const string SummaryVersion = "version";
         [DapParam(typeof(int))]
@@ -48,6 +50,7 @@ namespace angeldnd.dap {
                 if (Log.Init(bootstrapper.GetLogProvider())) {
                     _Bootstrapper = bootstrapper;
 
+                    _AppId = bootstrapper.GetAppId();
                     _Version = bootstrapper.GetVersion();
                     _SubVersion = bootstrapper.GetSubVersion();
                     foreach (var kv in bootstrapper.GetDapTypes()) {
@@ -86,6 +89,11 @@ namespace angeldnd.dap {
 
         private static Bootstrapper _Bootstrapper;
         private static List<Plugin> _Plugins;
+
+        private static string _AppId;
+        public static string AppId {
+            get { return _AppId; }
+        }
 
         private static int _Version;
         public static int Version {
@@ -285,7 +293,8 @@ namespace angeldnd.dap {
                             .S(ObjectConsts.SummaryType, plugin.GetType().FullName)
                             .B(EnvConsts.SummaryOk, !_FailedPluginIndexes.Contains(i)));
             }
-            summary.I(EnvConsts.SummaryVersion, _Version)
+            summary.S(EnvConsts.SummaryAppId, _AppId)
+                   .I(EnvConsts.SummaryVersion, _Version)
                    .I(EnvConsts.SummarySubVersion, _SubVersion)
                    .I(EnvConsts.SummaryRound, _Round)
                    .I(EnvConsts.SummaryTickCount, _TickCount)
