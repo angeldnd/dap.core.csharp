@@ -167,7 +167,8 @@ namespace angeldnd.dap {
 
         private Env() : base(null, null) {
             //Can NOT create any aspects other than Hooks here.
-            Hooks = AddTopAspect<Hooks>(EnvConsts.KeyHooks);
+            //Also can't use normal add here..
+            Hooks = new Hooks(this, EnvConsts.KeyHooks);
         }
 
         private Channel _TickChannel = null;
@@ -182,14 +183,6 @@ namespace angeldnd.dap {
 
         private List<int> _FailedPluginIndexes = new List<int>();
 
-        public override void OnAdded() {
-            //Do Nothing.
-        }
-
-        public override void OnRemoved() {
-            //Do Nothing.
-        }
-
         private void Tick(Data evt) {
             _TickChannel.FireEvent(evt);
         }
@@ -202,6 +195,7 @@ namespace angeldnd.dap {
         private void Init() {
             Log.Info("Dap Environment Init: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
+            Hooks.Setup();
             _TickChannel = Channels.Add(EnvConsts.ChannelTick);
 
             PublishOnBusAndEnvBus(EnvConsts.MsgOnInit);

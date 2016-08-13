@@ -9,6 +9,13 @@ namespace angeldnd.dap {
         }
 
         public Hooks(IContext owner, string key) : base(owner, key) {
+        }
+
+        public void Setup() {
+            if (_DebugHook != null) {
+                Error("Already Setup");
+                return;
+            }
             _DebugHook = Add();
             _DebugHook.Setup(
                 "DebugHook",
@@ -47,14 +54,6 @@ namespace angeldnd.dap {
             ForEach((Hook hook) => {
                 hook._OnAspectRemoved(aspect);
             });
-        }
-
-        public override void OnAdded() {
-            //Do Nothing.
-        }
-
-        public override void OnRemoved() {
-            //Do Nothing.
         }
     }
 }

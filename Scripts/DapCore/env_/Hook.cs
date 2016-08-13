@@ -125,14 +125,6 @@ namespace angeldnd.dap {
             }
         }
 
-        public override void OnAdded() {
-            //Do Nothing.
-        }
-
-        public override void OnRemoved() {
-            //Do Nothing.
-        }
-
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
             summary.S(ContextConsts.SummaryDescription, _Description);

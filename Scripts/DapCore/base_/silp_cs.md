@@ -327,7 +327,7 @@ public override sealed void OnAdded() {
     OnContextAdded();
 }
 
-public override sealed OnRemoved() {
+public override sealed void OnRemoved() {
     Env.Instance.Hooks._OnContextRemoved(this);
     OnContextRemoved();
 }

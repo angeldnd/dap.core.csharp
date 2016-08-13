@@ -81,7 +81,7 @@ namespace angeldnd.dap {
             OnContextAdded();                                                                         //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public override sealed OnRemoved() {                                                          //__SILP__
+        public override sealed void OnRemoved() {                                                     //__SILP__
             Env.Instance.Hooks._OnContextRemoved(this);                                               //__SILP__
             OnContextRemoved();                                                                       //__SILP__
         }                                                                                             //__SILP__
