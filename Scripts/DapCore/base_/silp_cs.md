@@ -201,17 +201,23 @@ public override sealed bool DebugMode {
     get { return _Debugging || base.DebugMode; }
 }
 
-public override void OnAdded() {
+public override sealed void OnAdded() {
     if (_Context != null) {
         Env.Instance.Hooks._OnAspectAdded(this);
     }
+    OnAspectAdded();
 }
 
-public override void OnRemoved() {
+public override sealed void OnRemoved() {
     if (_Context != null) {
         Env.Instance.Hooks._OnAspectRemoved(this);
     }
+    OnAspectRemoved();
 }
+
+protected virtual void OnAspectAdded() {}
+protected virtual void OnAspectRemoved() {}
+
 ```
 
 # ASPECT_SUMMARY_MIXIN() #
@@ -316,12 +322,14 @@ public override sealed bool DebugMode {
     get { return _Debugging; }
 }
 
-public override void OnAdded() {
+public override sealed void OnAdded() {
     Env.Instance.Hooks._OnContextAdded(this);
+    OnContextAdded();
 }
 
-public override void OnRemoved() {
+public override sealed OnRemoved() {
     Env.Instance.Hooks._OnContextRemoved(this);
+    OnContextRemoved();
 }
 
 protected override void AddSummaryFields(Data summary) {
@@ -387,5 +395,8 @@ public void ForEachAspects(Action<IAspect> callback) {
         AspectExtension.ForEachAspects(aspect, callback);
     });
 }
+
+protected virtual void OnContextAdded() {}
+protected virtual void OnContextRemoved() {}
 
 ```

@@ -44,16 +44,22 @@ namespace angeldnd.dap {
             get { return _Debugging || base.DebugMode; }              //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public override void OnAdded() {                              //__SILP__
+        public override sealed void OnAdded() {                       //__SILP__
             if (_Context != null) {                                   //__SILP__
                 Env.Instance.Hooks._OnAspectAdded(this);              //__SILP__
             }                                                         //__SILP__
+            OnAspectAdded();                                          //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public override void OnRemoved() {                            //__SILP__
+        public override sealed void OnRemoved() {                     //__SILP__
             if (_Context != null) {                                   //__SILP__
                 Env.Instance.Hooks._OnAspectRemoved(this);            //__SILP__
             }                                                         //__SILP__
+            OnAspectRemoved();                                        //__SILP__
         }                                                             //__SILP__
+                                                                      //__SILP__
+        protected virtual void OnAspectAdded() {}                     //__SILP__
+        protected virtual void OnAspectRemoved() {}                   //__SILP__
+                                                                      //__SILP__
     }
 }

@@ -75,12 +75,14 @@ namespace angeldnd.dap {
             get { return _Debugging; }                                                                //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public override void OnAdded() {                                                              //__SILP__
+        public override sealed void OnAdded() {                                                       //__SILP__
             Env.Instance.Hooks._OnContextAdded(this);                                                 //__SILP__
+            OnContextAdded();                                                                         //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public override void OnRemoved() {                                                            //__SILP__
+        public override sealed OnRemoved() {                                                          //__SILP__
             Env.Instance.Hooks._OnContextRemoved(this);                                               //__SILP__
+            OnContextRemoved();                                                                       //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         protected override void AddSummaryFields(Data summary) {                                      //__SILP__
@@ -146,6 +148,9 @@ namespace angeldnd.dap {
                 AspectExtension.ForEachAspects(aspect, callback);                                     //__SILP__
             });                                                                                       //__SILP__
         }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        protected virtual void OnContextAdded() {}                                                    //__SILP__
+        protected virtual void OnContextRemoved() {}                                                  //__SILP__
                                                                                                       //__SILP__
     }
 }
