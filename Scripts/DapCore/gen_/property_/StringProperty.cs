@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     //SILP: PROPERTY_CLASS(String, string)
-    [DapType(PropertiesConsts.TypeStringProperty)]                                       //__SILP__
+    [DapVarType(PropertiesConsts.TypeStringProperty, typeof(string))]                    //__SILP__
     [DapOrder(DapOrders.Property)]                                                       //__SILP__
     public sealed class StringProperty : Property<string> {                              //__SILP__
         public StringProperty(IDictProperties owner, string key) : base(owner, key) {    //__SILP__

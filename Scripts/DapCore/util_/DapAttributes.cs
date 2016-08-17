@@ -40,6 +40,24 @@ namespace angeldnd.dap {
     }
 
     [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
+    public class DapVarType: DapType {
+        public static Type GetDapVarType(Type type) {
+            object[] attribs = type._GetCustomAttributes(false);
+            foreach (var attr in attribs) {
+                if (attr is DapVarType) {
+                    return ((DapVarType)attr).VarType;
+                }
+            }
+            return null;
+        }
+
+        public readonly Type VarType;
+        public DapVarType(string type, Type varType) : base(type) {
+            VarType = varType;
+        }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public class DapPriority: System.Attribute {
         public static int GetPriority(Type type) {
             object[] attribs = type._GetCustomAttributes(false);

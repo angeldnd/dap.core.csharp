@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace angeldnd.dap {
     public static class Factory {
         private static readonly Dictionary<string, Type> _Types = new Dictionary<string, Type>();
+        private static readonly Dictionary<string, Type> _VarTypes = new Dictionary<string, Type>();
 
         public static bool Register<T>(string type) where T : class, IObject {
             return Register(type, typeof(T));
@@ -21,6 +22,10 @@ namespace angeldnd.dap {
                 }
             }
             _Types[type] = newType;
+            Type varType = DapVarType.GetDapVarType(newType);
+            if (varType != null) {
+                _VarTypes[type] = varType;
+            }
             return true;
         }
 
@@ -30,6 +35,16 @@ namespace angeldnd.dap {
                 return oldType;
             } else {
                 Log.ErrorOrDebug(isDebug, "DapType Not Found: {0}", type);
+            }
+            return null;
+        }
+
+        public static Type GetDapVarType(string type, bool isDebug = false) {
+            Type oldVarType;
+            if (_VarTypes.TryGetValue(type, out oldVarType)) {
+                return oldVarType;
+            } else {
+                Log.ErrorOrDebug(isDebug, "DapVarType Not Found: {0}", type);
             }
             return null;
         }
