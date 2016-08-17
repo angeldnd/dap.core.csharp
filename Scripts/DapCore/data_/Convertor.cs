@@ -113,7 +113,8 @@ namespace angeldnd.dap {
             }
         }
 
-        public static string Convert(object val, bool isDebug = false) {
+        //Not giving isDebug default value, othewise with get conflict with the generic version
+        public static string Convert(object val, bool isDebug) {
             if (val == null) return Null;
 
             InternalConvertor convertor = GetInternalConvertor(val.GetType());
