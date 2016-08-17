@@ -35,7 +35,7 @@ namespace angeldnd.dap {
             get {
                 if (InnerException != null) {
                     return string.Format("{0}{1} {2} [{3}] <- {4}", Caret, Hint,
-                            Message, GetType().FullName, InnerException.Message);
+                            Message, GetType().FullName, InnerException);
                 }
                 return string.Format("{0}{1} {2} [{3}]",
                             Caret, Hint, Message, GetType().FullName);
