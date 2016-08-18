@@ -14,6 +14,13 @@ public static ${cs_type} Get${type}(Handler handler, Data req, string key, strin
     return req.Get${type}(key);
 }
 
+public static ${cs_type} Get${type}(Handler handler, Data req, string key) {
+    if (req == null || !req.Is${type}(key)) {
+        throw new BadRequestException(handler, req, "Param Not Exist: [${type}] {0}", key);
+    }
+    return req.Get${type}(key);
+}
+
 public static ${cs_type} Get${type}(Data req, string key, ${cs_type} defaultValue) {
     if (req == null) {
         return defaultValue;

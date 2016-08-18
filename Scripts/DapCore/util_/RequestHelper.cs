@@ -21,6 +21,13 @@ namespace angeldnd.dap {
             return req.GetBool(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
+        public static bool GetBool(Handler handler, Data req, string key) {                                         //__SILP__
+            if (req == null || !req.IsBool(key)) {                                                                  //__SILP__
+                throw new BadRequestException(handler, req, "Param Not Exist: [Bool] {0}", key);                    //__SILP__
+            }                                                                                                       //__SILP__
+            return req.GetBool(key);                                                                                //__SILP__
+        }                                                                                                           //__SILP__
+                                                                                                                    //__SILP__
         public static bool GetBool(Data req, string key, bool defaultValue) {                                       //__SILP__
             if (req == null) {                                                                                      //__SILP__
                 return defaultValue;                                                                                //__SILP__
@@ -39,6 +46,13 @@ namespace angeldnd.dap {
         public static int GetInt(Handler handler, Data req, string key, string format, params object[] values) {  //__SILP__
             if (req == null || !req.IsInt(key)) {                                                                 //__SILP__
                 throw new BadRequestException(handler, req, format, values);                                      //__SILP__
+            }                                                                                                     //__SILP__
+            return req.GetInt(key);                                                                               //__SILP__
+        }                                                                                                         //__SILP__
+                                                                                                                  //__SILP__
+        public static int GetInt(Handler handler, Data req, string key) {                                         //__SILP__
+            if (req == null || !req.IsInt(key)) {                                                                 //__SILP__
+                throw new BadRequestException(handler, req, "Param Not Exist: [Int] {0}", key);                   //__SILP__
             }                                                                                                     //__SILP__
             return req.GetInt(key);                                                                               //__SILP__
         }                                                                                                         //__SILP__
@@ -65,6 +79,13 @@ namespace angeldnd.dap {
             return req.GetLong(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
+        public static long GetLong(Handler handler, Data req, string key) {                                         //__SILP__
+            if (req == null || !req.IsLong(key)) {                                                                  //__SILP__
+                throw new BadRequestException(handler, req, "Param Not Exist: [Long] {0}", key);                    //__SILP__
+            }                                                                                                       //__SILP__
+            return req.GetLong(key);                                                                                //__SILP__
+        }                                                                                                           //__SILP__
+                                                                                                                    //__SILP__
         public static long GetLong(Data req, string key, long defaultValue) {                                       //__SILP__
             if (req == null) {                                                                                      //__SILP__
                 return defaultValue;                                                                                //__SILP__
@@ -83,6 +104,13 @@ namespace angeldnd.dap {
         public static float GetFloat(Handler handler, Data req, string key, string format, params object[] values) {  //__SILP__
             if (req == null || !req.IsFloat(key)) {                                                                   //__SILP__
                 throw new BadRequestException(handler, req, format, values);                                          //__SILP__
+            }                                                                                                         //__SILP__
+            return req.GetFloat(key);                                                                                 //__SILP__
+        }                                                                                                             //__SILP__
+                                                                                                                      //__SILP__
+        public static float GetFloat(Handler handler, Data req, string key) {                                         //__SILP__
+            if (req == null || !req.IsFloat(key)) {                                                                   //__SILP__
+                throw new BadRequestException(handler, req, "Param Not Exist: [Float] {0}", key);                     //__SILP__
             }                                                                                                         //__SILP__
             return req.GetFloat(key);                                                                                 //__SILP__
         }                                                                                                             //__SILP__
@@ -109,6 +137,13 @@ namespace angeldnd.dap {
             return req.GetDouble(key);                                                                                  //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
+        public static double GetDouble(Handler handler, Data req, string key) {                                         //__SILP__
+            if (req == null || !req.IsDouble(key)) {                                                                    //__SILP__
+                throw new BadRequestException(handler, req, "Param Not Exist: [Double] {0}", key);                      //__SILP__
+            }                                                                                                           //__SILP__
+            return req.GetDouble(key);                                                                                  //__SILP__
+        }                                                                                                               //__SILP__
+                                                                                                                        //__SILP__
         public static double GetDouble(Data req, string key, double defaultValue) {                                     //__SILP__
             if (req == null) {                                                                                          //__SILP__
                 return defaultValue;                                                                                    //__SILP__
@@ -131,6 +166,13 @@ namespace angeldnd.dap {
             return req.GetString(key);                                                                                  //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
+        public static string GetString(Handler handler, Data req, string key) {                                         //__SILP__
+            if (req == null || !req.IsString(key)) {                                                                    //__SILP__
+                throw new BadRequestException(handler, req, "Param Not Exist: [String] {0}", key);                      //__SILP__
+            }                                                                                                           //__SILP__
+            return req.GetString(key);                                                                                  //__SILP__
+        }                                                                                                               //__SILP__
+                                                                                                                        //__SILP__
         public static string GetString(Data req, string key, string defaultValue) {                                     //__SILP__
             if (req == null) {                                                                                          //__SILP__
                 return defaultValue;                                                                                    //__SILP__
@@ -149,6 +191,13 @@ namespace angeldnd.dap {
         public static Data GetData(Handler handler, Data req, string key, string format, params object[] values) {  //__SILP__
             if (req == null || !req.IsData(key)) {                                                                  //__SILP__
                 throw new BadRequestException(handler, req, format, values);                                        //__SILP__
+            }                                                                                                       //__SILP__
+            return req.GetData(key);                                                                                //__SILP__
+        }                                                                                                           //__SILP__
+                                                                                                                    //__SILP__
+        public static Data GetData(Handler handler, Data req, string key) {                                         //__SILP__
+            if (req == null || !req.IsData(key)) {                                                                  //__SILP__
+                throw new BadRequestException(handler, req, "Param Not Exist: [Data] {0}", key);                    //__SILP__
             }                                                                                                       //__SILP__
             return req.GetData(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
