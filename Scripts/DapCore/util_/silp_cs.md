@@ -14,7 +14,7 @@ public static ${cs_type} Get${type}(Handler handler, Data req, string key, strin
     return req.Get${type}(key);
 }
 
-public static ${cs_type} GetReq${type}(Data req, string key, ${cs_type} defaultValue) {
+public static ${cs_type} Get${type}(Data req, string key, ${cs_type} defaultValue) {
     if (req == null) {
         return defaultValue;
     }

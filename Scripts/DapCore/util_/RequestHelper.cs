@@ -21,7 +21,7 @@ namespace angeldnd.dap {
             return req.GetBool(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
-        public static bool GetReqBool(Data req, string key, bool defaultValue) {                                    //__SILP__
+        public static bool GetBool(Data req, string key, bool defaultValue) {                                       //__SILP__
             if (req == null) {                                                                                      //__SILP__
                 return defaultValue;                                                                                //__SILP__
             }                                                                                                       //__SILP__
@@ -43,7 +43,7 @@ namespace angeldnd.dap {
             return req.GetInt(key);                                                                               //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
-        public static int GetReqInt(Data req, string key, int defaultValue) {                                     //__SILP__
+        public static int GetInt(Data req, string key, int defaultValue) {                                        //__SILP__
             if (req == null) {                                                                                    //__SILP__
                 return defaultValue;                                                                              //__SILP__
             }                                                                                                     //__SILP__
@@ -65,7 +65,7 @@ namespace angeldnd.dap {
             return req.GetLong(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
-        public static long GetReqLong(Data req, string key, long defaultValue) {                                    //__SILP__
+        public static long GetLong(Data req, string key, long defaultValue) {                                       //__SILP__
             if (req == null) {                                                                                      //__SILP__
                 return defaultValue;                                                                                //__SILP__
             }                                                                                                       //__SILP__
@@ -87,7 +87,7 @@ namespace angeldnd.dap {
             return req.GetFloat(key);                                                                                 //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
-        public static float GetReqFloat(Data req, string key, float defaultValue) {                                   //__SILP__
+        public static float GetFloat(Data req, string key, float defaultValue) {                                      //__SILP__
             if (req == null) {                                                                                        //__SILP__
                 return defaultValue;                                                                                  //__SILP__
             }                                                                                                         //__SILP__
@@ -109,7 +109,7 @@ namespace angeldnd.dap {
             return req.GetDouble(key);                                                                                  //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
-        public static double GetReqDouble(Data req, string key, double defaultValue) {                                  //__SILP__
+        public static double GetDouble(Data req, string key, double defaultValue) {                                     //__SILP__
             if (req == null) {                                                                                          //__SILP__
                 return defaultValue;                                                                                    //__SILP__
             }                                                                                                           //__SILP__
@@ -131,7 +131,7 @@ namespace angeldnd.dap {
             return req.GetString(key);                                                                                  //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
-        public static string GetReqString(Data req, string key, string defaultValue) {                                  //__SILP__
+        public static string GetString(Data req, string key, string defaultValue) {                                     //__SILP__
             if (req == null) {                                                                                          //__SILP__
                 return defaultValue;                                                                                    //__SILP__
             }                                                                                                           //__SILP__
@@ -153,7 +153,7 @@ namespace angeldnd.dap {
             return req.GetData(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
-        public static Data GetReqData(Data req, string key, Data defaultValue) {                                    //__SILP__
+        public static Data GetData(Data req, string key, Data defaultValue) {                                       //__SILP__
             if (req == null) {                                                                                      //__SILP__
                 return defaultValue;                                                                                //__SILP__
             }                                                                                                       //__SILP__
