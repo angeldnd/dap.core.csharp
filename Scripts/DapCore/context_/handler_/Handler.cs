@@ -56,7 +56,19 @@ namespace angeldnd.dap {
                 watcher.OnRequest(this, req);
             });
 
-            Data res = _Handler.DoHandle(this, req);
+            Data res = null;
+            try {
+                res = _Handler.DoHandle(this, req);
+            } catch (HandlerException e) {
+                res = e.Response;
+            } catch (Exception e) {
+                Error("DoHandle Got Exception: {0}\n{1}", e.Message, e.ToString());
+                if (LogDebug) {
+                    res = ResponseHelper.InternalError(this, req, e.ToString());
+                } else {
+                    res = ResponseHelper.InternalError(this, req, e.Message);
+                }
+            }
             if (res != null) res.Seal();
             AdvanceRevision();
 

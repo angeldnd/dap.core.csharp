@@ -84,7 +84,11 @@ namespace angeldnd.dap {
         }
 
         public Data DoHandle(Handler handler, Data req) {
-            return _Block(handler, req);
+            try {
+                return _Block(handler, req);
+            } catch (HandlerException e) {
+                return e.Response;
+            }
         }
     }
 }

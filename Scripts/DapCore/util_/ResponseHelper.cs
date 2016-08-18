@@ -137,243 +137,243 @@ namespace angeldnd.dap {
         }
 
         //SILP: RESPONSE_HELPER_GET_RESULT_TYPE(Bool, bool)
-        public static bool GetResultBool(Data response, string key) {                     //__SILP__
-            Data result = GetResult(response);                                            //__SILP__
-            if (result == null) {                                                         //__SILP__
-                return default(bool);                                                     //__SILP__
-            }                                                                             //__SILP__
-            return result.GetBool(key);                                                   //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public static bool GetResultBool(Data response, string key, bool defaultValue) {  //__SILP__
-            Data result = GetResult(response);                                            //__SILP__
-            if (result == null) {                                                         //__SILP__
-                return defaultValue;                                                      //__SILP__
-            }                                                                             //__SILP__
-            return result.GetBool(key, defaultValue);                                     //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
+        public static bool GetResultBool(Data res, string key) {                     //__SILP__
+            Data result = GetResult(res);                                            //__SILP__
+            if (result == null) {                                                    //__SILP__
+                return default(bool);                                                //__SILP__
+            }                                                                        //__SILP__
+            return result.GetBool(key);                                              //__SILP__
+        }                                                                            //__SILP__
+                                                                                     //__SILP__
+        public static bool GetResultBool(Data res, string key, bool defaultValue) {  //__SILP__
+            Data result = GetResult(res);                                            //__SILP__
+            if (result == null) {                                                    //__SILP__
+                return defaultValue;                                                 //__SILP__
+            }                                                                        //__SILP__
+            return result.GetBool(key, defaultValue);                                //__SILP__
+        }                                                                            //__SILP__
+                                                                                     //__SILP__
         //SILP: RESPONSE_HELPER_GET_RESULT_TYPE(Int, int)
-        public static int GetResultInt(Data response, string key) {                    //__SILP__
-            Data result = GetResult(response);                                         //__SILP__
-            if (result == null) {                                                      //__SILP__
-                return default(int);                                                   //__SILP__
-            }                                                                          //__SILP__
-            return result.GetInt(key);                                                 //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
-        public static int GetResultInt(Data response, string key, int defaultValue) {  //__SILP__
-            Data result = GetResult(response);                                         //__SILP__
-            if (result == null) {                                                      //__SILP__
-                return defaultValue;                                                   //__SILP__
-            }                                                                          //__SILP__
-            return result.GetInt(key, defaultValue);                                   //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
+        public static int GetResultInt(Data res, string key) {                    //__SILP__
+            Data result = GetResult(res);                                         //__SILP__
+            if (result == null) {                                                 //__SILP__
+                return default(int);                                              //__SILP__
+            }                                                                     //__SILP__
+            return result.GetInt(key);                                            //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public static int GetResultInt(Data res, string key, int defaultValue) {  //__SILP__
+            Data result = GetResult(res);                                         //__SILP__
+            if (result == null) {                                                 //__SILP__
+                return defaultValue;                                              //__SILP__
+            }                                                                     //__SILP__
+            return result.GetInt(key, defaultValue);                              //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
         //SILP: RESPONSE_HELPER_GET_RESULT_TYPE(Long, long)
-        public static long GetResultLong(Data response, string key) {                     //__SILP__
-            Data result = GetResult(response);                                            //__SILP__
-            if (result == null) {                                                         //__SILP__
-                return default(long);                                                     //__SILP__
-            }                                                                             //__SILP__
-            return result.GetLong(key);                                                   //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public static long GetResultLong(Data response, string key, long defaultValue) {  //__SILP__
-            Data result = GetResult(response);                                            //__SILP__
-            if (result == null) {                                                         //__SILP__
-                return defaultValue;                                                      //__SILP__
-            }                                                                             //__SILP__
-            return result.GetLong(key, defaultValue);                                     //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
+        public static long GetResultLong(Data res, string key) {                     //__SILP__
+            Data result = GetResult(res);                                            //__SILP__
+            if (result == null) {                                                    //__SILP__
+                return default(long);                                                //__SILP__
+            }                                                                        //__SILP__
+            return result.GetLong(key);                                              //__SILP__
+        }                                                                            //__SILP__
+                                                                                     //__SILP__
+        public static long GetResultLong(Data res, string key, long defaultValue) {  //__SILP__
+            Data result = GetResult(res);                                            //__SILP__
+            if (result == null) {                                                    //__SILP__
+                return defaultValue;                                                 //__SILP__
+            }                                                                        //__SILP__
+            return result.GetLong(key, defaultValue);                                //__SILP__
+        }                                                                            //__SILP__
+                                                                                     //__SILP__
         //SILP: RESPONSE_HELPER_GET_RESULT_TYPE(Float, float)
-        public static float GetResultFloat(Data response, string key) {                      //__SILP__
-            Data result = GetResult(response);                                               //__SILP__
-            if (result == null) {                                                            //__SILP__
-                return default(float);                                                       //__SILP__
-            }                                                                                //__SILP__
-            return result.GetFloat(key);                                                     //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
-        public static float GetResultFloat(Data response, string key, float defaultValue) {  //__SILP__
-            Data result = GetResult(response);                                               //__SILP__
-            if (result == null) {                                                            //__SILP__
-                return defaultValue;                                                         //__SILP__
-            }                                                                                //__SILP__
-            return result.GetFloat(key, defaultValue);                                       //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
+        public static float GetResultFloat(Data res, string key) {                      //__SILP__
+            Data result = GetResult(res);                                               //__SILP__
+            if (result == null) {                                                       //__SILP__
+                return default(float);                                                  //__SILP__
+            }                                                                           //__SILP__
+            return result.GetFloat(key);                                                //__SILP__
+        }                                                                               //__SILP__
+                                                                                        //__SILP__
+        public static float GetResultFloat(Data res, string key, float defaultValue) {  //__SILP__
+            Data result = GetResult(res);                                               //__SILP__
+            if (result == null) {                                                       //__SILP__
+                return defaultValue;                                                    //__SILP__
+            }                                                                           //__SILP__
+            return result.GetFloat(key, defaultValue);                                  //__SILP__
+        }                                                                               //__SILP__
+                                                                                        //__SILP__
         //SILP: RESPONSE_HELPER_GET_RESULT_TYPE(Double, double)
-        public static double GetResultDouble(Data response, string key) {                       //__SILP__
-            Data result = GetResult(response);                                                  //__SILP__
-            if (result == null) {                                                               //__SILP__
-                return default(double);                                                         //__SILP__
-            }                                                                                   //__SILP__
-            return result.GetDouble(key);                                                       //__SILP__
-        }                                                                                       //__SILP__
-                                                                                                //__SILP__
-        public static double GetResultDouble(Data response, string key, double defaultValue) {  //__SILP__
-            Data result = GetResult(response);                                                  //__SILP__
-            if (result == null) {                                                               //__SILP__
-                return defaultValue;                                                            //__SILP__
-            }                                                                                   //__SILP__
-            return result.GetDouble(key, defaultValue);                                         //__SILP__
-        }                                                                                       //__SILP__
-                                                                                                //__SILP__
+        public static double GetResultDouble(Data res, string key) {                       //__SILP__
+            Data result = GetResult(res);                                                  //__SILP__
+            if (result == null) {                                                          //__SILP__
+                return default(double);                                                    //__SILP__
+            }                                                                              //__SILP__
+            return result.GetDouble(key);                                                  //__SILP__
+        }                                                                                  //__SILP__
+                                                                                           //__SILP__
+        public static double GetResultDouble(Data res, string key, double defaultValue) {  //__SILP__
+            Data result = GetResult(res);                                                  //__SILP__
+            if (result == null) {                                                          //__SILP__
+                return defaultValue;                                                       //__SILP__
+            }                                                                              //__SILP__
+            return result.GetDouble(key, defaultValue);                                    //__SILP__
+        }                                                                                  //__SILP__
+                                                                                           //__SILP__
         //SILP: RESPONSE_HELPER_GET_RESULT_TYPE(String, string)
-        public static string GetResultString(Data response, string key) {                       //__SILP__
-            Data result = GetResult(response);                                                  //__SILP__
-            if (result == null) {                                                               //__SILP__
-                return default(string);                                                         //__SILP__
-            }                                                                                   //__SILP__
-            return result.GetString(key);                                                       //__SILP__
-        }                                                                                       //__SILP__
-                                                                                                //__SILP__
-        public static string GetResultString(Data response, string key, string defaultValue) {  //__SILP__
-            Data result = GetResult(response);                                                  //__SILP__
-            if (result == null) {                                                               //__SILP__
-                return defaultValue;                                                            //__SILP__
-            }                                                                                   //__SILP__
-            return result.GetString(key, defaultValue);                                         //__SILP__
-        }                                                                                       //__SILP__
-                                                                                                //__SILP__
+        public static string GetResultString(Data res, string key) {                       //__SILP__
+            Data result = GetResult(res);                                                  //__SILP__
+            if (result == null) {                                                          //__SILP__
+                return default(string);                                                    //__SILP__
+            }                                                                              //__SILP__
+            return result.GetString(key);                                                  //__SILP__
+        }                                                                                  //__SILP__
+                                                                                           //__SILP__
+        public static string GetResultString(Data res, string key, string defaultValue) {  //__SILP__
+            Data result = GetResult(res);                                                  //__SILP__
+            if (result == null) {                                                          //__SILP__
+                return defaultValue;                                                       //__SILP__
+            }                                                                              //__SILP__
+            return result.GetString(key, defaultValue);                                    //__SILP__
+        }                                                                                  //__SILP__
+                                                                                           //__SILP__
         //SILP: RESPONSE_HELPER_GET_RESULT_TYPE(Data, Data)
-        public static Data GetResultData(Data response, string key) {                     //__SILP__
-            Data result = GetResult(response);                                            //__SILP__
-            if (result == null) {                                                         //__SILP__
-                return default(Data);                                                     //__SILP__
-            }                                                                             //__SILP__
-            return result.GetData(key);                                                   //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public static Data GetResultData(Data response, string key, Data defaultValue) {  //__SILP__
-            Data result = GetResult(response);                                            //__SILP__
-            if (result == null) {                                                         //__SILP__
-                return defaultValue;                                                      //__SILP__
-            }                                                                             //__SILP__
-            return result.GetData(key, defaultValue);                                     //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
+        public static Data GetResultData(Data res, string key) {                     //__SILP__
+            Data result = GetResult(res);                                            //__SILP__
+            if (result == null) {                                                    //__SILP__
+                return default(Data);                                                //__SILP__
+            }                                                                        //__SILP__
+            return result.GetData(key);                                              //__SILP__
+        }                                                                            //__SILP__
+                                                                                     //__SILP__
+        public static Data GetResultData(Data res, string key, Data defaultValue) {  //__SILP__
+            Data result = GetResult(res);                                            //__SILP__
+            if (result == null) {                                                    //__SILP__
+                return defaultValue;                                                 //__SILP__
+            }                                                                        //__SILP__
+            return result.GetData(key, defaultValue);                                //__SILP__
+        }                                                                            //__SILP__
+                                                                                     //__SILP__
 
         //SILP: RESPONSE_HELPER_GET_REQ_TYPE(Bool, bool)
-        public static bool GetReqBool(Data response, string key) {                     //__SILP__
-            Data req = GetReq(response);                                               //__SILP__
-            if (req == null) {                                                         //__SILP__
-                return default(bool);                                                  //__SILP__
-            }                                                                          //__SILP__
-            return req.GetBool(key);                                                   //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
-        public static bool GetReqBool(Data response, string key, bool defaultValue) {  //__SILP__
-            Data req = GetReq(response);                                               //__SILP__
-            if (req == null) {                                                         //__SILP__
-                return defaultValue;                                                   //__SILP__
-            }                                                                          //__SILP__
-            return req.GetBool(key, defaultValue);                                     //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
+        public static bool GetReqBool(Data res, string key) {                     //__SILP__
+            Data req = GetReq(res);                                               //__SILP__
+            if (req == null) {                                                    //__SILP__
+                return default(bool);                                             //__SILP__
+            }                                                                     //__SILP__
+            return req.GetBool(key);                                              //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public static bool GetReqBool(Data res, string key, bool defaultValue) {  //__SILP__
+            Data req = GetReq(res);                                               //__SILP__
+            if (req == null) {                                                    //__SILP__
+                return defaultValue;                                              //__SILP__
+            }                                                                     //__SILP__
+            return req.GetBool(key, defaultValue);                                //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
         //SILP: RESPONSE_HELPER_GET_REQ_TYPE(Int, int)
-        public static int GetReqInt(Data response, string key) {                    //__SILP__
-            Data req = GetReq(response);                                            //__SILP__
-            if (req == null) {                                                      //__SILP__
-                return default(int);                                                //__SILP__
-            }                                                                       //__SILP__
-            return req.GetInt(key);                                                 //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
-        public static int GetReqInt(Data response, string key, int defaultValue) {  //__SILP__
-            Data req = GetReq(response);                                            //__SILP__
-            if (req == null) {                                                      //__SILP__
-                return defaultValue;                                                //__SILP__
-            }                                                                       //__SILP__
-            return req.GetInt(key, defaultValue);                                   //__SILP__
-        }                                                                           //__SILP__
-                                                                                    //__SILP__
+        public static int GetReqInt(Data res, string key) {                    //__SILP__
+            Data req = GetReq(res);                                            //__SILP__
+            if (req == null) {                                                 //__SILP__
+                return default(int);                                           //__SILP__
+            }                                                                  //__SILP__
+            return req.GetInt(key);                                            //__SILP__
+        }                                                                      //__SILP__
+                                                                               //__SILP__
+        public static int GetReqInt(Data res, string key, int defaultValue) {  //__SILP__
+            Data req = GetReq(res);                                            //__SILP__
+            if (req == null) {                                                 //__SILP__
+                return defaultValue;                                           //__SILP__
+            }                                                                  //__SILP__
+            return req.GetInt(key, defaultValue);                              //__SILP__
+        }                                                                      //__SILP__
+                                                                               //__SILP__
         //SILP: RESPONSE_HELPER_GET_REQ_TYPE(Long, long)
-        public static long GetReqLong(Data response, string key) {                     //__SILP__
-            Data req = GetReq(response);                                               //__SILP__
-            if (req == null) {                                                         //__SILP__
-                return default(long);                                                  //__SILP__
-            }                                                                          //__SILP__
-            return req.GetLong(key);                                                   //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
-        public static long GetReqLong(Data response, string key, long defaultValue) {  //__SILP__
-            Data req = GetReq(response);                                               //__SILP__
-            if (req == null) {                                                         //__SILP__
-                return defaultValue;                                                   //__SILP__
-            }                                                                          //__SILP__
-            return req.GetLong(key, defaultValue);                                     //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
+        public static long GetReqLong(Data res, string key) {                     //__SILP__
+            Data req = GetReq(res);                                               //__SILP__
+            if (req == null) {                                                    //__SILP__
+                return default(long);                                             //__SILP__
+            }                                                                     //__SILP__
+            return req.GetLong(key);                                              //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public static long GetReqLong(Data res, string key, long defaultValue) {  //__SILP__
+            Data req = GetReq(res);                                               //__SILP__
+            if (req == null) {                                                    //__SILP__
+                return defaultValue;                                              //__SILP__
+            }                                                                     //__SILP__
+            return req.GetLong(key, defaultValue);                                //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
         //SILP: RESPONSE_HELPER_GET_REQ_TYPE(Float, float)
-        public static float GetReqFloat(Data response, string key) {                      //__SILP__
-            Data req = GetReq(response);                                                  //__SILP__
-            if (req == null) {                                                            //__SILP__
-                return default(float);                                                    //__SILP__
-            }                                                                             //__SILP__
-            return req.GetFloat(key);                                                     //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
-        public static float GetReqFloat(Data response, string key, float defaultValue) {  //__SILP__
-            Data req = GetReq(response);                                                  //__SILP__
-            if (req == null) {                                                            //__SILP__
-                return defaultValue;                                                      //__SILP__
-            }                                                                             //__SILP__
-            return req.GetFloat(key, defaultValue);                                       //__SILP__
-        }                                                                                 //__SILP__
-                                                                                          //__SILP__
+        public static float GetReqFloat(Data res, string key) {                      //__SILP__
+            Data req = GetReq(res);                                                  //__SILP__
+            if (req == null) {                                                       //__SILP__
+                return default(float);                                               //__SILP__
+            }                                                                        //__SILP__
+            return req.GetFloat(key);                                                //__SILP__
+        }                                                                            //__SILP__
+                                                                                     //__SILP__
+        public static float GetReqFloat(Data res, string key, float defaultValue) {  //__SILP__
+            Data req = GetReq(res);                                                  //__SILP__
+            if (req == null) {                                                       //__SILP__
+                return defaultValue;                                                 //__SILP__
+            }                                                                        //__SILP__
+            return req.GetFloat(key, defaultValue);                                  //__SILP__
+        }                                                                            //__SILP__
+                                                                                     //__SILP__
         //SILP: RESPONSE_HELPER_GET_REQ_TYPE(Double, double)
-        public static double GetReqDouble(Data response, string key) {                       //__SILP__
-            Data req = GetReq(response);                                                     //__SILP__
-            if (req == null) {                                                               //__SILP__
-                return default(double);                                                      //__SILP__
-            }                                                                                //__SILP__
-            return req.GetDouble(key);                                                       //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
-        public static double GetReqDouble(Data response, string key, double defaultValue) {  //__SILP__
-            Data req = GetReq(response);                                                     //__SILP__
-            if (req == null) {                                                               //__SILP__
-                return defaultValue;                                                         //__SILP__
-            }                                                                                //__SILP__
-            return req.GetDouble(key, defaultValue);                                         //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
+        public static double GetReqDouble(Data res, string key) {                       //__SILP__
+            Data req = GetReq(res);                                                     //__SILP__
+            if (req == null) {                                                          //__SILP__
+                return default(double);                                                 //__SILP__
+            }                                                                           //__SILP__
+            return req.GetDouble(key);                                                  //__SILP__
+        }                                                                               //__SILP__
+                                                                                        //__SILP__
+        public static double GetReqDouble(Data res, string key, double defaultValue) {  //__SILP__
+            Data req = GetReq(res);                                                     //__SILP__
+            if (req == null) {                                                          //__SILP__
+                return defaultValue;                                                    //__SILP__
+            }                                                                           //__SILP__
+            return req.GetDouble(key, defaultValue);                                    //__SILP__
+        }                                                                               //__SILP__
+                                                                                        //__SILP__
         //SILP: RESPONSE_HELPER_GET_REQ_TYPE(String, string)
-        public static string GetReqString(Data response, string key) {                       //__SILP__
-            Data req = GetReq(response);                                                     //__SILP__
-            if (req == null) {                                                               //__SILP__
-                return default(string);                                                      //__SILP__
-            }                                                                                //__SILP__
-            return req.GetString(key);                                                       //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
-        public static string GetReqString(Data response, string key, string defaultValue) {  //__SILP__
-            Data req = GetReq(response);                                                     //__SILP__
-            if (req == null) {                                                               //__SILP__
-                return defaultValue;                                                         //__SILP__
-            }                                                                                //__SILP__
-            return req.GetString(key, defaultValue);                                         //__SILP__
-        }                                                                                    //__SILP__
-                                                                                             //__SILP__
+        public static string GetReqString(Data res, string key) {                       //__SILP__
+            Data req = GetReq(res);                                                     //__SILP__
+            if (req == null) {                                                          //__SILP__
+                return default(string);                                                 //__SILP__
+            }                                                                           //__SILP__
+            return req.GetString(key);                                                  //__SILP__
+        }                                                                               //__SILP__
+                                                                                        //__SILP__
+        public static string GetReqString(Data res, string key, string defaultValue) {  //__SILP__
+            Data req = GetReq(res);                                                     //__SILP__
+            if (req == null) {                                                          //__SILP__
+                return defaultValue;                                                    //__SILP__
+            }                                                                           //__SILP__
+            return req.GetString(key, defaultValue);                                    //__SILP__
+        }                                                                               //__SILP__
+                                                                                        //__SILP__
         //SILP: RESPONSE_HELPER_GET_REQ_TYPE(Data, Data)
-        public static Data GetReqData(Data response, string key) {                     //__SILP__
-            Data req = GetReq(response);                                               //__SILP__
-            if (req == null) {                                                         //__SILP__
-                return default(Data);                                                  //__SILP__
-            }                                                                          //__SILP__
-            return req.GetData(key);                                                   //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
-        public static Data GetReqData(Data response, string key, Data defaultValue) {  //__SILP__
-            Data req = GetReq(response);                                               //__SILP__
-            if (req == null) {                                                         //__SILP__
-                return defaultValue;                                                   //__SILP__
-            }                                                                          //__SILP__
-            return req.GetData(key, defaultValue);                                     //__SILP__
-        }                                                                              //__SILP__
-                                                                                       //__SILP__
+        public static Data GetReqData(Data res, string key) {                     //__SILP__
+            Data req = GetReq(res);                                               //__SILP__
+            if (req == null) {                                                    //__SILP__
+                return default(Data);                                             //__SILP__
+            }                                                                     //__SILP__
+            return req.GetData(key);                                              //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public static Data GetReqData(Data res, string key, Data defaultValue) {  //__SILP__
+            Data req = GetReq(res);                                               //__SILP__
+            if (req == null) {                                                    //__SILP__
+                return defaultValue;                                              //__SILP__
+            }                                                                     //__SILP__
+            return req.GetData(key, defaultValue);                                //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
     }
 }
