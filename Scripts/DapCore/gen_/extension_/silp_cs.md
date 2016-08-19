@@ -90,11 +90,11 @@ public static ${cs_type} Get${type}(this IDictProperties properties, string key)
 }
 
 public static ${cs_type} Get${type}(this IDictProperties properties, string key, ${cs_type} defaultValue) {
-    ${type}Property v = properties.Get<${type}Property>(key);
+    ${type}Property v = properties.Get<${type}Property>(key, true);
     if (v != null) {
         return v.Value;
     } else {
-        properties.Error("Property Not Exist: {0}", key);
+        properties.Debug("Property Not Exist: {0}", key);
     }
     return defaultValue;
 }

@@ -122,11 +122,11 @@ namespace angeldnd.dap {
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
         public static bool GetBool(this IDictProperties properties, string key, bool defaultValue) {                           //__SILP__
-            BoolProperty v = properties.Get<BoolProperty>(key);                                                                //__SILP__
+            BoolProperty v = properties.Get<BoolProperty>(key, true);                                                          //__SILP__
             if (v != null) {                                                                                                   //__SILP__
                 return v.Value;                                                                                                //__SILP__
             } else {                                                                                                           //__SILP__
-                properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
+                properties.Debug("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__
             return defaultValue;                                                                                               //__SILP__
         }                                                                                                                      //__SILP__
@@ -231,11 +231,11 @@ namespace angeldnd.dap {
         }                                                                                                                    //__SILP__
                                                                                                                              //__SILP__
         public static int GetInt(this IDictProperties properties, string key, int defaultValue) {                            //__SILP__
-            IntProperty v = properties.Get<IntProperty>(key);                                                                //__SILP__
+            IntProperty v = properties.Get<IntProperty>(key, true);                                                          //__SILP__
             if (v != null) {                                                                                                 //__SILP__
                 return v.Value;                                                                                              //__SILP__
             } else {                                                                                                         //__SILP__
-                properties.Error("Property Not Exist: {0}", key);                                                            //__SILP__
+                properties.Debug("Property Not Exist: {0}", key);                                                            //__SILP__
             }                                                                                                                //__SILP__
             return defaultValue;                                                                                             //__SILP__
         }                                                                                                                    //__SILP__
@@ -340,11 +340,11 @@ namespace angeldnd.dap {
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
         public static long GetLong(this IDictProperties properties, string key, long defaultValue) {                           //__SILP__
-            LongProperty v = properties.Get<LongProperty>(key);                                                                //__SILP__
+            LongProperty v = properties.Get<LongProperty>(key, true);                                                          //__SILP__
             if (v != null) {                                                                                                   //__SILP__
                 return v.Value;                                                                                                //__SILP__
             } else {                                                                                                           //__SILP__
-                properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
+                properties.Debug("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__
             return defaultValue;                                                                                               //__SILP__
         }                                                                                                                      //__SILP__
@@ -449,11 +449,11 @@ namespace angeldnd.dap {
         }                                                                                                                        //__SILP__
                                                                                                                                  //__SILP__
         public static float GetFloat(this IDictProperties properties, string key, float defaultValue) {                          //__SILP__
-            FloatProperty v = properties.Get<FloatProperty>(key);                                                                //__SILP__
+            FloatProperty v = properties.Get<FloatProperty>(key, true);                                                          //__SILP__
             if (v != null) {                                                                                                     //__SILP__
                 return v.Value;                                                                                                  //__SILP__
             } else {                                                                                                             //__SILP__
-                properties.Error("Property Not Exist: {0}", key);                                                                //__SILP__
+                properties.Debug("Property Not Exist: {0}", key);                                                                //__SILP__
             }                                                                                                                    //__SILP__
             return defaultValue;                                                                                                 //__SILP__
         }                                                                                                                        //__SILP__
@@ -558,11 +558,11 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public static double GetDouble(this IDictProperties properties, string key, double defaultValue) {                         //__SILP__
-            DoubleProperty v = properties.Get<DoubleProperty>(key);                                                                //__SILP__
+            DoubleProperty v = properties.Get<DoubleProperty>(key, true);                                                          //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.Value;                                                                                                    //__SILP__
             } else {                                                                                                               //__SILP__
-                properties.Error("Property Not Exist: {0}", key);                                                                  //__SILP__
+                properties.Debug("Property Not Exist: {0}", key);                                                                  //__SILP__
             }                                                                                                                      //__SILP__
             return defaultValue;                                                                                                   //__SILP__
         }                                                                                                                          //__SILP__
@@ -667,11 +667,11 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public static string GetString(this IDictProperties properties, string key, string defaultValue) {                         //__SILP__
-            StringProperty v = properties.Get<StringProperty>(key);                                                                //__SILP__
+            StringProperty v = properties.Get<StringProperty>(key, true);                                                          //__SILP__
             if (v != null) {                                                                                                       //__SILP__
                 return v.Value;                                                                                                    //__SILP__
             } else {                                                                                                               //__SILP__
-                properties.Error("Property Not Exist: {0}", key);                                                                  //__SILP__
+                properties.Debug("Property Not Exist: {0}", key);                                                                  //__SILP__
             }                                                                                                                      //__SILP__
             return defaultValue;                                                                                                   //__SILP__
         }                                                                                                                          //__SILP__
@@ -776,11 +776,11 @@ namespace angeldnd.dap {
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
         public static Data GetData(this IDictProperties properties, string key, Data defaultValue) {                           //__SILP__
-            DataProperty v = properties.Get<DataProperty>(key);                                                                //__SILP__
+            DataProperty v = properties.Get<DataProperty>(key, true);                                                          //__SILP__
             if (v != null) {                                                                                                   //__SILP__
                 return v.Value;                                                                                                //__SILP__
             } else {                                                                                                           //__SILP__
-                properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
+                properties.Debug("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__
             return defaultValue;                                                                                               //__SILP__
         }                                                                                                                      //__SILP__
