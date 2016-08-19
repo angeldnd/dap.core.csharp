@@ -43,6 +43,34 @@ public bool Set${type}(string key, ${cs_type} val) {
     return false;
 }
 
+public void ForEach${type}(Action<int, ${cs_type}> callback) {
+    for (int i = 0; i < Count; i++) {
+        string key = i.ToString();
+        callback(i, Get${type}(key));
+    }
+}
+
+public bool UntilTrue${type}(Func<int, ${cs_type}, bool> callback) {
+    for (int i = 0; i < Count; i++) {
+        string key = i.ToString();
+        if (callback(i, Get${type}(key))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+public bool UntilFalse${type}(Func<int, ${cs_type}, bool> callback) {
+    for (int i = 0; i < Count; i++) {
+        string key = i.ToString();
+        if (!callback(i, Get${type}(key))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
 ``` 
 
 # DATA_QUICK_SETTER(name, type, cs_type) #

@@ -210,6 +210,34 @@ namespace angeldnd.dap {
             return false;                                                        //__SILP__
         }                                                                        //__SILP__
                                                                                  //__SILP__
+        public void ForEachBool(Action<int, bool> callback) {                    //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                callback(i, GetBool(key));                                       //__SILP__
+            }                                                                    //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool UntilTrueBool(Func<int, bool, bool> callback) {              //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                if (callback(i, GetBool(key))) {                                 //__SILP__
+                    return true;                                                 //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return false;                                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool UntilFalseBool(Func<int, bool, bool> callback) {             //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                if (!callback(i, GetBool(key))) {                                //__SILP__
+                    return false;                                                //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return true;                                                         //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+                                                                                 //__SILP__
         //SILP: DATA_TYPE(Int, int)
         public bool IsInt(string key) {                                         //__SILP__
             DataType type = GetValueType(key);                                  //__SILP__
@@ -253,6 +281,34 @@ namespace angeldnd.dap {
             Log.Error("Key Exist: {0} {1} -> {2}", key, _IntValues[key], val);  //__SILP__
             return false;                                                       //__SILP__
         }                                                                       //__SILP__
+                                                                                //__SILP__
+        public void ForEachInt(Action<int, int> callback) {                     //__SILP__
+            for (int i = 0; i < Count; i++) {                                   //__SILP__
+                string key = i.ToString();                                      //__SILP__
+                callback(i, GetInt(key));                                       //__SILP__
+            }                                                                   //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
+        public bool UntilTrueInt(Func<int, int, bool> callback) {               //__SILP__
+            for (int i = 0; i < Count; i++) {                                   //__SILP__
+                string key = i.ToString();                                      //__SILP__
+                if (callback(i, GetInt(key))) {                                 //__SILP__
+                    return true;                                                //__SILP__
+                }                                                               //__SILP__
+            }                                                                   //__SILP__
+            return false;                                                       //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
+        public bool UntilFalseInt(Func<int, int, bool> callback) {              //__SILP__
+            for (int i = 0; i < Count; i++) {                                   //__SILP__
+                string key = i.ToString();                                      //__SILP__
+                if (!callback(i, GetInt(key))) {                                //__SILP__
+                    return false;                                               //__SILP__
+                }                                                               //__SILP__
+            }                                                                   //__SILP__
+            return true;                                                        //__SILP__
+        }                                                                       //__SILP__
+                                                                                //__SILP__
                                                                                 //__SILP__
         //SILP: DATA_TYPE(Long, long)
         public bool IsLong(string key) {                                         //__SILP__
@@ -298,6 +354,34 @@ namespace angeldnd.dap {
             return false;                                                        //__SILP__
         }                                                                        //__SILP__
                                                                                  //__SILP__
+        public void ForEachLong(Action<int, long> callback) {                    //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                callback(i, GetLong(key));                                       //__SILP__
+            }                                                                    //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool UntilTrueLong(Func<int, long, bool> callback) {              //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                if (callback(i, GetLong(key))) {                                 //__SILP__
+                    return true;                                                 //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return false;                                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool UntilFalseLong(Func<int, long, bool> callback) {             //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                if (!callback(i, GetLong(key))) {                                //__SILP__
+                    return false;                                                //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return true;                                                         //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+                                                                                 //__SILP__
         //SILP: DATA_TYPE(Float, float)
         public bool IsFloat(string key) {                                         //__SILP__
             DataType type = GetValueType(key);                                    //__SILP__
@@ -341,6 +425,34 @@ namespace angeldnd.dap {
             Log.Error("Key Exist: {0} {1} -> {2}", key, _FloatValues[key], val);  //__SILP__
             return false;                                                         //__SILP__
         }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public void ForEachFloat(Action<int, float> callback) {                   //__SILP__
+            for (int i = 0; i < Count; i++) {                                     //__SILP__
+                string key = i.ToString();                                        //__SILP__
+                callback(i, GetFloat(key));                                       //__SILP__
+            }                                                                     //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public bool UntilTrueFloat(Func<int, float, bool> callback) {             //__SILP__
+            for (int i = 0; i < Count; i++) {                                     //__SILP__
+                string key = i.ToString();                                        //__SILP__
+                if (callback(i, GetFloat(key))) {                                 //__SILP__
+                    return true;                                                  //__SILP__
+                }                                                                 //__SILP__
+            }                                                                     //__SILP__
+            return false;                                                         //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
+        public bool UntilFalseFloat(Func<int, float, bool> callback) {            //__SILP__
+            for (int i = 0; i < Count; i++) {                                     //__SILP__
+                string key = i.ToString();                                        //__SILP__
+                if (!callback(i, GetFloat(key))) {                                //__SILP__
+                    return false;                                                 //__SILP__
+                }                                                                 //__SILP__
+            }                                                                     //__SILP__
+            return true;                                                          //__SILP__
+        }                                                                         //__SILP__
+                                                                                  //__SILP__
                                                                                   //__SILP__
         //SILP: DATA_TYPE(Double, double)
         public bool IsDouble(string key) {                                         //__SILP__
@@ -386,6 +498,34 @@ namespace angeldnd.dap {
             return false;                                                          //__SILP__
         }                                                                          //__SILP__
                                                                                    //__SILP__
+        public void ForEachDouble(Action<int, double> callback) {                  //__SILP__
+            for (int i = 0; i < Count; i++) {                                      //__SILP__
+                string key = i.ToString();                                         //__SILP__
+                callback(i, GetDouble(key));                                       //__SILP__
+            }                                                                      //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public bool UntilTrueDouble(Func<int, double, bool> callback) {            //__SILP__
+            for (int i = 0; i < Count; i++) {                                      //__SILP__
+                string key = i.ToString();                                         //__SILP__
+                if (callback(i, GetDouble(key))) {                                 //__SILP__
+                    return true;                                                   //__SILP__
+                }                                                                  //__SILP__
+            }                                                                      //__SILP__
+            return false;                                                          //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public bool UntilFalseDouble(Func<int, double, bool> callback) {           //__SILP__
+            for (int i = 0; i < Count; i++) {                                      //__SILP__
+                string key = i.ToString();                                         //__SILP__
+                if (!callback(i, GetDouble(key))) {                                //__SILP__
+                    return false;                                                  //__SILP__
+                }                                                                  //__SILP__
+            }                                                                      //__SILP__
+            return true;                                                           //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+                                                                                   //__SILP__
         //SILP: DATA_TYPE(String, string)
         public bool IsString(string key) {                                         //__SILP__
             DataType type = GetValueType(key);                                     //__SILP__
@@ -430,6 +570,34 @@ namespace angeldnd.dap {
             return false;                                                          //__SILP__
         }                                                                          //__SILP__
                                                                                    //__SILP__
+        public void ForEachString(Action<int, string> callback) {                  //__SILP__
+            for (int i = 0; i < Count; i++) {                                      //__SILP__
+                string key = i.ToString();                                         //__SILP__
+                callback(i, GetString(key));                                       //__SILP__
+            }                                                                      //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public bool UntilTrueString(Func<int, string, bool> callback) {            //__SILP__
+            for (int i = 0; i < Count; i++) {                                      //__SILP__
+                string key = i.ToString();                                         //__SILP__
+                if (callback(i, GetString(key))) {                                 //__SILP__
+                    return true;                                                   //__SILP__
+                }                                                                  //__SILP__
+            }                                                                      //__SILP__
+            return false;                                                          //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+        public bool UntilFalseString(Func<int, string, bool> callback) {           //__SILP__
+            for (int i = 0; i < Count; i++) {                                      //__SILP__
+                string key = i.ToString();                                         //__SILP__
+                if (!callback(i, GetString(key))) {                                //__SILP__
+                    return false;                                                  //__SILP__
+                }                                                                  //__SILP__
+            }                                                                      //__SILP__
+            return true;                                                           //__SILP__
+        }                                                                          //__SILP__
+                                                                                   //__SILP__
+                                                                                   //__SILP__
         //SILP: DATA_TYPE(Data, Data)
         public bool IsData(string key) {                                         //__SILP__
             DataType type = GetValueType(key);                                   //__SILP__
@@ -473,6 +641,34 @@ namespace angeldnd.dap {
             Log.Error("Key Exist: {0} {1} -> {2}", key, _DataValues[key], val);  //__SILP__
             return false;                                                        //__SILP__
         }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public void ForEachData(Action<int, Data> callback) {                    //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                callback(i, GetData(key));                                       //__SILP__
+            }                                                                    //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool UntilTrueData(Func<int, Data, bool> callback) {              //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                if (callback(i, GetData(key))) {                                 //__SILP__
+                    return true;                                                 //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return false;                                                        //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool UntilFalseData(Func<int, Data, bool> callback) {             //__SILP__
+            for (int i = 0; i < Count; i++) {                                    //__SILP__
+                string key = i.ToString();                                       //__SILP__
+                if (!callback(i, GetData(key))) {                                //__SILP__
+                    return false;                                                //__SILP__
+                }                                                                //__SILP__
+            }                                                                    //__SILP__
+            return true;                                                         //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
                                                                                  //__SILP__
 
         //SILP: DATA_QUICK_SETTER(B, Bool, bool)
