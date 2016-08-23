@@ -22,7 +22,7 @@ namespace angeldnd.dap {
                 properties.Error("Failed to Add Property: {0}, {1}", key, data);
                 return null;
             }
-            if (data.HasValue(PropertiesConsts.KeyValue)) {
+            if (data.HasKey(PropertiesConsts.KeyValue)) {
                 if (!prop.Decode(data)) {
                     properties.Error("Failed to Decode Property: {0}, {1} -> {2}", key, data, prop);
                 }

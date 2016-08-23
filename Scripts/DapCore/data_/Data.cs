@@ -122,7 +122,7 @@ namespace angeldnd.dap {
             }
         }
 
-        public bool HasValue(string key) {
+        public bool HasKey(string key) {
             return _ValueTypes.ContainsKey(key);
         }
 
@@ -158,7 +158,7 @@ namespace angeldnd.dap {
         }
 
         public bool TryGetValue(string key, out object val) {
-            if (HasValue(key)) {
+            if (HasKey(key)) {
                 val = GetValue(key);
                 return true;
             }
