@@ -158,12 +158,12 @@ namespace angeldnd.dap {
             return Obj.Handlers.HandleRequest(key, req);
         }
 
-        public Var<T> SetupVar<T>(string fragment, T val, Action<IVar> watcher = null) {
+        public Var<T> SetupVar<T>(string fragment, T val, Action<IVar<T>, T> watcher = null) {
             string key = GetSubKey(fragment);
             Var<T> v = Obj.Vars.AddVar<T>(key, val);
             if (v != null) {
                 SaveVarKey(key);
-                if (watcher != null && v.AddVarWatcher(this, watcher) == null) {
+                if (watcher != null && v.AddValueWatcher(this, watcher) == null) {
                     Error("Add Watcher Failed: {0} -> {1}, {2}", this, typeof(T).FullName, fragment);
                 }
             }
