@@ -24,6 +24,14 @@ namespace angeldnd.dap {
             return _Values.Count - 1;
         }
 
+        public TOrder GetOrder(T v) {
+            TOrder order;
+            if (_Orders.TryGetValue(v, out order)) {
+                return order;
+            }
+            return default(TOrder);
+        }
+
         public int Count {
             get { return _Values.Count; }
         }
