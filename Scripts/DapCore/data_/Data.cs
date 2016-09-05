@@ -18,9 +18,9 @@ namespace angeldnd.dap {
     public sealed class Data : Sealable {
         public static int MaxFullStringKeyCount = 12;
 
-        public const string TempPrefix = "_";
+        public const char TempPrefix = '_';
         public static bool IsTempKey(string key) {
-            return key.StartsWith(TempPrefix);
+            return key.Length > 0 && key[0] == TempPrefix;
         }
 
         public static Data Clone(Data data) {
@@ -47,6 +47,10 @@ namespace angeldnd.dap {
         }
 
         public void Clear() {
+            if (Sealed) {
+                Log.Error("Already Sealed");
+            }
+
             ClearDictionary(_ValueTypes);
             ClearDictionary(_BoolValues);
             ClearDictionary(_IntValues);
