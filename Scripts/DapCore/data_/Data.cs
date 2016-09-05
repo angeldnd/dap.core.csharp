@@ -46,6 +46,23 @@ namespace angeldnd.dap {
             return string.Format("[Data:{0}]", Count);
         }
 
+        public void Clear() {
+            ClearDictionary(_ValueTypes);
+            ClearDictionary(_BoolValues);
+            ClearDictionary(_IntValues);
+            ClearDictionary(_LongValues);
+            ClearDictionary(_FloatValues);
+            ClearDictionary(_DoubleValues);
+            ClearDictionary(_StringValues);
+            ClearDictionary(_DataValues);
+        }
+
+        private void ClearDictionary<T>(Dictionary<string, T> dict) {
+            if (dict != null) {
+                dict.Clear();
+            }
+        }
+
         public Data Clone() {
             Data clone = new Data();
             clone._ValueTypes = CloneDictionary<DataType>(_ValueTypes);
