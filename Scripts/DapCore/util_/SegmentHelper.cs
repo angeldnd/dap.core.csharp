@@ -75,8 +75,12 @@ namespace angeldnd.dap {
             if (descendantStr.StartsWith(ancestorStr)) {
                 result = descendantStr.Remove(0, ancestorStr.Length);
             }
-            if (result != null && result.Length > 0 && result[0] == separator) {
-                result = descendantStr.Remove(0, 1);
+            if (result != null) {
+                if (result.Length > 0 && result[0] == separator) {
+                    result = result.Remove(0, 1);
+                } else {
+                    result = null;
+                }
             }
             if (result == null) {
                 Log.Error("Is Not Desecendant: {0}, {1}", ancestorStr, descendantStr);
