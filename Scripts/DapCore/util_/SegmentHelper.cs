@@ -40,7 +40,7 @@ namespace angeldnd.dap {
             return parentStr.ToString();
         }
 
-        public static string GetDescendantStr(char separator, string str, string relativeStr) {
+        public static string GetDescendantStr(string separator, string str, string relativeStr) {
             if (string.IsNullOrEmpty(str)) {
                 return relativeStr;
             } else if (string.IsNullOrEmpty(relativeStr)) {
@@ -50,19 +50,19 @@ namespace angeldnd.dap {
             }
         }
 
-        public static string GetDescendantsPattern(char separator, string str) {
+        public static string GetDescendantsPattern(string separator, string str) {
             if (string.IsNullOrEmpty(str)) {
                 return PatternMatcherConsts.WildcastSegments;
             } else {
-                return str + separator + PatternMatcherConsts.WildcastSegments;
+                return string.Format("{0}{1}{2}", str, separator, PatternMatcherConsts.WildcastSegments);
             }
         }
 
-        public static string GetChildrenPattern(char separator, string str) {
+        public static string GetChildrenPattern(string separator, string str) {
             if (string.IsNullOrEmpty(str)) {
                 return PatternMatcherConsts.WildcastSegment;
             } else {
-                return str + separator + PatternMatcherConsts.WildcastSegment;
+                return string.Format("{0}{1}{2}", str, separator, PatternMatcherConsts.WildcastSegment);
             }
         }
 
@@ -71,13 +71,17 @@ namespace angeldnd.dap {
                 return descendantStr;
             }
 
-            string prefix = ancestorStr + separator;
-            if (descendantStr.StartsWith(prefix)) {
-                return descendantStr.Replace(prefix, "");
-            } else {
+            string result = null;
+            if (descendantStr.StartsWith(ancestorStr)) {
+                result = descendantStr.Remove(0, ancestorStr.Length);
+            }
+            if (result != null && result.Length > 0 && result[0] == separator) {
+                result = descendantStr.Remove(0, 1);
+            }
+            if (result == null) {
                 Log.Error("Is Not Desecendant: {0}, {1}", ancestorStr, descendantStr);
             }
-            return null;
+            return result;
         }
     }
 }

@@ -16,15 +16,15 @@ namespace angeldnd.dap {
         }
 
         public static string GetDescendantPath(string path, string relativePath) {
-            return SegmentHelper.GetDescendantStr(PathConsts.SegmentSeparator, path, relativePath);
+            return SegmentHelper.GetDescendantStr(PathConsts.SegmentSeparatorAsString, path, relativePath);
         }
 
         public static string GetDescendantsPattern(string path) {
-            return SegmentHelper.GetDescendantsPattern(PathConsts.SegmentSeparator, path);
+            return SegmentHelper.GetDescendantsPattern(PathConsts.SegmentSeparatorAsString, path);
         }
 
         public static string GetChildrenPattern(string path) {
-            return SegmentHelper.GetChildrenPattern(PathConsts.SegmentSeparator, path);
+            return SegmentHelper.GetChildrenPattern(PathConsts.SegmentSeparatorAsString, path);
         }
 
         public static string GetRelativePath(string ancestorPath, string descendantPath) {

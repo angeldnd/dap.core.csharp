@@ -45,7 +45,7 @@ namespace angeldnd.dap {
             if (string.IsNullOrEmpty(path)) {
                 return relPath;
             } else {
-                return string.Format("{0}{1}{2}", path, SegmentSeparator, relPath);
+                return string.Format("{0}{1}{2}", path, SegmentSeparatorAsString, relPath);
             }
         }
     }

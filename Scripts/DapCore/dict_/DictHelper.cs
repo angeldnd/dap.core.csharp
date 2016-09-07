@@ -17,15 +17,15 @@ namespace angeldnd.dap {
         }
 
         public static string GetDescendantKey(string key, string relativeKey) {
-            return SegmentHelper.GetDescendantStr(DictConsts.KeySeparator, key, relativeKey);
+            return SegmentHelper.GetDescendantStr(DictConsts.KeySeparatorAsString, key, relativeKey);
         }
 
         public static string GetDescendantsPattern(string key) {
-            return SegmentHelper.GetDescendantsPattern(DictConsts.KeySeparator, key);
+            return SegmentHelper.GetDescendantsPattern(DictConsts.KeySeparatorAsString, key);
         }
 
         public static string GetChildrenPattern(string key) {
-            return SegmentHelper.GetChildrenPattern(DictConsts.KeySeparator, key);
+            return SegmentHelper.GetChildrenPattern(DictConsts.KeySeparatorAsString, key);
         }
 
         public static string GetRelativeKey(string ancestorKey, string descendantKey) {
