@@ -1,6 +1,5 @@
 dap-root = "Assets/Standard Assets/_Dap"
 dap-editor-root = "Assets/Standard Assets/Editor/_DapEditor"
-dap-version = "0.5.0"
 
 ext-root = "Assets/Standard Assets/_Ext"
 ext-editor-root = "Assets/Standard Assets/Editor/_ExtEditor"
@@ -11,13 +10,7 @@ mod-editor-root = "Assets/Standard Assets/Editor/_ModEditor"
 assets-root = "Assets"
 
 [dap-core]
-[[dap-core.files]]
-from = "Releases/${dap-version}"
-to = "${dap-root}"
-include = "DapCore.*"
-
-[dap-core-src]
-[[dap-core-src.folders]]
+[[dap-core.folders]]
 from = "Scripts/DapCore"
 to = "${dap-root}/_DapCore"
 
