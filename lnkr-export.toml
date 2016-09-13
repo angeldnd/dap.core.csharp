@@ -1,12 +1,12 @@
 dap-root = "Assets/Standard Assets/_Dap"
-dap-editor-root = "Assets/Standard Assets/Editor/_Dap"
+dap-editor-root = "Assets/Standard Assets/Editor/_DapEditor"
 dap-version = "0.5.0"
 
 ext-root = "Assets/Standard Assets/_Ext"
-ext-editor-root = "Assets/Standard Assets/Editor/_Ext"
+ext-editor-root = "Assets/Standard Assets/Editor/_ExtEditor"
 
 mod-root = "Assets/Standard Assets/_Mod"
-mod-editor-root = "Assets/Standard Assets/Editor/_Mod"
+mod-editor-root = "Assets/Standard Assets/Editor/_ModEditor"
 
 assets-root = "Assets"
 
