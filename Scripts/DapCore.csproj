@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <!--SILP:csproj:compile_include(DapCore) -->
+    <Compile Include="DapCore\DapOrders.cs" />                                <!--__SILP__-->
     <Compile Include="DapCore\base_\aspect_\Aspect.cs" />                     <!--__SILP__-->
     <Compile Include="DapCore\base_\aspect_\DictAspect.cs" />                 <!--__SILP__-->
     <Compile Include="DapCore\base_\aspect_\DictInBothAspect.cs" />           <!--__SILP__-->
@@ -69,19 +70,23 @@
     <Compile Include="DapCore\context_\Extra.cs" />                           <!--__SILP__-->
     <Compile Include="DapCore\context_\IAspect.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\context_\IContext.cs" />                        <!--__SILP__-->
-    <Compile Include="DapCore\context_\IManner.cs" />                         <!--__SILP__-->
-    <Compile Include="DapCore\context_\Manner.cs" />                          <!--__SILP__-->
-    <Compile Include="DapCore\context_\Manners.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\context_\channel_\Channel.cs" />                <!--__SILP__-->
     <Compile Include="DapCore\context_\channel_\Channels.cs" />               <!--__SILP__-->
     <Compile Include="DapCore\context_\channel_\IChannel.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\context_\handler_\BadRequestException.cs" />    <!--__SILP__-->
     <Compile Include="DapCore\context_\handler_\Handler.cs" />                <!--__SILP__-->
+    <Compile Include="DapCore\context_\handler_\HandlerException.cs" />       <!--__SILP__-->
     <Compile Include="DapCore\context_\handler_\Handlers.cs" />               <!--__SILP__-->
     <Compile Include="DapCore\context_\handler_\IHandler.cs" />               <!--__SILP__-->
-    <Compile Include="DapCore\context_\property_\BaseProperty.cs" />          <!--__SILP__-->
+    <Compile Include="DapCore\context_\manner_\Decorator.cs" />               <!--__SILP__-->
+    <Compile Include="DapCore\context_\manner_\IManner.cs" />                 <!--__SILP__-->
+    <Compile Include="DapCore\context_\manner_\Manner.cs" />                  <!--__SILP__-->
+    <Compile Include="DapCore\context_\manner_\Manners.cs" />                 <!--__SILP__-->
     <Compile Include="DapCore\context_\property_\IProperty.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\context_\property_\Properties.cs" />            <!--__SILP__-->
     <Compile Include="DapCore\context_\property_\Property.cs" />              <!--__SILP__-->
+    <Compile Include="DapCore\context_\util_\Utils.cs" />                     <!--__SILP__-->
+    <Compile Include="DapCore\context_\util_\Utils_Block.cs" />               <!--__SILP__-->
     <Compile Include="DapCore\context_\var_\IVar.cs" />                       <!--__SILP__-->
     <Compile Include="DapCore\context_\var_\ValueChecker.cs" />               <!--__SILP__-->
     <Compile Include="DapCore\context_\var_\ValueWatcher.cs" />               <!--__SILP__-->
@@ -90,6 +95,7 @@
     <Compile Include="DapCore\context_\var_\VarWatcher.cs" />                 <!--__SILP__-->
     <Compile Include="DapCore\core_\Accessor.cs" />                           <!--__SILP__-->
     <Compile Include="DapCore\core_\BlockOwner.cs" />                         <!--__SILP__-->
+    <Compile Include="DapCore\core_\DapException.cs" />                       <!--__SILP__-->
     <Compile Include="DapCore\core_\ElementConsts.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\core_\Factory.cs" />                            <!--__SILP__-->
     <Compile Include="DapCore\core_\IElement.cs" />                           <!--__SILP__-->
@@ -102,6 +108,7 @@
     <Compile Include="DapCore\data_\DataCodeConvertor.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\data_\DataConvertor.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\data_\DataTypeConvertor.cs" />                  <!--__SILP__-->
+    <Compile Include="DapCore\data_\Encoder.cs" />                            <!--__SILP__-->
     <Compile Include="DapCore\data_\Word.cs" />                               <!--__SILP__-->
     <Compile Include="DapCore\data_\WordException.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\data_\WordSplitter.cs" />                       <!--__SILP__-->
@@ -173,7 +180,11 @@
     <Compile Include="DapCore\util_\DapAttributes.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\util_\EnumExtension.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\util_\EnumHelper.cs" />                         <!--__SILP__-->
+    <Compile Include="DapCore\util_\OrderedList.cs" />                        <!--__SILP__-->
+    <Compile Include="DapCore\util_\RequestHelper.cs" />                      <!--__SILP__-->
+    <Compile Include="DapCore\util_\ResponseHelper.cs" />                     <!--__SILP__-->
     <Compile Include="DapCore\util_\SegmentHelper.cs" />                      <!--__SILP__-->
+    <Compile Include="DapCore\util_\TypeExtension.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\weak_\WeakBlock.cs" />                          <!--__SILP__-->
     <Compile Include="DapCore\weak_\WeakList.cs" />                           <!--__SILP__-->
     <Compile Include="DapCore\weak_\WeakListHelper.cs" />                     <!--__SILP__-->
