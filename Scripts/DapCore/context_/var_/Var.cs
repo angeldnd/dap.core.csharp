@@ -47,14 +47,16 @@ namespace angeldnd.dap {
         public bool Setup(T defaultValue) {
             if (!_Setup) {
                 _Setup = true;
-                UpdateValue(defaultValue);
-                if (LogDebug) {
-                    Debug("Setup: {0}", defaultValue);
-                }
                 OnSetup();
                 WeakListHelper.Notify(_SetupWatchers, (ISetupWatcher watcher) => {
                     watcher.OnSetup(this);
                 });
+                if (LogDebug) {
+                    Debug("Setup: {0}", defaultValue);
+                }
+                if (NeedUpdate(defaultValue)) {
+                    UpdateValue(defaultValue);
+                }
                 return true;
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
@@ -77,11 +79,17 @@ namespace angeldnd.dap {
         }
 
         private void UpdateValue(T newValue) {
+            T lastVal = Value;
+
             _Value = newValue;
             AdvanceRevision();
 
             WeakListHelper.Notify(_VarWatchers, (IVarWatcher watcher) => {
                 watcher.OnChanged(this);
+            });
+
+            WeakListHelper.Notify(_ValueWatchers, (IValueWatcher<T> watcher) => {
+                watcher.OnChanged(this, lastVal);
             });
         }
 
@@ -105,16 +113,11 @@ namespace angeldnd.dap {
                     return false;
                 }
                 T lastVal = Value;
-
                 if (!_Setup) {
                     Setup(newValue);
                 } else {
                     UpdateValue(newValue);
                 }
-
-                WeakListHelper.Notify(_ValueWatchers, (IValueWatcher<T> watcher) => {
-                    watcher.OnChanged(this, lastVal);
-                });
                 if (LogDebug) {
                     Debug("SetValue: {0} -> {1}", lastVal, newValue);
                 }
