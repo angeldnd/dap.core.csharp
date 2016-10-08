@@ -3,6 +3,15 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public static class DapExtension {
+        public static T TryAs<T>(this object obj) {
+            if (obj == null) return default(T);
+
+            if (!(obj is T)) {
+                return default(T);
+            }
+            return (T)obj;
+        }
+
         public static T As<T>(this object obj, bool isDebug = false) {
             if (obj == null) return default(T);
 
@@ -15,7 +24,7 @@ namespace angeldnd.dap {
         }
 
         public static bool Is<T>(this object obj) {
-            return As<T>(obj, true) != null;
+            return TryAs<T>(obj) != null;
         }
     }
 }
