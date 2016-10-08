@@ -47,7 +47,9 @@ namespace angeldnd.dap {
         public bool Setup(T defaultValue) {
             if (!_Setup) {
                 _Setup = true;
-                Action onSetup = () => {
+                //Not checking whether need to update here, so access code can either
+                //get the current value in setup triggers, or watcher all changes.
+                UpdateValue(defaultValue, () => {
                     OnSetup();
                     WeakListHelper.Notify(_SetupWatchers, (ISetupWatcher watcher) => {
                         watcher.OnSetup(this);
@@ -55,12 +57,7 @@ namespace angeldnd.dap {
                     if (LogDebug) {
                         Debug("Setup: {0}", defaultValue);
                     }
-                };
-                if (NeedUpdate(defaultValue)) {
-                    UpdateValue(defaultValue, onSetup);
-                } else {
-                    onSetup();
-                }
+                });
                 return true;
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
