@@ -1,6 +1,15 @@
 using System;
 using System.Collections.Generic;
 
+/* After Unity using a newer DotNet version, should switch to the
+ *
+ * System.Runtime.CompilerServices.ConditionalWeakTable
+ * WeakReference<T>
+ *
+ *
+ * which use reference instead of hashcode.
+ */
+
 namespace angeldnd.dap {
     /*
      * There are some special logic for WeakBlock, since don't want to force all items
