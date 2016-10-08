@@ -10,6 +10,16 @@ namespace angeldnd.dap {
             return Owner.Utils.WaitElement(this, channelKey, callback);
         }
 
+        public bool WaitAndWatchChannel(string channelKey, IEventWatcher watcher) {
+            return Owner.Utils.WaitElement(this, channelKey, (Channel channel, bool isNew) => {
+                channel.AddEventWatcher(watcher);
+            });
+        }
+
+        public bool WaitAndWatchChannel(string channelKey, IBlockOwner owner, Action<Channel, Data> block) {
+            return WaitAndWatchChannel(channelKey, new BlockEventWatcher(owner, block));
+        }
+
         public bool DelayTicks(int ticks, Action<Channel, Data> callback) {
             if (ticks <= 0) return false;
 

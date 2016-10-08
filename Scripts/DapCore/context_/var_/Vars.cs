@@ -13,8 +13,28 @@ namespace angeldnd.dap {
             return Owner.Utils.WaitSetupAspect(this, key, callback, waitSetup);
         }
 
+        public bool WaitAndWatchVar(string key, IVarWatcher watcher) {
+            return Owner.Utils.WaitSetupAspect(this, key, (IVar v, bool isNew) => {
+                v.AddVarWatcher(watcher);
+            });
+        }
+
+        public bool WaitAndWatchVar(string key, IBlockOwner owner, Action<IVar> block) {
+            return WaitAndWatchVar(key, new BlockVarWatcher(owner, block));
+        }
+
         public bool WaitVar<T>(string key, Action<IVar<T>, bool> callback, bool waitSetup = true) {
             return Owner.Utils.WaitSetupAspect(this, key, callback, waitSetup);
+        }
+
+        public bool WaitAndWatchVar<T>(string key, IValueWatcher<T> watcher) {
+            return Owner.Utils.WaitSetupAspect(this, key, (IVar<T> v, bool isNew) => {
+                v.AddValueWatcher(watcher);
+            });
+        }
+
+        public bool WaitAndWatchVar<T>(string key, IBlockOwner owner, Action<IVar<T>, T> block) {
+            return WaitAndWatchVar<T>(key, new BlockValueWatcher<T>(owner, block));
         }
 
         public Var<T> AddVar<T>(string key, T val) {
