@@ -8,7 +8,7 @@ namespace angeldnd.dap {
          * Constructor(TO owner, int index)
          */
         int Index { get; }
-        bool SetIndex(IOwner owner, int index);
+        bool _SetIndex(IOwner owner, int index);
     }
 
     public interface ITable : IOwner {
@@ -136,7 +136,7 @@ namespace angeldnd.dap {
             if (startIndex <= endIndex) {
                 for (int i = startIndex; i <= endIndex; i++) {
                     T element = _Elements[i];
-                    element.SetIndex(this, i);
+                    element._SetIndex(this, i);
                     OnElementIndexChanged(element);
                 }
                 AdvanceRevision();

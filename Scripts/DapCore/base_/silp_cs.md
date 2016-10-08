@@ -44,8 +44,37 @@ public override bool DebugMode {
     get { return _Owner == null ? false : _Owner.DebugMode; }
 }
 
-public virtual void OnAdded() {}
-public virtual void OnRemoved() {}
+private bool _IsOrphan = true;
+public bool IsOrphan {
+    get { return _IsOrphan; } 
+}
+
+public void _OnAdded(IOwner owner) {
+    if (_Owner != owner) {
+        throw new DapException("{0}: _OnAdded: Wrong Owner: {1} -> {2}",
+                                LogPrefix, _Owner, owner);
+    }
+    if (!_IsOrphan) {
+        throw new DapException("{0}: _OnAdded: IsOrphan == false", LogPrefix);
+    }
+    _IsOrphan = false;
+    OnAdded();
+}
+
+public void _OnRemoved(IOwner owner) {
+    if (_Owner != owner) {
+        throw new DapException("{0}: _OnRemoved: Wrong Owner: {1} -> {2}",
+                                LogPrefix, _Owner, owner);
+    }
+    if (_IsOrphan) {
+        throw new DapException("{0}: _OnRemoved: IsOrphan == true", LogPrefix);
+    }
+    _IsOrphan = true;
+    OnRemoved();
+}
+
+protected virtual void OnAdded() {}
+protected virtual void OnRemoved() {}
 
 protected override void AddSummaryFields(Data summary) {
     base.AddSummaryFields(summary);
@@ -88,7 +117,7 @@ public int Index {
     get { return _Index; }
 }
 
-public bool SetIndex(IOwner owner, int index) {
+public bool _SetIndex(IOwner owner, int index) {
     if (Owner != owner) return false;
 
     _Index = index;
@@ -201,14 +230,14 @@ public override sealed bool DebugMode {
     get { return _Debugging || base.DebugMode; }
 }
 
-public override sealed void OnAdded() {
+protected override sealed void OnAdded() {
     if (_Context != null) {
         Env.Instance.Hooks._OnAspectAdded(this);
     }
     OnAspectAdded();
 }
 
-public override sealed void OnRemoved() {
+protected override sealed void OnRemoved() {
     if (_Context != null) {
         Env.Instance.Hooks._OnAspectRemoved(this);
     }
@@ -322,12 +351,12 @@ public override sealed bool DebugMode {
     get { return _Debugging; }
 }
 
-public override sealed void OnAdded() {
+protected override sealed void OnAdded() {
     Env.Instance.Hooks._OnContextAdded(this);
     OnContextAdded();
 }
 
-public override sealed void OnRemoved() {
+protected override sealed void OnRemoved() {
     Env.Instance.Hooks._OnContextRemoved(this);
     OnContextRemoved();
 }

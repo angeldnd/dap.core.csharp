@@ -30,7 +30,7 @@ namespace angeldnd.dap {
 
                     AdvanceRevision();
                     OnElementAdded(element);
-                    element.OnAdded();
+                    element._OnAdded(this);
                 }
             }
             return _element;

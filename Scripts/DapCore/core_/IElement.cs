@@ -10,8 +10,9 @@ namespace angeldnd.dap {
 
         string Key { get; }
 
-        void OnAdded();
-        void OnRemoved();
+        bool IsOrphan { get; }
+        void _OnAdded(IOwner owner);
+        void _OnRemoved(IOwner owner);
     }
 
     public interface IElement<TO> : IElement

@@ -76,12 +76,12 @@ namespace angeldnd.dap {
             get { return _Debugging; }                                                                //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public override sealed void OnAdded() {                                                       //__SILP__
+        protected override sealed void OnAdded() {                                                    //__SILP__
             Env.Instance.Hooks._OnContextAdded(this);                                                 //__SILP__
             OnContextAdded();                                                                         //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
-        public override sealed void OnRemoved() {                                                     //__SILP__
+        protected override sealed void OnRemoved() {                                                  //__SILP__
             Env.Instance.Hooks._OnContextRemoved(this);                                               //__SILP__
             OnContextRemoved();                                                                       //__SILP__
         }                                                                                             //__SILP__

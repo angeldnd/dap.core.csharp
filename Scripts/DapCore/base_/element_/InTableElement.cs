@@ -18,7 +18,7 @@ namespace angeldnd.dap {
             get { return _Index; }                                      //__SILP__
         }                                                               //__SILP__
                                                                         //__SILP__
-        public bool SetIndex(IOwner owner, int index) {                 //__SILP__
+        public bool _SetIndex(IOwner owner, int index) {                //__SILP__
             if (Owner != owner) return false;                           //__SILP__
                                                                         //__SILP__
             _Index = index;                                             //__SILP__

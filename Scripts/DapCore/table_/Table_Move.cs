@@ -64,10 +64,10 @@ namespace angeldnd.dap {
             int bIndex = elementB.Index;
 
             _Elements[aIndex] = elementB;
-            elementB.SetIndex(this, aIndex);
+            elementB._SetIndex(this, aIndex);
 
             _Elements[bIndex] = elementA;
-            elementA.SetIndex(this, bIndex);
+            elementA._SetIndex(this, bIndex);
 
             AdvanceRevision();
             return true;

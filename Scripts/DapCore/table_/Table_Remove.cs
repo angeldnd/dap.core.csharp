@@ -12,7 +12,7 @@ namespace angeldnd.dap {
                     UpdateIndexes(index);
 
                     OnElementRemoved(element);
-                    element.OnRemoved();
+                    element._OnRemoved(this);
 
                     return _element;
                 }
@@ -37,7 +37,7 @@ namespace angeldnd.dap {
                 }
                 OnElementsRemoved(removed);
                 foreach (T element in removed) {
-                    element.OnRemoved();
+                    element._OnRemoved(this);
                 }
             }
         }
