@@ -15,7 +15,7 @@ namespace angeldnd.dap {
 
         private T1 AddElement<T1>(T1 _element) where T1 : class, IInTableElement {
             if (_element != null) {
-                T element = As<T>(_element);
+                T element = _element.As<T>();
                 if (element != null) {
                     _Elements.Add(element);
 

@@ -6,7 +6,7 @@ namespace angeldnd.dap {
         public T1 Remove<T1>(string key) where T1 : class, IInDictElement {
             T element;
             if (_Elements.TryGetValue(key, out element)) {
-                T1 _element = As<T1>(element);
+                T1 _element = element.As<T1>();
                 if (_element != null) {
                     _Elements.Remove(key);
                     AdvanceRevision();

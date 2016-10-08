@@ -10,7 +10,7 @@ namespace angeldnd.dap {
         public T1 Get<T1>(string key, bool isDebug = false) where T1 : class, IInDictElement {
             T element = null;
             if (_Elements.TryGetValue(key, out element)) {
-                return As<T1>(element, isDebug);
+                return element.As<T1>(isDebug);
             } else {
                 ErrorOrDebug(isDebug, "Get<{0}>({1}): Not Found", typeof(T1).FullName, key);
             }
@@ -30,7 +30,7 @@ namespace angeldnd.dap {
         public T1 GetOrAdd<T1>(string key) where T1 : class, IInDictElement {
             T element = null;
             if (_Elements.TryGetValue(key, out element)) {
-                return As<T1>(element);
+                return element.As<T1>();
             } else {
                 return Add<T1>(key);
             }
@@ -39,7 +39,7 @@ namespace angeldnd.dap {
         public T1 GetOrNew<T1>(string type, string key) where T1 : class, IInDictElement {
             T element = null;
             if (_Elements.TryGetValue(key, out element)) {
-                return As<T1>(element);
+                return element.As<T1>();
             } else {
                 return New<T1>(type, key);
             }

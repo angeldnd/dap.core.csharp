@@ -398,9 +398,9 @@ public TA GetAspect<TA>(string aspectPath, bool isDebug = false) where TA : clas
         return null;
     }
     if (segments.Count == 1) {
-        return As<TA>(topAspect, isDebug);
+        return topAspect.As<TA>(isDebug);
     } else {
-        IOwner asOwner = As<IOwner>(topAspect, isDebug);
+        IOwner asOwner = topAspect.As<IOwner>(isDebug);
         if (asOwner != null) {
             return TreeHelper.GetDescendant<TA>(asOwner, segments, 1, isDebug);
         }

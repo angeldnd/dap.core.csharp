@@ -122,9 +122,9 @@ namespace angeldnd.dap {
                 return null;                                                                          //__SILP__
             }                                                                                         //__SILP__
             if (segments.Count == 1) {                                                                //__SILP__
-                return As<TA>(topAspect, isDebug);                                                    //__SILP__
+                return topAspect.As<TA>(isDebug);                                                     //__SILP__
             } else {                                                                                  //__SILP__
-                IOwner asOwner = As<IOwner>(topAspect, isDebug);                                      //__SILP__
+                IOwner asOwner = topAspect.As<IOwner>(isDebug);                                       //__SILP__
                 if (asOwner != null) {                                                                //__SILP__
                     return TreeHelper.GetDescendant<TA>(asOwner, segments, 1, isDebug);               //__SILP__
                 }                                                                                     //__SILP__

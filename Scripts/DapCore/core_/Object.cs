@@ -33,21 +33,6 @@ namespace angeldnd.dap {
     }
 
     public abstract class Object : Logger, IObject {
-        public static T As<T>(object obj, bool isDebug = false) {
-            if (obj == null) return default(T);
-
-            if (!(obj is T)) {
-                Log.ErrorOrDebug(isDebug, "Type Mismatched: <{0}> -> {1}: {2}",
-                            typeof(T).FullName, obj.GetType().FullName, obj);
-                return default(T);
-            }
-            return (T)obj;
-        }
-
-        public static bool Is<T>(object obj) {
-            return As<T>(obj, true) != null;
-        }
-
         private string _DapType = null;
         public string DapType {
             get {

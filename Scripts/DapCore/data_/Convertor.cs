@@ -77,7 +77,7 @@ namespace angeldnd.dap {
             if (type == null) return null;
             IVar v = _Convertors.Get(type.FullName, true);
             if (v != null) {
-                return angeldnd.dap.Object.As<InternalConvertor>(v.GetValue());
+                return angeldnd.dap.DapExtension.As<InternalConvertor>(v.GetValue());
             }
             return null;
         }
@@ -157,7 +157,7 @@ namespace angeldnd.dap {
         }
 
         internal override string _ConvertInternal(object val) {
-            T _val = angeldnd.dap.Object.As<T>(val);
+            T _val = angeldnd.dap.DapExtension.As<T>(val);
             return Convert(_val);
         }
 

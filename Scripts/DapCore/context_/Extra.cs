@@ -36,7 +36,7 @@ namespace angeldnd.dap {
                 foreach (string key in keys) {
                     var element = topAspect.Get<IInDictElement>(key);
                     if (element != null) {
-                        IAspect aspect = Object.As<IAspect>(element);
+                        IAspect aspect = element.As<IAspect>();
                         if (aspect != null) {
                             pathes.Add(aspect.Path);
                         }

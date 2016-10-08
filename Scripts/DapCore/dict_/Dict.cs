@@ -122,7 +122,7 @@ namespace angeldnd.dap {
 
         public bool Is<T1>(string key) where T1 : class, IInDictElement {
             T element = Get(key);
-            return Object.Is<T1>(element);
+            return element.Is<T1>();
         }
 
         private void OnElementAdded(T element) {

@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+
+namespace angeldnd.dap {
+    public static class DapExtension {
+        public static T As<T>(this object obj, bool isDebug = false) {
+            if (obj == null) return default(T);
+
+            if (!(obj is T)) {
+                Log.ErrorOrDebug(isDebug, "Type Mismatched: <{0}> -> {1}: {2}",
+                            typeof(T).FullName, obj.GetType().FullName, obj);
+                return default(T);
+            }
+            return (T)obj;
+        }
+
+        public static bool Is<T>(this object obj) {
+            return As<T>(obj, true) != null;
+        }
+    }
+}

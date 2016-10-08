@@ -6,7 +6,7 @@ namespace angeldnd.dap {
         public T1 Remove<T1>(int index) where T1 : class, IInTableElement {
             if (index >= 0 && index < _Elements.Count) {
                 T element = _Elements[index];
-                T1 _element = As<T1>(element);
+                T1 _element = element.As<T1>();
                 if (_element != null) {
                     _Elements.RemoveAt(index);
                     UpdateIndexes(index);

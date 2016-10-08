@@ -168,7 +168,7 @@ namespace angeldnd.dap {
             for (int i = 0; i < segments.Count; i++) {
                 if (i < segments.Count - 1) {
                     if (current.Has(segments[i])) {
-                        current = Object.As<IDict>(current.Get<IInDictElement>(segments[i]));
+                        current = current.Get<IInDictElement>(segments[i]).As<IDict>();
                     } else {
                         current = current.Add<TO>(segments[i]);
                     }

@@ -9,7 +9,7 @@ namespace angeldnd.dap {
 
         public T1 Get<T1>(int index, bool isDebug = false) where T1 : class, IInTableElement {
             if (index >= 0 && index < _Elements.Count) {
-                return As<T1>(_Elements[index], isDebug);
+                return _Elements[index].As<T1>(isDebug);
             } else {
                 ErrorOrDebug(isDebug, "Get<{0}>({1}): Not Found", typeof(T1).FullName, index);
             }
@@ -20,7 +20,7 @@ namespace angeldnd.dap {
             for (int i = 0; i < _Elements.Count; i++) {
                 T element = _Elements[i];
                 if (element.Key == key) {
-                    return As<T1>(element, isDebug);
+                    return element.As<T1>(isDebug);
                 }
             }
             ErrorOrDebug(isDebug, "Get({0}): Not Found", key);

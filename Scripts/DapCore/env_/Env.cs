@@ -260,13 +260,13 @@ namespace angeldnd.dap {
             IAspect aspect;
             if (TryGetByUri(uri, out context, out aspect)) {
                 if (aspect != null) {
-                    result = Object.As<T>(aspect, true);
+                    result = aspect.As<T>(true);
                     if (result == null) {
                         ErrorOrDebug(isDebug, "GetByUri<{0}>({1}): Aspect Type MisMatched: {2}",
                                         typeof(T).FullName, uri, aspect);
                     }
                 } else {
-                    result = Object.As<T>(context, true);
+                    result = context.As<T>(true);
                     if (result == null) {
                         ErrorOrDebug(isDebug, "GetByUri<{0}>({1}): Context Type MisMatched: {2}",
                                         typeof(T).FullName, uri, context);

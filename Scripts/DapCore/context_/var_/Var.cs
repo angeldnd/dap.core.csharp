@@ -23,7 +23,7 @@ namespace angeldnd.dap {
         }
 
         public virtual bool SetValue(object _newValue) {
-            T newValue = Object.As<T>(_newValue);
+            T newValue = _newValue.As<T>();
             if (newValue != null) {
                 return SetValue(newValue);
             }

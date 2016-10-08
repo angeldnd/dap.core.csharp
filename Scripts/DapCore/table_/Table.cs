@@ -125,7 +125,7 @@ namespace angeldnd.dap {
 
         public bool Is<T1>(int index) where T1 : class, IInTableElement {
             T element = Get(index);
-            return Object.Is<T1>(element);
+            return element.Is<T1>();
         }
 
         private void UpdateIndexes(int startIndex) {
