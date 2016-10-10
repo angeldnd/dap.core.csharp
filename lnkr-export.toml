@@ -1,5 +1,3 @@
-dap-root = "Includes/_Dap"
-
 [dap-core]
 [[dap-core.folders]]
 from = "Scripts/DapCore"
