@@ -178,6 +178,7 @@
     <Compile Include="DapCore\uri_\UriConsts.cs" />                           <!--__SILP__-->
     <Compile Include="DapCore\util_\AssemblyHelper.cs" />                     <!--__SILP__-->
     <Compile Include="DapCore\util_\DapAttributes.cs" />                      <!--__SILP__-->
+    <Compile Include="DapCore\util_\DapExtension.cs" />                       <!--__SILP__-->
     <Compile Include="DapCore\util_\EnumExtension.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\util_\EnumHelper.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\util_\OrderedList.cs" />                        <!--__SILP__-->
