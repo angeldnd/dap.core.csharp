@@ -7,11 +7,18 @@ namespace angeldnd.dap {
         public const char EscapeChar = '\\';
 
         public const char EncloseBeginChar = '`';
-        public const char EncloseEndChar = '`';
+        public const char EncloseEndChar = EncloseBeginChar;
 
         public readonly static char[] LineSeparators = new char[]{'\n', '\r'};
         public readonly static char[] WordSeparators = new char[]{' ', '\t'};
         public readonly static char[] EmptyChars = new char[]{' ', '\t', '\n', '\r'};
+
+        public static bool IsLineSeparator(char ch) {
+            foreach (char separator in LineSeparators) {
+                if (separator == ch) return true;
+            }
+            return false;
+        }
 
         public static bool IsWordSeparator(char ch) {
             foreach (char separator in WordSeparators) {
@@ -23,6 +30,13 @@ namespace angeldnd.dap {
         public static bool IsEmptyChar(char ch) {
             foreach (char empty in EmptyChars) {
                 if (empty == ch) return true;
+            }
+            return false;
+        }
+
+        public static bool IsEncloseChar(char ch) {
+            if (ch == EncloseBeginChar) {
+                return true;
             }
             return false;
         }

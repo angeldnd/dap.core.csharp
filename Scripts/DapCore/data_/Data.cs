@@ -13,6 +13,10 @@ namespace angeldnd.dap {
         public static string ToFullString(this Data data, string indent = "\t") {
             return Convertor.DataConvertor.Convert(data, indent);
         }
+
+        public static string ToJsonString(this Data data, string indent = "\t") {
+            return Convertor.DataJsonConvertor.Convert(data, indent);
+        }
     }
 
     public sealed class Data : Sealable {

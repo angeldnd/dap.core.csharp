@@ -229,23 +229,6 @@ namespace angeldnd.dap {
             }
         }
 
-        private void AppendKeyBegin(StringBuilder builder, string indent) {
-            builder.Append(DataConvertorConsts.KeyBegin);
-            if (indent != null) {
-                builder.Append(DataConvertorConsts.Space);
-            }
-        }
-
-        private void AppendValueBegin(StringBuilder builder, string indent) {
-            if (indent != null) {
-                builder.Append(DataConvertorConsts.Space);
-            }
-            builder.Append(DataConvertorConsts.ValueBegin);
-            if (indent != null) {
-                builder.Append(DataConvertorConsts.Space);
-            }
-        }
-
         private void AppendData(StringBuilder builder, string indent, int indentLevel, Data data) {
             if (data == null) {
                 builder.Append(Convertor.Null);
@@ -257,25 +240,19 @@ namespace angeldnd.dap {
                 builder.AppendLine();
             }
 
-            foreach (string key in data.Keys) {
-                AppendValue(builder, indent, indentLevel + 1, data, key);
-            }
+            AppendDataValues(builder, indent, indentLevel, data);
 
-            if (data.Count > 0) {
+            if (indent != null && data.Count > 0) {
                 AppendIndents(builder, indent, indentLevel);
             }
             builder.Append(DataConvertorConsts.DataEnd);
         }
 
-        public void AppendValue(StringBuilder builder, string indent, int indentLevel, Data data, string key) {
+        protected void AppendValue(StringBuilder builder, string indent, int indentLevel, Data data, string key, string end) {
             DataType valueType = data.GetValueType(key);
 
             AppendIndents(builder, indent, indentLevel);
-            builder.Append(Convertor.DataTypeConvertor.Convert(valueType));
-            AppendKeyBegin(builder, indent);
-            AppendString(builder, key);
-
-            AppendValueBegin(builder, indent);
+            AppendTypeAndKey(builder, valueType, key, indent != null);
 
             switch (valueType) {
                 case DataType.Bool:
@@ -300,6 +277,9 @@ namespace angeldnd.dap {
                     AppendData(builder, indent, indentLevel, data.GetData(key));
                     break;
             }
+            if (end != null) {
+                builder.Append(end);
+            }
             if (indent != null) {
                 builder.AppendLine();
             } else {
@@ -307,7 +287,29 @@ namespace angeldnd.dap {
             }
         }
 
-        public void AppendString(StringBuilder builder, string str) {
+        protected virtual void AppendDataValues(StringBuilder builder, string indent, int indentLevel, Data data) {
+            foreach (string key in data.Keys) {
+                AppendValue(builder, indent, indentLevel + 1, data, key, null);
+            }
+        }
+
+        protected virtual void AppendTypeAndKey(StringBuilder builder, DataType valueType, string key, bool withSpace) {
+            builder.Append(Convertor.DataTypeConvertor.Convert(valueType));
+            builder.Append(DataConvertorConsts.KeyBegin);
+            if (withSpace) {
+                builder.Append(DataConvertorConsts.Space);
+            }
+            AppendString(builder, key);
+            if (withSpace) {
+                builder.Append(DataConvertorConsts.Space);
+            }
+            builder.Append(DataConvertorConsts.ValueBegin);
+            if (withSpace) {
+                builder.Append(DataConvertorConsts.Space);
+            }
+        }
+
+        protected virtual void AppendString(StringBuilder builder, string str) {
             if (string.IsNullOrEmpty(str)) {
                 builder.Append(WordSplitterConsts.EncloseBeginChar);
                 builder.Append(WordSplitterConsts.EncloseEndChar);
@@ -316,7 +318,9 @@ namespace angeldnd.dap {
 
             for (int i = 0; i < str.Length; i++) {
                 char ch = str[i];
-                if (WordSplitterConsts.IsEmptyChar(ch) || DataConvertorConsts.IsWordChar(ch)) {
+                if (WordSplitterConsts.IsEmptyChar(ch)
+                        || WordSplitterConsts.IsEncloseChar(ch)
+                        || DataConvertorConsts.IsWordChar(ch)) {
                     builder.Append(WordSplitterConsts.EscapeChar);
                 }
                 builder.Append(ch);

@@ -14,8 +14,9 @@ namespace angeldnd.dap {
         public readonly static DataConvertor DataConvertor = new DataConvertor();
         public readonly static DataTypeConvertor DataTypeConvertor = new DataTypeConvertor();
 
-        //This will NOT be registered.
+        //These will NOT be registered.
         public readonly static DataCodeConvertor DataCodeConvertor = new DataCodeConvertor();
+        public readonly static DataJsonConvertor DataJsonConvertor = new DataJsonConvertor();
 
         private static Vars _Convertors;
 
