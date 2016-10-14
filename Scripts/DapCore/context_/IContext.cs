@@ -22,8 +22,9 @@ namespace angeldnd.dap {
 
         void ForEachTopAspects(Action<IAspect> callback);
         void ForEachAspects(Action<IAspect> callback);
-    }
 
+        void AddDetailFields(Data summary);
+    }
 
     public interface IDictContext : IContext, IDict {
     }

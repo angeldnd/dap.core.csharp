@@ -43,6 +43,9 @@ namespace angeldnd.dap {
         [DapParam(typeof(int))]
         public const string SummaryCheckFailedCount = "check_failed_count";
 
+        [DapParam(typeof(Data))]
+        public const string SummaryAspects = "aspects";
+
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";
 

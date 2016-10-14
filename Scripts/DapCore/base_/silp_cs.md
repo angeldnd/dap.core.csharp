@@ -425,6 +425,14 @@ public void ForEachAspects(Action<IAspect> callback) {
     });
 }
 
+public virtual void AddDetailFields(Data summary) {
+    Data aspects = new Data();
+    ForEachAspects((IAspect aspect) => {
+        aspects.A(aspect.Path, aspect.Summary);
+    });
+    summary.A(ContextConsts.SummaryAspects, aspects);
+}
+
 protected virtual void OnContextAdded() {}
 protected virtual void OnContextRemoved() {}
 
