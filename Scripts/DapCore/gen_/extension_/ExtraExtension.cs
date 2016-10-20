@@ -7,6 +7,16 @@ namespace angeldnd.dap {
     public static class ExtensionExtension {
         //SILP: EXTRA_SETUP_PROPERTY(Bool, bool)
         public static BoolProperty SetupBoolProperty(this Extra ext,                         //__SILP__
+                string fragment, bool val) {                                                 //__SILP__
+            BoolProperty prop = ext.SetupProperty<BoolProperty>(                             //__SILP__
+                                        PropertiesConsts.TypeBoolProperty, fragment);        //__SILP__
+            if (prop != null) {                                                              //__SILP__
+                prop.Setup(val);                                                             //__SILP__
+            }                                                                                //__SILP__
+            return prop;                                                                     //__SILP__
+        }                                                                                    //__SILP__
+                                                                                             //__SILP__
+        public static BoolProperty SetupBoolProperty(this Extra ext,                         //__SILP__
                 string fragment, Func<bool> getter,                                          //__SILP__
                 Func<IVar<bool>, bool, bool> checker,                                        //__SILP__
                 Action<IVar<bool>, bool> watcher) {                                          //__SILP__
@@ -30,6 +40,16 @@ namespace angeldnd.dap {
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Int, int)
+        public static IntProperty SetupIntProperty(this Extra ext,                        //__SILP__
+                string fragment, int val) {                                               //__SILP__
+            IntProperty prop = ext.SetupProperty<IntProperty>(                            //__SILP__
+                                        PropertiesConsts.TypeIntProperty, fragment);      //__SILP__
+            if (prop != null) {                                                           //__SILP__
+                prop.Setup(val);                                                          //__SILP__
+            }                                                                             //__SILP__
+            return prop;                                                                  //__SILP__
+        }                                                                                 //__SILP__
+                                                                                          //__SILP__
         public static IntProperty SetupIntProperty(this Extra ext,                        //__SILP__
                 string fragment, Func<int> getter,                                        //__SILP__
                 Func<IVar<int>, int, bool> checker,                                       //__SILP__
@@ -55,6 +75,16 @@ namespace angeldnd.dap {
                                                                                           //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Long, long)
         public static LongProperty SetupLongProperty(this Extra ext,                         //__SILP__
+                string fragment, long val) {                                                 //__SILP__
+            LongProperty prop = ext.SetupProperty<LongProperty>(                             //__SILP__
+                                        PropertiesConsts.TypeLongProperty, fragment);        //__SILP__
+            if (prop != null) {                                                              //__SILP__
+                prop.Setup(val);                                                             //__SILP__
+            }                                                                                //__SILP__
+            return prop;                                                                     //__SILP__
+        }                                                                                    //__SILP__
+                                                                                             //__SILP__
+        public static LongProperty SetupLongProperty(this Extra ext,                         //__SILP__
                 string fragment, Func<long> getter,                                          //__SILP__
                 Func<IVar<long>, long, bool> checker,                                        //__SILP__
                 Action<IVar<long>, long> watcher) {                                          //__SILP__
@@ -78,6 +108,16 @@ namespace angeldnd.dap {
         }                                                                                    //__SILP__
                                                                                              //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Float, float)
+        public static FloatProperty SetupFloatProperty(this Extra ext,                          //__SILP__
+                string fragment, float val) {                                                   //__SILP__
+            FloatProperty prop = ext.SetupProperty<FloatProperty>(                              //__SILP__
+                                        PropertiesConsts.TypeFloatProperty, fragment);          //__SILP__
+            if (prop != null) {                                                                 //__SILP__
+                prop.Setup(val);                                                                //__SILP__
+            }                                                                                   //__SILP__
+            return prop;                                                                        //__SILP__
+        }                                                                                       //__SILP__
+                                                                                                //__SILP__
         public static FloatProperty SetupFloatProperty(this Extra ext,                          //__SILP__
                 string fragment, Func<float> getter,                                            //__SILP__
                 Func<IVar<float>, float, bool> checker,                                         //__SILP__
@@ -103,6 +143,16 @@ namespace angeldnd.dap {
                                                                                                 //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Double, double)
         public static DoubleProperty SetupDoubleProperty(this Extra ext,                           //__SILP__
+                string fragment, double val) {                                                     //__SILP__
+            DoubleProperty prop = ext.SetupProperty<DoubleProperty>(                               //__SILP__
+                                        PropertiesConsts.TypeDoubleProperty, fragment);            //__SILP__
+            if (prop != null) {                                                                    //__SILP__
+                prop.Setup(val);                                                                   //__SILP__
+            }                                                                                      //__SILP__
+            return prop;                                                                           //__SILP__
+        }                                                                                          //__SILP__
+                                                                                                   //__SILP__
+        public static DoubleProperty SetupDoubleProperty(this Extra ext,                           //__SILP__
                 string fragment, Func<double> getter,                                              //__SILP__
                 Func<IVar<double>, double, bool> checker,                                          //__SILP__
                 Action<IVar<double>, double> watcher) {                                            //__SILP__
@@ -127,6 +177,16 @@ namespace angeldnd.dap {
                                                                                                    //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(String, string)
         public static StringProperty SetupStringProperty(this Extra ext,                           //__SILP__
+                string fragment, string val) {                                                     //__SILP__
+            StringProperty prop = ext.SetupProperty<StringProperty>(                               //__SILP__
+                                        PropertiesConsts.TypeStringProperty, fragment);            //__SILP__
+            if (prop != null) {                                                                    //__SILP__
+                prop.Setup(val);                                                                   //__SILP__
+            }                                                                                      //__SILP__
+            return prop;                                                                           //__SILP__
+        }                                                                                          //__SILP__
+                                                                                                   //__SILP__
+        public static StringProperty SetupStringProperty(this Extra ext,                           //__SILP__
                 string fragment, Func<string> getter,                                              //__SILP__
                 Func<IVar<string>, string, bool> checker,                                          //__SILP__
                 Action<IVar<string>, string> watcher) {                                            //__SILP__
@@ -150,6 +210,16 @@ namespace angeldnd.dap {
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         //SILP: EXTRA_SETUP_PROPERTY(Data, Data)
+        public static DataProperty SetupDataProperty(this Extra ext,                         //__SILP__
+                string fragment, Data val) {                                                 //__SILP__
+            DataProperty prop = ext.SetupProperty<DataProperty>(                             //__SILP__
+                                        PropertiesConsts.TypeDataProperty, fragment);        //__SILP__
+            if (prop != null) {                                                              //__SILP__
+                prop.Setup(val);                                                             //__SILP__
+            }                                                                                //__SILP__
+            return prop;                                                                     //__SILP__
+        }                                                                                    //__SILP__
+                                                                                             //__SILP__
         public static DataProperty SetupDataProperty(this Extra ext,                         //__SILP__
                 string fragment, Func<Data> getter,                                          //__SILP__
                 Func<IVar<Data>, Data, bool> checker,                                        //__SILP__

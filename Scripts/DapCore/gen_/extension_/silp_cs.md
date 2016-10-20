@@ -127,6 +127,16 @@ public static ${type} Withdraw${name}(this Vars vars, string key) {
 # EXTRA_SETUP_PROPERTY(type, cs_type) #
 ```C#
 public static ${type}Property Setup${type}Property(this Extra ext,
+        string fragment, ${cs_type} val) {
+    ${type}Property prop = ext.SetupProperty<${type}Property>(
+                                PropertiesConsts.Type${type}Property, fragment);
+    if (prop != null) {
+        prop.Setup(val);
+    }
+    return prop;
+}
+
+public static ${type}Property Setup${type}Property(this Extra ext,
         string fragment, Func<${cs_type}> getter,
         Func<IVar<${cs_type}>, ${cs_type}, bool> checker,
         Action<IVar<${cs_type}>, ${cs_type}> watcher) {
