@@ -43,10 +43,13 @@ namespace angeldnd.dap {
 
         private static void ForEachType(Action<Type> callback) {
             ForEachAssembly((Assembly asm) => {
-                Type[] types = asm.GetTypes();
+                try {
+                    Type[] types = asm.GetTypes();
 
-                foreach (Type type in types) {
-                    callback(type);
+                    foreach (Type type in types) {
+                        callback(type);
+                    }
+                } catch (Exception e) {
                 }
             });
         }

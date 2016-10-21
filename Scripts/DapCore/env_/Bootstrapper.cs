@@ -34,9 +34,13 @@ namespace angeldnd.dap {
             /*
              * For Unity3D's IL2CPP to work, need to check CodeBase instead of Location
              */
-            string fileName = System.IO.Path.GetFileName(asm.CodeBase);
-            fileName = fileName.Replace(".dll", "");
-            return fileName == DAP_ENV_ASSEMBLY || fileName == DAP_UNITY_ASSEMBLY;
+            try {
+                string fileName = System.IO.Path.GetFileName(asm.CodeBase);
+                fileName = fileName.Replace(".dll", "");
+                return fileName == DAP_ENV_ASSEMBLY || fileName == DAP_UNITY_ASSEMBLY;
+            } catch (Exception e) {
+            }
+            return false;
         }
 
         public static Bootstrapper Bootstrap() {
