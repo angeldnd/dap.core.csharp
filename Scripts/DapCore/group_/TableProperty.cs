@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace angeldnd.dap {
-    public abstract class TableProperty<T> : TableInBothAspect<IProperties, T>, ITableProperties, IProperty
+    public class TableProperty<T> : TableInBothAspect<IProperties, T>, ITableProperties, IProperty
                                                 where T : class, IProperty {
         public Type ValueType {
             get { return GetType(); }
