@@ -43,21 +43,47 @@ namespace angeldnd.dap {
             return false;
         }
 
-        public static Bootstrapper Bootstrap() {
-            Type BootstrapperType = typeof(Bootstrapper);
-            Bootstrapper bootstrapper = null;
+        private static Bootstrapper GetBootstrapper(Assembly asm, Type bootstrapperType) {
+            Type type = asm.GetType(DAP_BOOTSTRAPPER);
+            if (type != null && type._IsSubclassOf(bootstrapperType)) {
+                Bootstrapper bootstrapper = (Bootstrapper)Activator.CreateInstance(type);
+                if (bootstrapper != null) {
+                    return bootstrapper;
+                }
+            }
+            return null;
+        }
 
-            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+        private static Bootstrapper GetBootstrapperFromDapEnvAssembly(Assembly[] asms, Type bootstrapperType) {
             foreach (Assembly asm in asms) {
                 if (IsDapEnvAssembly(asm)) {
-                    Type type = asm.GetType(DAP_BOOTSTRAPPER);
-                    if (type != null && type._IsSubclassOf(BootstrapperType)) {
-                        bootstrapper = (Bootstrapper)Activator.CreateInstance(type);
-                        if (bootstrapper != null) {
-                            break;
-                        }
+                    Bootstrapper bootstrapper = GetBootstrapper(asm, bootstrapperType);
+                    if (bootstrapper != null) {
+                        return bootstrapper;
                     }
                 }
+            }
+            return null;
+        }
+
+        private static Bootstrapper GetBootstrapperFromAnyAssembly(Assembly[] asms, Type bootstrapperType) {
+            foreach (Assembly asm in asms) {
+                Bootstrapper bootstrapper = GetBootstrapper(asm, bootstrapperType);
+                if (bootstrapper != null) {
+                    return bootstrapper;
+                }
+            }
+            return null;
+        }
+
+        public static Bootstrapper Bootstrap() {
+            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+            Type bootstrapperType = typeof(Bootstrapper);
+
+            Bootstrapper bootstrapper = GetBootstrapperFromDapEnvAssembly(asms, bootstrapperType);
+
+            if (bootstrapper == null) {
+                bootstrapper = GetBootstrapperFromAnyAssembly(asms, bootstrapperType);
             }
 
             if (bootstrapper == null) {
