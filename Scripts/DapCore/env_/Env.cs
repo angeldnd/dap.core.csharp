@@ -88,6 +88,9 @@ namespace angeldnd.dap {
         }
 
         private static Bootstrapper _Bootstrapper;
+        public static Bootstrapper Bootstrapper {
+            get { return _Bootstrapper; }
+        }
         private static List<Plugin> _Plugins;
 
         private static string _AppId;
