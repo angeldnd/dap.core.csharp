@@ -8,7 +8,7 @@ namespace angeldnd.dap {
         public static StackTrace FakeStackTrace = new StackTrace(new Exception("FakeStackTrace"), false);
 #endif
 
-        private static LogProvider _Provider = new FileLogProvider();
+        private static LogProvider _Provider = new NoEnvFileLogProvider();
         public static LogProvider Provider {
             get { return _Provider; }
         }
@@ -21,7 +21,11 @@ namespace angeldnd.dap {
         private static bool _Inited = false;
         public static bool Init(LogProvider provider) {
             if (!_Inited && provider != null) {
+                _Provider.Error("Finish Logging: {0}", provider);
+                _Provider.Flush();
+
                 _Inited = true;
+                provider.Info("Previous Logging: {0}", _Provider);
                 _Provider = provider;
                 _LogDebug = provider.LogDebug;
                 return true;

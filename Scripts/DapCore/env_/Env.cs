@@ -58,7 +58,7 @@ namespace angeldnd.dap {
                     }
                     _Plugins = bootstrapper.GetPlugins();
 
-                    Log.Info("Dap Environment Bootstrapped: Version = {0}, Sub Version = {1}, Round = {2}",
+                    Log.Error("Dap Environment Bootstrapped: Version = {0}, Sub Version = {1}, Round = {2}",
                                 _Version, _SubVersion, _Round);
                     Log.Info("Bootstrapper: {0}", _Bootstrapper.GetType().AssemblyQualifiedName);
                     Log.Info("Log Provider: {0}", Log.Provider.GetType().FullName);
@@ -85,6 +85,7 @@ namespace angeldnd.dap {
 
             _Instance = new Env();
             _Instance.Init();
+            Log.Flush();
         }
 
         private static Bootstrapper _Bootstrapper;

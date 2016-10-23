@@ -6,8 +6,8 @@ using System.IO;
 using System.Diagnostics;
 
 namespace angeldnd.dap {
-    [DapPriority(1)]
-    public class FileLogProvider : LogProvider {
+    [DapPriority(0)]
+    public class NoEnvFileLogProvider : LogProvider {
         public static int MAX_STACK_TRACK_NUM = 32;
         public static int DEBUG_MAX_STACK_TRACK_NUM = 128;
 
@@ -24,13 +24,13 @@ namespace angeldnd.dap {
         private StreamWriter _LogWriter = null;
         private DateTime _LastFlushTime;
 
-        public FileLogProvider() : this(EnvConsts.DefaultLogDebug,
+        public NoEnvFileLogProvider() : this(EnvConsts.DefaultLogDebug,
                                         EnvConsts.DefaultLogDir,
                                         EnvConsts.DefaultLogName,
                                         -1) {
         }
 
-        public FileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug) {
+        public NoEnvFileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug) {
             _LogRoot = GetLogRoot();
 
             _LogDir = string.IsNullOrEmpty(logDir) ? EnvConsts.DefaultLogDir : logDir;
@@ -43,6 +43,10 @@ namespace angeldnd.dap {
             }
             SetupLogWriter();
             Info("FileLogProvider: {0} {1} {2}", logDir, logName, runID);
+        }
+
+        public override string ToString() {
+            return string.Format("[<{0}>{1}{2}]", GetType().FullName, LogDebug ? "(Debug)" : "", _LogFilePath);
         }
 
         public int GetNextRunID(string logDir, string logName, int startRunID) {
@@ -124,7 +128,7 @@ namespace angeldnd.dap {
                     Directory.CreateDirectory(dir);
                 }
                 _LogWriter = File.AppendText(_LogFilePath);
-                Info("Start {0}Logging: {1}", LogDebug ? "Debug " : "", _LogFilePath);
+                Error("Start Logging: {0}", _LogFilePath);
 
                 //Probably can't use AutoFlush here due to performance issue
                 //need to check whether the system level cache make this workable
@@ -177,10 +181,23 @@ namespace angeldnd.dap {
         }
 
         protected virtual string GetTickMsg() {
-            return string.Format("{0}:{1}", Env.Round, Env.TickCount);
+            return "N/A";
         }
 
         protected virtual void OnLog(object source, string kind, string log, StackTrace stackTrace) {}
+    }
+
+    [DapPriority(1)]
+    public class FileLogProvider : NoEnvFileLogProvider {
+        public FileLogProvider() : base() {
+        }
+
+        public FileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug, logDir, logName, runID) {
+        }
+
+        protected override string GetTickMsg() {
+            return string.Format("{0}:{1}", Env.Round, Env.TickCount);
+        }
     }
 }
 

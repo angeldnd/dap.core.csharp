@@ -13,9 +13,9 @@ using Microsoft.DotNet.InternalAbstractions;
 
 namespace angeldnd.dap {
     public static class AssemblyHelper {
-        private enum CheckMode {SubClass, Interface, Assignable};
+        public enum CheckMode {SubClass, Interface, Assignable};
 
-        private static bool IsValidType(CheckMode mode, Type baseType, Type type) {
+        public static bool IsValidType(CheckMode mode, Type baseType, Type type) {
             if (type == null || baseType == null) return false;
             switch (mode) {
                 case CheckMode.SubClass:
@@ -28,7 +28,7 @@ namespace angeldnd.dap {
             return false;
         }
 
-        private static void ForEachAssembly(Action<Assembly> callback) {
+        public static void ForEachAssembly(Action<Assembly> callback) {
 #if DOTNET_CORE
             var libs = DependencyContext.Default.CompileLibraries;
             foreach (var lib in libs) {
@@ -41,7 +41,9 @@ namespace angeldnd.dap {
             }
         }
 
-        private static void ForEachType(Action<Type> callback) {
+        public static string _Debugging = null;
+
+        public static void ForEachType(Action<Type> callback) {
             ForEachAssembly((Assembly asm) => {
                 try {
                     Type[] types = asm.GetTypes();
@@ -50,12 +52,24 @@ namespace angeldnd.dap {
                         callback(type);
                     }
                 } catch (Exception e) {
+                    if (_Debugging != null && Log.Provider != null) {
+                        Log.Info("ForEachType Failed: [{0}] {1} -> {2}: {3}",
+                                _Debugging, asm.GetName().Name, e.GetType().Name, e.Message);
+                    }
                 }
             });
         }
 
-        private static void ForEachType(CheckMode mode, Type baseType, Action<Type> callback) {
+        public static void ForEachType(CheckMode mode, Type baseType, Action<Type> callback) {
             ForEachType((Type type) => {
+                /*
+                if (_Debugging != null && Log.Provider != null) {
+                    Log.Info("ForEachType: {0} <{1}> {2} {3} -> {4} -> {5}",
+                             _Debugging, baseType.FullName,
+                             type.Assembly.GetName().Name, type.FullName,
+                             type._IsAbstract(), IsValidType(mode, baseType, type));
+                }
+                */
                 if (type._IsAbstract()) return;
                 if (!IsValidType(mode, baseType, type)) return;
 
