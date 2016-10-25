@@ -58,6 +58,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\element_\InBothElement.cs" />             <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\element_\InDictElement.cs" />             <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\element_\InTableElement.cs" />            <!--__SILP__-->
+    <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\manner_\DictManner.cs" />                 <!--__SILP__-->
+    <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\manner_\Manner.cs" />                     <!--__SILP__-->
+    <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\manner_\TableManner.cs" />                <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\table_\TableElement.cs" />                <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\table_\TableInBoth.cs" />                 <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\base_\table_\TableInDict.cs" />                 <!--__SILP__-->
@@ -79,7 +82,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\context_\handler_\IHandler.cs" />               <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\context_\manner_\Decorator.cs" />               <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\context_\manner_\IManner.cs" />                 <!--__SILP__-->
-    <Compile Include="$(MSBuildThisFileDirectory)DapCore\context_\manner_\Manner.cs" />                  <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\context_\manner_\Manners.cs" />                 <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\context_\property_\IProperty.cs" />             <!--__SILP__-->
     <Compile Include="$(MSBuildThisFileDirectory)DapCore\context_\property_\Properties.cs" />            <!--__SILP__-->
