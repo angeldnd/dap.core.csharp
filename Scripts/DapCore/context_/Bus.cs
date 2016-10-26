@@ -88,6 +88,12 @@ namespace angeldnd.dap {
             return result;
         }
 
+        public void RemoveSub(string msg, IBusSub sub) {
+            if (_MsgSubs != null) {
+                _MsgSubs.RemoveSub(msg, sub);
+            }
+        }
+
         private bool CheckToken(string msg, object token) {
             if (_MsgTokens == null) {
                 _MsgTokens = new Dictionary<string, object>();
