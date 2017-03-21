@@ -182,7 +182,9 @@ namespace angeldnd.dap {
                     data.A(msg, msgData);
                 }
             }
-            summary.A(ContextConsts.SummaryData, data);
+            summary
+                .A(ContextConsts.SummaryData, data)
+                .I(ContextConsts.SummaryWatcherCount, BusWatcherCount);
         }
 
         //SILP: DECLARE_LIST(BusWatcher, listener, IBusWatcher, _BusWatchers)

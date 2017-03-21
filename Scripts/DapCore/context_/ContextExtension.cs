@@ -14,7 +14,7 @@ namespace angeldnd.dap {
             return TreeHelper.GetAncestor<T>(context, checker);
         }
 
-        public static T GetAncestorWithManner<T>(this IContext context, string mannerKey)
+        public static T GetAncestorManner<T>(this IContext context, string mannerKey)
                                                     where T : Manner {
             T result = null;
             GetAncestor<IContext>(context, (IContext ancestor) => {
@@ -22,6 +22,14 @@ namespace angeldnd.dap {
                 return result != null;
             });
             return result;
+        }
+
+        public static T GetOwnOrAncestorManner<T>(this IContext context, string mannerKey)
+                                                    where T : Manner {
+            T manner = context.Manners.Get<T>(mannerKey, true);
+            if (manner != null) return manner;
+
+            return GetAncestorManner<T>(context, mannerKey);
         }
 
         public static T GetContext<T>(this IDictContext context, string relPath,
