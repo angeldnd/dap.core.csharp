@@ -170,6 +170,19 @@ namespace angeldnd.dap {
             return 0;
         }
 
+        public List<string> GetExistMsgs() {
+            List<string> result = new List<string>();
+            if (_Msgs != null) {
+                for (int i = 0; i < _Msgs.Count; i++) {
+                    string msg = _Msgs[i];
+                    if (GetMsgCount(msg) > 0) {
+                        result.Add(msg);
+                    }
+                }
+            }
+            return result;
+        }
+
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
             Data data = new Data();
