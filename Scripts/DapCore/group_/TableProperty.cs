@@ -44,18 +44,21 @@ namespace angeldnd.dap {
 
         private bool DoDecodeValue(bool fullMode, Data values) {
             return DecodeElements(values, (string key) => {
-                Data subData = values.GetData(key);
-                if (subData == null) {
-                    Error("Invalid Elements Data: {0} -> {1}", key, values.GetValue(key));
-                    return null;
-                }
                 if (fullMode) {
+                    Data subData = values.GetData(key);
+                    if (subData == null) {
+                        Error("Invalid Elements Data: {0} -> {1}", key, values.GetValue(key));
+                        return null;
+                    }
                     return SpecHelper.AddPropertyWithSpec(this, subData);
                 } else {
                     T element = Add();
-                    if (!element.DecodeValue(subData)) {
-                        element.Error("DecodeValue Failed: {0} ->\n{1}", key,
-                                    Convertor.DataConvertor.Convert(subData, "\t"));
+                    Data valueData = new Data();
+                    if (values.CopyValueTo(key, valueData, PropertiesConsts.KeyValue)) {
+                        if (!element.DecodeValue(valueData)) {
+                            element.Error("DecodeValue Failed: {0} ->\n{1}", key,
+                                        Convertor.DataConvertor.Convert(valueData, "\t"));
+                        }
                     }
                     return element;
                 }
