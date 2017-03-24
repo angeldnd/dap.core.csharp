@@ -23,13 +23,10 @@ namespace angeldnd.dap {
                 if (fullMode) {
                     return subData != null && prop.Decode(subData);
                 } else {
-                    Data valueData = new Data();
-                    if (values.CopyValueTo(prop.Key, valueData, PropertiesConsts.KeyValue)) {
-                        if (!prop.DecodeValue(valueData)) {
-                            prop.Error("DecodeValue Failed: {0} ->\n{1}", prop.Key,
-                                        Convertor.DataConvertor.Convert(valueData, "\t"));
-                            return false;
-                        }
+                    if (!prop.DecodeValue(subData)) {
+                        prop.Error("DecodeValue Failed: {0} ->\n{1}", prop.Key,
+                                    Convertor.DataConvertor.Convert(subData, "\t"));
+                        return false;
                     }
                     return true;
                 }
