@@ -39,7 +39,7 @@ public bool Set${type}(string key, ${cs_type} val) {
         _${type}Values[key] = val;
         return true;
     }
-    Log.Error("Key Exist: {0} {1} -> {2}", key, _${type}Values[key], val);
+    Log.Error("Key Exist: {0} {1} -> {2}", key, GetValue(key), val);
     return false;
 }
 
