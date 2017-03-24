@@ -11,8 +11,13 @@ namespace angeldnd.dap {
             Data values = new Data();
 
             bool ok = UntilFalse((IProperty prop) => {
-                Data subData = fullMode ? prop.Encode() : prop.EncodeValue();
-                return subData != null && values.SetData(prop.Key, subData);
+                if (fullMode) {
+                    Data subData = prop.Encode();
+                    return subData != null && values.SetData(prop.Key, subData);
+                } else {
+                    Data subData = prop.EncodeValue();
+                    return subData != null && subData.CopyValueTo(PropertiesConsts.KeyValue, values, prop.Key);
+                }
             });
             return ok ? values : null;
         }

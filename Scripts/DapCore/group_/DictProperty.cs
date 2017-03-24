@@ -13,8 +13,13 @@ namespace angeldnd.dap {
             Data values = new Data();
 
             bool ok = UntilFalse((T element) => {
-                Data subData = fullMode ? element.Encode() : element.EncodeValue();
-                return subData != null && values.SetData(element.Key, subData);
+                if (fullMode) {
+                    Data subData = element.Encode();
+                    return subData != null && values.SetData(element.Key, subData);
+                } else {
+                    Data subData = element.EncodeValue();
+                    return subData != null && subData.CopyValueTo(PropertiesConsts.KeyValue, values, element.Key);
+                }
             });
             return ok ? values : null;
         }
