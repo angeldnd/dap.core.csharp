@@ -47,7 +47,11 @@ namespace angeldnd.dap {
             return res;
         }
 
-        public static Data Ok(Handler handler, Data req, Data result = null) {
+        public static Data Ok(Handler handler, Data req) {
+            return Result(handler, req, ResponseConsts.OK, null);
+        }
+
+        public static Data Ok(Handler handler, Data req, Data result) {
             return Result(handler, req, ResponseConsts.OK, result);
         }
 
@@ -55,7 +59,11 @@ namespace angeldnd.dap {
             return Ok(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
-        public static Data Accepted(Handler handler, Data req, Data result = null) {
+        public static Data Accepted(Handler handler, Data req) {
+            return Result(handler, req, ResponseConsts.ACCEPTED, null);
+        }
+
+        public static Data Accepted(Handler handler, Data req, Data result) {
             return Result(handler, req, ResponseConsts.ACCEPTED, result);
         }
 
@@ -63,7 +71,11 @@ namespace angeldnd.dap {
             return Accepted(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
-        public static Data BadRequest(Handler handler, Data req, Data result = null) {
+        public static Data BadRequest(Handler handler, Data req) {
+            return Result(handler, req, ResponseConsts.BAD_REQ, null);
+        }
+
+        public static Data BadRequest(Handler handler, Data req, Data result) {
             return Result(handler, req, ResponseConsts.BAD_REQ, result);
         }
 
@@ -77,7 +89,11 @@ namespace angeldnd.dap {
             return BadRequest(handler, req, paramsHint);
         }
 
-        public static Data NotFound(Handler handler, Data req, Data data = null) {
+        public static Data NotFound(Handler handler, Data req) {
+            return Result(handler, req, ResponseConsts.NOT_FOUND, null);
+        }
+
+        public static Data NotFound(Handler handler, Data req, Data data) {
             return Result(handler, req, ResponseConsts.NOT_FOUND, data);
         }
 
@@ -85,7 +101,7 @@ namespace angeldnd.dap {
             return NotFound(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
-        public static Data InternalError(Handler handler, Data req, Data data = null) {
+        public static Data InternalError(Handler handler, Data req, Data data) {
             return Result(handler, req, ResponseConsts.INTERNAL_ERROR, data);
         }
 
@@ -93,7 +109,7 @@ namespace angeldnd.dap {
             return InternalError(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
-        public static Data NotImplemented(Handler handler, Data req, Data data = null) {
+        public static Data NotImplemented(Handler handler, Data req, Data data) {
             return Result(handler, req, ResponseConsts.NOT_IMPLEMENTED, data);
         }
 
