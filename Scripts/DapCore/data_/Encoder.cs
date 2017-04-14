@@ -28,8 +28,12 @@ namespace angeldnd.dap {
             return _Encoders.AddVar(typeof(T).FullName, encoder) != null;
         }
 
-        public static Encoder<T> GetEncoder<T>() {
-            return _Encoders.GetValue<Encoder<T>>(typeof(T).FullName);
+        public static Encoder<T> GetEncoder<T>(bool isDebug = false) {
+            if (isDebug) {
+                return _Encoders.GetValue<Encoder<T>>(typeof(T).FullName, null);
+            } else {
+                return _Encoders.GetValue<Encoder<T>>(typeof(T).FullName);
+            }
         }
 
         public static T Decode<T>(Data data, string key) {
