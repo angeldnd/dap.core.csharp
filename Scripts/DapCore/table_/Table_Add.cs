@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace angeldnd.dap {
     public abstract partial class Table<T> {
@@ -30,7 +31,7 @@ namespace angeldnd.dap {
         public T1 Add<T1>() where T1 : class, IInTableElement {
             Type t1 = typeof(T1);
             if (t1._IsInterface()) {
-                if (t1 == typeof(IInTableElement)) {
+                if (_ElementType.GetInterfaces().Contains(t1)) {
                     return Add() as T1;
                 } else {
                     Error("Invalid Type: <{0}>, -> {1}",
