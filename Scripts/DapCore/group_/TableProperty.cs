@@ -6,7 +6,7 @@ namespace angeldnd.dap {
     public class TableProperty<T> : TableInBothAspect<IProperties, T>, ITableProperties, IProperty
                                                 where T : class, IProperty {
         public Type ValueType {
-            get { return GetType(); }
+            get { return typeof(T); }
         }
 
         private Data DoEncodeValue(bool fullMode) {
