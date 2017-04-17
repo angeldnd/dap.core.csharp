@@ -151,6 +151,16 @@ namespace angeldnd.dap {
             return TreeHelper.GetOrNewDescendant<Items, T>(context, type, relPath);
         }
 
+        public static T GetOrNewContext<T>(this IDictContext context, string relPath)
+                                                    where T : class, IContext {
+            string dapType = DapType.GetDapType(typeof(T));
+            if (dapType == null) {
+                context.Error("GetOrNewContext Failed, DapType Not Defined: " + typeof(T));
+                return null;
+            }
+            return TreeHelper.GetOrNewDescendant<Items, T>(context, dapType, relPath);
+        }
+
         public static IContext GetOrNewContext(this IDictContext context, string type, string relPath) {
             return TreeHelper.GetOrNewDescendant<Items, IContext>(context, type, relPath);
         }
