@@ -48,6 +48,7 @@ namespace angeldnd.dap {
         bool UntilTrue<T1>(Func<T1, bool> callback) where T1 : class, IInTableElement;
         bool UntilFalse<T1>(Func<T1, bool> callback) where T1 : class, IInTableElement;
         T1 First<T1>(Func<T1, bool> callback, bool isDebug = false) where T1 : class, IInTableElement;
+        T1 First<T1>(bool isDebug = false) where T1 : class, IInTableElement;
         List<T1> All<T1>() where T1 : class, IInTableElement;
 
         //Move

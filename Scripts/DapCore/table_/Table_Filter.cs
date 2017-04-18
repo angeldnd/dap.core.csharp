@@ -49,6 +49,10 @@ namespace angeldnd.dap {
             return result;
         }
 
+        public T1 First<T1>(bool isDebug = false) where T1 : class, IInTableElement {
+            return First<T1>((T1 element) => { return true; });
+        }
+
         public List<T1> All<T1>() where T1 : class, IInTableElement {
             List<T1> result = null;
             ForEach<T1>((T1 element) => {
