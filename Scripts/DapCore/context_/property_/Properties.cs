@@ -23,6 +23,7 @@ namespace angeldnd.dap {
         public const string TypeStringProperty = "String";
         public const string TypeDataProperty = "Data";
 
+        public const string KeyKey = "k";
         public const string KeyValue = "v";
     }
 
