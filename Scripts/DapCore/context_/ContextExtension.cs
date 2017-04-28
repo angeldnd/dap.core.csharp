@@ -99,6 +99,25 @@ namespace angeldnd.dap {
             return result;
         }
 
+        public static T FirstContext<T>(this IDictContext context, Func<T, bool> callback, bool isDebug = false)
+                                                    where T : class, IContext {
+            T result = null;
+            TreeHelper.ForEachDescendants<T>(context, (IContext element) => {
+                if (result == null && callback(element)) {
+                    result = element;
+                }
+            });
+            if (result == null) {
+                ErrorOrDebug(isDebug, "First<{0}>({1}): Not Found", typeof(T).FullName, callback);
+            }
+            return result;
+        }
+
+        public static T FirstContext<T>(this IDictContext context, bool isDebug = false)
+                                                    where T : class, IContext {
+            return FirstContext<T>((T element) => { return true; });
+        }
+
         public static T AddContext<TO, T>(this IDictContext context, string relPath)
                                                     where TO : class, IDictContext
                                                     where T : class, IContext {
