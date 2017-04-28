@@ -102,20 +102,20 @@ namespace angeldnd.dap {
         public static T FirstContext<T>(this IDictContext context, Func<T, bool> callback, bool isDebug = false)
                                                     where T : class, IContext {
             T result = null;
-            TreeHelper.ForEachDescendants<T>(context, (IContext element) => {
+            TreeHelper.ForEachDescendants<T>(context, (T element) => {
                 if (result == null && callback(element)) {
                     result = element;
                 }
             });
             if (result == null) {
-                ErrorOrDebug(isDebug, "First<{0}>({1}): Not Found", typeof(T).FullName, callback);
+                context.ErrorOrDebug(isDebug, "First<{0}>({1}): Not Found", typeof(T).FullName, callback);
             }
             return result;
         }
 
         public static T FirstContext<T>(this IDictContext context, bool isDebug = false)
                                                     where T : class, IContext {
-            return FirstContext<T>((T element) => { return true; });
+            return FirstContext<T>(context, (T element) => { return true; });
         }
 
         public static T AddContext<TO, T>(this IDictContext context, string relPath)
