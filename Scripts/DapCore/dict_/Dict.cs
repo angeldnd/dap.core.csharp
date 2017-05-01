@@ -32,7 +32,7 @@ namespace angeldnd.dap {
         T1 New<T1>(string type, string key) where T1 : class, IInDictElement;
 
         //Generic Remove
-        T1 Remove<T1>(string key) where T1 : class, IInDictElement;
+        T1 Remove<T1>(string key, bool isDebug = false) where T1 : class, IInDictElement;
 
         //Clear
         void Clear();
@@ -75,7 +75,7 @@ namespace angeldnd.dap {
         T New(string type, string key);
 
         //Remove
-        T Remove(string key);
+        T Remove(string key, bool isDebug = false);
 
         //Remove By Checker
         List<T> RemoveByChecker(Func<T, bool> checker);

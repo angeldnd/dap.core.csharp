@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public abstract partial class Dict<T> {
-        public T1 Remove<T1>(string key) where T1 : class, IInDictElement {
+        public T1 Remove<T1>(string key, bool isDebug = false) where T1 : class, IInDictElement {
             T element;
             if (_Elements.TryGetValue(key, out element)) {
                 T1 _element = element.As<T1>();
@@ -17,7 +17,7 @@ namespace angeldnd.dap {
                     return _element;
                 }
             } else {
-                Error("Not Exist: {0}", key);
+                ErrorOrDebug(isDebug, "Not Exist: {0}", key);
             }
             return null;
         }
@@ -26,8 +26,8 @@ namespace angeldnd.dap {
             RemoveAll();
         }
 
-        public T Remove(string key) {
-            return Remove<T>(key);
+        public T Remove(string key, bool isDebug = false) {
+            return Remove<T>(key, isDebug);
         }
 
         private void NotifyRemoves(List<T> removed) {
