@@ -129,6 +129,11 @@ namespace angeldnd.dap {
             get { return _TickDelta; }
         }
 
+        public static float _Time = 0;
+        public static float Time {
+            get { return _Time; }
+        }
+
         private static Data _TickData = null;
 
         public static Data NewTickEvt() {
@@ -149,6 +154,13 @@ namespace angeldnd.dap {
             _TickTime = _TickTime + tickDelta;
             _TickData = tickData;
             _Instance.Tick(NewTickEvt());
+        }
+
+        public static void SetTime(float time) {
+            if (time < _Time) {
+                _Instance.Error("SetTime Failed: {0} -> {1}", _Time, time);
+            }
+            _Time = time;
         }
 
         public static string GetContextPath(IContext context) {
