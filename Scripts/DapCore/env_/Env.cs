@@ -37,6 +37,8 @@ namespace angeldnd.dap {
         public const string SummaryPlugins = "plugins";
         public const string SummaryOk = "ok";
 
+        [DapParam(typeof(float))]
+        public const string KeyTime = "time";
         [DapParam(typeof(int))]
         public const string KeyTickCount = "tick_count";
         [DapParam(typeof(float))]
@@ -129,31 +131,36 @@ namespace angeldnd.dap {
             get { return _TickDelta; }
         }
 
+        public static Data _TickData = null;
+        public static Data TickData {
+            get { return _TickData; }
+        }
+
         public static float _Time = 0;
         public static float Time {
             get { return _Time; }
         }
 
-        private static Data _TickData = null;
-
         public static Data NewTickEvt() {
-            Data evt = _TickData == null ? new Data() : _TickData.Clone();
-            return evt
-                    .I(EnvConsts.KeyTickCount, _TickCount)
-                    .F(EnvConsts.KeyTickTime, _TickTime);
+            return _TickData == null ? new Data() : _TickData.Clone();
         }
 
-        public static void Tick(float tickDelta, Data tickData) {
+        public static void Tick(float time, float tickDelta) {
             //The tick channel will be triggered by some runtime, e.g. in Unity, will be from
             //FixedUpdate(), or other timer on other platform.
             if (tickDelta <= 0.0f) {
                 _Instance.Error("Invalid Tick Param: tickDelta = {0}", tickDelta);
             }
+            SetTime(time);
+
             _TickCount++;
             _TickDelta = tickDelta;
             _TickTime = _TickTime + tickDelta;
-            _TickData = tickData;
-            _Instance.Tick(NewTickEvt());
+            _TickData = new Data()
+                .F(EnvConsts.KeyTime, _Time)
+                .I(EnvConsts.KeyTickCount, _TickCount)
+                .F(EnvConsts.KeyTickTime, _TickTime);
+            _Instance.Tick(_TickData);
         }
 
         public static void SetTime(float time) {
