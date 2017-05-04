@@ -17,4 +17,24 @@ public sealed class ${type}Property : Property<${cs_type}> {
         return base.NeedSetup() || (Value != newVal);
     }
 }
+
+[DapType(PropertiesConsts.Type${type}TableProperty)]
+[DapOrder(DapOrders.Property)]
+public sealed class ${type}TableProperty : TableProperty<${type}Property> {
+    public ${type}TableProperty(IDictProperties owner, string key) : base(owner, key) {
+    }
+
+    public ${type}TableProperty(ITableProperties owner, int index) : base(owner, index) {
+    }
+}
+
+[DapType(PropertiesConsts.Type${type}DictProperty)]
+[DapOrder(DapOrders.Property)]
+public sealed class ${type}DictProperty : DictProperty<${type}Property> {
+    public ${type}DictProperty(IDictProperties owner, string key) : base(owner, key) {
+    }
+
+    public ${type}DictProperty(ITableProperties owner, int index) : base(owner, index) {
+    }
+}
 ```

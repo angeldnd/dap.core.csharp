@@ -23,6 +23,22 @@ namespace angeldnd.dap {
         public const string TypeStringProperty = "String";
         public const string TypeDataProperty = "Data";
 
+        public const string TypeBoolTableProperty = "BoolTable";
+        public const string TypeIntTableProperty = "IntTable";
+        public const string TypeLongTableProperty = "LongTable";
+        public const string TypeFloatTableProperty = "FloatTable";
+        public const string TypeDoubleTableProperty = "DoubleTable";
+        public const string TypeStringTableProperty = "StringTable";
+        public const string TypeDataTableProperty = "DataTable";
+
+        public const string TypeBoolDictProperty = "BoolDict";
+        public const string TypeIntDictProperty = "IntDict";
+        public const string TypeLongDictProperty = "LongDict";
+        public const string TypeFloatDictProperty = "FloatDict";
+        public const string TypeDoubleDictProperty = "DoubleDict";
+        public const string TypeStringDictProperty = "StringDict";
+        public const string TypeDataDictProperty = "DataDict";
+
         public const string KeyKey = "k";
         public const string KeyValue = "v";
     }
