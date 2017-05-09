@@ -53,7 +53,9 @@ namespace angeldnd.dap {
 
         public bool WaitAndWatchProperty(string key, IVarWatcher watcher) {
             return Owner.Utils.WaitSetupAspect(this, key, (IProperty prop, bool isNew) => {
-                prop.AddVarWatcher(watcher);
+                if (!isNew) {
+                    watcher.OnChanged(prop);
+                }
             });
         }
 
@@ -68,6 +70,9 @@ namespace angeldnd.dap {
         public bool WaitAndWatchProperty<T>(string key, IValueWatcher<T> watcher) {
             return Owner.Utils.WaitSetupAspect(this, key, (IProperty<T> prop, bool isNew) => {
                 prop.AddValueWatcher(watcher);
+                if (!isNew) {
+                    watcher.OnChanged(prop, prop.Value);
+                }
             });
         }
 

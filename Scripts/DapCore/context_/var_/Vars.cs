@@ -16,6 +16,9 @@ namespace angeldnd.dap {
         public bool WaitAndWatchVar(string key, IVarWatcher watcher) {
             return Owner.Utils.WaitSetupAspect(this, key, (IVar v, bool isNew) => {
                 v.AddVarWatcher(watcher);
+                if (!isNew) {
+                    watcher.OnChanged(v);
+                }
             });
         }
 
@@ -30,6 +33,9 @@ namespace angeldnd.dap {
         public bool WaitAndWatchVar<T>(string key, IValueWatcher<T> watcher) {
             return Owner.Utils.WaitSetupAspect(this, key, (IVar<T> v, bool isNew) => {
                 v.AddValueWatcher(watcher);
+                if (!isNew) {
+                    watcher.OnChanged(v, v.Value);
+                }
             });
         }
 
