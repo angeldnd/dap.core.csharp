@@ -53,6 +53,7 @@ namespace angeldnd.dap {
 
         public bool WaitAndWatchProperty(string key, IVarWatcher watcher) {
             return Owner.Utils.WaitSetupAspect(this, key, (IProperty prop, bool isNew) => {
+                prop.AddVarWatcher(watcher);
                 if (!isNew) {
                     watcher.OnChanged(prop);
                 }
