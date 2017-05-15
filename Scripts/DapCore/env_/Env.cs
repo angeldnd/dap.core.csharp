@@ -308,6 +308,22 @@ namespace angeldnd.dap {
             return true;
         }
 
+        public bool DelaySeconds(float delay, Action<Channel, Data> callback) {
+            if (delay <= 0 || callback == null) return false;
+
+            var owner = Utils.RetainBlockOwner();
+            float startTime = Time;
+            _ChannelOnTick.AddEventWatcher(owner, (Channel channel, Data evt) => {
+                if (owner == null) return;
+                if (Time - startTime > delay) {
+                    if (Utils.ReleaseBlockOwner(ref owner)) {
+                        callback(channel, evt);
+                    }
+                }
+            });
+            return true;
+        }
+
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
             Data plugins = new Data();
