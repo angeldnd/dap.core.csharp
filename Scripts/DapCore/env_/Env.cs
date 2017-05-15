@@ -13,8 +13,6 @@ namespace angeldnd.dap {
 
         public const string KeyHooks = "Hooks";
 
-        public const string ChannelTick = "tick";
-
         public const string MsgOnInit = "on_init";
         public const string MsgOnBoot = "on_boot";
         public const string MsgOnHalt = "on_halt";
@@ -36,13 +34,6 @@ namespace angeldnd.dap {
         [DapParam(typeof(Data))]
         public const string SummaryPlugins = "plugins";
         public const string SummaryOk = "ok";
-
-        [DapParam(typeof(float))]
-        public const string KeyTime = "time";
-        [DapParam(typeof(int))]
-        public const string KeyTickCount = "tick_count";
-        [DapParam(typeof(float))]
-        public const string KeyTickTime = "tick_time";
     }
 
     public sealed class Env : DictContext<Env, IContext> {
@@ -157,9 +148,9 @@ namespace angeldnd.dap {
             _TickDelta = tickDelta;
             _TickTime = _TickTime + tickDelta;
             _TickData = new Data()
-                .F(EnvConsts.KeyTime, _Time)
-                .I(EnvConsts.KeyTickCount, _TickCount)
-                .F(EnvConsts.KeyTickTime, _TickTime);
+                .F(TickableConsts.KeyTime, _Time)
+                .I(TickableConsts.KeyTickCount, _TickCount)
+                .F(TickableConsts.KeyTickTime, _TickTime);
             _Instance.Tick(_TickData);
         }
 
@@ -194,7 +185,7 @@ namespace angeldnd.dap {
             Hooks = new Hooks(this, EnvConsts.KeyHooks);
         }
 
-        private Channel _TickChannel = null;
+        private Channel _ChannelOnTick = null;
 
         public readonly Hooks Hooks;
 
@@ -207,7 +198,7 @@ namespace angeldnd.dap {
         private List<int> _FailedPluginIndexes = new List<int>();
 
         private void Tick(Data evt) {
-            _TickChannel.FireEvent(evt);
+            _ChannelOnTick.FireEvent(evt);
         }
 
         private void PublishOnBusAndEnvBus(string msg) {
@@ -219,7 +210,7 @@ namespace angeldnd.dap {
             Log.Info("Dap Environment Init: Version = {0}, Sub Version = {1}, Round = {2}",
                         _Version, _SubVersion, _Round);
             Hooks.Setup();
-            _TickChannel = Channels.Add(EnvConsts.ChannelTick);
+            _ChannelOnTick = Channels.Add(TickableConsts.ChannelOnTick);
 
             PublishOnBusAndEnvBus(EnvConsts.MsgOnInit);
 
@@ -299,6 +290,22 @@ namespace angeldnd.dap {
                 ErrorOrDebug(isDebug, "GetByUri<{0}>({1}): Not Found", typeof(T).FullName, uri);
             }
             return result;
+        }
+
+        public bool DelayTicks(int ticks, Action<Channel, Data> callback) {
+            if (ticks <= 0 || callback == null) return false;
+
+            var owner = Utils.RetainBlockOwner();
+            int startTickCount = TickCount;
+            _ChannelOnTick.AddEventWatcher(owner, (Channel channel, Data evt) => {
+                if (owner == null) return;
+                if (TickCount - startTickCount > ticks) {
+                    if (Utils.ReleaseBlockOwner(ref owner)) {
+                        callback(channel, evt);
+                    }
+                }
+            });
+            return true;
         }
 
         protected override void AddSummaryFields(Data summary) {

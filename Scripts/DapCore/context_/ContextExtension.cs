@@ -115,7 +115,7 @@ namespace angeldnd.dap {
 
         public static T FirstContext<T>(this IDictContext context, bool isDebug = false)
                                                     where T : class, IContext {
-            return FirstContext<T>(context, (T element) => { return true; });
+            return FirstContext<T>(context, (T element) => { return true; }, isDebug);
         }
 
         public static T AddContext<TO, T>(this IDictContext context, string relPath)

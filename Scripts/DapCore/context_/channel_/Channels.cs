@@ -20,27 +20,6 @@ namespace angeldnd.dap {
             return WaitAndWatchChannel(channelKey, new BlockEventWatcher(owner, block));
         }
 
-        public bool DelayTicks(int ticks, Action<Channel, Data> callback) {
-            if (ticks <= 0) return false;
-
-            Channel tickChannel = Get(EnvConsts.ChannelTick);
-            if (tickChannel != null) {
-                var owner = Owner.Utils.RetainBlockOwner();
-                int startTickCount = Env.TickCount;
-                tickChannel.AddEventWatcher(owner, (Channel channel, Data evt) => {
-                    if (owner == null) return;
-                    if (Env.TickCount - startTickCount > ticks) {
-                        if (Owner.Utils.ReleaseBlockOwner(ref owner)) {
-                            callback(channel, evt);
-                        }
-                    }
-                });
-                return true;
-            }
-            return false;
-
-        }
-
         public bool FireEvent(string channelKey, Data evt) {
             Channel channel = Get(channelKey);
             if (channel != null) {

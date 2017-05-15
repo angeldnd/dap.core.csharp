@@ -6,6 +6,15 @@ namespace angeldnd.dap {
         public const string TypeTickable = "Tickable";
 
         public const string MannerTickable = "tickable";
+
+        public const string ChannelOnTick = "on_tick";
+
+        [DapParam(typeof(float))]
+        public const string KeyTime = "time";
+        [DapParam(typeof(int))]
+        public const string KeyTickCount = "tick_count";
+        [DapParam(typeof(float))]
+        public const string KeyTickTime = "tick_time";
     }
 
     public static class TickableExtension {
@@ -25,23 +34,28 @@ namespace angeldnd.dap {
     [DapType(TickableConsts.TypeTickable)]
     [DapOrder(DapOrders.Manner)]
     public class Tickable : Manner {
+        private Channel _ChannelOnTick = null;
+        public Channel ChannelOnTick {
+            get { return _ChannelOnTick; }
+        }
+
         public Tickable(Manners owner, string key) : base(owner, key) {
             IContext contextOwner = Context.GetOwner() as IContext;
             if (contextOwner == null) {
                 Error("Invalid Context Owner: {0}", Context.GetOwner());
             }
 
-            Channel ownerTickChannel = contextOwner.Channels.Get(EnvConsts.ChannelTick);
+            Channel ownerTickChannel = contextOwner.Channels.Get(TickableConsts.ChannelOnTick);
             if (ownerTickChannel == null) {
-                Error("Context Owner Has No Tick Channel: {0}", contextOwner, EnvConsts.ChannelTick);
+                Error("Context Owner Has No Tick Channel: {0}", contextOwner, TickableConsts.ChannelOnTick);
                 return;
             }
 
-            Channel contextTickChannel = Context.Channels.Add(EnvConsts.ChannelTick);
-            if (contextTickChannel != null) {
+            _ChannelOnTick = Context.Channels.GetOrAdd(TickableConsts.ChannelOnTick);
+            if (_ChannelOnTick != null) {
                 ownerTickChannel.AddEventWatcher(this,
                     (Channel channel, Data evt) => {
-                        contextTickChannel.FireEvent(evt);
+                        _ChannelOnTick.FireEvent(evt);
                 });
             }
         }
