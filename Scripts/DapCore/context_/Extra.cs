@@ -179,6 +179,15 @@ namespace angeldnd.dap {
             return prop;
         }
 
+        public TP SetupProperty<TP>(string fragment) where TP : class, IProperty {
+            string dapType = DapType.GetDapType(typeof(TP));
+            if (dapType == null) {
+                Error("SetupProperty Failed, DapType Not Defined: " + typeof(TP));
+                return null;
+            }
+            return SetupProperty<TP>(dapType, fragment);
+        }
+
         public TP SetupProperty<TP, T>(string type, string fragment,
                 Func<T> getter,
                 IValueChecker<T> checker,
@@ -200,6 +209,19 @@ namespace angeldnd.dap {
                 }
             }
             return prop;
+        }
+
+        public TP SetupProperty<TP, T>(string fragment,
+                Func<T> getter,
+                IValueChecker<T> checker,
+                IValueWatcher<T> watcher) 
+                    where TP : class, IProperty<T> {
+            string dapType = DapType.GetDapType(typeof(TP));
+            if (dapType == null) {
+                Error("SetupProperty Failed, DapType Not Defined: " + typeof(TP));
+                return null;
+            }
+            return SetupProperty<TP, T>(dapType, fragment, getter, checker, watcher);
         }
     }
 }
