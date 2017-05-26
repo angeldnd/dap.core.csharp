@@ -80,5 +80,14 @@ namespace angeldnd.dap {
         public bool WaitAndWatchProperty<T>(string key, IBlockOwner owner, Action<IVar<T>, T> block) {
             return WaitAndWatchProperty<T>(key, new BlockValueWatcher<T>(owner, block));
         }
+
+        public Data EncodeValues() {
+            Data data = new Data();
+            ForEach<IProperty>((IProperty prop) => {
+                Data propValue = prop.EncodeValue();
+                propValue.CopyValueTo(PropertiesConsts.KeyValue, data, prop.Key);
+            });
+            return data;
+        }
     }
 }
