@@ -61,15 +61,20 @@ namespace angeldnd.dap {
             }
         }
 
+        public static void Quit() {
+            if (_Instance != null) {
+                _Instance.Halt();
+                _Instance = null;
+            }
+            Log.Flush();
+        }
+
         /*
          * The logic is very simple here, though to make the actually Reset work properly,
          * Extra work need to be done in all logics that caching values in the old Env.
          */
         public static void Reboot() {
-            if (_Instance != null) {
-                _Instance.Halt();
-                _Instance = null;
-            }
+            Quit();
 
             _Round++;
             _TickCount = 0;
