@@ -196,7 +196,7 @@ namespace angeldnd.dap {
         }
 
         protected override string GetTickMsg() {
-            return string.Format("{0}:{1}", Env.Round, Env.TickCount);
+            return string.Format("{0}:{1}:{2}", Env.Round, Env.TickCount, Env.FrameCount);
         }
     }
 }

@@ -127,6 +127,11 @@ namespace angeldnd.dap {
             get { return _TickData; }
         }
 
+        private static int _FrameCount = 0;
+        public static int FrameCount {
+            get { return _FrameCount; }
+        }
+
         public static float _Time = 0;
         public static float Time {
             get { return _Time; }
@@ -154,7 +159,12 @@ namespace angeldnd.dap {
             _Instance.Tick(_TickData);
         }
 
-        public static void SetTime(float time) {
+        public static void OnFrame(float time) {
+            _FrameCount++;
+            SetTime(time);
+        }
+
+        private static void SetTime(float time) {
             if (time < _Time) {
                 _Instance.Error("SetTime Failed: {0} -> {1}", _Time, time);
             }
