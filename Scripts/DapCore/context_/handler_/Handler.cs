@@ -53,7 +53,13 @@ namespace angeldnd.dap {
             }
 
             WeakListHelper.Notify(_RequestWatchers, (IRequestWatcher watcher) => {
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnRequest: " + Key);
+                #endif
                 watcher.OnRequest(this, req);
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.EndSample();
+                #endif
             });
 
             Data res = null;
@@ -73,7 +79,13 @@ namespace angeldnd.dap {
             AdvanceRevision();
 
             WeakListHelper.Notify(_ResponseWatchers, (IResponseWatcher watcher) => {
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnResponse: " + Key);
+                #endif
                 watcher.OnResponse(this, req, res);
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.EndSample();
+                #endif
             });
 
             if (ResponseHelper.IsResFailed(res)) {

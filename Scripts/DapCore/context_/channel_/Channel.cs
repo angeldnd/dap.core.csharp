@@ -22,7 +22,13 @@ namespace angeldnd.dap {
             AdvanceRevision();
 
             WeakListHelper.Notify(_EventWatchers, (IEventWatcher listener) => {
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.BeginSample("Channel.OnEvent: " + Key);
+                #endif
                 listener.OnEvent(this, evt);
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.EndSample();
+                #endif
             });
             if (LogDebug) {
                 Debug("FireEvent: {0}", evt.ToFullString());

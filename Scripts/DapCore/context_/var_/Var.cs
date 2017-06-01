@@ -90,11 +90,23 @@ namespace angeldnd.dap {
             }
 
             WeakListHelper.Notify(_VarWatchers, (IVarWatcher watcher) => {
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged: " + Key);
+                #endif
                 watcher.OnChanged(this);
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.EndSample();
+                #endif
             });
 
             WeakListHelper.Notify(_ValueWatchers, (IValueWatcher<T> watcher) => {
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged<T>: " + Key);
+                #endif
                 watcher.OnChanged(this, lastVal);
+                #if UNITY_5
+                UnityEngine.Profiling.Profiler.EndSample();
+                #endif
             });
         }
 
