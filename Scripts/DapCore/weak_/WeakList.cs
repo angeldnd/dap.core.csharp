@@ -106,10 +106,27 @@ namespace angeldnd.dap {
         }
 
         public void ForEach(Action<T> callback) {
-            UntilTrue((T element) => {
-                callback(element);
-                return false;
-            });
+            //Duplicated with Until() to prevent GC.Alloc
+
+            //The trick here is to reclaim at most one garbage in each publish, so don't need
+            //to maintain any List, for better performance and cleaness.
+            int garbageIndex = -1;
+
+            for (int i = 0; i < _Elements.Count; i++) {
+                WeakReference element = _Elements[i];
+                if (element.IsAlive) {
+                    callback((T)element.Target);
+                } else if (garbageIndex < 0) {
+                    if (Log.LogDebug) {
+                        Log.Debug("Garbage Item In WeakList Found: {0}, {1}", this, element.Target);
+                    }
+                    garbageIndex = i;
+                }
+            }
+
+            if (garbageIndex >= 0) {
+                _Elements.RemoveAt(garbageIndex);
+            }
         }
 
         public int CollectAllGarbage() {

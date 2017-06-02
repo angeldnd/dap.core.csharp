@@ -4,8 +4,8 @@ using System.Text;
 
 namespace angeldnd.dap {
     public class RealDataPool : Pool<RealData> {
-        public const int Default_Capacity = 64;
-        public const int Default_TypesCapacity = 64;
+        public RealDataPool(int capacity) : base(capacity) {
+        }
 
         protected override RealData NewItem() {
             return new RealData();

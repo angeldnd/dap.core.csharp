@@ -11,7 +11,7 @@ namespace angeldnd.dap {
 
         public Data Encode() {
             if (!string.IsNullOrEmpty(DapType)) {
-                Data data = new RealData();
+                Data data = DataCache.Take(this);
                 if (data.SetString(ObjectConsts.KeyDapType, DapType)) {
                     if (GetEncoder().Encode(data, PropertiesConsts.KeyValue, Value)) {
                         return data;
@@ -37,7 +37,7 @@ namespace angeldnd.dap {
         }
 
         public Data EncodeValue() {
-            Data data = new RealData();
+            Data data = DataCache.Take(this);
             if (GetEncoder().Encode(data, PropertiesConsts.KeyValue, Value)) {
                 return data;
             }

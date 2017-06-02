@@ -16,6 +16,11 @@ namespace angeldnd.dap {
 
         public override Data Clone() {
             RealData clone = new RealData();
+            _CopyTo(clone);
+            return clone;
+        }
+
+        public Data _CopyTo(RealData clone) {
             clone._ValueTypes = CloneDictionary<DataType>(_ValueTypes);
             clone._BoolValues = CloneDictionary<bool>(_BoolValues);
             clone._IntValues = CloneDictionary<int>(_IntValues);
@@ -30,7 +35,9 @@ namespace angeldnd.dap {
         protected override void OnRecycle() {
             if (_DataValues != null) {
                 foreach (var kv in _DataValues) {
-                    kv.Value._Recycle();
+                    if (kv.Value != null) {
+                        kv.Value._Recycle();
+                    }
                 }
             }
         }

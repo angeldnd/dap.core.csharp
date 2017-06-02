@@ -16,6 +16,7 @@ namespace angeldnd.dap {
 
         public Pool(int capacity) {
             _Items = new Queue<T>(capacity);
+            EnsureCapacity(capacity);
         }
 
         public void Clear() {
@@ -24,6 +25,12 @@ namespace angeldnd.dap {
 
         public void Pack() {
             _Items.TrimExcess();
+        }
+
+        public void EnsureCapacity(int capacity) {
+            while (_Items.Count < capacity) {
+                _Items.Enqueue(NewItem());
+            }
         }
 
         public T Take(bool createNew = false) {

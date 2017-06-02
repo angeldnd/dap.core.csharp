@@ -157,7 +157,7 @@ namespace angeldnd.dap {
             _TickCount++;
             _TickDelta = tickDelta;
             _TickTime = _TickTime + tickDelta;
-            _TickData = new RealData()
+            _TickData = DataCache.Take("tick")
                 .F(TickableConsts.KeyTime, _Time)
                 .I(TickableConsts.KeyTickCount, _TickCount)
                 .F(TickableConsts.KeyTickTime, _TickTime);

@@ -40,27 +40,18 @@ namespace angeldnd.dap {
                 return ResponseHelper.InternalError(this, req, "Invalid Handler");
             }
 
-            IRequestChecker lastChecker = null;
-            if (!WeakListHelper.IsValid(_RequestCheckers, (IRequestChecker checker) => {
-                lastChecker = checker;
-                return checker.IsValidRequest(this, req);
-            })) {
+            _HandleRequest_Req = req;
+            _HandleRequest_LastChecker = null;
+
+            if (!WeakListHelper.IsValid(_RequestCheckers, HandleRequest_Checker)) {
                 if (LogDebug) {
-                    Debug("Invalid Request: {0} => {1}", lastChecker, req.ToFullString());
+                    Debug("Invalid Request: {0} => {1}", _HandleRequest_LastChecker, req.ToFullString());
                 }
                 _CheckFailedCount++;
                 return ResponseHelper.BadRequest(this, req, "Invalid Request");
             }
 
-            WeakListHelper.Notify(_RequestWatchers, (IRequestWatcher watcher) => {
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnRequest: " + Key + " " + watcher.ToString());
-                #endif
-                watcher.OnRequest(this, req);
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.EndSample();
-                #endif
-            });
+            WeakListHelper.Notify(_RequestWatchers, HandleRequest_RequestWatcher);
 
             Data res = null;
             try {
@@ -77,16 +68,9 @@ namespace angeldnd.dap {
             }
             if (res != null) res.Seal();
             AdvanceRevision();
+            _HandleRequest_Res = res;
 
-            WeakListHelper.Notify(_ResponseWatchers, (IResponseWatcher watcher) => {
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnResponse: " + Key + " " + watcher.ToString());
-                #endif
-                watcher.OnResponse(this, req, res);
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.EndSample();
-                #endif
-            });
+            WeakListHelper.Notify(_ResponseWatchers, HandleRequest_ResponseWatcher);
 
             if (ResponseHelper.IsResFailed(res)) {
                 Error("HandleRequest Failed: {0} -> {1}", req.ToFullString(), res.ToFullString());
@@ -94,6 +78,67 @@ namespace angeldnd.dap {
                 Debug("HandleRequest: {0} -> {1}", req.ToFullString(), res.ToFullString());
             }
             return res;
+        }
+
+        private Data _HandleRequest_Req = null;
+        private IRequestChecker _HandleRequest_LastChecker = null;
+
+        private Func<IRequestChecker, bool> _HandleRequest_Checker = null;
+        private Func<IRequestChecker, bool> HandleRequest_Checker {
+            get {
+                if (_HandleRequest_Checker == null) {
+                    _HandleRequest_Checker = new Func<IRequestChecker, bool>((IRequestChecker checker) => {
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.BeginSample("Handler.IsValidRequest: " + Key + " " + checker.ToString());
+                        #endif
+                        _HandleRequest_LastChecker = checker;
+                        bool result = checker.IsValidRequest(this, _HandleRequest_Req);
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.EndSample();
+                        #endif
+                        return result;
+                    });
+                }
+                return _HandleRequest_Checker;
+            }
+        }
+
+        private Action<IRequestWatcher> _HandleRequest_RequestWatcher = null;
+        private Action<IRequestWatcher> HandleRequest_RequestWatcher {
+            get {
+                if (_HandleRequest_RequestWatcher == null) {
+                    _HandleRequest_RequestWatcher = new Action<IRequestWatcher>((IRequestWatcher watcher) => {
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.BeginSample("Handler.OnRequest: " + Key + " " + watcher.ToString());
+                        #endif
+                        watcher.OnRequest(this, _HandleRequest_Req);
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.EndSample();
+                        #endif
+                    });
+                }
+                return _HandleRequest_RequestWatcher;
+            }
+        }
+
+        private Data _HandleRequest_Res = null;
+
+        private Action<IResponseWatcher> _HandleRequest_ResponseWatcher = null;
+        private Action<IResponseWatcher> HandleRequest_ResponseWatcher {
+            get {
+                if (_HandleRequest_ResponseWatcher == null) {
+                    _HandleRequest_ResponseWatcher = new Action<IResponseWatcher>((IResponseWatcher watcher) => {
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.BeginSample("Handler.OnResponse: " + Key + " " + watcher.ToString());
+                        #endif
+                        watcher.OnResponse(this, _HandleRequest_Req, _HandleRequest_Res);
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.EndSample();
+                        #endif
+                    });
+                }
+                return _HandleRequest_ResponseWatcher;
+            }
         }
 
         public BlockSetupWatcher AddSetupWatcher(IBlockOwner owner, Action<ISetupAspect> block) {

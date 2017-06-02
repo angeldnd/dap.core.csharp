@@ -71,7 +71,7 @@ namespace angeldnd.dap {
         }
 
         public override string ToString() {
-            return Summary.ToFullString(null);
+            return GetType().Name + ":" + Uri;
         }
 
         protected virtual void AddSummaryFields(Data summary) {

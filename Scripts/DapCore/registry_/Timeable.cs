@@ -49,11 +49,12 @@ namespace angeldnd.dap {
 
             _ChannelOnTime = Context.Channels.Add(TimeableConsts.ChannelOnTime);
             if (_ChannelOnTime != null) {
-                ownerOnTimeChannel.AddEventWatcher(this,
-                    (Channel channel, Data evt) => {
-                        _ChannelOnTime.FireEvent(evt);
-                });
+                ownerOnTimeChannel.AddEventWatcher(this, OnTime);
             }
+        }
+
+        private void OnTime(Channel channel, Data evt) {
+            _ChannelOnTime.FireEvent(evt);
         }
     }
 }

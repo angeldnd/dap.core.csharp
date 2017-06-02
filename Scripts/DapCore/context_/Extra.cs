@@ -54,8 +54,7 @@ namespace angeldnd.dap {
             return result;
         }
 
-        public delegate void SyncPropertyBlock(string key);
-        private Dictionary<string, SyncPropertyBlock> _PropertySyncers;
+        private Dictionary<string, Action<string>> _PropertySyncers;
 
         public Extra(IContext obj, string key) : base(obj) {
             Key = key;
@@ -82,7 +81,7 @@ namespace angeldnd.dap {
         }
 
         private void SavePropertySyncer<TP, T>(string key, TP property, Func<T> getter) where TP : IProperty<T> {
-            if (_PropertySyncers == null) _PropertySyncers = new Dictionary<string, SyncPropertyBlock>();
+            if (_PropertySyncers == null) _PropertySyncers = new Dictionary<string, Action<string>>();
 
             _PropertySyncers[key] = (string _key) => {
                 T val = getter();
@@ -129,7 +128,13 @@ namespace angeldnd.dap {
                 #endif
                 var en = _PropertySyncers.GetEnumerator();
                 while (en.MoveNext()) {
+                    #if UNITY_EDITOR
+                    UnityEngine.Profiling.Profiler.BeginSample("Extra.SyncExtra: " + en.Current.Key);
+                    #endif
                     en.Current.Value(en.Current.Key);
+                    #if UNITY_EDITOR
+                    UnityEngine.Profiling.Profiler.EndSample();
+                    #endif
                 }
                 #if UNITY_EDITOR
                 UnityEngine.Profiling.Profiler.EndSample();

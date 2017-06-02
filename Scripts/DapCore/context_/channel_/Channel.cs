@@ -7,33 +7,75 @@ namespace angeldnd.dap {
         }
 
         public bool FireEvent(Data evt) {
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.BeginSample("Channel.FireEvent: " + Key);
+            #endif
+
             if (evt != null) evt.Seal();
 
-            IEventChecker lastChecker = null;
-            if (!WeakListHelper.IsValid(_EventCheckers, (IEventChecker checker) => {
-                lastChecker = checker;
-                return checker.IsValidEvent(this, evt);
-            })) {
-                if (LogDebug) {
-                    Debug("Invalid Event: {0} => {1}", lastChecker, evt.ToFullString());
-                }
-                return false;
-            }
-            AdvanceRevision();
+            _FireEvent_Evt = evt;
+            _FireEvent_LastChecker = null;
 
-            WeakListHelper.Notify(_EventWatchers, (IEventWatcher watcher) => {
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.BeginSample("Channel.OnEvent: " + Key + " " + watcher.ToString());
-                #endif
-                watcher.OnEvent(this, evt);
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.EndSample();
-                #endif
-            });
-            if (LogDebug) {
-                Debug("FireEvent: {0}", evt.ToFullString());
+            bool isValid = true;
+            if (!WeakListHelper.IsValid(_EventCheckers, FireEvent_Checker)) {
+                if (LogDebug) {
+                    Debug("Invalid Event: {0} => {1}", _FireEvent_LastChecker, evt.ToFullString());
+                }
+                isValid = false;
             }
-            return true;
+            if (isValid) {
+                AdvanceRevision();
+
+                WeakListHelper.Notify(_EventWatchers, FireEvent_Watcher);
+                if (LogDebug) {
+                    Debug("FireEvent: {0}", evt.ToFullString());
+                }
+            }
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.EndSample();
+            #endif
+            return isValid;
+        }
+
+        private Data _FireEvent_Evt = null;
+        private IEventChecker _FireEvent_LastChecker = null;
+
+        private Func<IEventChecker, bool> _FireEvent_Checker = null;
+        private Func<IEventChecker, bool> FireEvent_Checker {
+            get {
+                if (_FireEvent_Checker == null) {
+                    _FireEvent_Checker = new Func<IEventChecker, bool>((IEventChecker checker) => {
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.BeginSample("Channel.IsValidEvent: " + Key + " " + checker.ToString());
+                        #endif
+                        _FireEvent_LastChecker = checker;
+                        bool result = checker.IsValidEvent(this, _FireEvent_Evt);
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.EndSample();
+                        #endif
+                        return result;
+                    });
+                }
+                return _FireEvent_Checker;
+            }
+        }
+
+        private Action<IEventWatcher> _FireEvent_Watcher = null;
+        private Action<IEventWatcher> FireEvent_Watcher {
+            get {
+                if (_FireEvent_Watcher == null) {
+                    _FireEvent_Watcher = new Action<IEventWatcher>((IEventWatcher watcher) => {
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.BeginSample("Channel.OnEvent: " + Key + " " + watcher.ToString());
+                        #endif
+                        watcher.OnEvent(this, _FireEvent_Evt);
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.EndSample();
+                        #endif
+                    });
+                }
+                return _FireEvent_Watcher;
+            }
         }
 
         public BlockEventChecker AddEventChecker(IBlockOwner owner, Func<Channel, Data, bool> block) {

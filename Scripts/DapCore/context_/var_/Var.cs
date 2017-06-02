@@ -80,7 +80,7 @@ namespace angeldnd.dap {
         }
 
         private void UpdateValue(T newValue, Action callback = null) {
-            T lastVal = Value;
+            _UpdateValue_LastVal = Value;
 
             _Value = newValue;
             AdvanceRevision();
@@ -89,25 +89,46 @@ namespace angeldnd.dap {
                 callback();
             }
 
-            WeakListHelper.Notify(_VarWatchers, (IVarWatcher watcher) => {
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged: " + Key + " " + watcher.ToString());
-                #endif
-                watcher.OnChanged(this);
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.EndSample();
-                #endif
-            });
+            WeakListHelper.Notify(_VarWatchers, UpdateValue_VarWatcher);
+            WeakListHelper.Notify(_ValueWatchers, UpdateValue_ValueWatcher);
+        }
 
-            WeakListHelper.Notify(_ValueWatchers, (IValueWatcher<T> watcher) => {
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged<T>: " + Key + " " + watcher.ToString());
-                #endif
-                watcher.OnChanged(this, lastVal);
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.EndSample();
-                #endif
-            });
+        private T _UpdateValue_LastVal = default(T);
+
+        private Action<IVarWatcher> _UpdateValue_VarWatcher = null;
+        private Action<IVarWatcher> UpdateValue_VarWatcher {
+            get {
+                if (_UpdateValue_VarWatcher == null) {
+                    _UpdateValue_VarWatcher = new Action<IVarWatcher>((IVarWatcher watcher) => {
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged: " + Key + " " + watcher.ToString());
+                        #endif
+                        watcher.OnChanged(this);
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.EndSample();
+                        #endif
+                    });
+                }
+                return _UpdateValue_VarWatcher;
+            }
+        }
+
+        private Action<IValueWatcher<T>> _UpdateValue_ValueWatcher = null;
+        private Action<IValueWatcher<T>> UpdateValue_ValueWatcher {
+            get {
+                if (_UpdateValue_ValueWatcher == null) {
+                    _UpdateValue_ValueWatcher = new Action<IValueWatcher<T>>((IValueWatcher<T> watcher) => {
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged<T>: " + Key + " " + watcher.ToString());
+                        #endif
+                        watcher.OnChanged(this, _UpdateValue_LastVal);
+                        #if UNITY_EDITOR
+                        UnityEngine.Profiling.Profiler.EndSample();
+                        #endif
+                    });
+                }
+                return _UpdateValue_ValueWatcher;
+            }
         }
 
         public bool CheckNewValue(T newValue) {
