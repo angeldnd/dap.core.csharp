@@ -78,10 +78,10 @@ namespace angeldnd.dap {
         }
 
         // Should only be called from IContext.OnAdded();
-        public void _OnContextAdded(IContext context) {
+        public void _OnContextAdded(IContext context, string[] contextPathSegments) {
             if (_ContextAddedBlock != null) {
                 for (int i = 0; i < _UriMatchers.Count; i++) {
-                    if (_UriMatchers[i].IsMatched(context)) {
+                    if (_UriMatchers[i].IsMatched(contextPathSegments)) {
                         _ContextAddedBlock(context);
                         return;
                     }
@@ -90,10 +90,10 @@ namespace angeldnd.dap {
         }
 
         // Should only be called from IContext.OnRemoved();
-        public void _OnContextRemoved(IContext context) {
+        public void _OnContextRemoved(IContext context, string[] contextPathSegments) {
             if (_ContextRemovedBlock != null) {
                 for (int i = 0; i < _UriMatchers.Count; i++) {
-                    if (_UriMatchers[i].IsMatched(context)) {
+                    if (_UriMatchers[i].IsMatched(contextPathSegments)) {
                         _ContextRemovedBlock(context);
                         return;
                     }
@@ -102,10 +102,10 @@ namespace angeldnd.dap {
         }
 
         // Should only be called from IAspect.OnAdded();
-        public void _OnAspectAdded(IAspect aspect) {
+        public void _OnAspectAdded(IAspect aspect, string[] contextPathSegments, string[] aspectPathSegments) {
             if (_AspectAddedBlock != null) {
                 for (int i = 0; i < _UriMatchers.Count; i++) {
-                    if (_UriMatchers[i].IsMatched(aspect)) {
+                    if (_UriMatchers[i].IsMatched(contextPathSegments, aspectPathSegments)) {
                         _AspectAddedBlock(aspect);
                         return;
                     }
@@ -114,10 +114,10 @@ namespace angeldnd.dap {
         }
 
         // Should only be called from IAspect.OnRemoved();
-        public void _OnAspectRemoved(IAspect aspect) {
+        public void _OnAspectRemoved(IAspect aspect, string[] contextPathSegments, string[] aspectPathSegments) {
             if (_AspectRemovedBlock != null) {
                 for (int i = 0; i < _UriMatchers.Count; i++) {
-                    if (_UriMatchers[i].IsMatched(aspect)) {
+                    if (_UriMatchers[i].IsMatched(contextPathSegments, aspectPathSegments)) {
                         _AspectRemovedBlock(aspect);
                         return;
                     }

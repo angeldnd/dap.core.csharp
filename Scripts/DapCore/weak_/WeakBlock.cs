@@ -22,6 +22,10 @@ namespace angeldnd.dap {
             }
         }
 
+        public override string ToString() {
+            return IsOwnerAlive ? _OwnerReference.Target.GetType().Name : ("!" + GetType().Name);
+        }
+
         public void OnAdded() {
             if (IsOwnerAlive) {
                 ((IBlockOwner)_OwnerReference.Target).AddBlock(this);

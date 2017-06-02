@@ -53,11 +53,11 @@ namespace angeldnd.dap {
             }
 
             WeakListHelper.Notify(_RequestWatchers, (IRequestWatcher watcher) => {
-                #if UNITY_5
-                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnRequest: " + Key);
+                #if UNITY_EDITOR
+                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnRequest: " + Key + " " + watcher.ToString());
                 #endif
                 watcher.OnRequest(this, req);
-                #if UNITY_5
+                #if UNITY_EDITOR
                 UnityEngine.Profiling.Profiler.EndSample();
                 #endif
             });
@@ -79,11 +79,11 @@ namespace angeldnd.dap {
             AdvanceRevision();
 
             WeakListHelper.Notify(_ResponseWatchers, (IResponseWatcher watcher) => {
-                #if UNITY_5
-                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnResponse: " + Key);
+                #if UNITY_EDITOR
+                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnResponse: " + Key + " " + watcher.ToString());
                 #endif
                 watcher.OnResponse(this, req, res);
-                #if UNITY_5
+                #if UNITY_EDITOR
                 UnityEngine.Profiling.Profiler.EndSample();
                 #endif
             });
