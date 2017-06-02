@@ -426,7 +426,7 @@ public void ForEachAspects(Action<IAspect> callback) {
 }
 
 public virtual void AddDetailFields(Data summary) {
-    Data aspects = new Data();
+    Data aspects = DataCache.Take("_summary.aspects");
     ForEachAspects((IAspect aspect) => {
         aspects.A(aspect.Path, aspect.Summary);
     });

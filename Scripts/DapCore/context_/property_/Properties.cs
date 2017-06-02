@@ -82,7 +82,7 @@ namespace angeldnd.dap {
         }
 
         public Data EncodeValues() {
-            Data data = new Data();
+            Data data = new RealData();
             ForEach<IProperty>((IProperty prop) => {
                 Data propValue = prop.EncodeValue();
                 propValue.CopyValueTo(PropertiesConsts.KeyValue, data, prop.Key);

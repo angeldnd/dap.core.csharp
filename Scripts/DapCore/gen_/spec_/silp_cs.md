@@ -68,7 +68,7 @@ public class ${type}SpecValueChecker${checker_kind} : SpecValueChecker<${cs_type
     }
 
     public override bool DoEncode(Data spec) {
-        Data values = new Data();
+        Data values = DataCache.Take("_spec");
         for (int i = 0; i < Values.Length; i++) {
             ${cs_type} v = Values[i];
             values.Set${type}(i.ToString(), v);
@@ -97,7 +97,7 @@ public class Sub${type}SpecValueChecker${checker_kind}<T> : SpecValueChecker<T> 
     }
 
     public override bool DoEncode(Data spec) {
-        Data values = new Data();
+        Data values = DataCache.Take("_spec");
         for (int i = 0; i < Values.Length; i++) {
             ${cs_type} v = Values[i];
             values.Set${type}(i.ToString(), v);

@@ -186,7 +186,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 int v = Values[i];                                                                //__SILP__
                 values.SetInt(i.ToString(), v);                                                   //__SILP__
@@ -215,7 +215,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 int v = Values[i];                                                                //__SILP__
                 values.SetInt(i.ToString(), v);                                                   //__SILP__
@@ -244,7 +244,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 int v = Values[i];                                                                //__SILP__
                 values.SetInt(i.ToString(), v);                                                   //__SILP__
@@ -273,7 +273,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 int v = Values[i];                                                                //__SILP__
                 values.SetInt(i.ToString(), v);                                                   //__SILP__
@@ -472,7 +472,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 long v = Values[i];                                                               //__SILP__
                 values.SetLong(i.ToString(), v);                                                  //__SILP__
@@ -501,7 +501,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 long v = Values[i];                                                               //__SILP__
                 values.SetLong(i.ToString(), v);                                                  //__SILP__
@@ -530,7 +530,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 long v = Values[i];                                                               //__SILP__
                 values.SetLong(i.ToString(), v);                                                  //__SILP__
@@ -559,7 +559,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 long v = Values[i];                                                               //__SILP__
                 values.SetLong(i.ToString(), v);                                                  //__SILP__
@@ -927,7 +927,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 string v = Values[i];                                                             //__SILP__
                 values.SetString(i.ToString(), v);                                                //__SILP__
@@ -956,7 +956,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 string v = Values[i];                                                             //__SILP__
                 values.SetString(i.ToString(), v);                                                //__SILP__
@@ -985,7 +985,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 string v = Values[i];                                                             //__SILP__
                 values.SetString(i.ToString(), v);                                                //__SILP__
@@ -1014,7 +1014,7 @@ namespace angeldnd.dap {
         }                                                                                         //__SILP__
                                                                                                   //__SILP__
         public override bool DoEncode(Data spec) {                                                //__SILP__
-            Data values = new Data();                                                             //__SILP__
+            Data values = DataCache.Take("_spec");                                                //__SILP__
             for (int i = 0; i < Values.Length; i++) {                                             //__SILP__
                 string v = Values[i];                                                             //__SILP__
                 values.SetString(i.ToString(), v);                                                //__SILP__

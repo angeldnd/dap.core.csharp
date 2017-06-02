@@ -11,7 +11,7 @@ namespace angeldnd.dap {
 
         public Data Encode() {
             if (!string.IsNullOrEmpty(DapType)) {
-                Data data = new Data();
+                Data data = new RealData();
                 if (data.SetString(ObjectConsts.KeyDapType, DapType)) {
                     if (GetEncoder().Encode(data, PropertiesConsts.KeyValue, Value)) {
                         return data;
@@ -31,13 +31,13 @@ namespace angeldnd.dap {
             if (dapType == DapType) {
                 return SetValue(GetEncoder().Decode(data, PropertiesConsts.KeyValue));
             } else {
-                Error("Dap Type Mismatched: {0}, {1}", DapType, dapType);
+                Error("Dap Type Mismatched: {0}, {1}", DapType, data.ToFullString());
             }
             return false;
         }
 
         public Data EncodeValue() {
-            Data data = new Data();
+            Data data = new RealData();
             if (GetEncoder().Encode(data, PropertiesConsts.KeyValue, Value)) {
                 return data;
             }

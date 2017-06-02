@@ -10,7 +10,7 @@ namespace angeldnd.dap {
         }
 
         private Data DoEncodeValue(bool fullMode) {
-            Data values = new Data();
+            Data values = new RealData();
 
             bool ok = UntilFalse((T element) => {
                 if (fullMode) {
@@ -58,7 +58,7 @@ namespace angeldnd.dap {
                     return SpecHelper.AddPropertyWithSpec(this, subData);
                 } else {
                     T element = Add();
-                    Data valueData = new Data();
+                    Data valueData = new RealData();
                     if (values.CopyValueTo(key, valueData, PropertiesConsts.KeyValue)) {
                         if (!element.DecodeValue(valueData)) {
                             element.Error("DecodeValue Failed: {0} ->\n{1}", key,
@@ -103,7 +103,7 @@ namespace angeldnd.dap {
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         private Data EncodeValue(bool fullMode) {                                                  //__SILP__
-            Data data = new Data();                                                                //__SILP__
+            Data data = new RealData();                                                                //__SILP__
             if (data.SetData(PropertiesConsts.KeyValue, DoEncodeValue(fullMode))) {                //__SILP__
                 return data;                                                                       //__SILP__
             }                                                                                      //__SILP__

@@ -19,7 +19,7 @@ public Data Encode() {
 }
 
 private Data EncodeValue(bool fullMode) {
-    Data data = new Data();
+    Data data = DataCache.Take(this);
     if (data.SetData(PropertiesConsts.KeyValue, DoEncodeValue(fullMode))) {
         return data;
     }
@@ -137,7 +137,7 @@ public bool NeedSetup() {
 # GROUP_ENCODE_MIXIN(element_type) #
 ```
 private bool DoEncode(Data data) {
-    Data values = new Data();
+    Data values = DataCache.Take(this);
     if (!data.SetData(PropertiesConsts.KeyValue, values)) return false;
 
     return UntilFalse((${element_type} element) => {
@@ -147,8 +147,8 @@ private bool DoEncode(Data data) {
 }
 
 public Data EncodeValue() {
-    Data data = new Data();
-    Data values = new Data();
+    Data data = DataCache.Take(this);
+    Data values = DataCache.Take(this);
     if (!data.SetData(PropertiesConsts.KeyValue, values)) return false;
 
     return UntilFalse((${element_type} element) => {

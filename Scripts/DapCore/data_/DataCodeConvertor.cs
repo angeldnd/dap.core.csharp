@@ -6,7 +6,7 @@ namespace angeldnd.dap {
     public static class DataCodeConvertorConsts {
         public const string NullStr = "null";
 
-        public const string DataBegin = "new Data()";
+        public const string DataBegin = "new RealData()";
         public const string TypeBegin = ".";
         public const string KeyBegin = "(";
         public const string ValueBegin = ", ";

@@ -35,7 +35,7 @@ namespace angeldnd.dap {
 
     public static class ResponseHelper {
         private static Data Result(Handler handler, Data req, int status, Data result) {
-            Data res = new Data();
+            Data res = new RealData();
             res.SetInt(ResponseConsts.KeyStatus, status);
             res.SetString(ResponseConsts.KeyUri, handler.Uri);
             if (result != null) {
@@ -56,7 +56,7 @@ namespace angeldnd.dap {
         }
 
         public static Data Ok(Handler handler, Data req, string format, params object[] values) {
-            return Ok(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
+            return Ok(handler, req, new RealData().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data Accepted(Handler handler, Data req) {
@@ -68,7 +68,7 @@ namespace angeldnd.dap {
         }
 
         public static Data Accepted(Handler handler, Data req, string format, params object[] values) {
-            return Accepted(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
+            return Accepted(handler, req, new RealData().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data BadRequest(Handler handler, Data req) {
@@ -80,11 +80,11 @@ namespace angeldnd.dap {
         }
 
         public static Data BadRequest(Handler handler, Data req, string format, params object[] values) {
-            return BadRequest(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
+            return BadRequest(handler, req, new RealData().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data InvalidParams(Handler handler, Data req, Data paramsHint) {
-            if (paramsHint == null) paramsHint = new Data();
+            if (paramsHint == null) paramsHint = new RealData();
             paramsHint.S(ResponseConsts.KeyMsg, "Invalid Params");
             return BadRequest(handler, req, paramsHint);
         }
@@ -98,7 +98,7 @@ namespace angeldnd.dap {
         }
 
         public static Data NotFound(Handler handler, Data req, string format, params object[] values) {
-            return NotFound(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
+            return NotFound(handler, req, new RealData().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data InternalError(Handler handler, Data req, Data data) {
@@ -106,7 +106,7 @@ namespace angeldnd.dap {
         }
 
         public static Data InternalError(Handler handler, Data req, string format, params object[] values) {
-            return InternalError(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
+            return InternalError(handler, req, new RealData().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data NotImplemented(Handler handler, Data req, Data data) {
@@ -114,7 +114,7 @@ namespace angeldnd.dap {
         }
 
         public static Data NotImplemented(Handler handler, Data req, string format, params object[] values) {
-            return NotImplemented(handler, req, new Data().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
+            return NotImplemented(handler, req, new RealData().S(ResponseConsts.KeyMsg, Log.GetMsg(format, values)));
         }
 
         public static Data GetReq(Data response) {

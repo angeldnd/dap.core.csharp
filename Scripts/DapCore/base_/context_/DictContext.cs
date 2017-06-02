@@ -151,7 +151,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public virtual void AddDetailFields(Data summary) {                                           //__SILP__
-            Data aspects = new Data();                                                                //__SILP__
+            Data aspects = DataCache.Take("_summary.aspects");                                        //__SILP__
             ForEachAspects((IAspect aspect) => {                                                      //__SILP__
                 aspects.A(aspect.Path, aspect.Summary);                                               //__SILP__
             });                                                                                       //__SILP__

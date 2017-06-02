@@ -80,7 +80,7 @@ namespace angeldnd.dap {
 
         public Data Summary {
             get {
-                Data summary = new Data()
+                Data summary = DataCache.Take("_summary")
                         .S(ObjectConsts.SummaryType, GetType().FullName)
                         .S(ObjectConsts.SummaryDapType, DapType)
                         .I(ObjectConsts.SummaryRevision, _Revision)

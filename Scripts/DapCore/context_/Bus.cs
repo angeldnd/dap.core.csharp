@@ -185,11 +185,11 @@ namespace angeldnd.dap {
 
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
-            Data data = new Data();
+            Data data = new RealData();
             if (_Msgs != null) {
                 for (int i = 0; i < _Msgs.Count; i++) {
                     string msg = _Msgs[i];
-                    Data msgData = new Data();
+                    Data msgData = new RealData();
                     msgData.I(ContextConsts.SummarySubCount, GetSubCount(msg));
                     msgData.I(ContextConsts.SummaryMsgCount, GetMsgCount(msg));
                     data.A(msg, msgData);

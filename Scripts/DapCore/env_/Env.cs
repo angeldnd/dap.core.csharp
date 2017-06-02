@@ -143,7 +143,7 @@ namespace angeldnd.dap {
         }
 
         public static Data NewTickEvt() {
-            return _TickData == null ? new Data() : _TickData.Clone();
+            return _TickData == null ? new RealData() : _TickData.Clone();
         }
 
         public static void Tick(float time, float tickDelta) {
@@ -157,7 +157,7 @@ namespace angeldnd.dap {
             _TickCount++;
             _TickDelta = tickDelta;
             _TickTime = _TickTime + tickDelta;
-            _TickData = new Data()
+            _TickData = new RealData()
                 .F(TickableConsts.KeyTime, _Time)
                 .I(TickableConsts.KeyTickCount, _TickCount)
                 .F(TickableConsts.KeyTickTime, _TickTime);
@@ -341,10 +341,10 @@ namespace angeldnd.dap {
 
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
-            Data plugins = new Data();
+            Data plugins = new RealData();
             for (int i = 0; i < _Plugins.Count; i++) {
                 var plugin = _Plugins[i];
-                plugins.A(i.ToString(), new Data()
+                plugins.A(i.ToString(), new RealData()
                             .S(ObjectConsts.SummaryType, plugin.GetType().FullName)
                             .B(EnvConsts.SummaryOk, !_FailedPluginIndexes.Contains(i)));
             }

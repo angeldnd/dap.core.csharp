@@ -9,7 +9,7 @@ namespace angeldnd.dap {
             if (data != null) {
                 Data spec = null;
                 prop.AllValueCheckers<ISpecValueChecker>((ISpecValueChecker checker) => {
-                    if (spec == null) spec = new Data();
+                    if (spec == null) spec = new RealData();
                     checker.DoEncode(spec);
                 });
                 if (spec != null && spec.Count > 0) {

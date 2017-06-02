@@ -8,7 +8,7 @@ namespace angeldnd.dap {
         }
 
         private Data DoEncodeValue(bool fullMode) {
-            Data values = new Data();
+            Data values = new RealData();
 
             bool ok = UntilFalse((IProperty prop) => {
                 if (fullMode) {
@@ -28,7 +28,7 @@ namespace angeldnd.dap {
                 if (fullMode) {
                     return subData != null && prop.Decode(subData);
                 } else {
-                    Data valueData = new Data();
+                    Data valueData = new RealData();
                     if (values.CopyValueTo(prop.Key, valueData, PropertiesConsts.KeyValue)) {
                         if (!prop.DecodeValue(valueData)) {
                             prop.Error("DecodeValue Failed: {0} ->\n{1}", prop.Key,
@@ -74,7 +74,7 @@ namespace angeldnd.dap {
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         private Data EncodeValue(bool fullMode) {                                                  //__SILP__
-            Data data = new Data();                                                                //__SILP__
+            Data data = new RealData();                                                                //__SILP__
             if (data.SetData(PropertiesConsts.KeyValue, DoEncodeValue(fullMode))) {                //__SILP__
                 return data;                                                                       //__SILP__
             }                                                                                      //__SILP__

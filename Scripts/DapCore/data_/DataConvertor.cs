@@ -165,7 +165,7 @@ namespace angeldnd.dap {
             Data data = dataStack.Count > 0 ? dataStack.Peek() : null;
             if (DataConvertorConsts.IsWordChar(word.Value)) {
                 if (word.Value == DataConvertorConsts.DataBegin) {
-                    Data subData = new Data();
+                    Data subData = new RealData();
                     dataStack.Push(subData);
                     if (data != null) {
                         data.SetData(partialData.Key, subData);
