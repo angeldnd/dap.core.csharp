@@ -9,88 +9,85 @@ namespace angeldnd.dap {
 
         private static Dictionary<string, DataCache> _Caches = new Dictionary<string, DataCache>();
 
-        private static DataCache GetCache(string kind, int capacity) {
+        private static DataCache GetCache(string kind, int capacity, bool noProfile) {
             DataCache cache = null;
             if (!_Caches.TryGetValue(kind, out cache)) {
-                cache = new DataCache(kind, capacity);
+                cache = new DataCache(kind, capacity, noProfile);
                 _Caches[kind] = cache;
             }
             return cache;
         }
 
-        public static WeakData Take(string kind) {
-            return GetCache(kind, Default_Capacity).Take();
+        public static WeakData Take(string kind, bool noProfile = false) {
+            return GetCache(kind, Default_Capacity, noProfile).Take(noProfile);
         }
 
-        public static WeakData Take(string kind, string subKind) {
-            return GetCache(kind + "." + subKind, Default_SubKind_Capacity).Take();
+        //When calling from threads other than main thread, need to specify noProfile = true
+        public static WeakData Take(string kind, string subKind, bool noProfile = false) {
+            return GetCache(kind + "." + subKind, Default_SubKind_Capacity, noProfile).Take(noProfile);
         }
 
-        public static WeakData Take(ILogger caller) {
+        public static WeakData Take(ILogger caller, bool noProfile = false) {
             string kind = caller.GetType().FullName;
-            return Take(kind);
+            return Take(kind, noProfile);
         }
 
-        public static WeakData Take(ILogger caller, string subKind) {
+        public static WeakData Take(ILogger caller, string subKind, bool noProfile = false) {
             string kind = caller.GetType().FullName;
-            return Take(kind, subKind);
-        }
-
-        public static WeakData _Register(string kind, string subKind, RealData real) {
-            return GetCache(kind + "." + subKind, Default_SubKind_Capacity).Register(real);
+            return Take(kind, subKind, noProfile);
         }
 
         public readonly string Kind = null;
         public readonly int Capacity;
-        private Queue<WeakDataRef> _Instances = new Queue<WeakDataRef>();
-        private Queue<WeakDataRef> _Temp = new Queue<WeakDataRef>();
+        private List<WeakDataRef> _Instances = new List<WeakDataRef>();
+        private List<WeakDataRef> _Temp = new List<WeakDataRef>();
         private WeakDataRefPool _RefPool;
 
         private RealDataPool _DataPool;
 
-        public DataCache(string kind, int capacity) {
+        public DataCache(string kind, int capacity, bool noProfile) {
             Kind = kind;
             Capacity = capacity;
 
             _RefPool = new WeakDataRefPool();
             _DataPool = new RealDataPool(Capacity);
-            EnsureCapacity(capacity);
+            EnsureCapacity(capacity, noProfile);
         }
 
-        private void EnsureCapacity(int capacity) {
+        private void EnsureCapacity(int capacity, bool noProfile) {
             if (capacity < Capacity) {
                 capacity = Capacity;
             }
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample("DataCache.EnsureCapacity: " + Kind + " " + capacity.ToString());
+            if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("DataCache.EnsureCapacity: " + Kind + " " + capacity.ToString());
             #endif
             _DataPool.EnsureCapacity(capacity);
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
+            if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
             #endif
         }
 
-        public WeakData Take() {
+        private WeakData Take(bool noProfile) {
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample("DataCache.Take: " + Kind);
+            if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("DataCache.Take: " + Kind);
             #endif
             if (_DataPool.Count <= 0) {
-                DoCollect();
+                DoCollect(noProfile);
                 if (_DataPool.Count <= Capacity / 2) {
-                    EnsureCapacity(_Instances.Count / 2);
+                    EnsureCapacity(_Instances.Count / 2, noProfile);
                 }
             }
             RealData real = _DataPool.Take(true);
-            WeakData weak = Register(real);
+            WeakData weak = Register(real, noProfile);
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
+            if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
             #endif
             return weak;
         }
 
-        private WeakData Register(RealData real) {
+        private WeakData Register(RealData real, bool noProfile) {
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample("Register: " + real.CapacityTip);
+            if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("Register: " + real.CapacityTip);
             #endif
             WeakData weak = new WeakData(Kind, real);
             WeakDataRef r = _RefPool.Take();
@@ -99,41 +96,41 @@ namespace angeldnd.dap {
             } else {
                 r._Reuse(weak, real);
             }
-            _Instances.Enqueue(r);
+            _Instances.Add(r);
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
+            if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
             #endif
             return weak;
         }
 
-        public int DoCollect() {
+        private int DoCollect(bool noProfile = false) {
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample("DoCollect: " + _Instances.Count);
+            if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("DoCollect: " + _Instances.Count);
             #endif
-            Queue<WeakDataRef> tmp = _Temp;
+            List<WeakDataRef> tmp = _Temp;
             _Temp = _Instances;
             _Instances = tmp;
 
             int count = 0;
-            while (_Temp.Count > 0) {
-                WeakDataRef r = _Temp.Dequeue();
+            foreach (WeakDataRef r in _Temp) {
                 if (r.IsAlive) {
-                    _Instances.Enqueue(r);
+                    _Instances.Add(r);
                 } else {
                     count++;
                     #if UNITY_EDITOR
-                    UnityEngine.Profiling.Profiler.BeginSample("Collected");
+                    if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("Collected");
                     #endif
                     _DataPool.Add(r.Real);
                     _RefPool.Add(r);
                     #if UNITY_EDITOR
-                    UnityEngine.Profiling.Profiler.EndSample();
+                    if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
                     #endif
                 }
             }
+            _Temp.Clear();
             //Log.Error("DataCache.DoCollect {0} -> {1} -> {2}/{3}", Kind, count, _DataPool.Count, _Instances.Count);
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
+            if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
             #endif
             return count;
         }

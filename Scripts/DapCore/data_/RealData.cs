@@ -26,7 +26,14 @@ namespace angeldnd.dap {
         }
 
         public Data _CopyTo(RealData clone) {
-            clone._ValueTypes = CloneDictionary<DataType>(_ValueTypes);
+            var en = _ValueTypes.GetEnumerator();
+            while (en.MoveNext()) {
+                var kv = en.Current;
+                if (!IsTempKey(kv.Key)) {
+                    clone._ValueTypes[kv.Key] = kv.Value;
+                }
+            }
+
             clone._BoolValues = CloneDictionary<bool>(_BoolValues);
             clone._IntValues = CloneDictionary<int>(_IntValues);
             clone._LongValues = CloneDictionary<long>(_LongValues);
@@ -47,14 +54,6 @@ namespace angeldnd.dap {
                     _DoubleValues == null ? 0 : _DoubleValues.Count,
                     _StringValues == null ? 0 : _StringValues.Count,
                     _DataValues == null ? 0 : _DataValues.Count);
-
-            if (_DataValues != null) {
-                foreach (var kv in _DataValues) {
-                    if (kv.Value != null) {
-                        kv.Value._Recycle();
-                    }
-                }
-            }
         }
 
         public override void Clear() {
@@ -81,7 +80,9 @@ namespace angeldnd.dap {
         private Dictionary<string, T> CloneDictionary<T>(Dictionary<string, T> src) {
             if (src == null) return null;
             Dictionary<string, T> clone = null;
-            foreach (var kv in src) {
+            var en = src.GetEnumerator();
+            while (en.MoveNext()) {
+                var kv = en.Current;
                 if (!IsTempKey(kv.Key)) {
                     if (clone == null) clone = new Dictionary<string, T>();
                     clone[kv.Key] = kv.Value;

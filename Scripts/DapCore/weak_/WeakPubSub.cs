@@ -43,7 +43,7 @@ namespace angeldnd.dap {
                 subs = new WeakList<TSub>();
                 _InstanceSubscribers[pubHash] = subs;
             }
-            return subs.AddElement(sub);
+            return subs.Add(sub);
         }
 
         public bool RemoveSub(TPub pub, TSub sub) {

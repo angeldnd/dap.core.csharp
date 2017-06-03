@@ -15,51 +15,53 @@ namespace angeldnd.dap {
      * There are some special logic for WeakBlock, since don't want to force all items
      * to implement OnAdded() and OnRemoved().
      */
-    public sealed class WeakList<T> : IList<T> where T : class {
+    public sealed class WeakList<T> where T : class {
         private readonly List<WeakReference> _Elements = new List<WeakReference>();
 
-        #region IList<T>
+        private int _LockCount = 0;
+        private bool _NeedGc = false;
+        private List<KeyValuePair<bool, T>> _Ops = null;
+
         public int Count {
             get {
                 return _Elements.Count;
             }
         }
 
-        public bool IsReadOnly {
-            get { return false; }
-        }
-
-        public T this[int index] {
-            get {
-                throw new System.NotSupportedException("WeakList<T>.indexer:get");
+        public bool Add(T element) {
+            if (_LockCount > 0) {
+                if (!Contains(element)) {
+                    if (_Ops == null) {
+                        _Ops = new List<KeyValuePair<bool, T>>();
+                    }
+                    _Ops.Add(new KeyValuePair<bool, T>(true, element));
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return DoAddElement(element);
             }
-            set {
-                throw new System.NotSupportedException("WeakList<T>.indexer:set");
+        }
+
+        public bool Remove(T element) {
+            if (_LockCount > 0) {
+                if (Contains(element)) {
+                    if (_Ops == null) {
+                        _Ops = new List<KeyValuePair<bool, T>>();
+                    }
+                    _Ops.Add(new KeyValuePair<bool, T>(false, element));
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return DoRemoveElement(element);
             }
-        }
-
-        public IEnumerator<T> GetEnumerator() {
-            throw new System.NotSupportedException("WeakList<T>.GetEnumerator<T>");
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-            throw new System.NotSupportedException("WeakList<T>.GetEnumerator");
-        }
-
-        public void Add(T element) {
-            AddElement(element);
         }
 
         public void Clear() {
             _Elements.Clear();
-        }
-
-        public bool Contains(T element) {
-            return IndexOf(element) >= 0;
-        }
-
-        public void CopyTo(T[] array, int arrayIndex) {
-            throw new System.NotSupportedException("WeakList<T>.CopyTo()");
         }
 
         public int IndexOf(T element) {
@@ -71,29 +73,11 @@ namespace angeldnd.dap {
             return -1;
         }
 
-        public void Insert(int index, T element) {
-            throw new System.NotSupportedException("WeakList<T>.Insert()");
+        public bool Contains(T element) {
+            return IndexOf(element) >= 0;
         }
 
-        public bool Remove(T element) {
-            int index = IndexOf(element);
-            if (index >= 0) {
-                WeakBlock block = element as WeakBlock;
-                if (block != null) {
-                    block.OnRemoved();
-                }
-                _Elements.RemoveAt(index);
-                return true;
-            }
-            return false;
-        }
-
-        public void RemoveAt(int index) {
-            throw new System.NotSupportedException("WeakList<T>.RemoveAt()");
-        }
-        #endregion
-
-        public bool AddElement(T element) {
+        private bool DoAddElement(T element) {
             if (!Contains(element)) {
                 _Elements.Add(new WeakReference(element));
                 WeakBlock block = element as WeakBlock;
@@ -105,6 +89,18 @@ namespace angeldnd.dap {
             return false;
         }
 
+        private bool DoRemoveElement(T element) {
+            int index = IndexOf(element);
+            if (index >= 0) {
+                WeakBlock block = element as WeakBlock;
+                if (block != null) {
+                    block.OnRemoved();
+                }
+                _Elements.RemoveAt(index);
+                return true;
+            }
+            return false;
+        }
         public void ForEach(Action<T> callback) {
             //Duplicated with Until() to prevent GC.Alloc
 
@@ -130,17 +126,28 @@ namespace angeldnd.dap {
         }
 
         public int CollectAllGarbage() {
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.BeginSample("WeakList.CollectAllGarbage");
+            #endif
             int count = 0;
-            while (CollectOneGarbage()) {
+            int startIndex = 0;
+            while (true) {
+                startIndex = CollectOneGarbage(startIndex);
+                if (startIndex < 0) {
+                    break;
+                }
                 count++;
             }
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.EndSample();
+            #endif
             return count;
         }
 
-        public bool CollectOneGarbage() {
+        private int CollectOneGarbage(int startIndex) {
             int garbageIndex = -1;
 
-            for (int i = 0; i < _Elements.Count; i++) {
+            for (int i = startIndex; i < _Elements.Count; i++) {
                 WeakReference element = _Elements[i];
                 if (!element.IsAlive) {
                     if (Log.LogDebug) {
@@ -153,9 +160,9 @@ namespace angeldnd.dap {
 
             if (garbageIndex >= 0) {
                 _Elements.RemoveAt(garbageIndex);
-                return true;
+                return garbageIndex;
             }
-            return false;
+            return -1;
         }
 
         private bool Until(Func<T, bool> callback, bool breakCondition) {
@@ -193,6 +200,43 @@ namespace angeldnd.dap {
 
         public bool UntilFalse(Func<T, bool> callback) {
             return Until(callback, false);
+        }
+
+        // This is for the cases that need better performance, need
+        // more trivial codes though, check Channel.cs for example
+        public List<WeakReference> RetainLock() {
+            _LockCount++;
+            return _Elements;
+        }
+
+        public void ReleaseLock(bool needGc) {
+            if (needGc) {
+                _NeedGc = true;
+            }
+            _LockCount--;
+            if (_LockCount == 0) {
+                if (_NeedGc) {
+                    CollectAllGarbage();
+                    _NeedGc = false;
+                }
+                if (_Ops != null) {
+                    foreach (var op in _Ops) {
+                        if (op.Key == true) {
+                            DoAddElement(op.Value);
+                        } else {
+                            DoRemoveElement(op.Value);
+                        }
+                    }
+                    _Ops.Clear();
+                }
+            }
+        }
+
+        public T GetTarget(WeakReference element) {
+            if (element.IsAlive) {
+                return (T)element.Target;
+            }
+            return null;
         }
     }
 }

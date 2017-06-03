@@ -124,15 +124,43 @@ namespace angeldnd.dap {
                 });
             }
 
-            WeakListHelper.Notify(_BusWatchers, (IBusWatcher watcher) => {
-                watcher.OnBusMsg(this, msg);
-            });
+            NotifyBusWatchers(msg);
 
             if (LogDebug) {
                 Debug("Publish {0}: sub_count = {1}, msg_count = {2}",
                          msg, GetSubCount(msg), GetMsgCount(msg));
             }
             return true;
+        }
+
+        private void NotifyBusWatchers(string msg) {
+            //SILP: WEAK_LIST_FOREACH_BEGIN(Bus.OnBusMsg, watcher, IBusWatcher, _BusWatchers)
+            if (_BusWatchers != null) {                                      //__SILP__
+                #if UNITY_EDITOR                                             //__SILP__
+                UnityEngine.Profiling.Profiler.BeginSample("Bus.OnBusMsg");  //__SILP__
+                #endif                                                       //__SILP__
+                bool needGc = false;                                         //__SILP__
+                foreach (var r in _BusWatchers.RetainLock()) {               //__SILP__
+                    IBusWatcher watcher = _BusWatchers.GetTarget(r);         //__SILP__
+                    if (watcher == null) {                                   //__SILP__
+                        needGc = true;                                       //__SILP__
+                    } else {                                                 //__SILP__
+                        #if UNITY_EDITOR                                     //__SILP__
+                        UnityEngine.Profiling.Profiler.BeginSample(          //__SILP__
+                                                watcher.ToString());         //__SILP__
+                        #endif                                               //__SILP__
+                        watcher.OnBusMsg(this, msg);
+            //SILP: WEAK_LIST_FOREACH_END(Bus.OnBusMsg, watcher, IBusWatcher, _BusWatchers)
+                        #if UNITY_EDITOR                              //__SILP__
+                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
+                        #endif                                        //__SILP__
+                    }                                                 //__SILP__
+                }                                                     //__SILP__
+                _BusWatchers.ReleaseLock(needGc);                     //__SILP__
+                #if UNITY_EDITOR                                      //__SILP__
+                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
+                #endif                                                //__SILP__
+            }                                                         //__SILP__
         }
 
         public bool Clear(string msg, object token) {

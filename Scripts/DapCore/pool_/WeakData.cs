@@ -257,7 +257,9 @@ namespace angeldnd.dap {
                 if (Kind != null) {
                     RealData real = val as RealData;
                     if (real != null) {
-                        subData = DataCache._Register(Kind, key, real);
+                        WeakData weak = DataCache.Take(Kind, key);
+                        real._CopyTo(weak._Real);
+                        subData = weak;
                     }
                 }
                 return _Real.SetData(key, subData);

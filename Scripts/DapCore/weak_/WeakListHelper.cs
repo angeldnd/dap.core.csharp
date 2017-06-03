@@ -15,7 +15,7 @@ namespace angeldnd.dap {
             if (list == null) {
                 list = new WeakList<T>();
             }
-            return list.AddElement(element);
+            return list.Add(element);
         }
 
         public static bool Remove<T>(WeakList<T> list, T element) where T : class {

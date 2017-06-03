@@ -232,14 +232,14 @@ public override sealed bool DebugMode {
 
 protected override sealed void OnAdded() {
     if (_Context != null) {
-        Env.Instance.Hooks._OnAspectAdded(this);
+        //TODO: Add AspectWatcher to Context
     }
     OnAspectAdded();
 }
 
 protected override sealed void OnRemoved() {
     if (_Context != null) {
-        Env.Instance.Hooks._OnAspectRemoved(this);
+        //TODO: Add AspectWatcher to Context
     }
     OnAspectRemoved();
 }

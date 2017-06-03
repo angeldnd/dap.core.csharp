@@ -51,9 +51,7 @@ namespace angeldnd.dap {
                 //get the current value in setup triggers, or watcher all changes.
                 UpdateValue(defaultValue, () => {
                     OnSetup();
-                    WeakListHelper.Notify(_SetupWatchers, (ISetupWatcher watcher) => {
-                        watcher.OnSetup(this);
-                    });
+                    NotifySetupWatchers();
                     if (LogDebug) {
                         Debug("Setup: {0}", defaultValue);
                     }
@@ -63,6 +61,36 @@ namespace angeldnd.dap {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
                 return false;
             }
+        }
+
+        private void NotifySetupWatchers() {
+            //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnSetup, watcher, ISetupWatcher, _SetupWatchers)
+            if (_SetupWatchers != null) {                                   //__SILP__
+                #if UNITY_EDITOR                                            //__SILP__
+                UnityEngine.Profiling.Profiler.BeginSample("Var.OnSetup");  //__SILP__
+                #endif                                                      //__SILP__
+                bool needGc = false;                                        //__SILP__
+                foreach (var r in _SetupWatchers.RetainLock()) {            //__SILP__
+                    ISetupWatcher watcher = _SetupWatchers.GetTarget(r);    //__SILP__
+                    if (watcher == null) {                                  //__SILP__
+                        needGc = true;                                      //__SILP__
+                    } else {                                                //__SILP__
+                        #if UNITY_EDITOR                                    //__SILP__
+                        UnityEngine.Profiling.Profiler.BeginSample(         //__SILP__
+                                                watcher.ToString());        //__SILP__
+                        #endif                                              //__SILP__
+                        watcher.OnSetup(this);
+            //SILP: WEAK_LIST_FOREACH_END(Var.OnSetup, watcher, ISetupWatcher, _SetupWatchers)
+                        #if UNITY_EDITOR                              //__SILP__
+                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
+                        #endif                                        //__SILP__
+                    }                                                 //__SILP__
+                }                                                     //__SILP__
+                _SetupWatchers.ReleaseLock(needGc);                   //__SILP__
+                #if UNITY_EDITOR                                      //__SILP__
+                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
+                #endif                                                //__SILP__
+            }                                                         //__SILP__
         }
 
         protected virtual void OnSetup() {}
@@ -80,7 +108,7 @@ namespace angeldnd.dap {
         }
 
         private void UpdateValue(T newValue, Action callback = null) {
-            _UpdateValue_LastVal = Value;
+            T lastVal = _Value;
 
             _Value = newValue;
             AdvanceRevision();
@@ -89,64 +117,115 @@ namespace angeldnd.dap {
                 callback();
             }
 
-            WeakListHelper.Notify(_VarWatchers, UpdateValue_VarWatcher);
-            WeakListHelper.Notify(_ValueWatchers, UpdateValue_ValueWatcher);
+            NotifyVarWatchers();
+            NotifyValueWatchers(lastVal);
         }
 
-        private T _UpdateValue_LastVal = default(T);
-
-        private Action<IVarWatcher> _UpdateValue_VarWatcher = null;
-        private Action<IVarWatcher> UpdateValue_VarWatcher {
-            get {
-                if (_UpdateValue_VarWatcher == null) {
-                    _UpdateValue_VarWatcher = new Action<IVarWatcher>((IVarWatcher watcher) => {
-                        #if UNITY_EDITOR
-                        UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged: " + Key + " " + watcher.ToString());
-                        #endif
+        private void NotifyVarWatchers() {
+            //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnChanged, watcher, IVarWatcher, _VarWatchers)
+            if (_VarWatchers != null) {                                       //__SILP__
+                #if UNITY_EDITOR                                              //__SILP__
+                UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged");  //__SILP__
+                #endif                                                        //__SILP__
+                bool needGc = false;                                          //__SILP__
+                foreach (var r in _VarWatchers.RetainLock()) {                //__SILP__
+                    IVarWatcher watcher = _VarWatchers.GetTarget(r);          //__SILP__
+                    if (watcher == null) {                                    //__SILP__
+                        needGc = true;                                        //__SILP__
+                    } else {                                                  //__SILP__
+                        #if UNITY_EDITOR                                      //__SILP__
+                        UnityEngine.Profiling.Profiler.BeginSample(           //__SILP__
+                                                watcher.ToString());          //__SILP__
+                        #endif                                                //__SILP__
                         watcher.OnChanged(this);
-                        #if UNITY_EDITOR
-                        UnityEngine.Profiling.Profiler.EndSample();
-                        #endif
-                    });
-                }
-                return _UpdateValue_VarWatcher;
-            }
+            //SILP: WEAK_LIST_FOREACH_END(Var.IsValid, watcher, IVarWatcher, _VarWatchers)
+                        #if UNITY_EDITOR                              //__SILP__
+                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
+                        #endif                                        //__SILP__
+                    }                                                 //__SILP__
+                }                                                     //__SILP__
+                _VarWatchers.ReleaseLock(needGc);                     //__SILP__
+                #if UNITY_EDITOR                                      //__SILP__
+                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
+                #endif                                                //__SILP__
+            }                                                         //__SILP__
         }
 
-        private Action<IValueWatcher<T>> _UpdateValue_ValueWatcher = null;
-        private Action<IValueWatcher<T>> UpdateValue_ValueWatcher {
-            get {
-                if (_UpdateValue_ValueWatcher == null) {
-                    _UpdateValue_ValueWatcher = new Action<IValueWatcher<T>>((IValueWatcher<T> watcher) => {
-                        #if UNITY_EDITOR
-                        UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged<T>: " + Key + " " + watcher.ToString());
-                        #endif
-                        watcher.OnChanged(this, _UpdateValue_LastVal);
-                        #if UNITY_EDITOR
-                        UnityEngine.Profiling.Profiler.EndSample();
-                        #endif
-                    });
-                }
-                return _UpdateValue_ValueWatcher;
-            }
+        private void NotifyValueWatchers(T lastVal) {
+            //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnChanged<T>, watcher, IValueWatcher<T>, _ValueWatchers)
+            if (_ValueWatchers != null) {                                        //__SILP__
+                #if UNITY_EDITOR                                                 //__SILP__
+                UnityEngine.Profiling.Profiler.BeginSample("Var.OnChanged<T>");  //__SILP__
+                #endif                                                           //__SILP__
+                bool needGc = false;                                             //__SILP__
+                foreach (var r in _ValueWatchers.RetainLock()) {                 //__SILP__
+                    IValueWatcher<T> watcher = _ValueWatchers.GetTarget(r);      //__SILP__
+                    if (watcher == null) {                                       //__SILP__
+                        needGc = true;                                           //__SILP__
+                    } else {                                                     //__SILP__
+                        #if UNITY_EDITOR                                         //__SILP__
+                        UnityEngine.Profiling.Profiler.BeginSample(              //__SILP__
+                                                watcher.ToString());             //__SILP__
+                        #endif                                                   //__SILP__
+                        watcher.OnChanged(this, lastVal);
+            //SILP: WEAK_LIST_FOREACH_END(Var.IsValid<T>, watcher, IValueWatcher<T>, _ValueWatchers)
+                        #if UNITY_EDITOR                              //__SILP__
+                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
+                        #endif                                        //__SILP__
+                    }                                                 //__SILP__
+                }                                                     //__SILP__
+                _ValueWatchers.ReleaseLock(needGc);                   //__SILP__
+                #if UNITY_EDITOR                                      //__SILP__
+                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
+                #endif                                                //__SILP__
+            }                                                         //__SILP__
         }
 
-        public bool CheckNewValue(T newValue) {
-            return WeakListHelper.IsValid(_ValueCheckers, (IValueChecker<T> checker) => {
-                if (!checker.IsValid(this, newValue)) {
-                    if (LogDebug) {
-                        Debug("Invalid Value: {0} => {1} -> {2}",
-                                checker, Value, newValue);
-                    }
-                    return false;
-                }
-                return true;
-            });
+        private bool IsValid(T newValue) {
+            bool result = true;
+            //SILP: WEAK_LIST_FOREACH_BEGIN(Var.IsValid, checker, IValueChecker<T>, _ValueCheckers)
+            if (_ValueCheckers != null) {                                    //__SILP__
+                #if UNITY_EDITOR                                             //__SILP__
+                UnityEngine.Profiling.Profiler.BeginSample("Var.IsValid");   //__SILP__
+                #endif                                                       //__SILP__
+                bool needGc = false;                                         //__SILP__
+                foreach (var r in _ValueCheckers.RetainLock()) {             //__SILP__
+                    IValueChecker<T> checker = _ValueCheckers.GetTarget(r);  //__SILP__
+                    if (checker == null) {                                   //__SILP__
+                        needGc = true;                                       //__SILP__
+                    } else {                                                 //__SILP__
+                        #if UNITY_EDITOR                                     //__SILP__
+                        UnityEngine.Profiling.Profiler.BeginSample(          //__SILP__
+                                                checker.ToString());         //__SILP__
+                        #endif                                               //__SILP__
+                        if (!checker.IsValid(this, newValue)) {
+                            if (LogDebug) {
+                                Debug("Invalid Value: {0} => {1} -> {2}",
+                                        checker, _Value, newValue);
+                            }
+                            result = false;
+                            #if UNITY_EDITOR
+                            UnityEngine.Profiling.Profiler.EndSample();
+                            #endif
+                            break;
+                        }
+            //SILP: WEAK_LIST_FOREACH_END(Var.IsValid, checker, IValueChecker<T>, _ValueCheckers)
+                        #if UNITY_EDITOR                              //__SILP__
+                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
+                        #endif                                        //__SILP__
+                    }                                                 //__SILP__
+                }                                                     //__SILP__
+                _ValueCheckers.ReleaseLock(needGc);                   //__SILP__
+                #if UNITY_EDITOR                                      //__SILP__
+                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
+                #endif                                                //__SILP__
+            }                                                         //__SILP__
+            return result;
         }
 
         public bool SetValue(T newValue) {
             if (NeedUpdate(newValue)) {
-                if (!CheckNewValue(newValue)) {
+                if (!IsValid(newValue)) {
                     _CheckFailedCount++;
                     return false;
                 }
