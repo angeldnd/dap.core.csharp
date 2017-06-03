@@ -14,6 +14,11 @@ namespace angeldnd.dap {
         private Dictionary<string, string> _StringValues = null;
         private Dictionary<string, Data> _DataValues = null;
 
+        private string _CapacityTip = "";
+        public string CapacityTip {
+            get { return _CapacityTip; }
+        }
+
         public override Data Clone() {
             RealData clone = new RealData();
             _CopyTo(clone);
@@ -33,6 +38,16 @@ namespace angeldnd.dap {
         }
 
         protected override void OnRecycle() {
+            _CapacityTip = string.Format("({0} B:{1} I:{2} L:{3} F:{4} D:{5} S:{6} A:{7})",
+                    _ValueTypes.Count,
+                    _BoolValues == null ? 0 : _BoolValues.Count,
+                    _IntValues == null ? 0 : _IntValues.Count,
+                    _LongValues == null ? 0 : _LongValues.Count,
+                    _FloatValues == null ? 0 : _FloatValues.Count,
+                    _DoubleValues == null ? 0 : _DoubleValues.Count,
+                    _StringValues == null ? 0 : _StringValues.Count,
+                    _DataValues == null ? 0 : _DataValues.Count);
+
             if (_DataValues != null) {
                 foreach (var kv in _DataValues) {
                     if (kv.Value != null) {

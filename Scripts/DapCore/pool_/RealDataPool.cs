@@ -8,7 +8,14 @@ namespace angeldnd.dap {
         }
 
         protected override RealData NewItem() {
-            return new RealData();
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.BeginSample("RealDataPool.NewItem");
+            #endif
+            RealData result = new RealData();
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.EndSample();
+            #endif
+            return result;
         }
 
         protected override bool CheckAdd(RealData item) {

@@ -247,7 +247,23 @@ namespace angeldnd.dap {
         }
 
         public override bool SetData(string key, Data val) {
-            return _Real.SetData(key, val);
+            bool isTempKey = IsTempKey(key);
+            if (Sealed && !isTempKey) {
+                Log.Error("Already Sealed: {0} -> {1}", key, val);
+                return false;
+            }
+            if (isTempKey || !HasKey(key)) {
+                Data subData = val;
+                if (Kind != null) {
+                    RealData real = val as RealData;
+                    if (real != null) {
+                        subData = DataCache._Register(Kind, key, real);
+                    }
+                }
+                return _Real.SetData(key, subData);
+            }
+            Log.Error("Key Exist: {0} {1} -> {2}", key, GetValue(key), val);
+            return false;
         }
 
         public override void ForEachData(Action<int, Data> callback) {
