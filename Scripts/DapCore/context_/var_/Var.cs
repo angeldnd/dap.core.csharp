@@ -108,6 +108,9 @@ namespace angeldnd.dap {
         }
 
         private void UpdateValue(T newValue, Action callback = null) {
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.BeginSample(Key);
+            #endif
             T lastVal = _Value;
 
             _Value = newValue;
@@ -119,6 +122,9 @@ namespace angeldnd.dap {
 
             NotifyVarWatchers();
             NotifyValueWatchers(lastVal);
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.EndSample();
+            #endif
         }
 
         private void NotifyVarWatchers() {

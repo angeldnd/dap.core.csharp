@@ -73,6 +73,10 @@ namespace angeldnd.dap {
                 return ResponseHelper.BadRequest(this, req, "Invalid Request");
             }
 
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.BeginSample(Key);
+            #endif
+
             NotifyRequestWatchers(req);
 
             Data res = null;
@@ -98,6 +102,9 @@ namespace angeldnd.dap {
             } else if (LogDebug) {
                 Debug("HandleRequest: {0} -> {1}", req.ToFullString(), res.ToFullString());
             }
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.EndSample();
+            #endif
             return res;
         }
 

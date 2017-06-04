@@ -124,7 +124,7 @@ namespace angeldnd.dap {
         public void SyncExtra() {
             if (_PropertySyncers != null) {
                 #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.BeginSample("Extra.SyncExtra");
+                UnityEngine.Profiling.Profiler.BeginSample(Key == null ? "Extra.SyncExtra" : Key);
                 #endif
                 var en = _PropertySyncers.GetEnumerator();
                 while (en.MoveNext()) {
