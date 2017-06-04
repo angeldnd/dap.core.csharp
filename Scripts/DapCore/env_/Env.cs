@@ -33,6 +33,8 @@ namespace angeldnd.dap {
         public const string SummaryBootstrapper = "bootstrapper";
         [DapParam(typeof(Data))]
         public const string SummaryPlugins = "plugins";
+        [DapParam(typeof(Data))]
+        public const string SummaryPatterns = "patterns";
         public const string SummaryOk = "ok";
     }
 

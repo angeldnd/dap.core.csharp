@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class Hook : InTableAspect<Hooks> {
+    public class Hook : InTableAspect<Hooks> {
         private bool _Setup = false;
 
         private string _Description = null;
@@ -36,17 +36,25 @@ namespace angeldnd.dap {
             return Setup(description, contextAddedBlock, null);
         }
 
-        private List<PatternMatcher> _UriMatchers = new List<PatternMatcher>();
+        private List<EnvUriMatcher> _ContextPathMatchers = new List<EnvUriMatcher>();
+        public int ContextMatchersCount {
+            get { return _ContextPathMatchers.Count; }
+        }
 
-        public void AddUriPattern(string contextPathPattern) {
-            _UriMatchers.Add(new PatternMatcher(PathConsts.SegmentSeparator, contextPathPattern));
+        public void AddContextPattern(string contextPathPattern) {
+            EnvUriMatcher matcher = new EnvUriMatcher(contextPathPattern);
+            if (matcher.CanMatchContext()) {
+                _ContextPathMatchers.Add(matcher);
+            } else {
+                Error("Invalid ContextPattern: {0}", contextPathPattern);
+            }
         }
 
         // Should only be called from IContext.OnAdded();
         public void _OnContextAdded(IContext context, string[] contextPathSegments) {
             if (_ContextAddedBlock != null) {
-                for (int i = 0; i < _UriMatchers.Count; i++) {
-                    if (_UriMatchers[i].IsMatched(contextPathSegments)) {
+                for (int i = 0; i < _ContextPathMatchers.Count; i++) {
+                    if (_ContextPathMatchers[i].IsMatched(contextPathSegments)) {
                         _ContextAddedBlock(context);
                         return;
                     }
@@ -57,8 +65,8 @@ namespace angeldnd.dap {
         // Should only be called from IContext.OnRemoved();
         public void _OnContextRemoved(IContext context, string[] contextPathSegments) {
             if (_ContextRemovedBlock != null) {
-                for (int i = 0; i < _UriMatchers.Count; i++) {
-                    if (_UriMatchers[i].IsMatched(contextPathSegments)) {
+                for (int i = 0; i < _ContextPathMatchers.Count; i++) {
+                    if (_ContextPathMatchers[i].IsMatched(contextPathSegments)) {
                         _ContextRemovedBlock(context);
                         return;
                     }
@@ -69,6 +77,14 @@ namespace angeldnd.dap {
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
             summary.S(ContextConsts.SummaryDescription, _Description);
+            Data patterns = DataCache.Take(this, EnvConsts.SummaryPatterns);
+            for (int i = 0; i < _ContextPathMatchers.Count; i++) {
+                patterns.S("context_" + i.ToString(), _ContextPathMatchers[i].ContextPathPatternMatcher.Pattern);
+            }
+            AddSummaryExtraPatterns(patterns);
+            summary.A(EnvConsts.SummaryPatterns, patterns);
         }
+
+        protected virtual void AddSummaryExtraPatterns(Data patterns) {}
     }
 }

@@ -52,7 +52,7 @@ namespace angeldnd.dap {
                                                                       //__SILP__
         protected override sealed void OnAdded() {                    //__SILP__
             if (_Context != null) {                                   //__SILP__
-                //TODO: Add AspectWatcher to Context                  //__SILP__
+                Env.Instance.Hooks._OnAspectAdded(this);              //__SILP__
             }                                                         //__SILP__
             OnAspectAdded();                                          //__SILP__
         }                                                             //__SILP__

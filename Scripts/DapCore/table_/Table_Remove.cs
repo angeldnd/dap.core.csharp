@@ -44,20 +44,38 @@ namespace angeldnd.dap {
 
         public List<T> RemoveByChecker(Func<T, bool> checker) {
             List<T> removed = null;
-            /* Must use the list version since need to remove some of them */
-            List<T> all = All();
-            if (all != null) {
-                foreach (T element in all) {
-                    if (checker(element)) {
-                        _Elements.Remove(element);
-                        if (removed == null) {
-                            removed = new List<T>();
-                        }
-                        removed.Add(element);
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.BeginSample("RemoveByChecker: Check");
+            #endif
+            foreach (T element in _Elements) {
+                if (checker(element)) {
+                    if (removed == null) {
+                        removed = new List<T>();
                     }
-                };
+                    removed.Add(element);
+                }
             }
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.EndSample();
+            #endif
+            if (removed != null) {
+                #if UNITY_EDITOR
+                UnityEngine.Profiling.Profiler.BeginSample("RemoveByChecker: Remove");
+                #endif
+                for (int i = removed.Count - 1; i >= 0; i--) {
+                    _Elements.RemoveAt(removed[i].Index);
+                }
+                #if UNITY_EDITOR
+                UnityEngine.Profiling.Profiler.EndSample();
+                #endif
+            }
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.BeginSample("RemoveByChecker: Notify");
+            #endif
             NotifyRemoves(removed, true);
+            #if UNITY_EDITOR
+            UnityEngine.Profiling.Profiler.EndSample();
+            #endif
             return removed;
         }
 

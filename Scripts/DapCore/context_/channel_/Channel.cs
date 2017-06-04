@@ -8,7 +8,7 @@ namespace angeldnd.dap {
 
         public bool FireEvent(Data evt) {
             #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample("Channel.FireEvent: " + Key);
+            UnityEngine.Profiling.Profiler.BeginSample(Key);
             #endif
 
             if (evt != null) evt.Seal();

@@ -232,7 +232,7 @@ public override sealed bool DebugMode {
 
 protected override sealed void OnAdded() {
     if (_Context != null) {
-        //TODO: Add AspectWatcher to Context
+        Env.Instance.Hooks._OnAspectAdded(this);
     }
     OnAspectAdded();
 }

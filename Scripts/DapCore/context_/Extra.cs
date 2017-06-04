@@ -124,12 +124,12 @@ namespace angeldnd.dap {
         public void SyncExtra() {
             if (_PropertySyncers != null) {
                 #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.BeginSample("Extra.SyncExtra: " + Key);
+                UnityEngine.Profiling.Profiler.BeginSample("Extra.SyncExtra");
                 #endif
                 var en = _PropertySyncers.GetEnumerator();
                 while (en.MoveNext()) {
                     #if UNITY_EDITOR
-                    UnityEngine.Profiling.Profiler.BeginSample("Extra.SyncExtra: " + en.Current.Key);
+                    UnityEngine.Profiling.Profiler.BeginSample(en.Current.Key);
                     #endif
                     en.Current.Value(en.Current.Key);
                     #if UNITY_EDITOR

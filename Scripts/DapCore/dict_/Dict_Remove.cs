@@ -42,18 +42,20 @@ namespace angeldnd.dap {
 
         public List<T> RemoveByChecker(Func<T, bool> checker) {
             List<T> removed = null;
-            /* Must use the list version since need to remove some of them */
-            List<T> all = All();
-            if (all != null) {
-                foreach (T element in all) {
-                    if (checker(element)) {
-                        _Elements.Remove(element.Key);
-                        if (removed == null) {
-                            removed = new List<T>();
-                        }
-                        removed.Add(element);
+            var en = _Elements.GetEnumerator();
+            while (en.MoveNext()) {
+                T element = en.Current.Value;
+                if (checker(element)) {
+                    if (removed == null) {
+                        removed = new List<T>();
                     }
-                };
+                    removed.Add(element);
+                }
+            }
+            if (removed != null) {
+                foreach (T element  in removed) {
+                    _Elements.Remove(element.Key);
+                }
             }
 
             NotifyRemoves(removed);
