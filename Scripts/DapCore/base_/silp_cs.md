@@ -351,12 +351,22 @@ public override sealed bool DebugMode {
     get { return _Debugging; }
 }
 
+private bool _Removed = false;
+public bool Removed {
+    get { return _Removed; }
+}
+
 protected override sealed void OnAdded() {
     Env.Instance.Hooks._OnContextAdded(this);
     OnContextAdded();
 }
 
 protected override sealed void OnRemoved() {
+    if (_Removed) {
+        Error("Already Removed");
+        return;
+    }
+    _Removed = true;
     Env.Instance.Hooks._OnContextRemoved(this);
     OnContextRemoved();
 }

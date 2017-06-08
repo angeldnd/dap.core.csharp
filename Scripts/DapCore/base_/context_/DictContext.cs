@@ -76,12 +76,22 @@ namespace angeldnd.dap {
             get { return _Debugging; }                                                                //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
+        private bool _Removed = false;                                                                //__SILP__
+        public bool Removed {                                                                         //__SILP__
+            get { return _Removed; }                                                                  //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
         protected override sealed void OnAdded() {                                                    //__SILP__
             Env.Instance.Hooks._OnContextAdded(this);                                                 //__SILP__
             OnContextAdded();                                                                         //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         protected override sealed void OnRemoved() {                                                  //__SILP__
+            if (_Removed) {                                                                           //__SILP__
+                Error("Already Removed");                                                             //__SILP__
+                return;                                                                               //__SILP__
+            }                                                                                         //__SILP__
+            _Removed = true;                                                                          //__SILP__
             Env.Instance.Hooks._OnContextRemoved(this);                                               //__SILP__
             OnContextRemoved();                                                                       //__SILP__
         }                                                                                             //__SILP__
