@@ -51,12 +51,15 @@ namespace angeldnd.dap {
                 return;
             }
 
-            _ChannelOnTick = Context.Channels.GetOrAdd(TickableConsts.ChannelOnTick);
+            _ChannelOnTick = Context.Channels.Add(TickableConsts.ChannelOnTick);
             if (_ChannelOnTick != null) {
-                ownerTickChannel.AddEventWatcher(this,
-                    (Channel channel, Data evt) => {
-                        _ChannelOnTick.FireEvent(evt);
-                });
+                ownerTickChannel.AddEventWatcher(this, OnTick);
+            }
+        }
+
+        private void OnTick(Channel channel, Data evt) {
+            if (!Context.Removed) {
+                _ChannelOnTick.FireEvent(evt);
             }
         }
     }

@@ -54,7 +54,9 @@ namespace angeldnd.dap {
         }
 
         private void OnTime(Channel channel, Data evt) {
-            _ChannelOnTime.FireEvent(evt);
+            if (!Context.Removed) {
+                _ChannelOnTime.FireEvent(evt);
+            }
         }
     }
 }

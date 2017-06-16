@@ -5,6 +5,7 @@ namespace angeldnd.dap {
     public interface IObject : ILogger, IBlockOwner {
         string DapType { get; }
 
+        int Identity { get; }
         int Revision { get; }
         string RevInfo { get; }
 
@@ -43,6 +44,12 @@ namespace angeldnd.dap {
             }
         }
 
+        private static int _NextIdentity = 0;
+        private int _Identity = _NextIdentity++;
+        public int Identity {
+            get { return _Identity; }
+        }
+
         private int _Revision = 0;
         public int Revision {
             get { return _Revision; }
@@ -64,9 +71,9 @@ namespace angeldnd.dap {
             get {
                 string dapType = DapType;
                 if (dapType != null) {
-                    return string.Format("[{0}] [{1}] {2} ", dapType, Uri, RevInfo);
+                    return string.Format("[{0}] [{1}] ({2:D5}) {3} ", dapType, Uri, _Identity, RevInfo);
                 }
-                return string.Format("_[{0}] [{1}] {2} ", GetType().FullName, Uri, RevInfo);
+                return string.Format("_[{0}] [{1}] ({2:D5}) {3} ", GetType().FullName, Uri, _Identity, RevInfo);
             }
         }
 
