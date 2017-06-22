@@ -37,31 +37,22 @@ public bool Remove${name}(string ${a_key}, ${l_type} ${l_var}) {
 # WEAK_LIST_FOREACH_BEGIN(name, var_name, cs_type, list_name) #
 ```C#
 if (${list_name} != null) {
-    #if UNITY_EDITOR
-    UnityEngine.Profiling.Profiler.BeginSample("${name}");
-    #endif
+    if (Log.Profiler != null) Log.Profiler.BeginSample("${name}");
     bool needGc = false;
     foreach (var r in ${list_name}.RetainLock()) {
         ${cs_type} ${var_name} = ${list_name}.GetTarget(r);
         if (${var_name} == null) {
             needGc = true;
         } else {
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample(
-                                    ${var_name}.ToString());
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample(${var_name}.ToString());
 ```
 
 # WEAK_LIST_FOREACH_END(name, var_name, cs_type, list_name) #
 ```C#
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
         }
     }
     ${list_name}.ReleaseLock(needGc);
-    #if UNITY_EDITOR
-    UnityEngine.Profiling.Profiler.EndSample();
-    #endif
+    if (Log.Profiler != null) Log.Profiler.EndSample();
 }
 ```

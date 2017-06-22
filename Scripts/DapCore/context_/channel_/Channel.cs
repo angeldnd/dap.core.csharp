@@ -7,9 +7,7 @@ namespace angeldnd.dap {
         }
 
         public bool FireEvent(Data evt) {
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample(Key);
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample(Key);
 
             if (evt != null) evt.Seal();
 
@@ -19,81 +17,59 @@ namespace angeldnd.dap {
 
                 NotifyWatchers(evt);
             }
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
             return isValid;
         }
 
         private bool IsValidEvent(Data evt) {
             bool result = true;
             //SILP: WEAK_LIST_FOREACH_BEGIN(Channel.IsValidEvent, checker, IEventChecker, _EventCheckers)
-            if (_EventCheckers != null) {                                            //__SILP__
-                #if UNITY_EDITOR                                                     //__SILP__
-                UnityEngine.Profiling.Profiler.BeginSample("Channel.IsValidEvent");  //__SILP__
-                #endif                                                               //__SILP__
-                bool needGc = false;                                                 //__SILP__
-                foreach (var r in _EventCheckers.RetainLock()) {                     //__SILP__
-                    IEventChecker checker = _EventCheckers.GetTarget(r);             //__SILP__
-                    if (checker == null) {                                           //__SILP__
-                        needGc = true;                                               //__SILP__
-                    } else {                                                         //__SILP__
-                        #if UNITY_EDITOR                                             //__SILP__
-                        UnityEngine.Profiling.Profiler.BeginSample(                  //__SILP__
-                                                checker.ToString());                 //__SILP__
-                        #endif                                                       //__SILP__
+            if (_EventCheckers != null) {                                                        //__SILP__
+                if (Log.Profiler != null) Log.Profiler.BeginSample("Channel.IsValidEvent");      //__SILP__
+                bool needGc = false;                                                             //__SILP__
+                foreach (var r in _EventCheckers.RetainLock()) {                                 //__SILP__
+                    IEventChecker checker = _EventCheckers.GetTarget(r);                         //__SILP__
+                    if (checker == null) {                                                       //__SILP__
+                        needGc = true;                                                           //__SILP__
+                    } else {                                                                     //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.BeginSample(checker.ToString());  //__SILP__
                         if (!checker.IsValidEvent(this, evt)) {
                             if (LogDebug) {
                                 Debug("Invalid Event: {0} => {1}", checker, evt.ToFullString());
                             }
                             result = false;
-                            #if UNITY_EDITOR
-                            UnityEngine.Profiling.Profiler.EndSample();
-                            #endif
+                            if (Log.Profiler != null) Log.Profiler.EndSample();
                             break;
                         }
             //SILP: WEAK_LIST_FOREACH_END(Channel.IsValidEvent, checker, IEventChecker, _EventCheckers)
-                        #if UNITY_EDITOR                              //__SILP__
-                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
-                        #endif                                        //__SILP__
-                    }                                                 //__SILP__
-                }                                                     //__SILP__
-                _EventCheckers.ReleaseLock(needGc);                   //__SILP__
-                #if UNITY_EDITOR                                      //__SILP__
-                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
-                #endif                                                //__SILP__
-            }                                                         //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.EndSample();  //__SILP__
+                    }                                                        //__SILP__
+                }                                                            //__SILP__
+                _EventCheckers.ReleaseLock(needGc);                          //__SILP__
+                if (Log.Profiler != null) Log.Profiler.EndSample();          //__SILP__
+            }                                                                //__SILP__
             return result;
         }
 
         private void NotifyWatchers(Data evt) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Channel.OnEvent, watcher, IEventWatcher, _EventWatchers)
-            if (_EventWatchers != null) {                                       //__SILP__
-                #if UNITY_EDITOR                                                //__SILP__
-                UnityEngine.Profiling.Profiler.BeginSample("Channel.OnEvent");  //__SILP__
-                #endif                                                          //__SILP__
-                bool needGc = false;                                            //__SILP__
-                foreach (var r in _EventWatchers.RetainLock()) {                //__SILP__
-                    IEventWatcher watcher = _EventWatchers.GetTarget(r);        //__SILP__
-                    if (watcher == null) {                                      //__SILP__
-                        needGc = true;                                          //__SILP__
-                    } else {                                                    //__SILP__
-                        #if UNITY_EDITOR                                        //__SILP__
-                        UnityEngine.Profiling.Profiler.BeginSample(             //__SILP__
-                                                watcher.ToString());            //__SILP__
-                        #endif                                                  //__SILP__
+            if (_EventWatchers != null) {                                                        //__SILP__
+                if (Log.Profiler != null) Log.Profiler.BeginSample("Channel.OnEvent");           //__SILP__
+                bool needGc = false;                                                             //__SILP__
+                foreach (var r in _EventWatchers.RetainLock()) {                                 //__SILP__
+                    IEventWatcher watcher = _EventWatchers.GetTarget(r);                         //__SILP__
+                    if (watcher == null) {                                                       //__SILP__
+                        needGc = true;                                                           //__SILP__
+                    } else {                                                                     //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnEvent(this, evt);
             //SILP: WEAK_LIST_FOREACH_END(Channel.OnEvent, watcher, IEventWatcher, _EventWatchers)
-                        #if UNITY_EDITOR                              //__SILP__
-                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
-                        #endif                                        //__SILP__
-                    }                                                 //__SILP__
-                }                                                     //__SILP__
-                _EventWatchers.ReleaseLock(needGc);                   //__SILP__
-                #if UNITY_EDITOR                                      //__SILP__
-                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
-                #endif                                                //__SILP__
-            }                                                         //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.EndSample();  //__SILP__
+                    }                                                        //__SILP__
+                }                                                            //__SILP__
+                _EventWatchers.ReleaseLock(needGc);                          //__SILP__
+                if (Log.Profiler != null) Log.Profiler.EndSample();          //__SILP__
+            }                                                                //__SILP__
         }
 
         public BlockEventChecker AddEventChecker(IBlockOwner owner, Func<Channel, Data, bool> block) {

@@ -29,7 +29,7 @@ namespace angeldnd.dap {
             if (data == null) return false;
             string dapType = data.GetString(ObjectConsts.KeyDapType);
             if (dapType == DapType) {
-                return SetValue(GetEncoder().Decode(data, PropertiesConsts.KeyValue));
+                return DecodeValue(data);
             } else {
                 Error("Dap Type Mismatched: {0}, {1}", DapType, data.ToFullString());
             }
@@ -45,7 +45,11 @@ namespace angeldnd.dap {
         }
 
         public bool DecodeValue(Data data) {
-            return SetValue(GetEncoder().Decode(data, PropertiesConsts.KeyValue));
+            T val;
+            if (GetEncoder().TryDecode(data, PropertiesConsts.KeyValue, out val)) {
+                return SetValue(val);
+            }
+            return false;
         }
 
         protected override void AddSummaryFields(Data summary) {

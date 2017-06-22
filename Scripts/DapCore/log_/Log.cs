@@ -14,6 +14,21 @@ namespace angeldnd.dap {
             get { return _Provider; }
         }
 
+        private static IProfiler _Profiler = null;
+        public static IProfiler Profiler {
+            get { return _Profiler; }
+        }
+
+        public static IProfiler ResetProfiler() {
+            IProfiler profiler = _Profiler;
+            _Profiler = null;
+            return profiler;
+        }
+
+        public static void SetProfiler(IProfiler profiler) {
+            _Profiler = profiler;
+        }
+
         private static bool _LogDebug = true;
         public static bool LogDebug {
             get { return _LogDebug; }

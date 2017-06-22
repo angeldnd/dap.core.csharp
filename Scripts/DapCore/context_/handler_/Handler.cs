@@ -29,32 +29,23 @@ namespace angeldnd.dap {
 
         private void NotifySetupWatchers() {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnSetup, watcher, ISetupWatcher, _SetupWatchers)
-            if (_SetupWatchers != null) {                                   //__SILP__
-                #if UNITY_EDITOR                                            //__SILP__
-                UnityEngine.Profiling.Profiler.BeginSample("Var.OnSetup");  //__SILP__
-                #endif                                                      //__SILP__
-                bool needGc = false;                                        //__SILP__
-                foreach (var r in _SetupWatchers.RetainLock()) {            //__SILP__
-                    ISetupWatcher watcher = _SetupWatchers.GetTarget(r);    //__SILP__
-                    if (watcher == null) {                                  //__SILP__
-                        needGc = true;                                      //__SILP__
-                    } else {                                                //__SILP__
-                        #if UNITY_EDITOR                                    //__SILP__
-                        UnityEngine.Profiling.Profiler.BeginSample(         //__SILP__
-                                                watcher.ToString());        //__SILP__
-                        #endif                                              //__SILP__
+            if (_SetupWatchers != null) {                                                        //__SILP__
+                if (Log.Profiler != null) Log.Profiler.BeginSample("Var.OnSetup");               //__SILP__
+                bool needGc = false;                                                             //__SILP__
+                foreach (var r in _SetupWatchers.RetainLock()) {                                 //__SILP__
+                    ISetupWatcher watcher = _SetupWatchers.GetTarget(r);                         //__SILP__
+                    if (watcher == null) {                                                       //__SILP__
+                        needGc = true;                                                           //__SILP__
+                    } else {                                                                     //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnSetup(this);
             //SILP: WEAK_LIST_FOREACH_END(Var.OnSetup, watcher, ISetupWatcher, _SetupWatchers)
-                        #if UNITY_EDITOR                              //__SILP__
-                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
-                        #endif                                        //__SILP__
-                    }                                                 //__SILP__
-                }                                                     //__SILP__
-                _SetupWatchers.ReleaseLock(needGc);                   //__SILP__
-                #if UNITY_EDITOR                                      //__SILP__
-                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
-                #endif                                                //__SILP__
-            }                                                         //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.EndSample();  //__SILP__
+                    }                                                        //__SILP__
+                }                                                            //__SILP__
+                _SetupWatchers.ReleaseLock(needGc);                          //__SILP__
+                if (Log.Profiler != null) Log.Profiler.EndSample();          //__SILP__
+            }                                                                //__SILP__
         }
 
         public bool Setup(Func<Handler, Data, Data> block) {
@@ -73,9 +64,7 @@ namespace angeldnd.dap {
                 return ResponseHelper.BadRequest(this, req, "Invalid Request");
             }
 
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample(Key);
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample(Key);
 
             NotifyRequestWatchers(req);
 
@@ -102,112 +91,81 @@ namespace angeldnd.dap {
             } else if (LogDebug) {
                 Debug("HandleRequest: {0} -> {1}", req.ToFullString(), res.ToFullString());
             }
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
             return res;
         }
 
         private bool IsValidRequest(Data req) {
             bool result = true;
             //SILP: WEAK_LIST_FOREACH_BEGIN(Handler.IsValidRequest, checker, IRequestChecker, _RequestCheckers)
-            if (_RequestCheckers != null) {                                            //__SILP__
-                #if UNITY_EDITOR                                                       //__SILP__
-                UnityEngine.Profiling.Profiler.BeginSample("Handler.IsValidRequest");  //__SILP__
-                #endif                                                                 //__SILP__
-                bool needGc = false;                                                   //__SILP__
-                foreach (var r in _RequestCheckers.RetainLock()) {                     //__SILP__
-                    IRequestChecker checker = _RequestCheckers.GetTarget(r);           //__SILP__
-                    if (checker == null) {                                             //__SILP__
-                        needGc = true;                                                 //__SILP__
-                    } else {                                                           //__SILP__
-                        #if UNITY_EDITOR                                               //__SILP__
-                        UnityEngine.Profiling.Profiler.BeginSample(                    //__SILP__
-                                                checker.ToString());                   //__SILP__
-                        #endif                                                         //__SILP__
+            if (_RequestCheckers != null) {                                                      //__SILP__
+                if (Log.Profiler != null) Log.Profiler.BeginSample("Handler.IsValidRequest");    //__SILP__
+                bool needGc = false;                                                             //__SILP__
+                foreach (var r in _RequestCheckers.RetainLock()) {                               //__SILP__
+                    IRequestChecker checker = _RequestCheckers.GetTarget(r);                     //__SILP__
+                    if (checker == null) {                                                       //__SILP__
+                        needGc = true;                                                           //__SILP__
+                    } else {                                                                     //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.BeginSample(checker.ToString());  //__SILP__
                         if (!checker.IsValidRequest(this, req)) {
                             if (LogDebug) {
                                 Debug("Invalid Request: {0} => {1}",
                                         checker, req.ToFullString());
                             }
                             result = false;
-                            #if UNITY_EDITOR
-                            UnityEngine.Profiling.Profiler.EndSample();
-                            #endif
+                            if (Log.Profiler != null) Log.Profiler.EndSample();
                             break;
                         }
             //SILP: WEAK_LIST_FOREACH_END(Handler.IsValidRequest, checker, IRequestChecker, _RequestCheckers)
-                        #if UNITY_EDITOR                              //__SILP__
-                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
-                        #endif                                        //__SILP__
-                    }                                                 //__SILP__
-                }                                                     //__SILP__
-                _RequestCheckers.ReleaseLock(needGc);                 //__SILP__
-                #if UNITY_EDITOR                                      //__SILP__
-                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
-                #endif                                                //__SILP__
-            }                                                         //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.EndSample();  //__SILP__
+                    }                                                        //__SILP__
+                }                                                            //__SILP__
+                _RequestCheckers.ReleaseLock(needGc);                        //__SILP__
+                if (Log.Profiler != null) Log.Profiler.EndSample();          //__SILP__
+            }                                                                //__SILP__
             return result;
         }
 
         private void NotifyRequestWatchers(Data req) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Handler.OnRequest, watcher, IRequestWatcher, _RequestWatchers)
-            if (_RequestWatchers != null) {                                       //__SILP__
-                #if UNITY_EDITOR                                                  //__SILP__
-                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnRequest");  //__SILP__
-                #endif                                                            //__SILP__
-                bool needGc = false;                                              //__SILP__
-                foreach (var r in _RequestWatchers.RetainLock()) {                //__SILP__
-                    IRequestWatcher watcher = _RequestWatchers.GetTarget(r);      //__SILP__
-                    if (watcher == null) {                                        //__SILP__
-                        needGc = true;                                            //__SILP__
-                    } else {                                                      //__SILP__
-                        #if UNITY_EDITOR                                          //__SILP__
-                        UnityEngine.Profiling.Profiler.BeginSample(               //__SILP__
-                                                watcher.ToString());              //__SILP__
-                        #endif                                                    //__SILP__
+            if (_RequestWatchers != null) {                                                      //__SILP__
+                if (Log.Profiler != null) Log.Profiler.BeginSample("Handler.OnRequest");         //__SILP__
+                bool needGc = false;                                                             //__SILP__
+                foreach (var r in _RequestWatchers.RetainLock()) {                               //__SILP__
+                    IRequestWatcher watcher = _RequestWatchers.GetTarget(r);                     //__SILP__
+                    if (watcher == null) {                                                       //__SILP__
+                        needGc = true;                                                           //__SILP__
+                    } else {                                                                     //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnRequest(this, req);
             //SILP: WEAK_LIST_FOREACH_END(Handler.OnRequest, watcher, IRequestWatcher, _RequestWatchers)
-                        #if UNITY_EDITOR                              //__SILP__
-                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
-                        #endif                                        //__SILP__
-                    }                                                 //__SILP__
-                }                                                     //__SILP__
-                _RequestWatchers.ReleaseLock(needGc);                 //__SILP__
-                #if UNITY_EDITOR                                      //__SILP__
-                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
-                #endif                                                //__SILP__
-            }                                                         //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.EndSample();  //__SILP__
+                    }                                                        //__SILP__
+                }                                                            //__SILP__
+                _RequestWatchers.ReleaseLock(needGc);                        //__SILP__
+                if (Log.Profiler != null) Log.Profiler.EndSample();          //__SILP__
+            }                                                                //__SILP__
         }
 
         private void NotifyResponseWatchers(Data req, Data res) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Handler.OnResponse, watcher, IResponseWatcher, _ResponseWatchers)
-            if (_ResponseWatchers != null) {                                       //__SILP__
-                #if UNITY_EDITOR                                                   //__SILP__
-                UnityEngine.Profiling.Profiler.BeginSample("Handler.OnResponse");  //__SILP__
-                #endif                                                             //__SILP__
-                bool needGc = false;                                               //__SILP__
-                foreach (var r in _ResponseWatchers.RetainLock()) {                //__SILP__
-                    IResponseWatcher watcher = _ResponseWatchers.GetTarget(r);     //__SILP__
-                    if (watcher == null) {                                         //__SILP__
-                        needGc = true;                                             //__SILP__
-                    } else {                                                       //__SILP__
-                        #if UNITY_EDITOR                                           //__SILP__
-                        UnityEngine.Profiling.Profiler.BeginSample(                //__SILP__
-                                                watcher.ToString());               //__SILP__
-                        #endif                                                     //__SILP__
+            if (_ResponseWatchers != null) {                                                     //__SILP__
+                if (Log.Profiler != null) Log.Profiler.BeginSample("Handler.OnResponse");        //__SILP__
+                bool needGc = false;                                                             //__SILP__
+                foreach (var r in _ResponseWatchers.RetainLock()) {                              //__SILP__
+                    IResponseWatcher watcher = _ResponseWatchers.GetTarget(r);                   //__SILP__
+                    if (watcher == null) {                                                       //__SILP__
+                        needGc = true;                                                           //__SILP__
+                    } else {                                                                     //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnResponse(this, req, res);
             //SILP: WEAK_LIST_FOREACH_END(Handler.OnResponse, watcher, IResponseWatcher, _ResponseWatchers)
-                        #if UNITY_EDITOR                              //__SILP__
-                        UnityEngine.Profiling.Profiler.EndSample();   //__SILP__
-                        #endif                                        //__SILP__
-                    }                                                 //__SILP__
-                }                                                     //__SILP__
-                _ResponseWatchers.ReleaseLock(needGc);                //__SILP__
-                #if UNITY_EDITOR                                      //__SILP__
-                UnityEngine.Profiling.Profiler.EndSample();           //__SILP__
-                #endif                                                //__SILP__
-            }                                                         //__SILP__
+                        if (Log.Profiler != null) Log.Profiler.EndSample();  //__SILP__
+                    }                                                        //__SILP__
+                }                                                            //__SILP__
+                _ResponseWatchers.ReleaseLock(needGc);                       //__SILP__
+                if (Log.Profiler != null) Log.Profiler.EndSample();          //__SILP__
+            }                                                                //__SILP__
         }
 
         public BlockSetupWatcher AddSetupWatcher(IBlockOwner owner, Action<ISetupAspect> block) {

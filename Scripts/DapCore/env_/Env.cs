@@ -25,6 +25,8 @@ namespace angeldnd.dap {
         public const string SummarySubVersion = "sub_version";
         [DapParam(typeof(int))]
         public const string SummaryRound = "round";
+        [DapParam(typeof(float))]
+        public const string SummaryTime = "time";
         [DapParam(typeof(int))]
         public const string SummaryTickCount = "tick_count";
         [DapParam(typeof(float))]
@@ -354,6 +356,7 @@ namespace angeldnd.dap {
                    .I(EnvConsts.SummaryVersion, _Version)
                    .I(EnvConsts.SummarySubVersion, _SubVersion)
                    .I(EnvConsts.SummaryRound, _Round)
+                   .F(EnvConsts.SummaryTime, _Time)
                    .I(EnvConsts.SummaryTickCount, _TickCount)
                    .F(EnvConsts.SummaryTickTime, _TickTime)
                    .S(EnvConsts.SummaryBootstrapper, _Bootstrapper.GetType().FullName)

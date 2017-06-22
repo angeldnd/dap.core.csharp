@@ -126,9 +126,7 @@ namespace angeldnd.dap {
         }
 
         public int CollectAllGarbage() {
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample("WeakList.CollectAllGarbage");
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample("WeakList.CollectAllGarbage");
             int count = 0;
             int startIndex = 0;
             while (true) {
@@ -138,9 +136,7 @@ namespace angeldnd.dap {
                 }
                 count++;
             }
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
             return count;
         }
 

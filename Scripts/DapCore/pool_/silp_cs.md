@@ -4,6 +4,10 @@ public override bool Is${type}(string key) {
     return _Real.Is${type}(key);
 }
 
+public override bool TryGet${type}(string key, out ${cs_type} val, bool isDebug = false) {
+    return _Real.TryGet${type}(key, out val, isDebug);
+}
+
 public override ${cs_type} Get${type}(string key) {
     return _Real.Get${type}(key);
 }

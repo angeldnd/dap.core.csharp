@@ -1,6 +1,7 @@
 # DATA_TYPE(type, cs_type) #
 ```
 public abstract bool Is${type}(string key);
+public abstract bool TryGet${type}(string key, out ${cs_type} val, bool isDebug = false);
 public abstract ${cs_type} Get${type}(string key);
 public abstract ${cs_type} Get${type}(string key, ${cs_type} defaultValue);
 public abstract bool Set${type}(string key, ${cs_type} val);
@@ -26,22 +27,35 @@ public override bool Is${type}(string key) {
     return type == DataType.${type};
 }
 
-public override ${cs_type} Get${type}(string key) {
-    if (_${type}Values != null && Is${type}(key)) {
-        ${cs_type} result;
-        if (_${type}Values.TryGetValue(key, out result)) {
-            return result;
+public override bool TryGet${type}(string key, out ${cs_type} val, bool isDebug = false) {
+    if (_${type}Values == null) {
+        Log.ErrorOrDebug(isDebug, "Value Not Exist: {0}", key);
+    } else if (!Is${type}(key)) {
+        Log.ErrorOrDebug(isDebug, "Value Is Not ${type}: {0} -> {1} -> {2}",
+            key, GetValueType(key), GetValue(key));
+    } else {
+        ${cs_type} _val;
+        if (_${type}Values.TryGetValue(key, out _val)) {
+            val = _val;
+            return true;
+        } else {
+            Log.Error("Value Not Found: {0}", key);
         }
     }
-    return default(${cs_type}); 
+    val = default(${cs_type});
+    return false;
+}
+
+public override ${cs_type} Get${type}(string key) {
+    ${cs_type} result;
+    TryGet${type}(key, out result);
+    return result;
 }
 
 public override ${cs_type} Get${type}(string key, ${cs_type} defaultValue) {
-    if (_${type}Values != null && Is${type}(key)) {
-        ${cs_type} result;
-        if (_${type}Values.TryGetValue(key, out result)) {
-            return result;
-        }
+    ${cs_type} result;
+    if (TryGet${type}(key, out result, true)) {
+        return result;
     }
     return defaultValue;
 }
@@ -60,7 +74,7 @@ public override bool Set${type}(string key, ${cs_type} val) {
         _${type}Values[key] = val;
         return true;
     }
-    Log.Error("Key Exist: {0} {1} -> {2}", key, GetValue(key), val);
+    Log.Error("Value Exist: {0} {1} -> {2}", key, GetValue(key), val);
     return false;
 }
 

@@ -44,9 +44,7 @@ namespace angeldnd.dap {
 
         public List<T> RemoveByChecker(Func<T, bool> checker) {
             List<T> removed = null;
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample("RemoveByChecker: Check");
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample("RemoveByChecker: Check");
             foreach (T element in _Elements) {
                 if (checker(element)) {
                     if (removed == null) {
@@ -55,27 +53,17 @@ namespace angeldnd.dap {
                     removed.Add(element);
                 }
             }
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
             if (removed != null) {
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.BeginSample("RemoveByChecker: Remove");
-                #endif
+                if (Log.Profiler != null) Log.Profiler.BeginSample("RemoveByChecker: Remove");
                 for (int i = removed.Count - 1; i >= 0; i--) {
                     _Elements.RemoveAt(removed[i].Index);
                 }
-                #if UNITY_EDITOR
-                UnityEngine.Profiling.Profiler.EndSample();
-                #endif
+                if (Log.Profiler != null) Log.Profiler.EndSample();
             }
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.BeginSample("RemoveByChecker: Notify");
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample("RemoveByChecker: Notify");
             NotifyRemoves(removed, true);
-            #if UNITY_EDITOR
-            UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
             return removed;
         }
 

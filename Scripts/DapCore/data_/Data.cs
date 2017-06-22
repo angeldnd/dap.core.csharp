@@ -85,68 +85,75 @@ namespace angeldnd.dap {
         public abstract bool TryGetValue(string key, out object val);
 
         //SILP: DATA_TYPE(Bool, bool)
-        public abstract bool IsBool(string key);                              //__SILP__
-        public abstract bool GetBool(string key);                             //__SILP__
-        public abstract bool GetBool(string key, bool defaultValue);          //__SILP__
-        public abstract bool SetBool(string key, bool val);                   //__SILP__
-        public abstract void ForEachBool(Action<int, bool> callback);         //__SILP__
-        public abstract bool UntilTrueBool(Func<int, bool, bool> callback);   //__SILP__
-        public abstract bool UntilFalseBool(Func<int, bool, bool> callback);  //__SILP__
-                                                                              //__SILP__
+        public abstract bool IsBool(string key);                                          //__SILP__
+        public abstract bool TryGetBool(string key, out bool val, bool isDebug = false);  //__SILP__
+        public abstract bool GetBool(string key);                                         //__SILP__
+        public abstract bool GetBool(string key, bool defaultValue);                      //__SILP__
+        public abstract bool SetBool(string key, bool val);                               //__SILP__
+        public abstract void ForEachBool(Action<int, bool> callback);                     //__SILP__
+        public abstract bool UntilTrueBool(Func<int, bool, bool> callback);               //__SILP__
+        public abstract bool UntilFalseBool(Func<int, bool, bool> callback);              //__SILP__
+                                                                                          //__SILP__
         //SILP: DATA_TYPE(Int, int)
-        public abstract bool IsInt(string key);                             //__SILP__
-        public abstract int GetInt(string key);                             //__SILP__
-        public abstract int GetInt(string key, int defaultValue);           //__SILP__
-        public abstract bool SetInt(string key, int val);                   //__SILP__
-        public abstract void ForEachInt(Action<int, int> callback);         //__SILP__
-        public abstract bool UntilTrueInt(Func<int, int, bool> callback);   //__SILP__
-        public abstract bool UntilFalseInt(Func<int, int, bool> callback);  //__SILP__
-                                                                            //__SILP__
+        public abstract bool IsInt(string key);                                         //__SILP__
+        public abstract bool TryGetInt(string key, out int val, bool isDebug = false);  //__SILP__
+        public abstract int GetInt(string key);                                         //__SILP__
+        public abstract int GetInt(string key, int defaultValue);                       //__SILP__
+        public abstract bool SetInt(string key, int val);                               //__SILP__
+        public abstract void ForEachInt(Action<int, int> callback);                     //__SILP__
+        public abstract bool UntilTrueInt(Func<int, int, bool> callback);               //__SILP__
+        public abstract bool UntilFalseInt(Func<int, int, bool> callback);              //__SILP__
+                                                                                        //__SILP__
         //SILP: DATA_TYPE(Long, long)
-        public abstract bool IsLong(string key);                              //__SILP__
-        public abstract long GetLong(string key);                             //__SILP__
-        public abstract long GetLong(string key, long defaultValue);          //__SILP__
-        public abstract bool SetLong(string key, long val);                   //__SILP__
-        public abstract void ForEachLong(Action<int, long> callback);         //__SILP__
-        public abstract bool UntilTrueLong(Func<int, long, bool> callback);   //__SILP__
-        public abstract bool UntilFalseLong(Func<int, long, bool> callback);  //__SILP__
-                                                                              //__SILP__
+        public abstract bool IsLong(string key);                                          //__SILP__
+        public abstract bool TryGetLong(string key, out long val, bool isDebug = false);  //__SILP__
+        public abstract long GetLong(string key);                                         //__SILP__
+        public abstract long GetLong(string key, long defaultValue);                      //__SILP__
+        public abstract bool SetLong(string key, long val);                               //__SILP__
+        public abstract void ForEachLong(Action<int, long> callback);                     //__SILP__
+        public abstract bool UntilTrueLong(Func<int, long, bool> callback);               //__SILP__
+        public abstract bool UntilFalseLong(Func<int, long, bool> callback);              //__SILP__
+                                                                                          //__SILP__
         //SILP: DATA_TYPE(Float, float)
-        public abstract bool IsFloat(string key);                               //__SILP__
-        public abstract float GetFloat(string key);                             //__SILP__
-        public abstract float GetFloat(string key, float defaultValue);         //__SILP__
-        public abstract bool SetFloat(string key, float val);                   //__SILP__
-        public abstract void ForEachFloat(Action<int, float> callback);         //__SILP__
-        public abstract bool UntilTrueFloat(Func<int, float, bool> callback);   //__SILP__
-        public abstract bool UntilFalseFloat(Func<int, float, bool> callback);  //__SILP__
-                                                                                //__SILP__
+        public abstract bool IsFloat(string key);                                           //__SILP__
+        public abstract bool TryGetFloat(string key, out float val, bool isDebug = false);  //__SILP__
+        public abstract float GetFloat(string key);                                         //__SILP__
+        public abstract float GetFloat(string key, float defaultValue);                     //__SILP__
+        public abstract bool SetFloat(string key, float val);                               //__SILP__
+        public abstract void ForEachFloat(Action<int, float> callback);                     //__SILP__
+        public abstract bool UntilTrueFloat(Func<int, float, bool> callback);               //__SILP__
+        public abstract bool UntilFalseFloat(Func<int, float, bool> callback);              //__SILP__
+                                                                                            //__SILP__
         //SILP: DATA_TYPE(Double, double)
-        public abstract bool IsDouble(string key);                                //__SILP__
-        public abstract double GetDouble(string key);                             //__SILP__
-        public abstract double GetDouble(string key, double defaultValue);        //__SILP__
-        public abstract bool SetDouble(string key, double val);                   //__SILP__
-        public abstract void ForEachDouble(Action<int, double> callback);         //__SILP__
-        public abstract bool UntilTrueDouble(Func<int, double, bool> callback);   //__SILP__
-        public abstract bool UntilFalseDouble(Func<int, double, bool> callback);  //__SILP__
-                                                                                  //__SILP__
+        public abstract bool IsDouble(string key);                                            //__SILP__
+        public abstract bool TryGetDouble(string key, out double val, bool isDebug = false);  //__SILP__
+        public abstract double GetDouble(string key);                                         //__SILP__
+        public abstract double GetDouble(string key, double defaultValue);                    //__SILP__
+        public abstract bool SetDouble(string key, double val);                               //__SILP__
+        public abstract void ForEachDouble(Action<int, double> callback);                     //__SILP__
+        public abstract bool UntilTrueDouble(Func<int, double, bool> callback);               //__SILP__
+        public abstract bool UntilFalseDouble(Func<int, double, bool> callback);              //__SILP__
+                                                                                              //__SILP__
         //SILP: DATA_TYPE(String, string)
-        public abstract bool IsString(string key);                                //__SILP__
-        public abstract string GetString(string key);                             //__SILP__
-        public abstract string GetString(string key, string defaultValue);        //__SILP__
-        public abstract bool SetString(string key, string val);                   //__SILP__
-        public abstract void ForEachString(Action<int, string> callback);         //__SILP__
-        public abstract bool UntilTrueString(Func<int, string, bool> callback);   //__SILP__
-        public abstract bool UntilFalseString(Func<int, string, bool> callback);  //__SILP__
-                                                                                  //__SILP__
+        public abstract bool IsString(string key);                                            //__SILP__
+        public abstract bool TryGetString(string key, out string val, bool isDebug = false);  //__SILP__
+        public abstract string GetString(string key);                                         //__SILP__
+        public abstract string GetString(string key, string defaultValue);                    //__SILP__
+        public abstract bool SetString(string key, string val);                               //__SILP__
+        public abstract void ForEachString(Action<int, string> callback);                     //__SILP__
+        public abstract bool UntilTrueString(Func<int, string, bool> callback);               //__SILP__
+        public abstract bool UntilFalseString(Func<int, string, bool> callback);              //__SILP__
+                                                                                              //__SILP__
         //SILP: DATA_TYPE(Data, Data)
-        public abstract bool IsData(string key);                              //__SILP__
-        public abstract Data GetData(string key);                             //__SILP__
-        public abstract Data GetData(string key, Data defaultValue);          //__SILP__
-        public abstract bool SetData(string key, Data val);                   //__SILP__
-        public abstract void ForEachData(Action<int, Data> callback);         //__SILP__
-        public abstract bool UntilTrueData(Func<int, Data, bool> callback);   //__SILP__
-        public abstract bool UntilFalseData(Func<int, Data, bool> callback);  //__SILP__
-                                                                              //__SILP__
+        public abstract bool IsData(string key);                                          //__SILP__
+        public abstract bool TryGetData(string key, out Data val, bool isDebug = false);  //__SILP__
+        public abstract Data GetData(string key);                                         //__SILP__
+        public abstract Data GetData(string key, Data defaultValue);                      //__SILP__
+        public abstract bool SetData(string key, Data val);                               //__SILP__
+        public abstract void ForEachData(Action<int, Data> callback);                     //__SILP__
+        public abstract bool UntilTrueData(Func<int, Data, bool> callback);               //__SILP__
+        public abstract bool UntilFalseData(Func<int, Data, bool> callback);              //__SILP__
+                                                                                          //__SILP__
 
         //SILP: DATA_QUICK_SETTER(B, Bool, bool)
         public Data B(string key, bool val) {                         //__SILP__

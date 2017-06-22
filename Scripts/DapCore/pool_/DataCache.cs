@@ -58,19 +58,13 @@ namespace angeldnd.dap {
             if (capacity < Capacity) {
                 capacity = Capacity;
             }
-            #if UNITY_EDITOR
-            if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("DataCache.EnsureCapacity: " + Kind + " " + capacity.ToString());
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample("DataCache.EnsureCapacity: " + Kind + " " + capacity.ToString());
             _DataPool.EnsureCapacity(capacity);
-            #if UNITY_EDITOR
-            if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
         }
 
         private WeakData Take(bool noProfile) {
-            #if UNITY_EDITOR
-            if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("DataCache.Take: " + Kind);
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample("DataCache.Take: " + Kind);
             if (_DataPool.Count <= 0) {
                 DoCollect(noProfile);
                 if (_DataPool.Count <= Capacity / 2) {
@@ -79,16 +73,12 @@ namespace angeldnd.dap {
             }
             RealData real = _DataPool.Take(true);
             WeakData weak = Register(real, noProfile);
-            #if UNITY_EDITOR
-            if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
             return weak;
         }
 
         private WeakData Register(RealData real, bool noProfile) {
-            #if UNITY_EDITOR
-            if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("Register: " + real.CapacityTip);
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample("Register: " + real.CapacityTip);
             WeakData weak = new WeakData(Kind, real);
             WeakDataRef r = _RefPool.Take();
             if (r == null) {
@@ -97,16 +87,12 @@ namespace angeldnd.dap {
                 r._Reuse(weak, real);
             }
             _Instances.Add(r);
-            #if UNITY_EDITOR
-            if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
             return weak;
         }
 
         private int DoCollect(bool noProfile = false) {
-            #if UNITY_EDITOR
-            if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("DoCollect: " + _Instances.Count);
-            #endif
+            if (Log.Profiler != null) Log.Profiler.BeginSample("DoCollect: " + _Instances.Count);
             List<WeakDataRef> tmp = _Temp;
             _Temp = _Instances;
             _Instances = tmp;
@@ -117,21 +103,15 @@ namespace angeldnd.dap {
                     _Instances.Add(r);
                 } else {
                     count++;
-                    #if UNITY_EDITOR
-                    if (!noProfile) UnityEngine.Profiling.Profiler.BeginSample("Collected");
-                    #endif
+                    if (Log.Profiler != null) Log.Profiler.BeginSample("Collected");
                     _DataPool.Add(r.Real);
                     _RefPool.Add(r);
-                    #if UNITY_EDITOR
-                    if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
-                    #endif
+                    if (Log.Profiler != null) Log.Profiler.EndSample();
                 }
             }
             _Temp.Clear();
             //Log.Error("DataCache.DoCollect {0} -> {1} -> {2}/{3}", Kind, count, _DataPool.Count, _Instances.Count);
-            #if UNITY_EDITOR
-            if (!noProfile) UnityEngine.Profiling.Profiler.EndSample();
-            #endif
+            if (Log.Profiler != null) Log.Profiler.EndSample();
             return count;
         }
     }

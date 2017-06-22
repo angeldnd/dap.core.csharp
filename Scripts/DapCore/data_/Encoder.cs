@@ -36,15 +36,24 @@ namespace angeldnd.dap {
             }
         }
 
-        public static T Decode<T>(Data data, string key) {
+        public static bool TryDecode<T>(Data data, string key, out T val, bool isDebug = false) {
             Encoder<T> encoder = GetEncoder<T>();
             if (encoder != null) {
-                return encoder.Decode(data, key);
+                return encoder.TryDecode(data, key, out val, isDebug);
             } else {
                 Log.Error("Decode Failed, Unknown Type: <{0}> {1} {2}",
                             Convertor.GetTypeStr(typeof(T)), data, key);
             }
-            return default(T);
+            val = default(T);
+            return false;
+        }
+
+        public static T Decode<T>(Data data, string key, T defaultValue) {
+            T val;
+            if (TryDecode(data, key, out val)) {
+                return val;
+            }
+            return defaultValue;
         }
 
         public static bool Encode<T>(Data data, string key, T val) {
@@ -60,10 +69,12 @@ namespace angeldnd.dap {
     }
 
     public abstract class Encoder<T> {
-        public T Decode(Data data, string key) {
-            if (data == null) return default(T);
-            if (key == null) return default(T);
-            return DoDecode(data, key);
+        public bool TryDecode(Data data, string key, out T val, bool isDebug = false) {
+            if (data != null && key != null) {
+                return DoDecode(data, key, out val, isDebug);
+            }
+            val = default(T);
+            return false;
         }
 
         public bool Encode(Data data, string key, T val) {
@@ -73,7 +84,7 @@ namespace angeldnd.dap {
         }
 
         public abstract string GetDapType();
-        protected abstract T DoDecode(Data data, string key);
+        protected abstract bool DoDecode(Data data, string key, out T val, bool isDebug = false);
         protected abstract bool DoEncode(Data data, string key, T val);
     }
 
@@ -86,8 +97,8 @@ namespace angeldnd.dap {
             return data.SetBool(key, val);
         }
 
-        protected override bool DoDecode(Data data, string key) {
-            return data.GetBool(key);
+        protected override bool DoDecode(Data data, string key, out bool val, bool isDebug = false) {
+            return data.TryGetBool(key, out val, isDebug);
         }
     }
 
@@ -100,8 +111,8 @@ namespace angeldnd.dap {
             return data.SetInt(key, val);
         }
 
-        protected override int DoDecode(Data data, string key) {
-            return data.GetInt(key);
+        protected override bool DoDecode(Data data, string key, out int val, bool isDebug = false) {
+            return data.TryGetInt(key, out val, isDebug);
         }
     }
 
@@ -114,8 +125,8 @@ namespace angeldnd.dap {
             return data.SetLong(key, val);
         }
 
-        protected override long DoDecode(Data data, string key) {
-            return data.GetLong(key);
+        protected override bool DoDecode(Data data, string key, out long val, bool isDebug = false) {
+            return data.TryGetLong(key, out val, isDebug);
         }
     }
 
@@ -128,8 +139,8 @@ namespace angeldnd.dap {
             return data.SetFloat(key, val);
         }
 
-        protected override float DoDecode(Data data, string key) {
-            return data.GetFloat(key);
+        protected override bool DoDecode(Data data, string key, out float val, bool isDebug = false) {
+            return data.TryGetFloat(key, out val, isDebug);
         }
     }
 
@@ -142,8 +153,8 @@ namespace angeldnd.dap {
             return data.SetDouble(key, val);
         }
 
-        protected override double DoDecode(Data data, string key) {
-            return data.GetDouble(key);
+        protected override bool DoDecode(Data data, string key, out double val, bool isDebug = false) {
+            return data.TryGetDouble(key, out val, isDebug);
         }
     }
 
@@ -156,8 +167,8 @@ namespace angeldnd.dap {
             return data.SetString(key, val);
         }
 
-        protected override string DoDecode(Data data, string key) {
-            return data.GetString(key);
+        protected override bool DoDecode(Data data, string key, out string val, bool isDebug = false) {
+            return data.TryGetString(key, out val, isDebug);
         }
     }
 
@@ -166,14 +177,17 @@ namespace angeldnd.dap {
             return data.SetData(key, EncodeValue(val));
         }
 
-        protected override T DoDecode(Data data, string key) {
-            Data valueData = data.GetData(key);
-            if (valueData == null) return default(T);
-            return DecodeValue(valueData);
+        protected override bool DoDecode(Data data, string key, out T val, bool isDebug = false) {
+            Data valueData;
+            if (data.TryGetData(key, out valueData, isDebug)) {
+                return DoDecodeValue(valueData, out val, isDebug);
+            }
+            val = default(T);
+            return false;
         }
 
         protected abstract Data EncodeValue(T val);
-        protected abstract T DecodeValue(Data valueData);
+        protected abstract bool DoDecodeValue(Data valueData, out T val, bool isDebug = false);
     }
 
     public class DataEncoder : DataEncoder<Data> {
@@ -185,8 +199,9 @@ namespace angeldnd.dap {
             return val;
         }
 
-        protected override Data DecodeValue(Data valueData) {
-            return valueData;
+        protected override bool DoDecodeValue(Data valueData, out Data val, bool isDebug = false) {
+            val = valueData;
+            return true;
         }
     }
 }
