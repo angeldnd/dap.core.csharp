@@ -37,22 +37,22 @@ public bool Remove${name}(string ${a_key}, ${l_type} ${l_var}) {
 # WEAK_LIST_FOREACH_BEGIN(name, var_name, cs_type, list_name) #
 ```C#
 if (${list_name} != null) {
-    if (Log.Profiler != null) Log.Profiler.BeginSample("${name}");
+    bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("${name}");
     bool needGc = false;
     foreach (var r in ${list_name}.RetainLock()) {
         ${cs_type} ${var_name} = ${list_name}.GetTarget(r);
         if (${var_name} == null) {
             needGc = true;
         } else {
-            if (Log.Profiler != null) Log.Profiler.BeginSample(${var_name}.ToString());
+            if (profiling) Log.Profiler.BeginSample(${var_name}.ToString());
 ```
 
 # WEAK_LIST_FOREACH_END(name, var_name, cs_type, list_name) #
 ```C#
-            if (Log.Profiler != null) Log.Profiler.EndSample();
+            if (profiling) Log.Profiler.EndSample();
         }
     }
     ${list_name}.ReleaseLock(needGc);
-    if (Log.Profiler != null) Log.Profiler.EndSample();
+    if (profiling) Log.Profiler.EndSample();
 }
 ```

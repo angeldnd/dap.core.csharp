@@ -126,7 +126,7 @@ namespace angeldnd.dap {
         }
 
         public int CollectAllGarbage() {
-            if (Log.Profiler != null) Log.Profiler.BeginSample("WeakList.CollectAllGarbage");
+            bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("WeakList.CollectAllGarbage");
             int count = 0;
             int startIndex = 0;
             while (true) {
@@ -136,7 +136,7 @@ namespace angeldnd.dap {
                 }
                 count++;
             }
-            if (Log.Profiler != null) Log.Profiler.EndSample();
+            if (profiling) Log.Profiler.EndSample();
             return count;
         }
 

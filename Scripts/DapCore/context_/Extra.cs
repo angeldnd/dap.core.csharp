@@ -123,14 +123,14 @@ namespace angeldnd.dap {
 
         public void SyncExtra() {
             if (_PropertySyncers != null) {
-                if (Log.Profiler != null) Log.Profiler.BeginSample(Key == null ? "Extra.SyncExtra" : Key);
+                bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample(Key == null ? "Extra.SyncExtra" : Key);
                 var en = _PropertySyncers.GetEnumerator();
                 while (en.MoveNext()) {
-                    if (Log.Profiler != null) Log.Profiler.BeginSample(en.Current.Key);
+                    if (profiling) Log.Profiler.BeginSample(en.Current.Key);
                     en.Current.Value(en.Current.Key);
-                    if (Log.Profiler != null) Log.Profiler.EndSample();
+                    if (profiling) Log.Profiler.EndSample();
                 }
-                if (Log.Profiler != null) Log.Profiler.EndSample();
+                if (profiling) Log.Profiler.EndSample();
             }
         }
 
