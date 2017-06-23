@@ -135,22 +135,22 @@ namespace angeldnd.dap {
 
         private void NotifyBusWatchers(string msg) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Bus.OnBusMsg, watcher, IBusWatcher, _BusWatchers)
-            if (_BusWatchers != null) {                                                                    //__SILP__
-                bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("Bus.OnBusMsg");  //__SILP__
-                bool needGc = false;                                                                       //__SILP__
-                foreach (var r in _BusWatchers.RetainLock()) {                                             //__SILP__
-                    IBusWatcher watcher = _BusWatchers.GetTarget(r);                                       //__SILP__
-                    if (watcher == null) {                                                                 //__SILP__
-                        needGc = true;                                                                     //__SILP__
-                    } else {                                                                               //__SILP__
-                        if (profiling) Log.Profiler.BeginSample(watcher.ToString());                       //__SILP__
+            if (_BusWatchers != null) {                                                  //__SILP__
+                IProfiler profiler = Log.BeginSample("Bus.OnBusMsg");                    //__SILP__
+                bool needGc = false;                                                     //__SILP__
+                foreach (var r in _BusWatchers.RetainLock()) {                           //__SILP__
+                    IBusWatcher watcher = _BusWatchers.GetTarget(r);                     //__SILP__
+                    if (watcher == null) {                                               //__SILP__
+                        needGc = true;                                                   //__SILP__
+                    } else {                                                             //__SILP__
+                        if (profiler != null) profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnBusMsg(this, msg);
             //SILP: WEAK_LIST_FOREACH_END(Bus.OnBusMsg, watcher, IBusWatcher, _BusWatchers)
-                        if (profiling) Log.Profiler.EndSample();      //__SILP__
+                        if (profiler != null) profiler.EndSample();   //__SILP__
                     }                                                 //__SILP__
                 }                                                     //__SILP__
                 _BusWatchers.ReleaseLock(needGc);                     //__SILP__
-                if (profiling) Log.Profiler.EndSample();              //__SILP__
+                if (profiler != null) profiler.EndSample();           //__SILP__
             }                                                         //__SILP__
         }
 

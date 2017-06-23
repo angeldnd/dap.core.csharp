@@ -44,7 +44,7 @@ namespace angeldnd.dap {
 
         public List<T> RemoveByChecker(Func<T, bool> checker) {
             List<T> removed = null;
-            bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("RemoveByChecker: Check");
+            IProfiler profiler = Log.BeginSample("RemoveByChecker: Check");
             foreach (T element in _Elements) {
                 if (checker(element)) {
                     if (removed == null) {
@@ -53,17 +53,17 @@ namespace angeldnd.dap {
                     removed.Add(element);
                 }
             }
-            if (profiling) Log.Profiler.EndSample();
+            if (profiler != null) profiler.EndSample();
             if (removed != null) {
-                if (profiling) Log.Profiler.BeginSample("RemoveByChecker: Remove");
+                if (profiler != null) profiler.BeginSample("RemoveByChecker: Remove");
                 for (int i = removed.Count - 1; i >= 0; i--) {
                     _Elements.RemoveAt(removed[i].Index);
                 }
-                if (profiling) Log.Profiler.EndSample();
+                if (profiler != null) profiler.EndSample();
             }
-            if (profiling) Log.Profiler.BeginSample("RemoveByChecker: Notify");
+            if (profiler != null) profiler.BeginSample("RemoveByChecker: Notify");
             NotifyRemoves(removed, true);
-            if (profiling) Log.Profiler.EndSample();
+            if (profiler != null) profiler.EndSample();
             return removed;
         }
 

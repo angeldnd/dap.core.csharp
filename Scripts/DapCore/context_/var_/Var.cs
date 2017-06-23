@@ -65,22 +65,22 @@ namespace angeldnd.dap {
 
         private void NotifySetupWatchers() {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnSetup, watcher, ISetupWatcher, _SetupWatchers)
-            if (_SetupWatchers != null) {                                                                 //__SILP__
-                bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("Var.OnSetup");  //__SILP__
-                bool needGc = false;                                                                      //__SILP__
-                foreach (var r in _SetupWatchers.RetainLock()) {                                          //__SILP__
-                    ISetupWatcher watcher = _SetupWatchers.GetTarget(r);                                  //__SILP__
-                    if (watcher == null) {                                                                //__SILP__
-                        needGc = true;                                                                    //__SILP__
-                    } else {                                                                              //__SILP__
-                        if (profiling) Log.Profiler.BeginSample(watcher.ToString());                      //__SILP__
+            if (_SetupWatchers != null) {                                                //__SILP__
+                IProfiler profiler = Log.BeginSample("Var.OnSetup");                     //__SILP__
+                bool needGc = false;                                                     //__SILP__
+                foreach (var r in _SetupWatchers.RetainLock()) {                         //__SILP__
+                    ISetupWatcher watcher = _SetupWatchers.GetTarget(r);                 //__SILP__
+                    if (watcher == null) {                                               //__SILP__
+                        needGc = true;                                                   //__SILP__
+                    } else {                                                             //__SILP__
+                        if (profiler != null) profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnSetup(this);
             //SILP: WEAK_LIST_FOREACH_END(Var.OnSetup, watcher, ISetupWatcher, _SetupWatchers)
-                        if (profiling) Log.Profiler.EndSample();      //__SILP__
+                        if (profiler != null) profiler.EndSample();   //__SILP__
                     }                                                 //__SILP__
                 }                                                     //__SILP__
                 _SetupWatchers.ReleaseLock(needGc);                   //__SILP__
-                if (profiling) Log.Profiler.EndSample();              //__SILP__
+                if (profiler != null) profiler.EndSample();           //__SILP__
             }                                                         //__SILP__
         }
 
@@ -99,7 +99,7 @@ namespace angeldnd.dap {
         }
 
         private void UpdateValue(T newValue, Action callback = null) {
-            bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample(Key);
+            IProfiler profiler = Log.BeginSample(Key);
             T lastVal = _Value;
 
             _Value = newValue;
@@ -111,78 +111,78 @@ namespace angeldnd.dap {
 
             NotifyVarWatchers();
             NotifyValueWatchers(lastVal);
-            if (profiling) Log.Profiler.EndSample();
+            if (profiler != null) profiler.EndSample();
         }
 
         private void NotifyVarWatchers() {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnChanged, watcher, IVarWatcher, _VarWatchers)
-            if (_VarWatchers != null) {                                                                     //__SILP__
-                bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("Var.OnChanged");  //__SILP__
-                bool needGc = false;                                                                        //__SILP__
-                foreach (var r in _VarWatchers.RetainLock()) {                                              //__SILP__
-                    IVarWatcher watcher = _VarWatchers.GetTarget(r);                                        //__SILP__
-                    if (watcher == null) {                                                                  //__SILP__
-                        needGc = true;                                                                      //__SILP__
-                    } else {                                                                                //__SILP__
-                        if (profiling) Log.Profiler.BeginSample(watcher.ToString());                        //__SILP__
+            if (_VarWatchers != null) {                                                  //__SILP__
+                IProfiler profiler = Log.BeginSample("Var.OnChanged");                   //__SILP__
+                bool needGc = false;                                                     //__SILP__
+                foreach (var r in _VarWatchers.RetainLock()) {                           //__SILP__
+                    IVarWatcher watcher = _VarWatchers.GetTarget(r);                     //__SILP__
+                    if (watcher == null) {                                               //__SILP__
+                        needGc = true;                                                   //__SILP__
+                    } else {                                                             //__SILP__
+                        if (profiler != null) profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnChanged(this);
             //SILP: WEAK_LIST_FOREACH_END(Var.IsValid, watcher, IVarWatcher, _VarWatchers)
-                        if (profiling) Log.Profiler.EndSample();      //__SILP__
+                        if (profiler != null) profiler.EndSample();   //__SILP__
                     }                                                 //__SILP__
                 }                                                     //__SILP__
                 _VarWatchers.ReleaseLock(needGc);                     //__SILP__
-                if (profiling) Log.Profiler.EndSample();              //__SILP__
+                if (profiler != null) profiler.EndSample();           //__SILP__
             }                                                         //__SILP__
         }
 
         private void NotifyValueWatchers(T lastVal) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnChanged<T>, watcher, IValueWatcher<T>, _ValueWatchers)
-            if (_ValueWatchers != null) {                                                                      //__SILP__
-                bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("Var.OnChanged<T>");  //__SILP__
-                bool needGc = false;                                                                           //__SILP__
-                foreach (var r in _ValueWatchers.RetainLock()) {                                               //__SILP__
-                    IValueWatcher<T> watcher = _ValueWatchers.GetTarget(r);                                    //__SILP__
-                    if (watcher == null) {                                                                     //__SILP__
-                        needGc = true;                                                                         //__SILP__
-                    } else {                                                                                   //__SILP__
-                        if (profiling) Log.Profiler.BeginSample(watcher.ToString());                           //__SILP__
+            if (_ValueWatchers != null) {                                                //__SILP__
+                IProfiler profiler = Log.BeginSample("Var.OnChanged<T>");                //__SILP__
+                bool needGc = false;                                                     //__SILP__
+                foreach (var r in _ValueWatchers.RetainLock()) {                         //__SILP__
+                    IValueWatcher<T> watcher = _ValueWatchers.GetTarget(r);              //__SILP__
+                    if (watcher == null) {                                               //__SILP__
+                        needGc = true;                                                   //__SILP__
+                    } else {                                                             //__SILP__
+                        if (profiler != null) profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnChanged(this, lastVal);
             //SILP: WEAK_LIST_FOREACH_END(Var.IsValid<T>, watcher, IValueWatcher<T>, _ValueWatchers)
-                        if (profiling) Log.Profiler.EndSample();      //__SILP__
+                        if (profiler != null) profiler.EndSample();   //__SILP__
                     }                                                 //__SILP__
                 }                                                     //__SILP__
                 _ValueWatchers.ReleaseLock(needGc);                   //__SILP__
-                if (profiling) Log.Profiler.EndSample();              //__SILP__
+                if (profiler != null) profiler.EndSample();           //__SILP__
             }                                                         //__SILP__
         }
 
         private bool IsValid(T newValue) {
             bool result = true;
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.IsValid, checker, IValueChecker<T>, _ValueCheckers)
-            if (_ValueCheckers != null) {                                                                 //__SILP__
-                bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("Var.IsValid");  //__SILP__
-                bool needGc = false;                                                                      //__SILP__
-                foreach (var r in _ValueCheckers.RetainLock()) {                                          //__SILP__
-                    IValueChecker<T> checker = _ValueCheckers.GetTarget(r);                               //__SILP__
-                    if (checker == null) {                                                                //__SILP__
-                        needGc = true;                                                                    //__SILP__
-                    } else {                                                                              //__SILP__
-                        if (profiling) Log.Profiler.BeginSample(checker.ToString());                      //__SILP__
+            if (_ValueCheckers != null) {                                                //__SILP__
+                IProfiler profiler = Log.BeginSample("Var.IsValid");                     //__SILP__
+                bool needGc = false;                                                     //__SILP__
+                foreach (var r in _ValueCheckers.RetainLock()) {                         //__SILP__
+                    IValueChecker<T> checker = _ValueCheckers.GetTarget(r);              //__SILP__
+                    if (checker == null) {                                               //__SILP__
+                        needGc = true;                                                   //__SILP__
+                    } else {                                                             //__SILP__
+                        if (profiler != null) profiler.BeginSample(checker.ToString());  //__SILP__
                         if (!checker.IsValid(this, newValue)) {
                             if (LogDebug) {
                                 Debug("Invalid Value: {0} => {1} -> {2}",
                                         checker, _Value, newValue);
                             }
                             result = false;
-                            if (profiling) Log.Profiler.EndSample();
+                            if (profiler != null) profiler.EndSample();
                             break;
                         }
             //SILP: WEAK_LIST_FOREACH_END(Var.IsValid, checker, IValueChecker<T>, _ValueCheckers)
-                        if (profiling) Log.Profiler.EndSample();      //__SILP__
+                        if (profiler != null) profiler.EndSample();   //__SILP__
                     }                                                 //__SILP__
                 }                                                     //__SILP__
                 _ValueCheckers.ReleaseLock(needGc);                   //__SILP__
-                if (profiling) Log.Profiler.EndSample();              //__SILP__
+                if (profiler != null) profiler.EndSample();           //__SILP__
             }                                                         //__SILP__
             return result;
         }

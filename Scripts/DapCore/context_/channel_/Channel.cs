@@ -7,7 +7,7 @@ namespace angeldnd.dap {
         }
 
         public bool FireEvent(Data evt) {
-            bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample(Key);
+            IProfiler profiler = Log.BeginSample(Key);
 
             if (evt != null) evt.Seal();
 
@@ -17,58 +17,58 @@ namespace angeldnd.dap {
 
                 NotifyWatchers(evt);
             }
-            if (profiling) Log.Profiler.EndSample();
+            if (profiler != null) profiler.EndSample();
             return isValid;
         }
 
         private bool IsValidEvent(Data evt) {
             bool result = true;
             //SILP: WEAK_LIST_FOREACH_BEGIN(Channel.IsValidEvent, checker, IEventChecker, _EventCheckers)
-            if (_EventCheckers != null) {                                                                          //__SILP__
-                bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("Channel.IsValidEvent");  //__SILP__
-                bool needGc = false;                                                                               //__SILP__
-                foreach (var r in _EventCheckers.RetainLock()) {                                                   //__SILP__
-                    IEventChecker checker = _EventCheckers.GetTarget(r);                                           //__SILP__
-                    if (checker == null) {                                                                         //__SILP__
-                        needGc = true;                                                                             //__SILP__
-                    } else {                                                                                       //__SILP__
-                        if (profiling) Log.Profiler.BeginSample(checker.ToString());                               //__SILP__
+            if (_EventCheckers != null) {                                                //__SILP__
+                IProfiler profiler = Log.BeginSample("Channel.IsValidEvent");            //__SILP__
+                bool needGc = false;                                                     //__SILP__
+                foreach (var r in _EventCheckers.RetainLock()) {                         //__SILP__
+                    IEventChecker checker = _EventCheckers.GetTarget(r);                 //__SILP__
+                    if (checker == null) {                                               //__SILP__
+                        needGc = true;                                                   //__SILP__
+                    } else {                                                             //__SILP__
+                        if (profiler != null) profiler.BeginSample(checker.ToString());  //__SILP__
                         if (!checker.IsValidEvent(this, evt)) {
                             if (LogDebug) {
                                 Debug("Invalid Event: {0} => {1}", checker, evt.ToFullString());
                             }
                             result = false;
-                            if (profiling) Log.Profiler.EndSample();
+                            if (profiler != null) profiler.EndSample();
                             break;
                         }
             //SILP: WEAK_LIST_FOREACH_END(Channel.IsValidEvent, checker, IEventChecker, _EventCheckers)
-                        if (profiling) Log.Profiler.EndSample();      //__SILP__
+                        if (profiler != null) profiler.EndSample();   //__SILP__
                     }                                                 //__SILP__
                 }                                                     //__SILP__
                 _EventCheckers.ReleaseLock(needGc);                   //__SILP__
-                if (profiling) Log.Profiler.EndSample();              //__SILP__
+                if (profiler != null) profiler.EndSample();           //__SILP__
             }                                                         //__SILP__
             return result;
         }
 
         private void NotifyWatchers(Data evt) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Channel.OnEvent, watcher, IEventWatcher, _EventWatchers)
-            if (_EventWatchers != null) {                                                                     //__SILP__
-                bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("Channel.OnEvent");  //__SILP__
-                bool needGc = false;                                                                          //__SILP__
-                foreach (var r in _EventWatchers.RetainLock()) {                                              //__SILP__
-                    IEventWatcher watcher = _EventWatchers.GetTarget(r);                                      //__SILP__
-                    if (watcher == null) {                                                                    //__SILP__
-                        needGc = true;                                                                        //__SILP__
-                    } else {                                                                                  //__SILP__
-                        if (profiling) Log.Profiler.BeginSample(watcher.ToString());                          //__SILP__
+            if (_EventWatchers != null) {                                                //__SILP__
+                IProfiler profiler = Log.BeginSample("Channel.OnEvent");                 //__SILP__
+                bool needGc = false;                                                     //__SILP__
+                foreach (var r in _EventWatchers.RetainLock()) {                         //__SILP__
+                    IEventWatcher watcher = _EventWatchers.GetTarget(r);                 //__SILP__
+                    if (watcher == null) {                                               //__SILP__
+                        needGc = true;                                                   //__SILP__
+                    } else {                                                             //__SILP__
+                        if (profiler != null) profiler.BeginSample(watcher.ToString());  //__SILP__
                         watcher.OnEvent(this, evt);
             //SILP: WEAK_LIST_FOREACH_END(Channel.OnEvent, watcher, IEventWatcher, _EventWatchers)
-                        if (profiling) Log.Profiler.EndSample();      //__SILP__
+                        if (profiler != null) profiler.EndSample();   //__SILP__
                     }                                                 //__SILP__
                 }                                                     //__SILP__
                 _EventWatchers.ReleaseLock(needGc);                   //__SILP__
-                if (profiling) Log.Profiler.EndSample();              //__SILP__
+                if (profiler != null) profiler.EndSample();           //__SILP__
             }                                                         //__SILP__
         }
 

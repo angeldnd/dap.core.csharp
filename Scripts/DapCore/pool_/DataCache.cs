@@ -58,13 +58,13 @@ namespace angeldnd.dap {
             if (capacity < Capacity) {
                 capacity = Capacity;
             }
-            bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("DataCache.EnsureCapacity: " + Kind + " " + capacity.ToString());
+            IProfiler profiler = Log.BeginSample("DataCache.EnsureCapacity: " + Kind + " " + capacity.ToString());
             _DataPool.EnsureCapacity(capacity);
-            if (profiling) Log.Profiler.EndSample();
+            if (profiler != null) profiler.EndSample();
         }
 
         private WeakData Take(bool noProfile) {
-            bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("DataCache.Take: " + Kind);
+            IProfiler profiler = Log.BeginSample("DataCache.Take: " + Kind);
             if (_DataPool.Count <= 0) {
                 DoCollect(noProfile);
                 if (_DataPool.Count <= Capacity / 2) {
@@ -73,12 +73,12 @@ namespace angeldnd.dap {
             }
             RealData real = _DataPool.Take(true);
             WeakData weak = Register(real, noProfile);
-            if (profiling) Log.Profiler.EndSample();
+            if (profiler != null) profiler.EndSample();
             return weak;
         }
 
         private WeakData Register(RealData real, bool noProfile) {
-            bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("Register: " + real.CapacityTip);
+            IProfiler profiler = Log.BeginSample("Register: " + real.CapacityTip);
             WeakData weak = new WeakData(Kind, real);
             WeakDataRef r = _RefPool.Take();
             if (r == null) {
@@ -87,12 +87,12 @@ namespace angeldnd.dap {
                 r._Reuse(weak, real);
             }
             _Instances.Add(r);
-            if (profiling) Log.Profiler.EndSample();
+            if (profiler != null) profiler.EndSample();
             return weak;
         }
 
         private int DoCollect(bool noProfile = false) {
-            bool profiling = Log.Profiler == null ? false : Log.Profiler.BeginSample("DoCollect: " + _Instances.Count);
+            IProfiler profiler = Log.BeginSample("DoCollect: " + _Instances.Count);
             List<WeakDataRef> tmp = _Temp;
             _Temp = _Instances;
             _Instances = tmp;
@@ -103,15 +103,15 @@ namespace angeldnd.dap {
                     _Instances.Add(r);
                 } else {
                     count++;
-                    if (profiling) Log.Profiler.BeginSample("Collected");
+                    if (profiler != null) profiler.BeginSample("Collected");
                     _DataPool.Add(r.Real);
                     _RefPool.Add(r);
-                    if (profiling) Log.Profiler.EndSample();
+                    if (profiler != null) profiler.EndSample();
                 }
             }
             _Temp.Clear();
             //Log.Error("DataCache.DoCollect {0} -> {1} -> {2}/{3}", Kind, count, _DataPool.Count, _Instances.Count);
-            if (profiling) Log.Profiler.EndSample();
+            if (profiler != null) profiler.EndSample();
             return count;
         }
     }

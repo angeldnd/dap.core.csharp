@@ -19,6 +19,14 @@ namespace angeldnd.dap {
             get { return _Profiler; }
         }
 
+        public static IProfiler BeginSample(string key) {
+            IProfiler profiler = _Profiler;
+            if (profiler != null && profiler.BeginSample(key)) {
+                return profiler;
+            }
+            return null;
+        }
+
         public static IProfiler ResetProfiler() {
             IProfiler profiler = _Profiler;
             _Profiler = null;
