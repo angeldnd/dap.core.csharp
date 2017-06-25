@@ -7,12 +7,8 @@ using System.Diagnostics;
 
 namespace angeldnd.dap {
     [DapPriority(0)]
-    public class NoEnvFileLogProvider : LogProvider {
-        public static int MAX_STACK_TRACK_NUM = 32;
-        public static int DEBUG_MAX_STACK_TRACK_NUM = 128;
-
+    public class FileLogProvider : LogProvider {
         public static long FLUSH_DURATION = 10 * 1000 * 60; // flush every minute
-        public static string TIMESTAMP_FORMAT = "HH:mm:ss.fff";    //http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 
         private string _LogRoot = "";
         private string _LogDir = "";
@@ -20,17 +16,21 @@ namespace angeldnd.dap {
         private int _RunID = -1;
         private int _LogDayOfYear = -1;
         private string _LogFilePath = "";
+        public string LogFilePath {
+            get { return _LogFilePath; }
+        }
+
         private bool _LogAutoFlush = false;
         private StreamWriter _LogWriter = null;
         private DateTime _LastFlushTime;
 
-        public NoEnvFileLogProvider() : this(EnvConsts.DefaultLogDebug,
+        public FileLogProvider() : this(EnvConsts.DefaultLogDebug,
                                         EnvConsts.DefaultLogDir,
                                         EnvConsts.DefaultLogName,
                                         -1) {
         }
 
-        public NoEnvFileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug) {
+        public FileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug) {
             _LogRoot = GetLogRoot();
 
             _LogDir = string.IsNullOrEmpty(logDir) ? EnvConsts.DefaultLogDir : logDir;
@@ -127,7 +127,8 @@ namespace angeldnd.dap {
                     Info("CreateDirectory: {0}", dir);
                     Directory.CreateDirectory(dir);
                 }
-                _LogWriter = File.AppendText(_LogFilePath);
+                FileStream stream = new FileStream(_LogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read);
+                _LogWriter = new StreamWriter(stream);
                 Info("Start Logging: {0}", _LogFilePath);
 
                 //Probably can't use AutoFlush here due to performance issue
@@ -140,20 +141,7 @@ namespace angeldnd.dap {
             }
         }
 
-        public override void AddLog(object source, string kind, string msg, StackTrace stackTrace) {
-            var now = System.DateTime.UtcNow;
-
-            string log = null;
-            if (stackTrace != null) {
-                log = string.Format("{0} <{1}> [{2}] {3}\n{4}",
-                            now.ToString(TIMESTAMP_FORMAT), GetTickMsg(), kind, msg,
-                            FormatStackTrace(stackTrace, "\t",
-                                LogDebug ? DEBUG_MAX_STACK_TRACK_NUM: MAX_STACK_TRACK_NUM));
-            } else {
-                log = string.Format("{0} <{1}> [{2}] {3}",
-                            now.ToString(TIMESTAMP_FORMAT), GetTickMsg(), kind, msg);
-            }
-
+        protected override void OnAddLog(System.DateTime now, object source, string kind, string log, StackTrace stackTrace) {
             if (_LogWriter != null) {
                 if (now.DayOfYear != _LogDayOfYear) {
                     SetupLogWriter();
@@ -180,23 +168,19 @@ namespace angeldnd.dap {
             return "Logs";
         }
 
-        protected virtual string GetTickMsg() {
-            return "N/A";
-        }
-
         protected virtual void OnLog(object source, string kind, string log, StackTrace stackTrace) {}
     }
 
     [DapPriority(1)]
-    public class FileLogProvider : NoEnvFileLogProvider {
-        public FileLogProvider() : base() {
+    public class EnvFileLogProvider : FileLogProvider {
+        public EnvFileLogProvider() : base() {
         }
 
-        public FileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug, logDir, logName, runID) {
+        public EnvFileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug, logDir, logName, runID) {
         }
 
         protected override string GetTickMsg() {
-            return string.Format("{0}:{1}:{2}", Env.Round, Env.TickCount, Env.FrameCount);
+            return string.Format("<{0}:{1}:{2}> ", Env.Round, Env.TickCount, Env.FrameCount);
         }
     }
 }

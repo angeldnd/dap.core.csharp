@@ -18,7 +18,13 @@ namespace angeldnd.dap {
     }
     */
     public abstract class LogProvider : ILogger {
-        public abstract void AddLog(object source, string kind, string msg, StackTrace stackTrace);
+        public static int LOG_BUFFER_SIZE = 64;
+
+        public static int MAX_STACK_TRACK_NUM = 32;
+        public static int DEBUG_MAX_STACK_TRACK_NUM = 128;
+        public static string TIMESTAMP_FORMAT = "HH:mm:ss.fff";    //http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
+
+        protected abstract void OnAddLog(System.DateTime now, object source, string kind, string log, StackTrace stackTrace);
 
         public virtual bool AutoFlush {
             get { return true; }
@@ -28,6 +34,16 @@ namespace angeldnd.dap {
         private bool _LogDebug;
         public bool LogDebug {
             get { return _LogDebug; }
+        }
+
+        private string[] _LogBuffer = new string[LOG_BUFFER_SIZE];
+        public string[] LogBuffer {
+            get { return _LogBuffer; }
+        }
+
+        private int _LogBufferPtr = 0;
+        public int LogBufferPtr {
+            get { return _LogBufferPtr; }
         }
 
         private StringBuilder _StackBuilder = new StringBuilder(1024);
@@ -101,6 +117,33 @@ namespace angeldnd.dap {
             }
             return _StackBuilder.ToString();
 #endif
+        }
+
+        public void AddLog(object source, string kind, string msg, StackTrace stackTrace) {
+            var now = System.DateTime.UtcNow;
+
+            string log = null;
+            if (stackTrace != null) {
+                log = string.Format("{0} {1}[{2}] {3}\n{4}",
+                            now.ToString(TIMESTAMP_FORMAT), GetTickMsg(), kind, msg,
+                            FormatStackTrace(stackTrace, "\t",
+                                LogDebug ? DEBUG_MAX_STACK_TRACK_NUM: MAX_STACK_TRACK_NUM));
+            } else {
+                log = string.Format("{0} {1}[{2}] {3}",
+                            now.ToString(TIMESTAMP_FORMAT), GetTickMsg(), kind, msg);
+            }
+
+            _LogBuffer[_LogBufferPtr] = log;
+            _LogBufferPtr++;
+            if (_LogBufferPtr >= _LogBuffer.Length) {
+                _LogBufferPtr = 0;
+            }
+
+            OnAddLog(now, source, kind, log, stackTrace);
+        }
+
+        protected virtual string GetTickMsg() {
+            return "";
         }
     }
 }
