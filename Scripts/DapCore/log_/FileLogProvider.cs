@@ -170,18 +170,5 @@ namespace angeldnd.dap {
 
         protected virtual void OnLog(object source, string kind, string log, StackTrace stackTrace) {}
     }
-
-    [DapPriority(1)]
-    public class EnvFileLogProvider : FileLogProvider {
-        public EnvFileLogProvider() : base() {
-        }
-
-        public EnvFileLogProvider(bool logDebug, string logDir, string logName, int runID) : base(logDebug, logDir, logName, runID) {
-        }
-
-        protected override string GetTickMsg() {
-            return string.Format("<{0}:{1}:{2}> ", Env.Round, Env.TickCount, Env.FrameCount);
-        }
-    }
 }
 

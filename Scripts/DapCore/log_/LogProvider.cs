@@ -143,7 +143,7 @@ namespace angeldnd.dap {
         }
 
         protected virtual string GetTickMsg() {
-            return "";
+            return string.Format("[{0}:{1}:{2}] ", Env.Round, Env.TickCount, Env.FrameCount);
         }
     }
 }

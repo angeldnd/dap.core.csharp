@@ -71,9 +71,9 @@ namespace angeldnd.dap {
             get {
                 string dapType = DapType;
                 if (dapType != null) {
-                    return string.Format("[{0}] [{1}] ({2:D5}) {3} ", dapType, Uri, _Identity, RevInfo);
+                    return string.Format("<{0}> [{1}] ({2:D5}) {3} ", dapType, Uri, _Identity, RevInfo);
                 }
-                return string.Format("_[{0}] [{1}] ({2:D5}) {3} ", GetType().FullName, Uri, _Identity, RevInfo);
+                return string.Format("<{0}> [{1}] ({2:D5}) {3} ", GetType().Name, Uri, _Identity, RevInfo);
             }
         }
 
