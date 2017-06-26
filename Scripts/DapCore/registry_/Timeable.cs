@@ -27,15 +27,31 @@ namespace angeldnd.dap {
         }
     }
 
+    public interface ITimedContext : IContext {
+        float CurrentTime { get; }
+    }
+
     [DapType(TimeableConsts.TypeTimeable)]
     [DapOrder(DapOrders.Manner)]
     public class Timeable : Manner {
+        private ITimedContext _TimeProvider = null;
+        public float CurrentTime {
+            get {
+                return _TimeProvider == null ? -1f: _TimeProvider.CurrentTime;
+            }
+        }
+
         private Channel _ChannelOnTime = null;
         public Channel ChannelOnTime {
             get { return _ChannelOnTime; }
         }
 
         public Timeable(Manners owner, string key) : base(owner, key) {
+            _TimeProvider = Context.GetAncestor<ITimedContext>();
+            if (_TimeProvider == null) {
+                Error("Invalid Timeable: TimeProvider Not Found");
+            }
+
             IContext contextOwner = Context.GetOwner() as IContext;
             if (contextOwner == null) {
                 Error("Invalid Context Owner: {0}", Context.GetOwner());
