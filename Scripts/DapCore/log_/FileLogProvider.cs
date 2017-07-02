@@ -42,7 +42,6 @@ namespace angeldnd.dap {
                 _RunID = runID;
             }
             SetupLogWriter();
-            Info("FileLogProvider: {0} {1} {2}", logDir, logName, runID);
         }
 
         public override string ToString() {

@@ -9,7 +9,7 @@ namespace angeldnd.dap {
         public static StackTrace FakeStackTrace = new StackTrace(new Exception("FakeStackTrace"), false);
 #endif
 
-        private static LogProvider _Provider = new FileLogProvider();
+        private static LogProvider _Provider = new ConsoleLogProvider(LogDebug);
         public static LogProvider Provider {
             get { return _Provider; }
         }
