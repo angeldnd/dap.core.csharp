@@ -6,8 +6,18 @@ using angeldnd.dap;
 
 namespace angeldnd.dap {
     public abstract class OrderedList<T, TOrder> {
-        private List<T> _Values = new List<T>();
-        private Dictionary<T, TOrder> _Orders = new Dictionary<T, TOrder>();
+        private List<T> _Values = null;
+        private Dictionary<T, TOrder> _Orders = null;
+
+        protected OrderedList(int capacity) {
+            _Values = new List<T>(capacity);
+            _Orders = new Dictionary<T, TOrder>(capacity);
+        }
+
+        protected OrderedList() {
+            _Values = new List<T>();
+            _Orders = new Dictionary<T, TOrder>();
+        }
 
         public int Add(T v, TOrder order) {
             if (Contains(v)) return -1;
@@ -59,24 +69,48 @@ namespace angeldnd.dap {
     }
 
     public class IntOrderedList<T> : OrderedList<T, int> {
+        public IntOrderedList(int capacity) : base(capacity) {
+        }
+
+        public IntOrderedList() : base() {
+        }
+
         protected override int Compare(int a, int b) {
             return a.CompareTo(b);
         }
     }
 
     public class LongOrderedList<T> : OrderedList<T, long> {
+        public LongOrderedList(int capacity) : base(capacity) {
+        }
+
+        public LongOrderedList() : base() {
+        }
+
         protected override int Compare(long a, long b) {
             return a.CompareTo(b);
         }
     }
 
     public class FloatOrderedList<T> : OrderedList<T, float> {
+        public FloatOrderedList(int capacity) : base(capacity) {
+        }
+
+        public FloatOrderedList() : base() {
+        }
+
         protected override int Compare(float a, float b) {
             return a.CompareTo(b);
         }
     }
 
     public class DoubleOrderedList<T> : OrderedList<T, double> {
+        public DoubleOrderedList(int capacity) : base(capacity) {
+        }
+
+        public DoubleOrderedList() : base() {
+        }
+
         protected override int Compare(double a, double b) {
             return a.CompareTo(b);
         }
