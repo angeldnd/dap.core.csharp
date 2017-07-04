@@ -28,6 +28,12 @@ namespace angeldnd.dap {
                 }, OnHandlerRemoved));
             }
             if (ShouldWatchBus()) {
+                var allMsgs = Bus.GetExistMsgs();
+                if (allMsgs != null) {
+                    foreach (var msg in allMsgs) {
+                        OnBusMsg(Bus, msg);
+                    }
+                }
                 Bus.AddBusWatcher(this, OnBusMsg);
             }
             if (ShouldWatchVars()) {
