@@ -14,7 +14,7 @@ namespace angeldnd.dap {
         bool NeedSetup();
     }
 
-    public interface ISetupWatcher {
+    public interface ISetupWatcher : IBlock {
         void OnSetup(ISetupAspect handler);
     }
 

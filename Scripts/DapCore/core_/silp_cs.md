@@ -1,5 +1,11 @@
 # BLOCK_OWNER() #
 ```
+public string TypeName {
+    get {
+        return GetType().Name;
+    }
+}
+
 private List<WeakBlock> _Blocks = null;
 
 public void AddBlock(WeakBlock block) {

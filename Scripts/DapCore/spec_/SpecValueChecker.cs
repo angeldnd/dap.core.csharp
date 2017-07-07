@@ -7,6 +7,12 @@ namespace angeldnd.dap {
     }
 
     public abstract class SpecValueChecker<T> : ISpecValueChecker, IValueChecker<T> {
+        public string TypeName {
+            get {
+                return GetType().Name;
+            }
+        }
+
         public bool IsValid(IVar<T> v, T newVal) {
             return IsValid(newVal);
         }

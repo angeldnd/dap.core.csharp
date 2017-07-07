@@ -23,15 +23,15 @@ namespace angeldnd.dap {
         Data HandleRequest(Data req);
     }
 
-    public interface IRequestChecker {
+    public interface IRequestChecker : IBlock {
         bool IsValidRequest(Handler handler, Data req);
     }
 
-    public interface IRequestWatcher {
+    public interface IRequestWatcher : IBlock {
         void OnRequest(Handler handler, Data req);
     }
 
-    public interface IResponseWatcher {
+    public interface IResponseWatcher : IBlock {
         void OnResponse(Handler handler, Data req, Data res);
     }
 

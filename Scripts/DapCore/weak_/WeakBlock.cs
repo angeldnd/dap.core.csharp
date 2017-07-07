@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IBlockOwner {
+    public interface IBlock {
+        string TypeName { get; }
+    }
+
+    public interface IBlockOwner : IBlock {
         void AddBlock(WeakBlock block);
         void RemoveBlock(WeakBlock block);
     }
 
-    public abstract class WeakBlock {
+    public abstract class WeakBlock : IBlock {
         private readonly WeakReference _OwnerReference = null;
 
         public bool IsOwnerAlive {
@@ -23,7 +27,13 @@ namespace angeldnd.dap {
         }
 
         public override string ToString() {
-            return IsOwnerAlive ? _OwnerReference.Target.GetType().Name : ("!" + GetType().Name);
+            return TypeName;
+        }
+
+        public string TypeName {
+            get {
+                return IsOwnerAlive ? _OwnerReference.Target.GetType().Name : ("!" + GetType().Name);
+            }
         }
 
         public void OnAdded() {

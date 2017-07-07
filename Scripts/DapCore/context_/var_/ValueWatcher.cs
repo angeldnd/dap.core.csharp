@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IValueWatcher {
+    public interface IValueWatcher : IBlock {
     }
 
     public interface IValueWatcher<T> : IValueWatcher {

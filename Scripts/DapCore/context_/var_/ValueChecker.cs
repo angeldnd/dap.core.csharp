@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IValueChecker {
+    public interface IValueChecker : IBlock {
     }
 
     public interface IValueChecker<T> : IValueChecker {

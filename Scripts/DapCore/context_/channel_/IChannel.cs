@@ -16,11 +16,11 @@ namespace angeldnd.dap {
         bool FireEvent(Data evt);
     }
 
-    public interface IEventChecker {
+    public interface IEventChecker : IBlock {
         bool IsValidEvent(Channel channel, Data evt);
     }
 
-    public interface IEventWatcher {
+    public interface IEventWatcher : IBlock {
         void OnEvent(Channel channel, Data evt);
     }
 

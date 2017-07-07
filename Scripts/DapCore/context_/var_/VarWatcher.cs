@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public interface IVarWatcher {
+    public interface IVarWatcher : IBlock {
         void OnChanged(IVar v);
     }
 
