@@ -9,32 +9,31 @@ namespace angeldnd.dap {
 
         private static Dictionary<string, DataCache> _Caches = new Dictionary<string, DataCache>();
 
-        private static DataCache GetCache(string kind, int capacity, bool noProfile) {
+        private static DataCache GetCache(string kind, int capacity) {
             DataCache cache = null;
             if (!_Caches.TryGetValue(kind, out cache)) {
-                cache = new DataCache(kind, capacity, noProfile);
+                cache = new DataCache(kind, capacity);
                 _Caches[kind] = cache;
             }
             return cache;
         }
 
-        public static WeakData Take(string kind, bool noProfile = false) {
-            return GetCache(kind, Default_Capacity, noProfile).Take(noProfile);
+        public static WeakData Take(string kind) {
+            return GetCache(kind, Default_Capacity).Take();
         }
 
-        //When calling from threads other than main thread, need to specify noProfile = true
-        public static WeakData Take(string kind, string subKind, bool noProfile = false) {
-            return GetCache(kind + "." + subKind, Default_SubKind_Capacity, noProfile).Take(noProfile);
+        public static WeakData Take(string kind, string subKind) {
+            return GetCache(kind + "." + subKind, Default_SubKind_Capacity).Take();
         }
 
-        public static WeakData Take(ILogger caller, bool noProfile = false) {
+        public static WeakData Take(ILogger caller) {
             string kind = caller.GetType().FullName;
-            return Take(kind, noProfile);
+            return Take(kind);
         }
 
-        public static WeakData Take(ILogger caller, string subKind, bool noProfile = false) {
+        public static WeakData Take(ILogger caller, string subKind) {
             string kind = caller.GetType().FullName;
-            return Take(kind, subKind, noProfile);
+            return Take(kind, subKind);
         }
 
         public readonly string Kind = null;
@@ -45,16 +44,16 @@ namespace angeldnd.dap {
 
         private RealDataPool _DataPool;
 
-        public DataCache(string kind, int capacity, bool noProfile) {
+        public DataCache(string kind, int capacity) {
             Kind = kind;
             Capacity = capacity;
 
             _RefPool = new WeakDataRefPool();
             _DataPool = new RealDataPool(Capacity);
-            EnsureCapacity(capacity, noProfile);
+            EnsureCapacity(capacity);
         }
 
-        private void EnsureCapacity(int capacity, bool noProfile) {
+        private void EnsureCapacity(int capacity) {
             if (capacity < Capacity) {
                 capacity = Capacity;
             }
@@ -63,21 +62,21 @@ namespace angeldnd.dap {
             if (profiler != null) profiler.EndSample();
         }
 
-        private WeakData Take(bool noProfile) {
+        private WeakData Take() {
             IProfiler profiler = Log.BeginSample("DataCache.Take: " + Kind);
             if (_DataPool.Count <= 0) {
-                DoCollect(noProfile);
+                DoCollect();
                 if (_DataPool.Count <= Capacity / 2) {
-                    EnsureCapacity(_Instances.Count / 2, noProfile);
+                    EnsureCapacity(_Instances.Count / 2);
                 }
             }
             RealData real = _DataPool.Take(true);
-            WeakData weak = Register(real, noProfile);
+            WeakData weak = Register(real);
             if (profiler != null) profiler.EndSample();
             return weak;
         }
 
-        private WeakData Register(RealData real, bool noProfile) {
+        private WeakData Register(RealData real) {
             IProfiler profiler = Log.BeginSample("Register: " + real.CapacityTip);
             WeakData weak = new WeakData(Kind, real);
             WeakDataRef r = _RefPool.Take();
@@ -91,7 +90,7 @@ namespace angeldnd.dap {
             return weak;
         }
 
-        private int DoCollect(bool noProfile = false) {
+        private int DoCollect() {
             IProfiler profiler = Log.BeginSample("DoCollect: " + _Instances.Count);
             List<WeakDataRef> tmp = _Temp;
             _Temp = _Instances;
