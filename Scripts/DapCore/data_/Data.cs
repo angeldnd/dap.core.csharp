@@ -27,6 +27,28 @@ namespace angeldnd.dap {
             return data.Clone();
         }
 
+        public static bool IsNullOrEmpty(Data data) {
+            if (data == null) return true;
+            if (data.Count == 0) return true;
+            return false;
+        }
+
+        public static bool IsStringEquals(string v1, string v2) {
+            bool v1NullOrEmpty = string.IsNullOrEmpty(v1);
+            bool v2NullOrEmpty = string.IsNullOrEmpty(v2);
+            if (v1NullOrEmpty && v2NullOrEmpty) return true;
+            if (v1NullOrEmpty || v2NullOrEmpty) return false;
+            return v1.Equals(v2);
+        }
+
+        public static bool IsDataEquals(Data v1, Data v2) {
+            bool v1NullOrEmpty = IsNullOrEmpty(v1);
+            bool v2NullOrEmpty = IsNullOrEmpty(v2);
+            if (v1NullOrEmpty && v2NullOrEmpty) return true;
+            if (v1NullOrEmpty || v2NullOrEmpty) return false;
+            return v1.Equals(v2);
+        }
+
         private bool _Sealed = false;
         public bool Sealed {
             get { return _Sealed; }
@@ -40,6 +62,46 @@ namespace angeldnd.dap {
             _Sealed = false;
             OnRecycle();
             Clear();
+        }
+
+        private bool IsValueEquals(Data data, string key, DataType valueType) {
+            switch (valueType) {
+                case DataType.Bool:
+                    return GetBool(key) == data.GetBool(key);
+                case DataType.Int:
+                    return GetInt(key) == data.GetInt(key);
+                case DataType.Long:
+                    return GetLong(key) == data.GetLong(key);
+                case DataType.Float:
+                    return GetFloat(key) == data.GetFloat(key);
+                case DataType.Double:
+                    return GetDouble(key) == data.GetDouble(key);
+                case DataType.String:
+                    return IsStringEquals(GetString(key), data.GetString(key));
+                case DataType.Data:
+                    return IsDataEquals(GetData(key), data.GetData(key));
+            }
+            return false;
+        }
+
+        public override bool Equals(object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+
+            Data data = obj as Data;
+            if (data == null) return false;
+            if (data.Count != this.Count) return false;
+
+            foreach (string key in Keys) {
+                DataType valueType = GetValueType(key);
+                if (valueType != data.GetValueType(key)) {
+                    return false;
+                }
+                if (!IsValueEquals(data, key, valueType)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public override string ToString() {
