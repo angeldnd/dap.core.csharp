@@ -15,7 +15,7 @@ namespace angeldnd.dap {
         }
 
         public static T GetAncestorManner<T>(this IContext context, string mannerKey)
-                                                    where T : Manner {
+                                                    where T : class, IManner {
             T result = null;
             GetAncestor<IContext>(context, (IContext ancestor) => {
                 result = ancestor.Manners.Get<T>(mannerKey, true);
@@ -25,7 +25,7 @@ namespace angeldnd.dap {
         }
 
         public static T GetOwnOrAncestorManner<T>(this IContext context, string mannerKey)
-                                                    where T : Manner {
+                                                    where T : class, IManner {
             T manner = context.Manners.Get<T>(mannerKey, true);
             if (manner != null) return manner;
 
@@ -49,7 +49,7 @@ namespace angeldnd.dap {
 
         public static T GetContextManner<T>(this IDictContext context, string relPath,
                                                 string mannerKey, bool isDebug = false)
-                                                    where T : Manner {
+                                                    where T : class, IManner {
             IContext descendant = GetContext<IContext>(context, relPath, isDebug);
             if (descendant != null) {
                 T manner = descendant.Manners.Get<T>(mannerKey, isDebug);
@@ -78,7 +78,7 @@ namespace angeldnd.dap {
         }
 
         public static void ForEachContextsWithManner<T>(this IDictContext context, string mannerKey, Action<T> callback)
-                                                    where T : Manner {
+                                                    where T : class, IManner {
             TreeHelper.ForEachDescendants<IContext>(context, (IContext element) => {
                 T manner = element.Manners.Get<T>(mannerKey, true);
                 if (manner != null) {
@@ -88,7 +88,7 @@ namespace angeldnd.dap {
         }
 
         public static List<T> GetContextsWithManner<T>(this IDictContext context, string mannerKey)
-                                                    where T : Manner {
+                                                    where T : class, IManner {
             List<T> result = null;
             ForEachContextsWithManner<T>(context, mannerKey, (T manner) => {
                 if (result == null) {
@@ -167,7 +167,7 @@ namespace angeldnd.dap {
 
         public static T NewContextWithManner<T>(this IDictContext context,
                                     string type, string relPath, string mannerKey)
-                                                    where T : Manner {
+                                                    where T : class, IManner {
             IContext descendant = NewContext(context, type, relPath);
             if (descendant != null) {
                 return descendant.Manners.Add<T>(mannerKey);
@@ -196,7 +196,7 @@ namespace angeldnd.dap {
 
         public static T GetOrNewContextWithManner<T>(this IDictContext context,
                                     string type, string relPath, string mannerKey)
-                                                    where T : Manner {
+                                                    where T : class, IManner {
             IContext descendant = GetOrNewContext(context, type, relPath);
             if (descendant != null) {
                 return descendant.Manners.Add<T>(mannerKey);

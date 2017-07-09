@@ -28,14 +28,14 @@ namespace angeldnd.dap {
     [DapType(RecordableConsts.TypeRecordable)]
     [DapOrder(DapOrders.Manner)]
     public class Recordable : Decorator, IVarWatcher, IEventWatcher, IResponseWatcher {
-        private Recorder _Recorder;
-        public Recorder Recorder {
+        private IRecorder _Recorder;
+        public IRecorder Recorder {
             get {
                 //Use this way since will be used in Decorator's constructor
                 if (_Recorder == null) {
-                    _Recorder = Owner.Get<Recorder>(RecordableConsts.MannerRecorder, true);
+                    _Recorder = Owner.Get<IRecorder>(RecordableConsts.MannerRecorder, true);
                     if (_Recorder == null) {
-                        _Recorder = Context.GetOwnOrAncestorManner<Recorder>(RecordableConsts.MannerRecorder);
+                        _Recorder = Context.GetOwnOrAncestorManner<IRecorder>(RecordableConsts.MannerRecorder);
                     }
                     if (_Recorder != null) {
                         _Recorder.OnJoin(this);

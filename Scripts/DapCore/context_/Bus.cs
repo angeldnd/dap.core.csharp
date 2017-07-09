@@ -189,6 +189,10 @@ namespace angeldnd.dap {
             return 0;
         }
 
+        public bool IsMsgExist(string msg) {
+            return GetMsgCount(msg) > 0;
+        }
+
         public List<string> GetExistMsgs() {
             List<string> result = new List<string>();
             if (_Msgs != null) {

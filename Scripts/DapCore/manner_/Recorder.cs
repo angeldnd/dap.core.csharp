@@ -6,33 +6,49 @@ using angeldnd.dap;
 namespace angeldnd.dap {
     public static class RecorderExtension {
         public static T AddRecorder<T>(this Manners manners)
-                                                    where T : Recorder {
+                                                    where T : class, IRecorder {
             return manners.Add<T>(RecordableConsts.MannerRecorder);
         }
 
         public static T GetRecorder<T>(this Manners manners)
-                                                    where T : Recorder {
+                                                    where T : class, IRecorder {
             return manners.Get<T>(RecordableConsts.MannerRecorder);
         }
 
         public static T GetOrAddRecorder<T>(this Manners manners)
-                                                    where T : Recorder {
+                                                    where T : class, IRecorder {
             return manners.GetOrAdd<T>(RecordableConsts.MannerRecorder);
         }
     }
 
-    public interface IRecorderContext : IContext {
+    public interface IRecorderDelegate {
         bool ShouldRecord(Recordable src, IProperty prop);
         bool ShouldRecord(Recordable src, Channel channel);
         bool ShouldRecord(Recordable src, Handler handler);
         bool ShouldRecord(Recordable src, Bus bus, string msg);
-        Data AppendSyncData(Data data);
     }
 
-    public abstract class Recorder : Manner, ISealable {
-        private IRecorderContext _RecorderContext = null;
-        public IRecorderContext RecorderContext {
-            get { return _RecorderContext; }
+    public interface IRecorder : IRecorderDelegate, IManner, ISealable {
+        void OnJoin(Recordable src);
+
+        void OnChanged(Recordable src, IVar v);
+        void OnEvent(Recordable src, Channel channel, Data evt);
+        void OnResponse(Recordable src, Handler handler, Data req, Data res);
+        void OnBusMsg(Recordable src, Bus bus, string msg);
+
+        void OnPropertyAdded(Recordable src, IProperty property);
+        void OnPropertyRemoved(Recordable src, IProperty property);
+        void OnChannelAdded(Recordable src, Channel channel);
+        void OnChannelRemoved(Recordable src, Channel channel);
+        void OnHandlerAdded(Recordable src, Handler handler);
+        void OnHandlerRemoved(Recordable src, Handler handler);
+    }
+
+    public abstract class Recorder<T> : Manner, IRecorder
+                                            where T : class, IRecorderDelegate {
+        private T _Delegate = null;
+        public T Delegate {
+            get { return _Delegate; }
         }
 
         private bool _Sealed = false;
@@ -46,34 +62,34 @@ namespace angeldnd.dap {
         }
 
         public Recorder(Manners owner, string key) : base(owner, key) {
-            _RecorderContext = Context.As<IRecorderContext>();
-            if (_RecorderContext == null) {
-                Error("Invalid Recorder: RecorderContext Not Found");
+            _Delegate = Context.As<T>();
+            if (_Delegate == null) {
+                Error("Invalid Recorder: Delegate Not Found");
             }
         }
 
         public bool ShouldRecord(Recordable src, IProperty prop) {
-            if (_RecorderContext == null) return false;
+            if (_Delegate == null) return false;
 
-            return _RecorderContext.ShouldRecord(src, prop);
+            return _Delegate.ShouldRecord(src, prop);
         }
 
         public bool ShouldRecord(Recordable src, Channel channel) {
-            if (_RecorderContext == null) return false;
+            if (_Delegate == null) return false;
 
-            return _RecorderContext.ShouldRecord(src, channel);
+            return _Delegate.ShouldRecord(src, channel);
         }
 
         public bool ShouldRecord(Recordable src, Handler handler) {
-            if (_RecorderContext == null) return false;
+            if (_Delegate == null) return false;
 
-            return _RecorderContext.ShouldRecord(src, handler);
+            return _Delegate.ShouldRecord(src, handler);
         }
 
         public bool ShouldRecord(Recordable src, Bus bus, string msg) {
-            if (_RecorderContext == null) return false;
+            if (_Delegate == null) return false;
 
-            return _RecorderContext.ShouldRecord(src, bus, msg);
+            return _Delegate.ShouldRecord(src, bus, msg);
         }
 
         public abstract void OnJoin(Recordable src);
