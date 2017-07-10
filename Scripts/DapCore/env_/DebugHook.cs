@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class DebugHook : Hook {
+    public sealed class DebugHook : EnvHook {
         private bool _Setup = false;
 
         private string _Description = null;
@@ -10,7 +10,7 @@ namespace angeldnd.dap {
             get { return _Description; }
         }
 
-        public DebugHook(Hooks owner, int index) : base(owner, index) {
+        public DebugHook(EnvHooks owner, int index) : base(owner, index) {
             Setup(
                 "DebugHook",
                 (IContext context) => {

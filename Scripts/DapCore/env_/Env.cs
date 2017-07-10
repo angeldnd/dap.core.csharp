@@ -201,12 +201,12 @@ namespace angeldnd.dap {
         private Env() : base(null, null) {
             //Can NOT create any aspects other than Hooks here.
             //Also can't use normal add here..
-            Hooks = new Hooks(this, EnvConsts.KeyHooks);
+            Hooks = new EnvHooks(this, EnvConsts.KeyHooks);
         }
 
         private Channel _ChannelOnTick = null;
 
-        public readonly Hooks Hooks;
+        public readonly EnvHooks Hooks;
 
         public override string LogPrefix {
             get {

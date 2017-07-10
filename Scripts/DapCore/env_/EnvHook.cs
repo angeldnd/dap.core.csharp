@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public class Hook : InTableAspect<Hooks> {
+    public class EnvHook : InTableAspect<EnvHooks> {
         private bool _Setup = false;
 
         private string _Description = null;
@@ -12,7 +12,7 @@ namespace angeldnd.dap {
         private Action<IContext> _ContextAddedBlock;
         private Action<IContext> _ContextRemovedBlock;
 
-        public Hook(Hooks owner, int index) : base(owner, index) {
+        public EnvHook(EnvHooks owner, int index) : base(owner, index) {
         }
 
         public bool Setup(string description,
