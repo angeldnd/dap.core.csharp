@@ -11,21 +11,21 @@ namespace angeldnd.dap {
 
             if (evt != null) evt.Seal();
 
-            bool isValid = IsValidEvent(evt);;
+            bool isValid = IsValidEvent(evt, profiler);;
             if (isValid) {
                 AdvanceRevision();
 
-                NotifyWatchers(evt);
+                NotifyWatchers(evt, profiler);
             }
             if (profiler != null) profiler.EndSample();
             return isValid;
         }
 
-        private bool IsValidEvent(Data evt) {
+        private bool IsValidEvent(Data evt, IProfiler profiler) {
             bool result = true;
             //SILP: WEAK_LIST_FOREACH_BEGIN(Channel.IsValidEvent, checker, IEventChecker, _EventCheckers)
             if (_EventCheckers != null) {                                              //__SILP__
-                IProfiler profiler = Log.BeginSample("Channel.IsValidEvent");          //__SILP__
+                if (profiler != null) profiler.BeginSample("Channel.IsValidEvent");    //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _EventCheckers.RetainLock()) {                       //__SILP__
                     IEventChecker checker = _EventCheckers.GetTarget(r);               //__SILP__
@@ -51,10 +51,10 @@ namespace angeldnd.dap {
             return result;
         }
 
-        private void NotifyWatchers(Data evt) {
+        private void NotifyWatchers(Data evt, IProfiler profiler) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Channel.OnEvent, watcher, IEventWatcher, _EventWatchers)
             if (_EventWatchers != null) {                                              //__SILP__
-                IProfiler profiler = Log.BeginSample("Channel.OnEvent");               //__SILP__
+                if (profiler != null) profiler.BeginSample("Channel.OnEvent");         //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _EventWatchers.RetainLock()) {                       //__SILP__
                     IEventWatcher watcher = _EventWatchers.GetTarget(r);               //__SILP__

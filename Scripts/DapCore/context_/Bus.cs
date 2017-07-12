@@ -112,6 +112,7 @@ namespace angeldnd.dap {
         }
 
         public bool Publish(string msg, object token) {
+            IProfiler profiler = Log.BeginSample(msg);
             TryAddMsg(msg);
             if (!CheckToken(msg, token)) {
                 return false;
@@ -124,19 +125,20 @@ namespace angeldnd.dap {
                 });
             }
 
-            NotifyBusWatchers(msg);
+            NotifyBusWatchers(msg, profiler);
 
             if (LogDebug) {
                 Debug("Publish {0}: sub_count = {1}, msg_count = {2}",
                          msg, GetSubCount(msg), GetMsgCount(msg));
             }
+            if (profiler != null) profiler.EndSample();
             return true;
         }
 
-        private void NotifyBusWatchers(string msg) {
+        private void NotifyBusWatchers(string msg, IProfiler profiler) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Bus.OnBusMsg, watcher, IBusWatcher, _BusWatchers)
             if (_BusWatchers != null) {                                                //__SILP__
-                IProfiler profiler = Log.BeginSample("Bus.OnBusMsg");                  //__SILP__
+                if (profiler != null) profiler.BeginSample("Bus.OnBusMsg");            //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _BusWatchers.RetainLock()) {                         //__SILP__
                     IBusWatcher watcher = _BusWatchers.GetTarget(r);                   //__SILP__

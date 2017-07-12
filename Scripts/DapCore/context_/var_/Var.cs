@@ -46,16 +46,18 @@ namespace angeldnd.dap {
 
         public bool Setup(T defaultValue) {
             if (!_Setup) {
+                IProfiler profiler = Log.BeginSample(Key);
                 _Setup = true;
                 //Not checking whether need to update here, so access code can either
                 //get the current value in setup triggers, or watcher all changes.
                 UpdateValue(defaultValue, () => {
                     OnSetup();
-                    NotifySetupWatchers();
+                    NotifySetupWatchers(profiler);
                     if (LogDebug) {
                         Debug("Setup: {0}", defaultValue);
                     }
                 });
+                if (profiler != null) profiler.EndSample();
                 return true;
             } else {
                 Error("Already Setup: {0} -> {1}", _Value, defaultValue);
@@ -63,10 +65,10 @@ namespace angeldnd.dap {
             }
         }
 
-        private void NotifySetupWatchers() {
+        private void NotifySetupWatchers(IProfiler profiler) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnSetup, watcher, ISetupWatcher, _SetupWatchers)
             if (_SetupWatchers != null) {                                              //__SILP__
-                IProfiler profiler = Log.BeginSample("Var.OnSetup");                   //__SILP__
+                if (profiler != null) profiler.BeginSample("Var.OnSetup");             //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _SetupWatchers.RetainLock()) {                       //__SILP__
                     ISetupWatcher watcher = _SetupWatchers.GetTarget(r);               //__SILP__
@@ -109,15 +111,15 @@ namespace angeldnd.dap {
                 callback();
             }
 
-            NotifyVarWatchers();
-            NotifyValueWatchers(lastVal);
+            NotifyVarWatchers(profiler);
+            NotifyValueWatchers(lastVal, profiler);
             if (profiler != null) profiler.EndSample();
         }
 
-        private void NotifyVarWatchers() {
+        private void NotifyVarWatchers(IProfiler profiler) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnChanged, watcher, IVarWatcher, _VarWatchers)
             if (_VarWatchers != null) {                                                //__SILP__
-                IProfiler profiler = Log.BeginSample("Var.OnChanged");                 //__SILP__
+                if (profiler != null) profiler.BeginSample("Var.OnChanged");           //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _VarWatchers.RetainLock()) {                         //__SILP__
                     IVarWatcher watcher = _VarWatchers.GetTarget(r);                   //__SILP__
@@ -135,10 +137,10 @@ namespace angeldnd.dap {
             }                                                         //__SILP__
         }
 
-        private void NotifyValueWatchers(T lastVal) {
+        private void NotifyValueWatchers(T lastVal, IProfiler profiler) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnChanged<T>, watcher, IValueWatcher<T>, _ValueWatchers)
             if (_ValueWatchers != null) {                                              //__SILP__
-                IProfiler profiler = Log.BeginSample("Var.OnChanged<T>");              //__SILP__
+                if (profiler != null) profiler.BeginSample("Var.OnChanged<T>");        //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _ValueWatchers.RetainLock()) {                       //__SILP__
                     IValueWatcher<T> watcher = _ValueWatchers.GetTarget(r);            //__SILP__
@@ -156,11 +158,11 @@ namespace angeldnd.dap {
             }                                                         //__SILP__
         }
 
-        private bool IsValid(T newValue) {
+        private bool IsValid(T newValue, IProfiler profiler) {
             bool result = true;
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.IsValid, checker, IValueChecker<T>, _ValueCheckers)
             if (_ValueCheckers != null) {                                              //__SILP__
-                IProfiler profiler = Log.BeginSample("Var.IsValid");                   //__SILP__
+                if (profiler != null) profiler.BeginSample("Var.IsValid");             //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _ValueCheckers.RetainLock()) {                       //__SILP__
                     IValueChecker<T> checker = _ValueCheckers.GetTarget(r);            //__SILP__
@@ -189,10 +191,13 @@ namespace angeldnd.dap {
 
         public bool SetValue(T newValue) {
             if (NeedUpdate(newValue)) {
-                if (!IsValid(newValue)) {
+                IProfiler profiler = Log.BeginSample(Key);
+                if (!IsValid(newValue, profiler)) {
                     _CheckFailedCount++;
+                    if (profiler != null) profiler.EndSample();
                     return false;
                 }
+                if (profiler != null) profiler.EndSample();
                 T lastVal = Value;
                 if (!_Setup) {
                     Setup(newValue);

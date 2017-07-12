@@ -19,18 +19,20 @@ namespace angeldnd.dap {
 
         public bool Setup(IRequestHandler handler) {
             if (_Handler == null) {
+                IProfiler profiler = Log.BeginSample(Key);
                 _Handler = handler;
-                NotifySetupWatchers();
+                NotifySetupWatchers(profiler);
+                if (profiler != null) profiler.EndSample();
                 return true;
             }
             Error("Alread Setup: {0} -> {1}", _Handler, handler);
             return false;
         }
 
-        private void NotifySetupWatchers() {
+        private void NotifySetupWatchers(IProfiler profiler) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Var.OnSetup, watcher, ISetupWatcher, _SetupWatchers)
             if (_SetupWatchers != null) {                                              //__SILP__
-                IProfiler profiler = Log.BeginSample("Var.OnSetup");                   //__SILP__
+                if (profiler != null) profiler.BeginSample("Var.OnSetup");             //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _SetupWatchers.RetainLock()) {                       //__SILP__
                     ISetupWatcher watcher = _SetupWatchers.GetTarget(r);               //__SILP__
@@ -59,14 +61,15 @@ namespace angeldnd.dap {
                 return ResponseHelper.InternalError(this, req, "Invalid Handler");
             }
 
-            if (!IsValidRequest(req)) {
+            IProfiler profiler = Log.BeginSample(Key);
+
+            if (!IsValidRequest(req, profiler)) {
                 _CheckFailedCount++;
+                if (profiler != null) profiler.EndSample();
                 return ResponseHelper.BadRequest(this, req, "Invalid Request");
             }
 
-            IProfiler profiler = Log.BeginSample(Key);
-
-            NotifyRequestWatchers(req);
+            NotifyRequestWatchers(req, profiler);
 
             Data res = null;
             try {
@@ -84,7 +87,7 @@ namespace angeldnd.dap {
             if (res != null) res.Seal();
             AdvanceRevision();
 
-            NotifyResponseWatchers(req, res);
+            NotifyResponseWatchers(req, res, profiler);
 
             if (ResponseHelper.IsResFailed(res)) {
                 Error("HandleRequest Failed: {0} -> {1}", req.ToFullString(), res.ToFullString());
@@ -95,11 +98,11 @@ namespace angeldnd.dap {
             return res;
         }
 
-        private bool IsValidRequest(Data req) {
+        private bool IsValidRequest(Data req, IProfiler profiler) {
             bool result = true;
             //SILP: WEAK_LIST_FOREACH_BEGIN(Handler.IsValidRequest, checker, IRequestChecker, _RequestCheckers)
             if (_RequestCheckers != null) {                                            //__SILP__
-                IProfiler profiler = Log.BeginSample("Handler.IsValidRequest");        //__SILP__
+                if (profiler != null) profiler.BeginSample("Handler.IsValidRequest");  //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _RequestCheckers.RetainLock()) {                     //__SILP__
                     IRequestChecker checker = _RequestCheckers.GetTarget(r);           //__SILP__
@@ -126,10 +129,10 @@ namespace angeldnd.dap {
             return result;
         }
 
-        private void NotifyRequestWatchers(Data req) {
+        private void NotifyRequestWatchers(Data req, IProfiler profiler) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Handler.OnRequest, watcher, IRequestWatcher, _RequestWatchers)
             if (_RequestWatchers != null) {                                            //__SILP__
-                IProfiler profiler = Log.BeginSample("Handler.OnRequest");             //__SILP__
+                if (profiler != null) profiler.BeginSample("Handler.OnRequest");       //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _RequestWatchers.RetainLock()) {                     //__SILP__
                     IRequestWatcher watcher = _RequestWatchers.GetTarget(r);           //__SILP__
@@ -147,10 +150,10 @@ namespace angeldnd.dap {
             }                                                         //__SILP__
         }
 
-        private void NotifyResponseWatchers(Data req, Data res) {
+        private void NotifyResponseWatchers(Data req, Data res, IProfiler profiler) {
             //SILP: WEAK_LIST_FOREACH_BEGIN(Handler.OnResponse, watcher, IResponseWatcher, _ResponseWatchers)
             if (_ResponseWatchers != null) {                                           //__SILP__
-                IProfiler profiler = Log.BeginSample("Handler.OnResponse");            //__SILP__
+                if (profiler != null) profiler.BeginSample("Handler.OnResponse");      //__SILP__
                 bool needGc = false;                                                   //__SILP__
                 foreach (var r in _ResponseWatchers.RetainLock()) {                    //__SILP__
                     IResponseWatcher watcher = _ResponseWatchers.GetTarget(r);         //__SILP__

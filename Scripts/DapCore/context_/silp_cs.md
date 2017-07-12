@@ -37,7 +37,7 @@ public bool Remove${name}(string ${a_key}, ${l_type} ${l_var}) {
 # WEAK_LIST_FOREACH_BEGIN(name, var_name, cs_type, list_name) #
 ```C#
 if (${list_name} != null) {
-    IProfiler profiler = Log.BeginSample("${name}");
+    if (profiler != null) profiler.BeginSample("${name}");
     bool needGc = false;
     foreach (var r in ${list_name}.RetainLock()) {
         ${cs_type} ${var_name} = ${list_name}.GetTarget(r);
