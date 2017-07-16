@@ -58,6 +58,10 @@ namespace angeldnd.dap {
             _Sealed = true;
         }
 
+        public void _UnSeal() {
+            _Sealed = false;
+        }
+
         public void _Recycle() {
             _Sealed = false;
             OnRecycle();
