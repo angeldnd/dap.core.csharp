@@ -25,24 +25,37 @@ namespace angeldnd.dap {
         }
     }
 
+    public interface IRecordable : IManner {
+        IRecorder GetRecorder();
+        string RelPath { get; }
+    }
+
     [DapType(RecordableConsts.TypeRecordable)]
     [DapOrder(DapOrders.Manner)]
-    public class Recordable : Decorator, IVarWatcher, IEventWatcher, IResponseWatcher {
-        private IRecorder _Recorder;
-        public IRecorder Recorder {
+    public abstract class Recordable<T> : Decorator, IRecordable
+                                            where T : class, IRecorder {
+        private bool _RecorderInited = false;
+
+        private T _Recorder;
+        public T Recorder {
             get {
                 //Use this way since will be used in Decorator's constructor
-                if (_Recorder == null) {
-                    _Recorder = Owner.Get<IRecorder>(RecordableConsts.MannerRecorder, true);
+                if (_Recorder == null && !_RecorderInited) {
+                    _RecorderInited = true;
+                    _Recorder = Owner.Get<T>(RecordableConsts.MannerRecorder, true);
                     if (_Recorder == null) {
-                        _Recorder = Context.GetOwnOrAncestorManner<IRecorder>(RecordableConsts.MannerRecorder);
+                        _Recorder = Context.GetOwnOrAncestorManner<T>(RecordableConsts.MannerRecorder);
                     }
                     if (_Recorder != null) {
-                        _Recorder.OnJoin(this);
+                        OnRecorderInit();
                     }
                 }
                 return _Recorder;
             }
+        }
+
+        public IRecorder GetRecorder() {
+            return Recorder;
         }
 
         private string _RelPath = null;
@@ -59,6 +72,25 @@ namespace angeldnd.dap {
                 return _RelPath;
             }
         }
+
+        public virtual bool TryResetRecorder() {
+            if (_Recorder != null) {
+                Error("TryResetRecorder Failed: _Recorder = {0}", _Recorder);
+                return false;
+            }
+            _RecorderInited = false;
+            if (Recorder == null) {
+                Error("Invalid Recordable: Recorder Not Found");
+                return false;
+            }
+            if (RelPath == null) {
+                Error("Invalid Recordable: RelPath == null");
+                return false;
+            }
+            return true;
+        }
+
+        protected abstract void OnRecorderInit();
 
         protected override bool ShouldWatchProperties() {
             return true;
@@ -77,12 +109,45 @@ namespace angeldnd.dap {
         }
 
         public Recordable(Manners owner, string key) : base(owner, key) {
+        }
+
+        protected bool ShouldRecord(IProperty prop) {
+            if (Recorder == null) return false;
+
+            return Recorder.ShouldRecord(this, prop);
+        }
+
+        protected bool ShouldRecord(Channel channel) {
+            if (Recorder == null) return false;
+
+            return Recorder.ShouldRecord(this, channel);
+        }
+
+        protected bool ShouldRecord(Handler handler) {
+            if (Recorder == null) return false;
+
+            return Recorder.ShouldRecord(this, handler);
+        }
+
+        protected bool ShouldRecord(Bus bus, string msg) {
+            if (Recorder == null) return false;
+
+            return Recorder.ShouldRecord(this, bus, msg);
+        }
+    }
+
+    public class Recordable : Recordable<Recorder>, IVarWatcher, IEventWatcher, IResponseWatcher {
+        public Recordable(Manners owner, string key) : base(owner, key) {
             if (Recorder == null) {
                 Error("Invalid Recordable: Recorder Not Found");
             }
             if (RelPath == null) {
                 Error("Invalid Recordable: RelPath == null");
             }
+        }
+
+        protected override void OnRecorderInit() {
+            Recorder.OnJoin(this);
         }
 
         protected override void OnPropertyAdded(IProperty property, bool isNew) {
@@ -143,30 +208,6 @@ namespace angeldnd.dap {
 
         public void OnResponse(Handler handler, Data req, Data res) {
             Recorder.OnResponse(this, handler, req, res);
-        }
-
-        private bool ShouldRecord(IProperty prop) {
-            if (Recorder == null) return false;
-
-            return Recorder.ShouldRecord(this, prop);
-        }
-
-        private bool ShouldRecord(Channel channel) {
-            if (Recorder == null) return false;
-
-            return Recorder.ShouldRecord(this, channel);
-        }
-
-        private bool ShouldRecord(Handler handler) {
-            if (Recorder == null) return false;
-
-            return Recorder.ShouldRecord(this, handler);
-        }
-
-        private bool ShouldRecord(Bus bus, string msg) {
-            if (Recorder == null) return false;
-
-            return Recorder.ShouldRecord(this, bus, msg);
         }
     }
 }

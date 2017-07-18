@@ -22,26 +22,13 @@ namespace angeldnd.dap {
     }
 
     public interface IRecorderDelegate {
-        bool ShouldRecord(Recordable src, IProperty prop);
-        bool ShouldRecord(Recordable src, Channel channel);
-        bool ShouldRecord(Recordable src, Handler handler);
-        bool ShouldRecord(Recordable src, Bus bus, string msg);
+        bool ShouldRecord(IRecordable src, IProperty prop);
+        bool ShouldRecord(IRecordable src, Channel channel);
+        bool ShouldRecord(IRecordable src, Handler handler);
+        bool ShouldRecord(IRecordable src, Bus bus, string msg);
     }
 
     public interface IRecorder : IRecorderDelegate, IManner, ISealable {
-        void OnJoin(Recordable src);
-
-        void OnChanged(Recordable src, IVar v);
-        void OnEvent(Recordable src, Channel channel, Data evt);
-        void OnResponse(Recordable src, Handler handler, Data req, Data res);
-        void OnBusMsg(Recordable src, Bus bus, string msg);
-
-        void OnPropertyAdded(Recordable src, IProperty property);
-        void OnPropertyRemoved(Recordable src, IProperty property);
-        void OnChannelAdded(Recordable src, Channel channel);
-        void OnChannelRemoved(Recordable src, Channel channel);
-        void OnHandlerAdded(Recordable src, Handler handler);
-        void OnHandlerRemoved(Recordable src, Handler handler);
     }
 
     public abstract class Recorder<T> : Manner, IRecorder
@@ -68,44 +55,49 @@ namespace angeldnd.dap {
             }
         }
 
-        public bool ShouldRecord(Recordable src, IProperty prop) {
+        public bool ShouldRecord(IRecordable src, IProperty prop) {
             if (_Delegate == null) return false;
 
             return _Delegate.ShouldRecord(src, prop);
         }
 
-        public bool ShouldRecord(Recordable src, Channel channel) {
+        public bool ShouldRecord(IRecordable src, Channel channel) {
             if (_Delegate == null) return false;
 
             return _Delegate.ShouldRecord(src, channel);
         }
 
-        public bool ShouldRecord(Recordable src, Handler handler) {
+        public bool ShouldRecord(IRecordable src, Handler handler) {
             if (_Delegate == null) return false;
 
             return _Delegate.ShouldRecord(src, handler);
         }
 
-        public bool ShouldRecord(Recordable src, Bus bus, string msg) {
+        public bool ShouldRecord(IRecordable src, Bus bus, string msg) {
             if (_Delegate == null) return false;
 
             return _Delegate.ShouldRecord(src, bus, msg);
         }
 
-        public abstract void OnJoin(Recordable src);
-
-        public abstract void OnChanged(Recordable src, IVar v);
-        public abstract void OnEvent(Recordable src, Channel channel, Data evt);
-        public abstract void OnResponse(Recordable src, Handler handler, Data req, Data res);
-        public abstract void OnBusMsg(Recordable src, Bus bus, string msg);
-
-        public abstract void OnPropertyAdded(Recordable src, IProperty property);
-        public abstract void OnPropertyRemoved(Recordable src, IProperty property);
-        public abstract void OnChannelAdded(Recordable src, Channel channel);
-        public abstract void OnChannelRemoved(Recordable src, Channel channel);
-        public abstract void OnHandlerAdded(Recordable src, Handler handler);
-        public abstract void OnHandlerRemoved(Recordable src, Handler handler);
-
         protected virtual void OnSeal() {}
+    }
+
+    public abstract class Recorder : Recorder<IRecorderDelegate> {
+        public Recorder(Manners owner, string key) : base(owner, key) {
+        }
+
+        public abstract void OnJoin(IRecordable src);
+
+        public abstract void OnChanged(IRecordable src, IVar v);
+        public abstract void OnEvent(IRecordable src, Channel channel, Data evt);
+        public abstract void OnResponse(IRecordable src, Handler handler, Data req, Data res);
+        public abstract void OnBusMsg(IRecordable src, Bus bus, string msg);
+
+        public abstract void OnPropertyAdded(IRecordable src, IProperty property);
+        public abstract void OnPropertyRemoved(IRecordable src, IProperty property);
+        public abstract void OnChannelAdded(IRecordable src, Channel channel);
+        public abstract void OnChannelRemoved(IRecordable src, Channel channel);
+        public abstract void OnHandlerAdded(IRecordable src, Handler handler);
+        public abstract void OnHandlerRemoved(IRecordable src, Handler handler);
     }
 }
