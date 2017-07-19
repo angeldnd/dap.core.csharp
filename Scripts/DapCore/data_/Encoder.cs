@@ -172,6 +172,20 @@ namespace angeldnd.dap {
         }
     }
 
+    public class DataEncoder : Encoder<Data> {
+        public override string GetDapType() {
+            return PropertiesConsts.TypeDataProperty;
+        }
+
+        protected override bool DoEncode(Data data, string key, Data val) {
+            return data.SetData(key, val);
+        }
+
+        protected override bool DoDecode(Data data, string key, out Data val, bool isDebug = false) {
+            return data.TryGetData(key, out val, isDebug);
+        }
+    }
+
     public abstract class DataEncoder<T> : Encoder<T> {
         protected override bool DoEncode(Data data, string key, T val) {
             return data.SetData(key, EncodeValue(val));
@@ -186,22 +200,11 @@ namespace angeldnd.dap {
             return false;
         }
 
-        protected abstract Data EncodeValue(T val);
+        protected Data EncodeValue(T val) {
+            return EncodeValue(DataCache.Take(typeof(T).FullName), val);
+        }
+
+        protected abstract Data EncodeValue(Data valueData, T val);
         protected abstract bool DoDecodeValue(Data valueData, out T val, bool isDebug = false);
-    }
-
-    public class DataEncoder : DataEncoder<Data> {
-        public override string GetDapType() {
-            return PropertiesConsts.TypeDataProperty;
-        }
-
-        protected override Data EncodeValue(Data val) {
-            return val;
-        }
-
-        protected override bool DoDecodeValue(Data valueData, out Data val, bool isDebug = false) {
-            val = valueData;
-            return true;
-        }
     }
 }

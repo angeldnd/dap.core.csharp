@@ -126,11 +126,13 @@ namespace angeldnd.dap {
         }
 
         public int CollectAllGarbage() {
-            IProfiler profiler = Log.BeginSample("WeakList.CollectAllGarbage");
+            IProfiler profiler = Log.BeginSample("CollectAll");
             int count = 0;
             int startIndex = 0;
             while (true) {
+                if (profiler != null) profiler.BeginSample("CollectOne");
                 startIndex = CollectOneGarbage(startIndex);
+                if (profiler != null) profiler.EndSample();
                 if (startIndex < 0) {
                     break;
                 }
@@ -201,8 +203,11 @@ namespace angeldnd.dap {
         // This is for the cases that need better performance, need
         // more trivial codes though, check Channel.cs for example
         public List<WeakReference> RetainLock() {
+            IProfiler profiler = Log.BeginSample("WeakList.RetainLock");
             _LockCount++;
-            return _Elements;
+            var result = _Elements;
+            if (profiler != null) profiler.EndSample();
+            return result;
         }
 
         public void ReleaseLock(bool needGc) {
@@ -211,6 +216,7 @@ namespace angeldnd.dap {
             }
             _LockCount--;
             if (_LockCount == 0) {
+                IProfiler profiler = Log.BeginSample("WeakList.ReleaseLock");
                 if (_NeedGc) {
                     CollectAllGarbage();
                     _NeedGc = false;
@@ -218,13 +224,18 @@ namespace angeldnd.dap {
                 if (_Ops != null) {
                     foreach (var op in _Ops) {
                         if (op.Key == true) {
+                            if (profiler != null) profiler.BeginSample("DoAdd");
                             DoAddElement(op.Value);
+                            if (profiler != null) profiler.EndSample();
                         } else {
+                            if (profiler != null) profiler.BeginSample("DoRemove");
                             DoRemoveElement(op.Value);
+                            if (profiler != null) profiler.EndSample();
                         }
                     }
                     _Ops.Clear();
                 }
+                if (profiler != null) profiler.EndSample();
             }
         }
 

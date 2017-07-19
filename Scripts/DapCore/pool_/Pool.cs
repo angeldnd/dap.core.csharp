@@ -28,19 +28,34 @@ namespace angeldnd.dap {
         }
 
         public void EnsureCapacity(int capacity) {
+            IProfiler profiler = Log.BeginSample("EnsureCapacity");
             while (_Items.Count < capacity) {
+                if (profiler != null) profiler.BeginSample("New");
                 _Items.Enqueue(NewItem());
+                if (profiler != null) profiler.EndSample();
             }
+            if (profiler != null) profiler.EndSample();
         }
 
         public T Take(bool createNew = false) {
+            IProfiler profiler = Log.BeginSample("Take");
+            bool found = false;
+            T result = default(T);
             while (_Items.Count > 0) {
                 T item = _Items.Dequeue();
                 if (CheckTake(item)) {
-                    return item;
+                    found = true;
+                    result = item;
+                    break;
                 }
             }
-            return createNew ? NewItem() : default(T);
+            if (!found && createNew) {
+                if (profiler != null) profiler.BeginSample("New");
+                result = NewItem();
+                if (profiler != null) profiler.EndSample();
+            }
+            if (profiler != null) profiler.EndSample();
+            return result;
         }
 
         public void Add(T item) {

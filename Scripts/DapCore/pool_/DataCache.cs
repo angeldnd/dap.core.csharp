@@ -4,8 +4,11 @@ using System.Text;
 
 namespace angeldnd.dap {
     public class DataCache {
-        public const int Default_Capacity = 16;
-        public const int Default_SubKind_Capacity = 4;
+        public const int Max_Collect_Tries = 1024;
+        public const int Max_Single_Alloc = 128;
+
+        public const int Default_Capacity = 32;
+        public const int Default_SubKind_Capacity = 16;
 
         private static Dictionary<string, DataCache> _Caches = new Dictionary<string, DataCache>();
 
@@ -39,9 +42,11 @@ namespace angeldnd.dap {
         public readonly string Kind = null;
         public readonly int Capacity;
         private List<WeakDataRef> _Instances = new List<WeakDataRef>();
-        private List<WeakDataRef> _Temp = new List<WeakDataRef>();
-        private WeakDataRefPool _RefPool;
 
+        private List<WeakDataRef> _Collecting = new List<WeakDataRef>();
+        private int _CollectingIndex = 0;
+
+        private WeakDataRefPool _RefPool;
         private RealDataPool _DataPool;
 
         public DataCache(string kind, int capacity) {
@@ -64,11 +69,19 @@ namespace angeldnd.dap {
 
         private WeakData Take() {
             IProfiler profiler = Log.BeginSample("DataCache.Take: " + Kind);
-            if (_DataPool.Count <= 0) {
-                DoCollect();
-                if (_DataPool.Count <= Capacity / 2) {
-                    EnsureCapacity(_Instances.Count / 2);
+            int capacity = Capacity / 2;
+            if (_DataPool.Count <= capacity) {
+                DoCollect(capacity);
+            }
+            if (_DataPool.Count <= capacity) {
+                capacity = Capacity;
+                if (_Instances.Count / 2 > capacity) {
+                    capacity = _Instances.Count / 2;
+                    if (capacity > _DataPool.Count + Max_Single_Alloc) {
+                        capacity = _DataPool.Count + Max_Single_Alloc;
+                    }
                 }
+                EnsureCapacity(capacity);
             }
             RealData real = _DataPool.Take(true);
             WeakData weak = Register(real);
@@ -77,43 +90,64 @@ namespace angeldnd.dap {
         }
 
         private WeakData Register(RealData real) {
-            IProfiler profiler = Log.BeginSample("Register: " + real.CapacityTip);
+            IProfiler profiler = Log.BeginSample("Register");
+            if (profiler != null) profiler.BeginSample("New WeakData");
             WeakData weak = new WeakData(Kind, real);
+            if (profiler != null) profiler.EndSample();
             WeakDataRef r = _RefPool.Take();
             if (r == null) {
+                if (profiler != null) profiler.BeginSample("New WeakDataRef");
                 r = new WeakDataRef(weak, real);
+                if (profiler != null) profiler.EndSample();
             } else {
+                if (profiler != null) profiler.BeginSample("_Reuse");
                 r._Reuse(weak, real);
+                if (profiler != null) profiler.EndSample();
             }
             _Instances.Add(r);
             if (profiler != null) profiler.EndSample();
             return weak;
         }
 
-        private int DoCollect() {
-            IProfiler profiler = Log.BeginSample("DoCollect: " + _Instances.Count);
-            List<WeakDataRef> tmp = _Temp;
-            _Temp = _Instances;
-            _Instances = tmp;
+        private int DoCollect(int capacity) {
+            IProfiler profiler = Log.BeginSample("DoCollect");
 
-            int count = 0;
-            foreach (WeakDataRef r in _Temp) {
+            if (_CollectingIndex >= _Collecting.Count) {
+                _Collecting.Clear();
+                _CollectingIndex = 0;
+
+                if (_Instances.Count > 0) {
+                    List<WeakDataRef> tmp = _Collecting;
+                    _Collecting = _Instances;
+                    _Instances = tmp;
+                }
+            }
+
+            int checkedCount = 0;
+            int collectedCount = 0;
+            while (_CollectingIndex < _Collecting.Count) {
+                WeakDataRef r = _Collecting[_CollectingIndex++];
                 if (r.IsAlive) {
                     _Instances.Add(r);
                 } else {
-                    count++;
                     _DataPool.Add(r.Real);
                     _RefPool.Add(r);
+                    collectedCount++;
+                    if (collectedCount >= capacity) {
+                        break;
+                    }
+                }
+                checkedCount ++;
+                if (checkedCount >= Max_Collect_Tries) {
+                    break;
                 }
             }
-            _Temp.Clear();
-            if (count > 0) {
-                if (profiler != null) profiler.BeginSample("Collected: " + count.ToString());
-                if (profiler != null) profiler.EndSample();
-            }
+            if (profiler != null) profiler.BeginSample(string.Format("{0}, {1} -> {2} -> {3}",
+                                            _Instances.Count, _Collecting.Count, checkedCount, collectedCount));
+            if (profiler != null) profiler.EndSample();
             //Log.Error("DataCache.DoCollect {0} -> {1} -> {2}/{3}", Kind, count, _DataPool.Count, _Instances.Count);
             if (profiler != null) profiler.EndSample();
-            return count;
+            return collectedCount;
         }
     }
 }

@@ -37,11 +37,14 @@ namespace angeldnd.dap {
         }
 
         public Data EncodeValue() {
+            IProfiler profiler = Log.BeginSample("EncodeValue");
+            Data result = null;
             Data data = DataCache.Take(this);
             if (GetEncoder().Encode(data, PropertiesConsts.KeyValue, Value)) {
-                return data;
+                result = data;
             }
-            return null;
+            if (profiler != null) profiler.EndSample();
+            return result;
         }
 
         public bool DecodeValue(Data data) {
