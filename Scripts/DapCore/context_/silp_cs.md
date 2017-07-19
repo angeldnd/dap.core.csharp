@@ -44,7 +44,7 @@ if (${list_name} != null) {
         if (${var_name} == null) {
             needGc = true;
         } else {
-            if (profiler != null) profiler.BeginSample(${var_name}.TypeName);
+            if (profiler != null) profiler.BeginSample(${var_name}.BlockName);
 ```
 
 # WEAK_LIST_FOREACH_END(name, var_name, cs_type, list_name) #

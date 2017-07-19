@@ -40,6 +40,13 @@ public string Key {
     get { return _Key; }
 }
 
+public override string BlockName {
+    get {
+        return string.Format("{0}<{1}>", GetType().Name,
+                    _Owner == null ? "null" : _Owner.BlockName);
+    }
+}
+
 public override bool DebugMode {
     get { return _Owner == null ? false : _Owner.DebugMode; }
 }
@@ -220,6 +227,12 @@ public override sealed string Uri {
     }
 }
 
+public override string BlockName {
+    get {
+        return string.Format("{0}<{1}>", GetType().Name, _Context.BlockName);
+    }
+}
+
 private bool _Debugging = false;
 public bool Debugging {
     get { return _Debugging; }
@@ -291,6 +304,12 @@ protected override void AddSummaryFields(Data summary) {
     _Vars = AddTopAspect<Vars>(ContextConsts.KeyVars);
     _Utils = AddTopAspect<Utils>(ContextConsts.KeyUtils);
     _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);
+}
+
+public override string BlockName {
+    get {
+        return GetType().Name;
+    }
 }
 
 private readonly string _Path;

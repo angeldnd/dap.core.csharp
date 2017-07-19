@@ -29,6 +29,13 @@ namespace angeldnd.dap {
             get { return _Key; }                                                         //__SILP__
         }                                                                                //__SILP__
                                                                                          //__SILP__
+        public override string BlockName {                                               //__SILP__
+            get {                                                                        //__SILP__
+                return string.Format("{0}<{1}>", GetType().Name,                         //__SILP__
+                            _Owner == null ? "null" : _Owner.BlockName);                 //__SILP__
+            }                                                                            //__SILP__
+        }                                                                                //__SILP__
+                                                                                         //__SILP__
         public override bool DebugMode {                                                 //__SILP__
             get { return _Owner == null ? false : _Owner.DebugMode; }                    //__SILP__
         }                                                                                //__SILP__

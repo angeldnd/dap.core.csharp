@@ -50,11 +50,13 @@ namespace angeldnd.dap {
             _TimeProvider = Context.GetAncestor<ITimedContext>();
             if (_TimeProvider == null) {
                 Error("Invalid Timeable: TimeProvider Not Found");
+                return;
             }
 
             IContext contextOwner = Context.GetOwner() as IContext;
             if (contextOwner == null) {
                 Error("Invalid Context Owner: {0}", Context.GetOwner());
+                return;
             }
 
             Channel ownerOnTimeChannel = contextOwner.Channels.Get(TimeableConsts.ChannelOnTime);

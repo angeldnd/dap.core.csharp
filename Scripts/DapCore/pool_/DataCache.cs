@@ -102,13 +102,15 @@ namespace angeldnd.dap {
                     _Instances.Add(r);
                 } else {
                     count++;
-                    if (profiler != null) profiler.BeginSample("Collected");
                     _DataPool.Add(r.Real);
                     _RefPool.Add(r);
-                    if (profiler != null) profiler.EndSample();
                 }
             }
             _Temp.Clear();
+            if (count > 0) {
+                if (profiler != null) profiler.BeginSample("Collected: " + count.ToString());
+                if (profiler != null) profiler.EndSample();
+            }
             //Log.Error("DataCache.DoCollect {0} -> {1} -> {2}/{3}", Kind, count, _DataPool.Count, _Instances.Count);
             if (profiler != null) profiler.EndSample();
             return count;

@@ -7,7 +7,7 @@ namespace angeldnd.dap {
     }
 
     public abstract class SpecValueChecker<T> : ISpecValueChecker, IValueChecker<T> {
-        public string TypeName {
+        public string BlockName {
             get {
                 return GetType().Name;
             }

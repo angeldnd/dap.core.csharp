@@ -62,13 +62,14 @@ namespace angeldnd.dap {
             }
         }
 
+        public string BlockName {
+            get {
+                return string.Format("{0}<{1}>", GetType().Name,
+                            _Obj == null ? "null" : _Obj.BlockName);
+            }
+        }
+
         //SILP:BLOCK_OWNER()
-        public string TypeName {                                      //__SILP__
-            get {                                                     //__SILP__
-                return GetType().Name;                                //__SILP__
-            }                                                         //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
         private List<WeakBlock> _Blocks = null;                       //__SILP__
                                                                       //__SILP__
         public void AddBlock(WeakBlock block) {                       //__SILP__

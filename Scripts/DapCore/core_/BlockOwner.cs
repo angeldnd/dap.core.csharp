@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public class BlockOwner : IBlockOwner {
+        public string BlockName {
+            get {
+                return GetType().Name;
+            }
+        }
+
         //SILP:BLOCK_OWNER()
-        public string TypeName {                                      //__SILP__
-            get {                                                     //__SILP__
-                return GetType().Name;                                //__SILP__
-            }                                                         //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
         private List<WeakBlock> _Blocks = null;                       //__SILP__
                                                                       //__SILP__
         public void AddBlock(WeakBlock block) {                       //__SILP__

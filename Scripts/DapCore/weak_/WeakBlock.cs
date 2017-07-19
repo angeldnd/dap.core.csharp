@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public interface IBlock {
-        string TypeName { get; }
+        string BlockName { get; }
     }
 
     public interface IBlockOwner : IBlock {
@@ -27,12 +27,12 @@ namespace angeldnd.dap {
         }
 
         public override string ToString() {
-            return TypeName;
+            return BlockName;
         }
 
-        public string TypeName {
+        public string BlockName {
             get {
-                return IsOwnerAlive ? _OwnerReference.Target.GetType().Name : ("!" + GetType().Name);
+                return IsOwnerAlive ? ((IBlockOwner)_OwnerReference.Target).BlockName : ("!" + GetType().Name);
             }
         }
 
