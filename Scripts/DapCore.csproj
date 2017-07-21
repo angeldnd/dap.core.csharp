@@ -36,13 +36,13 @@
   <ItemGroup>
     <!--SILP:csproj:compile_include(DapCore) -->
     <Compile Include="DapCore\DapOrders.cs" />                                <!--__SILP__-->
-    <Compile Include="DapCore\data_\DataJsonConvertor.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\data_\DataConvertor.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\data_\Caret.cs" />                              <!--__SILP__-->
     <Compile Include="DapCore\data_\DataCodeConvertor.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\data_\DataTypeConvertor.cs" />                  <!--__SILP__-->
     <Compile Include="DapCore\data_\Data.cs" />                               <!--__SILP__-->
     <Compile Include="DapCore\data_\WordSplitter.cs" />                       <!--__SILP__-->
+    <Compile Include="DapCore\data_\RealData.cs" />                           <!--__SILP__-->
     <Compile Include="DapCore\data_\Word.cs" />                               <!--__SILP__-->
     <Compile Include="DapCore\data_\CaretException.cs" />                     <!--__SILP__-->
     <Compile Include="DapCore\data_\Convertor.cs" />                          <!--__SILP__-->
@@ -105,6 +105,12 @@
     <Compile Include="DapCore\base_\element_\InBothElement.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\base_\element_\InDictElement.cs" />             <!--__SILP__-->
     <Compile Include="DapCore\base_\element_\Element.cs" />                   <!--__SILP__-->
+    <Compile Include="DapCore\pool_\WeakData.cs" />                           <!--__SILP__-->
+    <Compile Include="DapCore\pool_\WeakDataRef.cs" />                        <!--__SILP__-->
+    <Compile Include="DapCore\pool_\RealDataPool.cs" />                       <!--__SILP__-->
+    <Compile Include="DapCore\pool_\DataCache.cs" />                          <!--__SILP__-->
+    <Compile Include="DapCore\pool_\Pool.cs" />                               <!--__SILP__-->
+    <Compile Include="DapCore\pool_\WeakDataRefPool.cs" />                    <!--__SILP__-->
     <Compile Include="DapCore\core_\BlockOwner.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\core_\Factory.cs" />                            <!--__SILP__-->
     <Compile Include="DapCore\core_\ElementConsts.cs" />                      <!--__SILP__-->
@@ -128,15 +134,18 @@
     <Compile Include="DapCore\util_\AssemblyHelper.cs" />                     <!--__SILP__-->
     <Compile Include="DapCore\util_\EnumExtension.cs" />                      <!--__SILP__-->
     <Compile Include="DapCore\util_\EnumHelper.cs" />                         <!--__SILP__-->
-    <Compile Include="DapCore\env_\Hook.cs" />                                <!--__SILP__-->
     <Compile Include="DapCore\env_\Plugin.cs" />                              <!--__SILP__-->
     <Compile Include="DapCore\env_\Env.cs" />                                 <!--__SILP__-->
     <Compile Include="DapCore\env_\EnvUriMatcher.cs" />                       <!--__SILP__-->
+    <Compile Include="DapCore\env_\EnvHook.cs" />                             <!--__SILP__-->
+    <Compile Include="DapCore\env_\EnvHooks.cs" />                            <!--__SILP__-->
     <Compile Include="DapCore\env_\Bootstrapper.cs" />                        <!--__SILP__-->
-    <Compile Include="DapCore\env_\Hooks.cs" />                               <!--__SILP__-->
+    <Compile Include="DapCore\env_\DebugHook.cs" />                           <!--__SILP__-->
     <Compile Include="DapCore\env_\EnvBus.cs" />                              <!--__SILP__-->
     <Compile Include="DapCore\log_\Logger.cs" />                              <!--__SILP__-->
     <Compile Include="DapCore\log_\FileLogProvider.cs" />                     <!--__SILP__-->
+    <Compile Include="DapCore\log_\ConsoleLogProvider.cs" />                  <!--__SILP__-->
+    <Compile Include="DapCore\log_\Profiler.cs" />                            <!--__SILP__-->
     <Compile Include="DapCore\log_\LogProvider.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\log_\Log.cs" />                                 <!--__SILP__-->
     <Compile Include="DapCore\uri_\UriConsts.cs" />                           <!--__SILP__-->
@@ -187,8 +196,11 @@
     <Compile Include="DapCore\dict_\Dict_Filter.cs" />                        <!--__SILP__-->
     <Compile Include="DapCore\dict_\DictConsts.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\dict_\DictHelper.cs" />                         <!--__SILP__-->
+    <Compile Include="DapCore\manner_\Recordable.cs" />                       <!--__SILP__-->
+    <Compile Include="DapCore\manner_\Tickable.cs" />                         <!--__SILP__-->
+    <Compile Include="DapCore\manner_\Timeable.cs" />                         <!--__SILP__-->
+    <Compile Include="DapCore\manner_\Recorder.cs" />                         <!--__SILP__-->
     <Compile Include="DapCore\registry_\Item.cs" />                           <!--__SILP__-->
-    <Compile Include="DapCore\registry_\Tickable.cs" />                       <!--__SILP__-->
     <Compile Include="DapCore\registry_\Items.cs" />                          <!--__SILP__-->
     <Compile Include="DapCore\spec_\SpecValueChecker.cs" />                   <!--__SILP__-->
     <Compile Include="DapCore\spec_\SpecHelper.cs" />                         <!--__SILP__-->
