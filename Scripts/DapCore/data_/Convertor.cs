@@ -36,8 +36,12 @@ namespace angeldnd.dap {
             return _Convertors.AddVar(typeof(T).FullName, convertor) != null;
         }
 
-        public static Convertor<T> GetConvertor<T>() {
-            return _Convertors.GetValue<Convertor<T>>(typeof(T).FullName);
+        public static Convertor<T> GetConvertor<T>(bool isDebug = false) {
+            if (isDebug) {
+                return _Convertors.GetValue<Convertor<T>>(typeof(T).FullName, null);
+            } else {
+                return _Convertors.GetValue<Convertor<T>>(typeof(T).FullName);
+            }
         }
 
         public static bool TryParse<T>(string str, out T val, bool isDebug = false) {

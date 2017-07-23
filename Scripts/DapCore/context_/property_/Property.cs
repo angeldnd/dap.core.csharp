@@ -9,6 +9,11 @@ namespace angeldnd.dap {
         public Property(IProperties owner, int index) : base(owner, index) {
         }
 
+        public override string GetValueStr() {
+            Convertor<T> convertor = Convertor.GetConvertor<T>(true);
+            string val = convertor != null ? convertor.Convert(Value) : base.GetValueString();
+        }
+
         public Data Encode() {
             if (!string.IsNullOrEmpty(DapType)) {
                 Data data = DataCache.Take(this);

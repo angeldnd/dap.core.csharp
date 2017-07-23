@@ -30,6 +30,10 @@ namespace angeldnd.dap {
             return false;
         }
 
+        public virtual string GetValueStr() {
+            return string.Format("{0}", _Value);
+        }
+
         private int _CheckFailedCount = 0;
 
         public Var(TO owner, string key) : base(owner, key) {
@@ -253,10 +257,8 @@ namespace angeldnd.dap {
 
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
-            Convertor<T> convertor = Convertor.GetConvertor<T>();
-            string val = convertor != null ? convertor.Convert(_Value) : _Value.ToString();
             summary.S(ContextConsts.SummaryValueType, ValueType.FullName)
-                   .S(ContextConsts.SummaryValue, val)
+                   .S(ContextConsts.SummaryValue, GetValueStr())
                    .I(ContextConsts.SummaryCheckerCount, ValueCheckerCount)
                    .I(ContextConsts.SummaryWatcherCount, ValueWatcherCount)
                    .I(ContextConsts.Summary2ndWatcherCount, VarWatcherCount)
