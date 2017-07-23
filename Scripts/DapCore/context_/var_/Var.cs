@@ -253,8 +253,10 @@ namespace angeldnd.dap {
 
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
+            Convertor<T> convertor = Convertor.GetConvertor<T>();
+            string val = convertor != null ? convertor.Convert(_Value) : _Value.ToString();
             summary.S(ContextConsts.SummaryValueType, ValueType.FullName)
-                   .S(ContextConsts.SummaryValue, string.Format("{0}", _Value))
+                   .S(ContextConsts.SummaryValue, val)
                    .I(ContextConsts.SummaryCheckerCount, ValueCheckerCount)
                    .I(ContextConsts.SummaryWatcherCount, ValueWatcherCount)
                    .I(ContextConsts.Summary2ndWatcherCount, VarWatcherCount)
