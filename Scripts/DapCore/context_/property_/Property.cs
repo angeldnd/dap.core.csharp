@@ -11,7 +11,7 @@ namespace angeldnd.dap {
 
         public override string GetValueStr() {
             Convertor<T> convertor = Convertor.GetConvertor<T>(true);
-            string val = convertor != null ? convertor.Convert(Value) : base.GetValueString();
+            string val = convertor != null ? convertor.Convert(Value) : base.GetValueStr();
         }
 
         public Data Encode() {
