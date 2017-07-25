@@ -177,5 +177,19 @@ namespace angeldnd.dap {
         protected virtual void OnContextAdded() {}                                                    //__SILP__
         protected virtual void OnContextRemoved() {}                                                  //__SILP__
                                                                                                       //__SILP__
+
+        public void AddDescendants(Data summary, bool treeMode) {
+            Data contexts = DataCache.Take("_summary.contexts");
+            if (treeMode) {
+                this.ForEachContexts((IContext child) => {
+                    contexts.A(child.Path, child.Summary);
+                });
+            } else {
+                ForEach((IContext child) => {
+                    contexts.A(child.Path, child.Summary);
+                });
+            }
+            summary.A(ContextConsts.SummaryContexts, contexts);
+        }
     }
 }

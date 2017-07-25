@@ -176,5 +176,7 @@ namespace angeldnd.dap {
         protected virtual void OnContextAdded() {}                                                    //__SILP__
         protected virtual void OnContextRemoved() {}                                                  //__SILP__
                                                                                                       //__SILP__
+
+        public void AddDescendants(Data summary, bool treeMode) {}
     }
 }

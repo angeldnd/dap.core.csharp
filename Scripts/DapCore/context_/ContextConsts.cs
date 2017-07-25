@@ -46,6 +46,9 @@ namespace angeldnd.dap {
         [DapParam(typeof(Data))]
         public const string SummaryAspects = "aspects";
 
+        [DapParam(typeof(Data))]
+        public const string SummaryContexts = "contexts";
+
         public const string SuffixHandlerAsync = "~";
         public const string SuffixChannelResponse = ">";
 
