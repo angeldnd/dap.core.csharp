@@ -81,13 +81,43 @@ namespace angeldnd.dap {
             return WaitAndWatchProperty<T>(key, new BlockValueWatcher<T>(owner, block));
         }
 
-        public Data EncodeValues() {
+        public Data EncodeValues(HashSet<string> excludes = null) {
             Data data = new RealData();
+            data.S(ObjectConsts.KeyDapType, Context.DapType);
+
             ForEach<IProperty>((IProperty prop) => {
-                Data propValue = prop.EncodeValue();
-                propValue.CopyValueTo(PropertiesConsts.KeyValue, data, prop.Key);
+                if (excludes == null || !excludes.Contains(prop.Key)) {
+                    Data propValue = prop.EncodeValue();
+                    propValue.CopyValueTo(PropertiesConsts.KeyValue, data, prop.Key);
+                }
             });
             return data;
+        }
+
+        public bool DecodeValues(Data data, bool strict = false) {
+            bool ok = true;
+            foreach (var key in data.Keys) {
+                if (key == ObjectConsts.KeyDapType) continue;
+
+                IProperty prop = Get(key);
+                if (prop == null) {
+                    Error("Invalid Entry Key: {0} -> {1}",
+                                    key, data.GetValue(key));
+                    ok = false;
+                    if (strict) return ok;
+                }
+                Data valueData = new RealData();
+                if (data.CopyValueTo(key, valueData, PropertiesConsts.KeyValue)) {
+                    if (!prop.DecodeValue(valueData)) {
+                        prop.Error("Invalid Entry Value: DecodeValue: {0} ->\n{1}",
+                                    key,
+                                    Convertor.DataConvertor.Convert(valueData, "\t"));
+                        ok = false;
+                        if (strict) return ok;
+                    }
+                }
+            }
+            return ok;
         }
     }
 }
