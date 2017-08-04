@@ -17,6 +17,14 @@ namespace angeldnd.dap {
             _Path = Env.GetAspectPath(this);                                     //__SILP__
             _Uri = Env.GetAspectUri(this);                                       //__SILP__
         }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public override bool _SetIndex(IOwner owner, int index) {                //__SILP__
+            if (!base._SetIndex(owner, index)) return false;                     //__SILP__
+                                                                                 //__SILP__
+            _Path = Env.GetAspectPath(this);                                     //__SILP__
+            _Uri = Env.GetAspectUri(this);                                       //__SILP__
+            return true;                                                         //__SILP__
+        }                                                                        //__SILP__
 
         //SILP: ASPECT_MIXIN()
         private readonly IContext _Context;                                            //__SILP__
@@ -28,12 +36,12 @@ namespace angeldnd.dap {
             get { return _Context; }                                                   //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
-        private readonly string _Path;                                                 //__SILP__
+        private string _Path;                                                          //__SILP__
         public string Path {                                                           //__SILP__
             get { return _Path; }                                                      //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
-        private readonly string _Uri;                                                  //__SILP__
+        private string _Uri;                                                           //__SILP__
         public override sealed string Uri {                                            //__SILP__
             get {                                                                      //__SILP__
                 return _Uri;                                                           //__SILP__

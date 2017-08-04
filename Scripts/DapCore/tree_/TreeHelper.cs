@@ -8,8 +8,13 @@ namespace angeldnd.dap {
             List<string> segments = new List<string>();
             T current = element;
             while (current != null) {
-                segments.Add(current.Key);
                 IOwner owner = current.GetOwner();
+                IInTableElement inTable = current as IInTableElement;
+                if (inTable != null && owner is ITable) {
+                    segments.Add(inTable.Index.ToString());
+                } else {
+                    segments.Add(current.Key);
+                }
                 if (owner == root) {
                     break;
                 }
@@ -52,7 +57,8 @@ namespace angeldnd.dap {
             } else {
                 ITable ownerAsTable = owner as ITable;
                 if (ownerAsTable != null) {
-                    child = ownerAsTable.GetByKey<IInTableElement>(key, isDebug) as T;
+                    int index = Convertor.IntConvertor.Parse(key);
+                    child = ownerAsTable.Get<IInTableElement>(index, isDebug) as T;
                 }
             }
             if (child == null) {

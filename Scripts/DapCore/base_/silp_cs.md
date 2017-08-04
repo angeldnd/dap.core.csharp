@@ -124,8 +124,9 @@ public int Index {
     get { return _Index; }
 }
 
-public bool _SetIndex(IOwner owner, int index) {
+public virtual bool _SetIndex(IOwner owner, int index) {
     if (Owner != owner) return false;
+    if (_Index == index) return false;
 
     _Index = index;
     return true;
@@ -162,6 +163,14 @@ protected ${class}(TO owner, int index) : base(owner, index) {
     _Context = owner == null ? null : owner.GetContext();
     _Path = Env.GetAspectPath(this);
     _Uri = Env.GetAspectUri(this);
+}
+
+public override bool _SetIndex(IOwner owner, int index) {
+    if (!base._SetIndex(owner, index)) return false;
+
+    _Path = Env.GetAspectPath(this);
+    _Uri = Env.GetAspectUri(this);
+    return true;
 }
 ```
 
@@ -215,12 +224,12 @@ public IContext Context {
     get { return _Context; }
 }
 
-private readonly string _Path;
+private string _Path;
 public string Path {
     get { return _Path; }
 }
 
-private readonly string _Uri;
+private string _Uri;
 public override sealed string Uri {
     get {
         return _Uri;

@@ -21,12 +21,12 @@ namespace angeldnd.dap {
             get { return _Context; }                                                   //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
-        private readonly string _Path;                                                 //__SILP__
+        private string _Path;                                                          //__SILP__
         public string Path {                                                           //__SILP__
             get { return _Path; }                                                      //__SILP__
         }                                                                              //__SILP__
                                                                                        //__SILP__
-        private readonly string _Uri;                                                  //__SILP__
+        private string _Uri;                                                           //__SILP__
         public override sealed string Uri {                                            //__SILP__
             get {                                                                      //__SILP__
                 return _Uri;                                                           //__SILP__
