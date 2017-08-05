@@ -13,7 +13,7 @@ namespace angeldnd.dap {
         bool SetObj(T obj);
     }
 
-    public abstract class Pointer<T> : Logger, IPointer<T>, IBlockOwner
+    public class Pointer<T> : Logger, IPointer<T>, IBlockOwner
                                             where T : class, IObject {
         private T _Obj = null;
         public T Obj {
