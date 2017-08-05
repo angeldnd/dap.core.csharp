@@ -70,20 +70,20 @@ namespace angeldnd.dap {
             return Get<Var<T>>(key, isDebug);
         }
 
-        public T GetValue<T>(string key, T defaultValue) {
-            Var<T> v = GetVar<T>(key, true);
+        private T _GetValue<T>(string key, T defaultValue, bool isDebug) {
+            Var<T> v = GetVar<T>(key, isDebug);
             if (v != null) {
                 return v.Value;
             }
             return defaultValue;
         }
 
+        public T GetValue<T>(string key, T defaultValue) {
+            return _GetValue<T>(key, defaultValue, true);
+        }
+
         public T GetValue<T>(string key) {
-            Var<T> v = GetVar<T>(key);
-            if (v != null) {
-                return v.Value;
-            }
-            return default(T);
+            return _GetValue<T>(key, default(T), false);
         }
 
         public bool SetValue<T>(string key, T val) {
@@ -114,6 +114,33 @@ namespace angeldnd.dap {
                 return v.Value;
             }
             return defaultValue;
+        }
+
+        private T _GetWeakValue<T>(string key, T defaultValue, bool isDebug) where T : class {
+            WeakVar<T> v = Get<WeakVar<T>>(key, isDebug);
+            if (v != null) {
+                return v.Target;
+            }
+            return defaultValue;
+        }
+
+        public T GetWeakValue<T>(string key, T defaultValue) where T : class {
+            return _GetWeakValue<T>(key, defaultValue, true);
+        }
+
+        public T GetWeakValue<T>(string key) where T : class {
+            return _GetWeakValue<T>(key, default(T), false);
+        }
+
+        public bool SetWeakValue<T>(string key, T val) where T : class {
+            WeakVar<T> v = Get<WeakVar<T>>(key, true);
+            if (v == null) {
+                v = Add<WeakVar<T>>(key);
+            }
+            if (v != null) {
+                return v.SetTarget(val);
+            }
+            return false;
         }
     }
 }
