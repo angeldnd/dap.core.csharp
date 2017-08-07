@@ -17,6 +17,10 @@ namespace angeldnd.dap {
 
                 NotifyWatchers(evt, profiler);
             }
+
+            if (LogDebug) {
+                Debug("FireEvent: {0} -> {1}", evt, isValid);
+            }
             if (profiler != null) profiler.EndSample();
             return isValid;
         }
