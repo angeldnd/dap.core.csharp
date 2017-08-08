@@ -98,7 +98,7 @@ namespace angeldnd.dap {
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         private Data EncodeValue(bool fullMode) {                                                  //__SILP__
-            Data data = new RealData();                                                                //__SILP__
+            Data data = DataCache.Take(this);                                                      //__SILP__
             if (data.SetData(PropertiesConsts.KeyValue, DoEncodeValue(fullMode))) {                //__SILP__
                 return data;                                                                       //__SILP__
             }                                                                                      //__SILP__

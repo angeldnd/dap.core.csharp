@@ -7,8 +7,8 @@ namespace angeldnd.dap {
             get { return GetType(); }
         }
 
-        private Data DoEncodeValue(bool fullMode) {
-            Data values = new RealData();
+        protected Data DoEncodeValue(bool fullMode) {
+            Data values = DataCache.Take(this, PropertiesConsts.KeyValue);
 
             bool ok = UntilFalse((IProperty prop) => {
                 if (fullMode) {
@@ -22,7 +22,7 @@ namespace angeldnd.dap {
             return ok ? values : null;
         }
 
-        private bool DoDecodeValue(bool fullMode, Data values) {
+        protected bool DoDecodeValue(bool fullMode, Data values) {
             return UntilFalse((IProperty prop) => {
                 Data subData = values.GetData(prop.Key, null);
                 if (fullMode) {
@@ -74,7 +74,7 @@ namespace angeldnd.dap {
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         private Data EncodeValue(bool fullMode) {                                                  //__SILP__
-            Data data = new RealData();                                                                //__SILP__
+            Data data = DataCache.Take(this);                                                      //__SILP__
             if (data.SetData(PropertiesConsts.KeyValue, DoEncodeValue(fullMode))) {                //__SILP__
                 return data;                                                                       //__SILP__
             }                                                                                      //__SILP__
