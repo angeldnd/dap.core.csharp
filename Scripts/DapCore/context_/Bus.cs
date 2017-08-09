@@ -111,6 +111,14 @@ namespace angeldnd.dap {
             return true;
         }
 
+        public bool PublishOnce(string msg, object token, bool isDebug = false) {
+            if (IsMsgExist(msg)) {
+                ErrorOrDebug(isDebug, "Already Published: {0}", msg);
+                return false;
+            }
+            return Publish(msg, token);
+        }
+
         public bool Publish(string msg, object token) {
             IProfiler profiler = Log.BeginSample(msg);
             TryAddMsg(msg);
