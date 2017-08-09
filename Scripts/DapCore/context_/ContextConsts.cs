@@ -49,8 +49,8 @@ namespace angeldnd.dap {
         [DapParam(typeof(Data))]
         public const string SummaryContexts = "contexts";
 
-        public const string SuffixHandlerAsync = "~";
-        public const string SuffixChannelResponse = ">";
+        public const char SuffixHandlerAsync = '~';
+        public const char SuffixChannelResponse = '>';
 
         public static string GetAspectKey(params string[] segments) {
             return string.Join(".", segments);
@@ -58,6 +58,14 @@ namespace angeldnd.dap {
 
         public static string GetAsyncHandlerKey(string handlerKey) {
             return handlerKey + SuffixHandlerAsync;
+        }
+
+        public static bool IsResponseChannelKey(string channelKey) {
+            if (channelKey != null && channelKey.Length > 0
+                    && channelKey[channelKey.Length - 1] == SuffixChannelResponse) {
+                return true;
+            }
+            return false;
         }
 
         public static string GetResponseChannelKey(string handlerKey) {
