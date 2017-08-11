@@ -19,7 +19,7 @@ namespace angeldnd.dap {
             }
 
             if (LogDebug) {
-                Debug("FireEvent: {0} -> {1}", evt, isValid);
+                Debug("FireEvent: {0} -> {1}", evt.ToFullString(), isValid);
             }
             if (profiler != null) profiler.EndSample();
             return isValid;
