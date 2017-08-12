@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using angeldnd.dap;
 
 namespace angeldnd.dap {
-    public sealed class Extra : Accessor<IContext>, IBlockOwner {
+    public class Extra : Accessor<IContext>, IBlockOwner {
         public readonly string Key;
 
-        public string GetSubKey(string fragment) {
+        public virtual string GetSubKey(string fragment) {
             return DictConsts.Encode(Key, fragment);
         }
 
