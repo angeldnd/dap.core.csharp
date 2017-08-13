@@ -8,7 +8,7 @@ namespace angeldnd.dap {
         public readonly string Key;
 
         public virtual string GetSubKey(string fragment) {
-            return DictConsts.Encode(Key, fragment);
+            return Obj.MapKey(DictConsts.Encode(Key, fragment));
         }
 
         private List<string> _VarKeys;

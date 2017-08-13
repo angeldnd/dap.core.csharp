@@ -379,6 +379,36 @@ public override sealed bool DebugMode {
     get { return _Debugging; }
 }
 
+private Mappings _Mappings = null;
+public Mappings Mappings {
+    get {
+        if (_Mappings == null) {
+            _Mappings = new Mappings("");
+        }
+        return _Mappings;
+    }
+}
+
+public bool HasMappings() {
+    return _Mappings != null;
+}
+
+public string MapKey(string key) {
+    string mappedKey;
+    if (TryMapKey(key, out mappedKey)) {
+        return mappedKey;
+    }
+    return key;
+}
+
+public bool TryMapKey(string key, out string mappedKey) {
+    if (_Mappings != null) {
+        return _Mappings.TryMapKey(key, out mappedKey);
+    }
+    mappedKey = key;
+    return false;
+}
+
 private bool _Removed = false;
 public bool Removed {
     get { return _Removed; }

@@ -81,6 +81,36 @@ namespace angeldnd.dap {
             get { return _Debugging; }                                                                //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
+        private Mappings _Mappings = null;                                                            //__SILP__
+        public Mappings Mappings {                                                                    //__SILP__
+            get {                                                                                     //__SILP__
+                if (_Mappings == null) {                                                              //__SILP__
+                    _Mappings = new Mappings("");                                                     //__SILP__
+                }                                                                                     //__SILP__
+                return _Mappings;                                                                     //__SILP__
+            }                                                                                         //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public bool HasMappings() {                                                                   //__SILP__
+            return _Mappings != null;                                                                 //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public string MapKey(string key) {                                                            //__SILP__
+            string mappedKey;                                                                         //__SILP__
+            if (TryMapKey(key, out mappedKey)) {                                                      //__SILP__
+                return mappedKey;                                                                     //__SILP__
+            }                                                                                         //__SILP__
+            return key;                                                                               //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public bool TryMapKey(string key, out string mappedKey) {                                     //__SILP__
+            if (_Mappings != null) {                                                                  //__SILP__
+                return _Mappings.TryMapKey(key, out mappedKey);                                       //__SILP__
+            }                                                                                         //__SILP__
+            mappedKey = key;                                                                          //__SILP__
+            return false;                                                                             //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
         private bool _Removed = false;                                                                //__SILP__
         public bool Removed {                                                                         //__SILP__
             get { return _Removed; }                                                                  //__SILP__
