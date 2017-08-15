@@ -95,6 +95,15 @@ namespace angeldnd.dap {
             return _Mappings != null;                                                                 //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
+        public int MappingCount {                                                                     //__SILP__
+            get { return _Mappings == null ? 0 : _Mappings.MappingCount; }                            //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        public bool HasMapKey(string key) {                                                           //__SILP__
+            if (_Mappings == null) return false;                                                      //__SILP__
+            return _Mappings.HasMapKey(key);                                                          //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
         public string MapKey(string key) {                                                            //__SILP__
             string mappedKey;                                                                         //__SILP__
             if (TryMapKey(key, out mappedKey)) {                                                      //__SILP__

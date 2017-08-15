@@ -4,13 +4,33 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public class Mappings : Mapping {
-        public override int Count {
-            get { return base.Count + (_Mappings == null ? 0 : _Mappings.Count); }
+        public override int MappingCount {
+            get {
+                int result = base.MappingCount;
+                if (_Mappings != null) {
+                    foreach (var mapping in _Mappings) {
+                        result += mapping.MappingCount;
+                    }
+                }
+                return result;
+            }
         }
 
         private List<IMapping> _Mappings = null;
 
         public Mappings(string title) : base(title) {
+        }
+
+        public override bool HasMapKey(string key) {
+            if (base.HasMapKey(key)) return true;
+            if (_Mappings != null) {
+                foreach (IMapping mapping in _Mappings) {
+                    if (mapping.HasMapKey(key)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public override bool TryMapKey(string key, out string mappedKey) {

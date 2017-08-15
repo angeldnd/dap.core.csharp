@@ -393,6 +393,15 @@ public bool HasMappings() {
     return _Mappings != null;
 }
 
+public int MappingCount {
+    get { return _Mappings == null ? 0 : _Mappings.MappingCount; }
+}
+
+public bool HasMapKey(string key) {
+    if (_Mappings == null) return false;
+    return _Mappings.HasMapKey(key);
+}
+
 public string MapKey(string key) {
     string mappedKey;
     if (TryMapKey(key, out mappedKey)) {

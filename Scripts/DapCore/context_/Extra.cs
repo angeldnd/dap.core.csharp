@@ -31,27 +31,22 @@ namespace angeldnd.dap {
             get { return _HandlerKeys == null ? 0 : _HandlerKeys.Count; }
         }
 
-        private void AddAspectPathes(List<string> pathes, IDict topAspect, List<string> keys) {
-            if (keys != null) {
-                foreach (string key in keys) {
-                    var element = topAspect.Get<IInDictElement>(key);
-                    if (element != null) {
-                        IAspect aspect = element.As<IAspect>();
-                        if (aspect != null) {
-                            pathes.Add(aspect.Path);
-                        }
-                    }
-                }
-            }
+        private Data _AspectsSummary = new RealData();
+        public Data AspectsSummary {
+            get { return _AspectsSummary; }
         }
 
-        public List<string> GetAspectPathes() {
-            List<string> result = new List<string>();
-            AddAspectPathes(result, Obj.Vars, _VarKeys);
-            AddAspectPathes(result, Obj.Properties, _PropertyKeys);
-            AddAspectPathes(result, Obj.Channels, _ChannelKeys);
-            AddAspectPathes(result, Obj.Handlers, _HandlerKeys);
-            return result;
+        private void AddAspectSummary(string topKey, string fragment, string key) {
+            Data aspect = DataCache.Take("_extra_aspect")
+                .S(ExtraConsts.SummaryTop, topKey)
+                .S(ExtraConsts.SummaryFragment, fragment)
+                .S(ExtraConsts.SummarySubKey, key)
+            ;
+            string originalSubKey = DictConsts.Encode(Key, fragment);
+            if (originalSubKey != key) {
+                aspect.S(ExtraConsts.SummaryOriginalSubKey, originalSubKey);
+            }
+            _AspectsSummary.A(PathConsts.Encode(topKey, key), aspect);
         }
 
         private Dictionary<string, Action<string>> _PropertySyncers;
@@ -60,22 +55,26 @@ namespace angeldnd.dap {
             Key = key;
         }
 
-        private void SaveVarKey(string key) {
+        private void SaveVarKey(string fragment, string key) {
+            AddAspectSummary(ContextConsts.KeyVars, fragment, key);
             if (_VarKeys == null) _VarKeys = new List<string>();
             _VarKeys.Add(key);
         }
 
-        private void SavePropertyKey(string key) {
+        private void SavePropertyKey(string fragment, string key) {
+            AddAspectSummary(ContextConsts.KeyProperties, fragment, key);
             if (_PropertyKeys == null) _PropertyKeys = new List<string>();
             _PropertyKeys.Add(key);
         }
 
-        private void SaveChannelKey(string key) {
+        private void SaveChannelKey(string fragment, string key) {
+            AddAspectSummary(ContextConsts.KeyChannels, fragment, key);
             if (_ChannelKeys == null) _ChannelKeys = new List<string>();
             _ChannelKeys.Add(key);
         }
 
-        private void SaveHandlerKey(string key) {
+        private void SaveHandlerKey(string fragment, string key) {
+            AddAspectSummary(ContextConsts.KeyHandlers, fragment, key);
             if (_HandlerKeys == null) _HandlerKeys = new List<string>();
             _HandlerKeys.Add(key);
         }
@@ -119,6 +118,7 @@ namespace angeldnd.dap {
                 }
                 _VarKeys.Clear();
             }
+            _AspectsSummary = new RealData();
         }
 
         public void SyncExtra() {
@@ -138,7 +138,7 @@ namespace angeldnd.dap {
             string key = GetSubKey(fragment);
             Channel channel = Obj.Channels.Add(key);
             if (channel != null) {
-                SaveChannelKey(key);
+                SaveChannelKey(fragment, key);
             }
             return channel;
         }
@@ -147,7 +147,7 @@ namespace angeldnd.dap {
             string key = GetSubKey(fragment);
             Handler handler = Obj.Handlers.Add(key);
             if (handler != null) {
-                SaveHandlerKey(key);
+                SaveHandlerKey(fragment, key);
             }
             return handler;
         }
@@ -166,7 +166,7 @@ namespace angeldnd.dap {
             string key = GetSubKey(fragment);
             Var<T> v = Obj.Vars.AddVar<T>(key, val);
             if (v != null) {
-                SaveVarKey(key);
+                SaveVarKey(fragment, key);
                 if (watcher != null && v.AddValueWatcher(this, watcher) == null) {
                     Error("Add Watcher Failed: {0} -> {1}, {2}", this, typeof(T).FullName, fragment);
                 }
@@ -178,7 +178,7 @@ namespace angeldnd.dap {
             string key = GetSubKey(fragment);
             TP prop = Obj.Properties.New<TP>(type, key);
             if (prop != null) {
-                SavePropertyKey(key);
+                SavePropertyKey(fragment, key);
             }
             return prop;
         }

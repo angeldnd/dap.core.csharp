@@ -5,13 +5,15 @@ using System.Linq;
 
 namespace angeldnd.dap {
     public interface IMapping {
+        int MappingCount { get; }
+        bool HasMapKey(string key);
         string MapKey(string key);
         bool TryMapKey(string key, out string mappedKey);
     }
 
     public class Mapping : IMapping {
         public readonly string Title;
-        public virtual int Count {
+        public virtual int MappingCount {
             get { return _MappedKeys == null ? 0 : _MappedKeys.Count; }
         }
 
@@ -37,6 +39,11 @@ namespace angeldnd.dap {
             return false;
         }
 
+        public virtual bool HasMapKey(string key) {
+            if (_MappedKeys == null) return false;
+            return _MappedKeys.ContainsKey(key);
+        }
+
         public void ForEachMappedKey(Action<string, string> callback) {
             if (_MappedKeys != null) {
                 foreach (var kv in _MappedKeys) {
@@ -50,10 +57,9 @@ namespace angeldnd.dap {
                 _MappedKeys = new Dictionary<string, string>();
             }
 
-            string oldMappedKey;
-            if (_MappedKeys.TryGetValue(key, out oldMappedKey)) {
+            if (HasMapKey(key)) {
                 logger.Error("<{0}>.AddMappedKey Failed: Already Exist: : {1} -> {2} -> {3}",
-                                GetType().Name, key, oldMappedKey, mappedKey);
+                                GetType().Name, key, MapKey(key), mappedKey);
                 return false;
             }
             _MappedKeys[key] = mappedKey;
