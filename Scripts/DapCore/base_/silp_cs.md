@@ -306,6 +306,7 @@ protected override void AddSummaryFields(Data summary) {
 ```
     _Path = Env.GetContextPath(this);
 
+    _Mapping = AddTopAspect<Mapping>(ContextConsts.KeyMapping);
     _Properties = AddTopAspect<Properties>(ContextConsts.KeyProperties);
     _Channels = AddTopAspect<Channels>(ContextConsts.KeyChannels);
     _Handlers = AddTopAspect<Handlers>(ContextConsts.KeyHandlers);
@@ -324,6 +325,11 @@ public override string BlockName {
 private readonly string _Path;
 public string Path {
     get { return _Path; }
+}
+
+private readonly Mapping _Mapping;
+public Mapping Mapping {
+    get { return _Mapping; }
 }
 
 private readonly Properties _Properties;
@@ -377,45 +383,6 @@ public bool Debugging {
 
 public override sealed bool DebugMode {
     get { return _Debugging; }
-}
-
-private Mappings _Mappings = null;
-public Mappings Mappings {
-    get {
-        if (_Mappings == null) {
-            _Mappings = new Mappings("");
-        }
-        return _Mappings;
-    }
-}
-
-public bool HasMappings() {
-    return _Mappings != null;
-}
-
-public int MappingCount {
-    get { return _Mappings == null ? 0 : _Mappings.MappingCount; }
-}
-
-public bool HasMapKey(string key) {
-    if (_Mappings == null) return false;
-    return _Mappings.HasMapKey(key);
-}
-
-public string MapKey(string key) {
-    string mappedKey;
-    if (TryMapKey(key, out mappedKey)) {
-        return mappedKey;
-    }
-    return key;
-}
-
-public bool TryMapKey(string key, out string mappedKey) {
-    if (_Mappings != null) {
-        return _Mappings.TryMapKey(key, out mappedKey);
-    }
-    mappedKey = key;
-    return false;
 }
 
 private bool _Removed = false;
@@ -517,6 +484,10 @@ protected virtual void OnContextRemoved() {}
 
 # MANNER_MIXIN() #
 ```C#
+}
+
+public Mapping Mapping {
+    get { return Context.Mapping; }
 }
 
 public Properties Properties {

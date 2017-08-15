@@ -5,6 +5,7 @@ namespace angeldnd.dap {
     public static class ContextConsts {
         public const string TypeContext = "Context";
 
+        public const string KeyMapping = "Mapping";
         public const string KeyProperties = "Properties";
         public const string KeyChannels = "Channels";
         public const string KeyHandlers = "Handlers";
@@ -18,6 +19,8 @@ namespace angeldnd.dap {
         [DapParam(typeof(bool))]
         public const string SummaryDebugging = "debugging";
 
+        [DapParam(typeof(bool))]
+        public const string SummaryMappings = "mappings";
         [DapParam(typeof(string))]
         public const string SummaryValueType = "value_type";
         [DapParam(typeof(string))]
@@ -42,6 +45,9 @@ namespace angeldnd.dap {
         public const string SummaryDescription = "description";
         [DapParam(typeof(int))]
         public const string SummaryCheckFailedCount = "check_failed_count";
+
+        [DapParam(typeof(Data))]
+        public const string SummaryMapping = "mapping";
 
         [DapParam(typeof(Data))]
         public const string SummaryAspects = "aspects";

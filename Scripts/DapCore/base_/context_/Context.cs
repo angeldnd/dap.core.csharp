@@ -8,6 +8,7 @@ namespace angeldnd.dap {
         //SILP: CONTEXT_MIXIN()
             _Path = Env.GetContextPath(this);                                                         //__SILP__
                                                                                                       //__SILP__
+            _Mapping = AddTopAspect<Mapping>(ContextConsts.KeyMapping);                               //__SILP__
             _Properties = AddTopAspect<Properties>(ContextConsts.KeyProperties);                      //__SILP__
             _Channels = AddTopAspect<Channels>(ContextConsts.KeyChannels);                            //__SILP__
             _Handlers = AddTopAspect<Handlers>(ContextConsts.KeyHandlers);                            //__SILP__
@@ -26,6 +27,11 @@ namespace angeldnd.dap {
         private readonly string _Path;                                                                //__SILP__
         public string Path {                                                                          //__SILP__
             get { return _Path; }                                                                     //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        private readonly Mapping _Mapping;                                                            //__SILP__
+        public Mapping Mapping {                                                                      //__SILP__
+            get { return _Mapping; }                                                                  //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         private readonly Properties _Properties;                                                      //__SILP__
@@ -79,45 +85,6 @@ namespace angeldnd.dap {
                                                                                                       //__SILP__
         public override sealed bool DebugMode {                                                       //__SILP__
             get { return _Debugging; }                                                                //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        private Mappings _Mappings = null;                                                            //__SILP__
-        public Mappings Mappings {                                                                    //__SILP__
-            get {                                                                                     //__SILP__
-                if (_Mappings == null) {                                                              //__SILP__
-                    _Mappings = new Mappings("");                                                     //__SILP__
-                }                                                                                     //__SILP__
-                return _Mappings;                                                                     //__SILP__
-            }                                                                                         //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public bool HasMappings() {                                                                   //__SILP__
-            return _Mappings != null;                                                                 //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public int MappingCount {                                                                     //__SILP__
-            get { return _Mappings == null ? 0 : _Mappings.MappingCount; }                            //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public bool HasMapKey(string key) {                                                           //__SILP__
-            if (_Mappings == null) return false;                                                      //__SILP__
-            return _Mappings.HasMapKey(key);                                                          //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public string MapKey(string key) {                                                            //__SILP__
-            string mappedKey;                                                                         //__SILP__
-            if (TryMapKey(key, out mappedKey)) {                                                      //__SILP__
-                return mappedKey;                                                                     //__SILP__
-            }                                                                                         //__SILP__
-            return key;                                                                               //__SILP__
-        }                                                                                             //__SILP__
-                                                                                                      //__SILP__
-        public bool TryMapKey(string key, out string mappedKey) {                                     //__SILP__
-            if (_Mappings != null) {                                                                  //__SILP__
-                return _Mappings.TryMapKey(key, out mappedKey);                                       //__SILP__
-            }                                                                                         //__SILP__
-            mappedKey = key;                                                                          //__SILP__
-            return false;                                                                             //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         private bool _Removed = false;                                                                //__SILP__

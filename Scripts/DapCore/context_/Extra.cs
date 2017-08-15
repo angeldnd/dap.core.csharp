@@ -8,7 +8,7 @@ namespace angeldnd.dap {
         public readonly string Key;
 
         public virtual string GetSubKey(string fragment) {
-            return Obj.MapKey(DictConsts.Encode(Key, fragment));
+            return Obj.Mapping.Map(DictConsts.Encode(Key, fragment));
         }
 
         private List<string> _VarKeys;
@@ -42,11 +42,13 @@ namespace angeldnd.dap {
                 .S(ExtraConsts.SummaryFragment, fragment)
                 .S(ExtraConsts.SummarySubKey, key)
             ;
+            string path = PathConsts.Encode(topKey, key);
             string originalSubKey = DictConsts.Encode(Key, fragment);
             if (originalSubKey != key) {
                 aspect.S(ExtraConsts.SummaryOriginalSubKey, originalSubKey);
+                Obj.Mapping._AddAspectSummary(path, aspect);
             }
-            _AspectsSummary.A(PathConsts.Encode(topKey, key), aspect);
+            _AspectsSummary.A(path, aspect);
         }
 
         private Dictionary<string, Action<string>> _PropertySyncers;

@@ -8,7 +8,8 @@ namespace angeldnd.dap {
         bool Debugging { get; set; }
     }
 
-    public interface IContext : IOwner, IInDictElement, IContextElement, IMapping {
+    public interface IContext : IOwner, IInDictElement, IContextElement {
+        Mapping Mapping { get; }
         Properties Properties { get; }
         Channels Channels { get; }
         Handlers Handlers { get; }
@@ -17,9 +18,6 @@ namespace angeldnd.dap {
         Utils Utils { get; }
         Manners Manners { get; }
         bool Removed { get; }
-
-        bool HasMappings();
-        Mappings Mappings { get; }
 
         T GetAspect<T>(string aspectPath, bool isDebug = false) where T : class, IAspect;
         IAspect GetAspect(string aspectPath, bool isDebug = false);

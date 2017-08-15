@@ -6,6 +6,10 @@ namespace angeldnd.dap {
         //SILP: MANNER_MIXIN()
         }                                                             //__SILP__
                                                                       //__SILP__
+        public Mapping Mapping {                                      //__SILP__
+            get { return Context.Mapping; }                           //__SILP__
+        }                                                             //__SILP__
+                                                                      //__SILP__
         public Properties Properties {                                //__SILP__
             get { return Context.Properties; }                        //__SILP__
         }                                                             //__SILP__
