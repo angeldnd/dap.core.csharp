@@ -51,13 +51,15 @@ namespace angeldnd.dap {
                         result = true;
                     } else if (isWildcast) {
                         result = IsMatchedWord(pattern, word, patternIndex + 1, wordIndex);
+                    } else if (IsMatchedChar(pattern[patternIndex + 1], word[wordIndex])) {
+                        result = IsMatchedWord(pattern, word, patternIndex + 1, wordIndex);
                     }
                 } else if (patternIndex == pattern.Length - 1) {
                     result = isWildcast;
                 } else if (isWildcast) {
                     // If * is not the last segment, then need to try matching the next one for a better match
                     if (IsMatchedChar(pattern[patternIndex + 1], word[wordIndex])) {
-                        result = IsMatchedWord(pattern, word, patternIndex + 2, wordIndex + 1);
+                        result = IsMatchedWord(pattern, word, patternIndex + 1, wordIndex);
                     } else {
                         result = IsMatchedWord(pattern, word, patternIndex, wordIndex + 1);
                     }
