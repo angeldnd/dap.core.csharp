@@ -10,4 +10,7 @@ namespace angeldnd.dap {
         Vars Vars { get; }
         Manners Manners { get; }
     }
+
+    public interface IDictManner : IManner, IDict {
+    }
 }

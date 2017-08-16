@@ -1,7 +1,7 @@
 using System;
 
 namespace angeldnd.dap {
-    public abstract class DictManner<T> : DictInDictAspect<Manners, T>, IManner
+    public abstract class DictManner<T> : DictInDictAspect<Manners, T>, IDictManner
                                                 where T : class, IInDictElement {
         public DictManner(Manners owner, string key) : base(owner, key) {
         //SILP: MANNER_MIXIN()
