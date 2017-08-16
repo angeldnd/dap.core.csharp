@@ -8,9 +8,9 @@ namespace angeldnd.dap {
         bool SetValue(object newValue);
 
         int VarWatcherCount { get; }
-        bool AddVarWatcher(IVarWatcher watcher);
+        bool AddVarWatcher(IVarWatcher watcher, bool callNow = false);
         bool RemoveVarWatcher(IVarWatcher watcher);
-        BlockVarWatcher AddVarWatcher(IBlockOwner owner, Action<IVar> block);
+        BlockVarWatcher AddVarWatcher(IBlockOwner owner, Action<IVar> block, bool callNow = false);
 
         int ValueCheckerCount { get; }
         void AllValueCheckers<T1>(Action<T1> callback) where T1 : IValueChecker;
@@ -28,8 +28,8 @@ namespace angeldnd.dap {
         bool RemoveValueChecker(IValueChecker<T> checker);
         BlockValueChecker<T> AddValueChecker(IBlockOwner owner, Func<IVar<T>, T, bool> block);
 
-        bool AddValueWatcher(IValueWatcher<T> watcher);
+        bool AddValueWatcher(IValueWatcher<T> watcher, bool callNow = false);
         bool RemoveValueWatcher(IValueWatcher<T> watcher);
-        BlockValueWatcher<T> AddValueWatcher(IBlockOwner owner, Action<IVar<T>, T> block);
+        BlockValueWatcher<T> AddValueWatcher(IBlockOwner owner, Action<IVar<T>, T> block, bool callNow = false);
     }
 }

@@ -15,6 +15,19 @@ public bool Remove${name}(${cs_type} ${var_name}) {
 }
 ```
 
+# DECLARE_VAR_WATCHER_LIST(name, var_name, cs_type, list_name) #
+```C#
+private WeakList<${cs_type}> ${list_name} = null;
+
+public int ${name}Count {
+    get { return WeakListHelper.Count(${list_name}); }
+}
+
+public bool Remove${name}(${cs_type} ${var_name}) {
+    return WeakListHelper.Remove(${list_name}, ${var_name});
+}
+```
+
 # ADD_REMOVE_HELPER(name, a_key, a_var, a_type, l_name, l_var, l_type) #
 ```C#
 public bool Add${name}(string ${a_key}, ${l_type} ${l_var}) {

@@ -155,9 +155,12 @@ namespace angeldnd.dap {
             get { return WeakListHelper.Count(_VarWatchers); }                                     //__SILP__
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
-        public bool AddVarWatcher(IVarWatcher watcher) {                                           //__SILP__
+        public bool AddVarWatcher(IVarWatcher watcher, bool callNow = false) {                     //__SILP__
             if (WeakListHelper.Add(ref _VarWatchers, watcher)){                                    //__SILP__
                 CheckWatcherWrapper();                                                             //__SILP__
+                if (callNow) {                                                                     //__SILP__
+                    watcher.OnChanged(this);                                                       //__SILP__
+                }                                                                                  //__SILP__
                 return true;                                                                       //__SILP__
             }                                                                                      //__SILP__
             return false;                                                                          //__SILP__
@@ -171,9 +174,9 @@ namespace angeldnd.dap {
         }                                                                                          //__SILP__
                                                                                                    //__SILP__
         public BlockVarWatcher AddVarWatcher(IBlockOwner owner,                                    //__SILP__
-                                             Action<IVar> _watcher) {                              //__SILP__
+                                    Action<IVar> _watcher, bool callNow = false) {                 //__SILP__
             BlockVarWatcher watcher = new BlockVarWatcher(owner, _watcher);                        //__SILP__
-            if (AddVarWatcher(watcher)) {                                                          //__SILP__
+            if (AddVarWatcher(watcher, callNow)) {                                                 //__SILP__
                 return watcher;                                                                    //__SILP__
             }                                                                                      //__SILP__
             return null;                                                                           //__SILP__

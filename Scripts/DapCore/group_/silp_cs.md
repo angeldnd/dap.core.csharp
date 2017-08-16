@@ -76,9 +76,12 @@ public int VarWatcherCount {
     get { return WeakListHelper.Count(_VarWatchers); }
 }
 
-public bool AddVarWatcher(IVarWatcher watcher) {
+public bool AddVarWatcher(IVarWatcher watcher, bool callNow = false) {
     if (WeakListHelper.Add(ref _VarWatchers, watcher)){
         CheckWatcherWrapper();
+        if (callNow) {
+            watcher.OnChanged(this);
+        }
         return true;
     }
     return false;
@@ -92,9 +95,9 @@ public bool RemoveVarWatcher(IVarWatcher watcher) {
 }
 
 public BlockVarWatcher AddVarWatcher(IBlockOwner owner,
-                                     Action<IVar> _watcher) {
+                            Action<IVar> _watcher, bool callNow = false) {
     BlockVarWatcher watcher = new BlockVarWatcher(owner, _watcher);
-    if (AddVarWatcher(watcher)) {
+    if (AddVarWatcher(watcher, callNow)) {
         return watcher;
     }
     return null;

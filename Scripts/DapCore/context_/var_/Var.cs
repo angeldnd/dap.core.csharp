@@ -223,9 +223,9 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public BlockVarWatcher AddVarWatcher(IBlockOwner owner, Action<IVar> block) {
+        public BlockVarWatcher AddVarWatcher(IBlockOwner owner, Action<IVar> block, bool callNow = false) {
             BlockVarWatcher result = new BlockVarWatcher(owner, block);
-            if (AddVarWatcher(result)) {
+            if (AddVarWatcher(result, callNow)) {
                 return result;
             }
             return null;
@@ -239,9 +239,9 @@ namespace angeldnd.dap {
             return null;
         }
 
-        public BlockValueWatcher<T> AddValueWatcher(IBlockOwner owner, Action<IVar<T>, T> block) {
+        public BlockValueWatcher<T> AddValueWatcher(IBlockOwner owner, Action<IVar<T>, T> block, bool callNow = false) {
             BlockValueWatcher<T> result = new BlockValueWatcher<T>(owner, block);
-            if (AddValueWatcher(result)) {
+            if (AddValueWatcher(result, callNow)) {
                 return result;
             }
             return null;
@@ -280,20 +280,24 @@ namespace angeldnd.dap {
             return WeakListHelper.Remove(_SetupWatchers, watcher);    //__SILP__
         }                                                             //__SILP__
 
-        //SILP: DECLARE_LIST(VarWatcher, watcher, IVarWatcher, _VarWatchers)
+        //SILP: DECLARE_VAR_WATCHER_LIST(VarWatcher, watcher, IVarWatcher, _VarWatchers)
         private WeakList<IVarWatcher> _VarWatchers = null;            //__SILP__
                                                                       //__SILP__
         public int VarWatcherCount {                                  //__SILP__
             get { return WeakListHelper.Count(_VarWatchers); }        //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public bool AddVarWatcher(IVarWatcher watcher) {              //__SILP__
-            return WeakListHelper.Add(ref _VarWatchers, watcher);     //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
         public bool RemoveVarWatcher(IVarWatcher watcher) {           //__SILP__
             return WeakListHelper.Remove(_VarWatchers, watcher);      //__SILP__
         }                                                             //__SILP__
+
+        public bool AddVarWatcher(IVarWatcher watcher, bool callNow = false) {
+            bool result = WeakListHelper.Add(ref _VarWatchers, watcher);
+            if (result && callNow) {
+                watcher.OnChanged(this);
+            }
+            return result;
+        }
 
         //SILP: DECLARE_LIST(ValueChecker, checker, IValueChecker<T>, _ValueCheckers)
         private WeakList<IValueChecker<T>> _ValueCheckers = null;     //__SILP__
@@ -310,19 +314,23 @@ namespace angeldnd.dap {
             return WeakListHelper.Remove(_ValueCheckers, checker);    //__SILP__
         }                                                             //__SILP__
 
-        //SILP: DECLARE_LIST(ValueWatcher, watcher, IValueWatcher<T>, _ValueWatchers)
+        //SILP: DECLARE_VAR_WATCHER_LIST(ValueWatcher, watcher, IValueWatcher<T>, _ValueWatchers)
         private WeakList<IValueWatcher<T>> _ValueWatchers = null;     //__SILP__
                                                                       //__SILP__
         public int ValueWatcherCount {                                //__SILP__
             get { return WeakListHelper.Count(_ValueWatchers); }      //__SILP__
         }                                                             //__SILP__
                                                                       //__SILP__
-        public bool AddValueWatcher(IValueWatcher<T> watcher) {       //__SILP__
-            return WeakListHelper.Add(ref _ValueWatchers, watcher);   //__SILP__
-        }                                                             //__SILP__
-                                                                      //__SILP__
         public bool RemoveValueWatcher(IValueWatcher<T> watcher) {    //__SILP__
             return WeakListHelper.Remove(_ValueWatchers, watcher);    //__SILP__
         }                                                             //__SILP__
+
+        public bool AddValueWatcher(IValueWatcher<T> watcher, bool callNow = false) {
+            bool result = WeakListHelper.Add(ref _ValueWatchers, watcher);
+            if (result && callNow) {
+                watcher.OnChanged(this, Value);
+            }
+            return result;
+        }
     }
 }
