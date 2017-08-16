@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public abstract class DictInBothAspect<TO, T> : DictInBoth<TO, T>, IAspect
+    public abstract class DictInBothAspect<TO, T> : DictInBoth<TO, T>, IDictAspect
                                                         where TO : class, IOwner, IContextElement
                                                         where T : class, IInDictElement {
         //SILP:IN_BOTH_ASPECT_MIXIN_CONSTRUCTOR(DictInBothAspect)

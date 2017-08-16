@@ -5,6 +5,12 @@ namespace angeldnd.dap {
         IContext Context { get; }
     }
 
+    public interface IDictAspect : IAspect, IDict {
+    }
+
+    public interface ITableAspect : IAspect, ITable {
+    }
+
     public interface ISetupAspect : IAspect {
         int SetupWatcherCount { get; }
         bool AddSetupWatcher(ISetupWatcher watcher);
