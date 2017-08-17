@@ -18,6 +18,10 @@ namespace angeldnd.dap {
             _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);                               //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
+        public IDictContext OwnerAsDictContext {                                                      //__SILP__
+            get { return Owner; }                                                                     //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
         public override string BlockName {                                                            //__SILP__
             get {                                                                                     //__SILP__
                 return GetType().Name;                                                                //__SILP__

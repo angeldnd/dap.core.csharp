@@ -316,6 +316,10 @@ protected override void AddSummaryFields(Data summary) {
     _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);
 }
 
+public IDictContext OwnerAsDictContext {
+    get { return Owner; }
+}
+
 public override string BlockName {
     get {
         return GetType().Name;
