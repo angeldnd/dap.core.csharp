@@ -194,7 +194,7 @@ namespace angeldnd.dap {
         protected override bool DoDecode(Data data, string key, out T val, bool isDebug = false) {
             Data valueData;
             if (data.TryGetData(key, out valueData, isDebug)) {
-                return DoDecodeValue(valueData, out val, isDebug);
+                return TryDecodeValue(valueData, out val, isDebug);
             }
             val = default(T);
             return false;
@@ -204,7 +204,7 @@ namespace angeldnd.dap {
             return EncodeValue(DataCache.Take(typeof(T).FullName), val);
         }
 
-        protected abstract Data EncodeValue(Data valueData, T val);
-        protected abstract bool DoDecodeValue(Data valueData, out T val, bool isDebug = false);
+        public abstract Data EncodeValue(Data valueData, T val);
+        public abstract bool TryDecodeValue(Data valueData, out T val, bool isDebug = false);
     }
 }
