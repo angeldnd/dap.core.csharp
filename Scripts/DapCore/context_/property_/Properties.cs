@@ -105,15 +105,16 @@ namespace angeldnd.dap {
                                     key, data.GetValue(key));
                     ok = false;
                     if (strict) return ok;
-                }
-                Data valueData = new RealData();
-                if (data.CopyValueTo(key, valueData, PropertiesConsts.KeyValue)) {
-                    if (!prop.DecodeValue(valueData)) {
-                        prop.Error("Invalid Entry Value: DecodeValue: {0} ->\n{1}",
-                                    key,
-                                    Convertor.DataConvertor.Convert(valueData, "\t"));
-                        ok = false;
-                        if (strict) return ok;
+                } else {
+                    Data valueData = new RealData();
+                    if (data.CopyValueTo(key, valueData, PropertiesConsts.KeyValue)) {
+                        if (!prop.DecodeValue(valueData)) {
+                            prop.Error("Invalid Entry Value: DecodeValue: {0} ->\n{1}",
+                                        key,
+                                        Convertor.DataConvertor.Convert(valueData, "\t"));
+                            ok = false;
+                            if (strict) return ok;
+                        }
                     }
                 }
             }
