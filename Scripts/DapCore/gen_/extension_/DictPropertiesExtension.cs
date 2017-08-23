@@ -76,17 +76,19 @@ namespace angeldnd.dap {
             return null;                                                                                                       //__SILP__
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
-        public static bool AddBoolValueWatcher(this IDictProperties properties, string key, IValueWatcher<bool> watcher) {     //__SILP__
+        public static bool AddBoolValueWatcher(this IDictProperties properties, string key,                                    //__SILP__
+                                            IValueWatcher<bool> watcher, bool callNow = false) {                               //__SILP__
             BoolProperty p = properties.Get<BoolProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
-                return p.AddValueWatcher(watcher);                                                                             //__SILP__
+                return p.AddValueWatcher(watcher, callNow);                                                                    //__SILP__
             } else {                                                                                                           //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__
             return false;                                                                                                      //__SILP__
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
-        public static bool RemoveBoolValueWatcher(this IDictProperties properties, string key, IValueWatcher<bool> watcher) {  //__SILP__
+        public static bool RemoveBoolValueWatcher(this IDictProperties properties, string key,                                 //__SILP__
+                                            IValueWatcher<bool> watcher) {                                                     //__SILP__
             BoolProperty p = properties.Get<BoolProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                          //__SILP__
@@ -97,10 +99,11 @@ namespace angeldnd.dap {
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
         public static BlockValueWatcher<bool> AddBoolValueWatcher(this IDictProperties properties, string key,                 //__SILP__
-                                            IBlockOwner owner, Action<IVar<bool>, bool> block) {                               //__SILP__
+                                            IBlockOwner owner, Action<IVar<bool>, bool> block,                                 //__SILP__
+                                            bool callNow = false) {                                                            //__SILP__
             BoolProperty p = properties.Get<BoolProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
-                return p.AddValueWatcher(owner, block);                                                                        //__SILP__
+                return p.AddValueWatcher(owner, block, callNow);                                                               //__SILP__
             } else {                                                                                                           //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__
@@ -185,17 +188,19 @@ namespace angeldnd.dap {
             return null;                                                                                                     //__SILP__
         }                                                                                                                    //__SILP__
                                                                                                                              //__SILP__
-        public static bool AddIntValueWatcher(this IDictProperties properties, string key, IValueWatcher<int> watcher) {     //__SILP__
+        public static bool AddIntValueWatcher(this IDictProperties properties, string key,                                   //__SILP__
+                                            IValueWatcher<int> watcher, bool callNow = false) {                              //__SILP__
             IntProperty p = properties.Get<IntProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                 //__SILP__
-                return p.AddValueWatcher(watcher);                                                                           //__SILP__
+                return p.AddValueWatcher(watcher, callNow);                                                                  //__SILP__
             } else {                                                                                                         //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                            //__SILP__
             }                                                                                                                //__SILP__
             return false;                                                                                                    //__SILP__
         }                                                                                                                    //__SILP__
                                                                                                                              //__SILP__
-        public static bool RemoveIntValueWatcher(this IDictProperties properties, string key, IValueWatcher<int> watcher) {  //__SILP__
+        public static bool RemoveIntValueWatcher(this IDictProperties properties, string key,                                //__SILP__
+                                            IValueWatcher<int> watcher) {                                                    //__SILP__
             IntProperty p = properties.Get<IntProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                 //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                        //__SILP__
@@ -206,10 +211,11 @@ namespace angeldnd.dap {
         }                                                                                                                    //__SILP__
                                                                                                                              //__SILP__
         public static BlockValueWatcher<int> AddIntValueWatcher(this IDictProperties properties, string key,                 //__SILP__
-                                            IBlockOwner owner, Action<IVar<int>, int> block) {                               //__SILP__
+                                            IBlockOwner owner, Action<IVar<int>, int> block,                                 //__SILP__
+                                            bool callNow = false) {                                                          //__SILP__
             IntProperty p = properties.Get<IntProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                 //__SILP__
-                return p.AddValueWatcher(owner, block);                                                                      //__SILP__
+                return p.AddValueWatcher(owner, block, callNow);                                                             //__SILP__
             } else {                                                                                                         //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                            //__SILP__
             }                                                                                                                //__SILP__
@@ -294,17 +300,19 @@ namespace angeldnd.dap {
             return null;                                                                                                       //__SILP__
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
-        public static bool AddLongValueWatcher(this IDictProperties properties, string key, IValueWatcher<long> watcher) {     //__SILP__
+        public static bool AddLongValueWatcher(this IDictProperties properties, string key,                                    //__SILP__
+                                            IValueWatcher<long> watcher, bool callNow = false) {                               //__SILP__
             LongProperty p = properties.Get<LongProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
-                return p.AddValueWatcher(watcher);                                                                             //__SILP__
+                return p.AddValueWatcher(watcher, callNow);                                                                    //__SILP__
             } else {                                                                                                           //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__
             return false;                                                                                                      //__SILP__
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
-        public static bool RemoveLongValueWatcher(this IDictProperties properties, string key, IValueWatcher<long> watcher) {  //__SILP__
+        public static bool RemoveLongValueWatcher(this IDictProperties properties, string key,                                 //__SILP__
+                                            IValueWatcher<long> watcher) {                                                     //__SILP__
             LongProperty p = properties.Get<LongProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                          //__SILP__
@@ -315,10 +323,11 @@ namespace angeldnd.dap {
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
         public static BlockValueWatcher<long> AddLongValueWatcher(this IDictProperties properties, string key,                 //__SILP__
-                                            IBlockOwner owner, Action<IVar<long>, long> block) {                               //__SILP__
+                                            IBlockOwner owner, Action<IVar<long>, long> block,                                 //__SILP__
+                                            bool callNow = false) {                                                            //__SILP__
             LongProperty p = properties.Get<LongProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
-                return p.AddValueWatcher(owner, block);                                                                        //__SILP__
+                return p.AddValueWatcher(owner, block, callNow);                                                               //__SILP__
             } else {                                                                                                           //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__
@@ -403,17 +412,19 @@ namespace angeldnd.dap {
             return null;                                                                                                         //__SILP__
         }                                                                                                                        //__SILP__
                                                                                                                                  //__SILP__
-        public static bool AddFloatValueWatcher(this IDictProperties properties, string key, IValueWatcher<float> watcher) {     //__SILP__
+        public static bool AddFloatValueWatcher(this IDictProperties properties, string key,                                     //__SILP__
+                                            IValueWatcher<float> watcher, bool callNow = false) {                                //__SILP__
             FloatProperty p = properties.Get<FloatProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                     //__SILP__
-                return p.AddValueWatcher(watcher);                                                                               //__SILP__
+                return p.AddValueWatcher(watcher, callNow);                                                                      //__SILP__
             } else {                                                                                                             //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                                //__SILP__
             }                                                                                                                    //__SILP__
             return false;                                                                                                        //__SILP__
         }                                                                                                                        //__SILP__
                                                                                                                                  //__SILP__
-        public static bool RemoveFloatValueWatcher(this IDictProperties properties, string key, IValueWatcher<float> watcher) {  //__SILP__
+        public static bool RemoveFloatValueWatcher(this IDictProperties properties, string key,                                  //__SILP__
+                                            IValueWatcher<float> watcher) {                                                      //__SILP__
             FloatProperty p = properties.Get<FloatProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                     //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                            //__SILP__
@@ -424,10 +435,11 @@ namespace angeldnd.dap {
         }                                                                                                                        //__SILP__
                                                                                                                                  //__SILP__
         public static BlockValueWatcher<float> AddFloatValueWatcher(this IDictProperties properties, string key,                 //__SILP__
-                                            IBlockOwner owner, Action<IVar<float>, float> block) {                               //__SILP__
+                                            IBlockOwner owner, Action<IVar<float>, float> block,                                 //__SILP__
+                                            bool callNow = false) {                                                              //__SILP__
             FloatProperty p = properties.Get<FloatProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                     //__SILP__
-                return p.AddValueWatcher(owner, block);                                                                          //__SILP__
+                return p.AddValueWatcher(owner, block, callNow);                                                                 //__SILP__
             } else {                                                                                                             //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                                //__SILP__
             }                                                                                                                    //__SILP__
@@ -512,17 +524,19 @@ namespace angeldnd.dap {
             return null;                                                                                                           //__SILP__
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
-        public static bool AddDoubleValueWatcher(this IDictProperties properties, string key, IValueWatcher<double> watcher) {     //__SILP__
+        public static bool AddDoubleValueWatcher(this IDictProperties properties, string key,                                      //__SILP__
+                                            IValueWatcher<double> watcher, bool callNow = false) {                                 //__SILP__
             DoubleProperty p = properties.Get<DoubleProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                       //__SILP__
-                return p.AddValueWatcher(watcher);                                                                                 //__SILP__
+                return p.AddValueWatcher(watcher, callNow);                                                                        //__SILP__
             } else {                                                                                                               //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                                  //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
-        public static bool RemoveDoubleValueWatcher(this IDictProperties properties, string key, IValueWatcher<double> watcher) {  //__SILP__
+        public static bool RemoveDoubleValueWatcher(this IDictProperties properties, string key,                                   //__SILP__
+                                            IValueWatcher<double> watcher) {                                                       //__SILP__
             DoubleProperty p = properties.Get<DoubleProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                              //__SILP__
@@ -533,10 +547,11 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public static BlockValueWatcher<double> AddDoubleValueWatcher(this IDictProperties properties, string key,                 //__SILP__
-                                            IBlockOwner owner, Action<IVar<double>, double> block) {                               //__SILP__
+                                            IBlockOwner owner, Action<IVar<double>, double> block,                                 //__SILP__
+                                            bool callNow = false) {                                                                //__SILP__
             DoubleProperty p = properties.Get<DoubleProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                       //__SILP__
-                return p.AddValueWatcher(owner, block);                                                                            //__SILP__
+                return p.AddValueWatcher(owner, block, callNow);                                                                   //__SILP__
             } else {                                                                                                               //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                                  //__SILP__
             }                                                                                                                      //__SILP__
@@ -621,17 +636,19 @@ namespace angeldnd.dap {
             return null;                                                                                                           //__SILP__
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
-        public static bool AddStringValueWatcher(this IDictProperties properties, string key, IValueWatcher<string> watcher) {     //__SILP__
+        public static bool AddStringValueWatcher(this IDictProperties properties, string key,                                      //__SILP__
+                                            IValueWatcher<string> watcher, bool callNow = false) {                                 //__SILP__
             StringProperty p = properties.Get<StringProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                       //__SILP__
-                return p.AddValueWatcher(watcher);                                                                                 //__SILP__
+                return p.AddValueWatcher(watcher, callNow);                                                                        //__SILP__
             } else {                                                                                                               //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                                  //__SILP__
             }                                                                                                                      //__SILP__
             return false;                                                                                                          //__SILP__
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
-        public static bool RemoveStringValueWatcher(this IDictProperties properties, string key, IValueWatcher<string> watcher) {  //__SILP__
+        public static bool RemoveStringValueWatcher(this IDictProperties properties, string key,                                   //__SILP__
+                                            IValueWatcher<string> watcher) {                                                       //__SILP__
             StringProperty p = properties.Get<StringProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                       //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                              //__SILP__
@@ -642,10 +659,11 @@ namespace angeldnd.dap {
         }                                                                                                                          //__SILP__
                                                                                                                                    //__SILP__
         public static BlockValueWatcher<string> AddStringValueWatcher(this IDictProperties properties, string key,                 //__SILP__
-                                            IBlockOwner owner, Action<IVar<string>, string> block) {                               //__SILP__
+                                            IBlockOwner owner, Action<IVar<string>, string> block,                                 //__SILP__
+                                            bool callNow = false) {                                                                //__SILP__
             StringProperty p = properties.Get<StringProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                       //__SILP__
-                return p.AddValueWatcher(owner, block);                                                                            //__SILP__
+                return p.AddValueWatcher(owner, block, callNow);                                                                   //__SILP__
             } else {                                                                                                               //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                                  //__SILP__
             }                                                                                                                      //__SILP__
@@ -730,17 +748,19 @@ namespace angeldnd.dap {
             return null;                                                                                                       //__SILP__
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
-        public static bool AddDataValueWatcher(this IDictProperties properties, string key, IValueWatcher<Data> watcher) {     //__SILP__
+        public static bool AddDataValueWatcher(this IDictProperties properties, string key,                                    //__SILP__
+                                            IValueWatcher<Data> watcher, bool callNow = false) {                               //__SILP__
             DataProperty p = properties.Get<DataProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
-                return p.AddValueWatcher(watcher);                                                                             //__SILP__
+                return p.AddValueWatcher(watcher, callNow);                                                                    //__SILP__
             } else {                                                                                                           //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__
             return false;                                                                                                      //__SILP__
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
-        public static bool RemoveDataValueWatcher(this IDictProperties properties, string key, IValueWatcher<Data> watcher) {  //__SILP__
+        public static bool RemoveDataValueWatcher(this IDictProperties properties, string key,                                 //__SILP__
+                                            IValueWatcher<Data> watcher) {                                                     //__SILP__
             DataProperty p = properties.Get<DataProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
                 return p.RemoveValueWatcher(watcher);                                                                          //__SILP__
@@ -751,10 +771,11 @@ namespace angeldnd.dap {
         }                                                                                                                      //__SILP__
                                                                                                                                //__SILP__
         public static BlockValueWatcher<Data> AddDataValueWatcher(this IDictProperties properties, string key,                 //__SILP__
-                                            IBlockOwner owner, Action<IVar<Data>, Data> block) {                               //__SILP__
+                                            IBlockOwner owner, Action<IVar<Data>, Data> block,                                 //__SILP__
+                                            bool callNow = false) {                                                            //__SILP__
             DataProperty p = properties.Get<DataProperty>(key);                                                                //__SILP__
             if (p != null) {                                                                                                   //__SILP__
-                return p.AddValueWatcher(owner, block);                                                                        //__SILP__
+                return p.AddValueWatcher(owner, block, callNow);                                                               //__SILP__
             } else {                                                                                                           //__SILP__
                 properties.Error("Property Not Exist: {0}", key);                                                              //__SILP__
             }                                                                                                                  //__SILP__

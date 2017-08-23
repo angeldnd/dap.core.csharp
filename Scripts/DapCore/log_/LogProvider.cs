@@ -119,6 +119,27 @@ namespace angeldnd.dap {
 #endif
         }
 
+        public string FormatBytes(byte[] data, int startIndex, int size, string prefix = null) {
+            _StackBuilder.Length = 0;
+            if (!string.IsNullOrEmpty(prefix)) {
+                _StackBuilder.Append(prefix);
+                _StackBuilder.Append("\n");
+            }
+            for (int i = startIndex; i < size; i++) {
+                int index = i - startIndex;
+                if (index % 32 == 0) {
+                    _StackBuilder.Append("\t");
+                }
+                _StackBuilder.Append(data[i].ToString("X2"));
+                if (index % 32 == 31) {
+                    _StackBuilder.Append("\n");
+                } else {
+                    _StackBuilder.Append(" ");
+                }
+            }
+            return _StackBuilder.ToString();
+        }
+
         public void AddLog(object source, string kind, string msg, StackTrace stackTrace) {
             var now = System.DateTime.UtcNow;
 

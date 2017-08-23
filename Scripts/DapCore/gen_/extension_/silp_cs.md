@@ -44,17 +44,19 @@ public static BlockValueChecker<${cs_type}> Add${type}ValueChecker(this IDictPro
     return null;
 }
 
-public static bool Add${type}ValueWatcher(this IDictProperties properties, string key, IValueWatcher<${cs_type}> watcher) {
+public static bool Add${type}ValueWatcher(this IDictProperties properties, string key,
+                                    IValueWatcher<${cs_type}> watcher, bool callNow = false) {
     ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
-        return p.AddValueWatcher(watcher);
+        return p.AddValueWatcher(watcher, callNow);
     } else {
         properties.Error("Property Not Exist: {0}", key);
     }
     return false;
 }
 
-public static bool Remove${type}ValueWatcher(this IDictProperties properties, string key, IValueWatcher<${cs_type}> watcher) {
+public static bool Remove${type}ValueWatcher(this IDictProperties properties, string key,
+                                    IValueWatcher<${cs_type}> watcher) {
     ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
         return p.RemoveValueWatcher(watcher);
@@ -65,10 +67,11 @@ public static bool Remove${type}ValueWatcher(this IDictProperties properties, st
 }
 
 public static BlockValueWatcher<${cs_type}> Add${type}ValueWatcher(this IDictProperties properties, string key,
-                                    IBlockOwner owner, Action<IVar<${cs_type}>, ${cs_type}> block) {
+                                    IBlockOwner owner, Action<IVar<${cs_type}>, ${cs_type}> block,
+                                    bool callNow = false) {
     ${type}Property p = properties.Get<${type}Property>(key);
     if (p != null) {
-        return p.AddValueWatcher(owner, block);
+        return p.AddValueWatcher(owner, block, callNow);
     } else {
         properties.Error("Property Not Exist: {0}", key);
     }
