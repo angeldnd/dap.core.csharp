@@ -18,6 +18,11 @@ namespace angeldnd.dap {
         bool RemoveResponseWatcher(IResponseWatcher watcher);
         BlockResponseWatcher AddResponseWatcher(IBlockOwner owner, Action<Handler, Data, Data> block);
 
+        int AsyncResponseWatcherCount { get; }
+        bool AddAsyncResponseWatcher(IAsyncResponseWatcher watcher);
+        bool RemoveAsyncResponseWatcher(IAsyncResponseWatcher watcher);
+        BlockAsyncResponseWatcher AddAsyncResponseWatcher(IBlockOwner owner, Action<Handler, Data> block);
+
         bool IsValid { get; }
         bool Setup(IRequestHandler handler);
         Data HandleRequest(Data req);
@@ -33,6 +38,10 @@ namespace angeldnd.dap {
 
     public interface IResponseWatcher : IBlock {
         void OnResponse(Handler handler, Data req, Data res);
+    }
+
+    public interface IAsyncResponseWatcher : IBlock {
+        void OnAsyncResponse(Handler handler, Data res);
     }
 
     public interface IRequestHandler {
@@ -72,6 +81,18 @@ namespace angeldnd.dap {
 
         public void OnResponse(Handler handler, Data req, Data res) {
             _Block(handler, req, res);
+        }
+    }
+
+    public sealed class BlockAsyncResponseWatcher : WeakBlock, IAsyncResponseWatcher {
+        private readonly Action<Handler, Data> _Block;
+
+        public BlockAsyncResponseWatcher(IBlockOwner owner, Action<Handler, Data> block) : base(owner) {
+            _Block = block;
+        }
+
+        public void OnAsyncResponse(Handler handler, Data res) {
+            _Block(handler, res);
         }
     }
 

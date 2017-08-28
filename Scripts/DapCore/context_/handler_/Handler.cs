@@ -54,6 +54,21 @@ namespace angeldnd.dap {
             return Setup(new BlockRequestHandler(block));
         }
 
+        public bool OnAsyncResponse(Data res) {
+            IProfiler profiler = Log.BeginSample(Key);
+
+            AdvanceRevision();
+            NotifyAsyncResponseWatchers(res, profiler);
+
+            if (ResponseHelper.IsResFailed(res)) {
+                Error("OnAsyncResponse Failed: {0}", res.ToFullString());
+            } else if (LogDebug) {
+                Debug("OnAsyncResponse: {0}", res.ToFullString());
+            }
+            if (profiler != null) profiler.EndSample();
+            return true;
+        }
+
         public Data HandleRequest(Data req) {
             if (req != null) req.Seal();
 
@@ -171,6 +186,27 @@ namespace angeldnd.dap {
             }                                                         //__SILP__
         }
 
+        private void NotifyAsyncResponseWatchers(Data res, IProfiler profiler) {
+            //SILP: WEAK_LIST_FOREACH_BEGIN(Handler.OnAsyncResponse, watcher, IAsyncResponseWatcher, _AsyncResponseWatchers)
+            if (_AsyncResponseWatchers != null) {                                         //__SILP__
+                if (profiler != null) profiler.BeginSample("Handler.OnAsyncResponse");    //__SILP__
+                bool needGc = false;                                                      //__SILP__
+                foreach (var r in _AsyncResponseWatchers.RetainLock()) {                  //__SILP__
+                    IAsyncResponseWatcher watcher = _AsyncResponseWatchers.GetTarget(r);  //__SILP__
+                    if (watcher == null) {                                                //__SILP__
+                        needGc = true;                                                    //__SILP__
+                    } else {                                                              //__SILP__
+                        if (profiler != null) profiler.BeginSample(watcher.BlockName);    //__SILP__
+                        watcher.OnAsyncResponse(this, res);
+            //SILP: WEAK_LIST_FOREACH_END(Handler.OnAsyncResponse, watcher, IAsyncResponseWatcher, _AsyncResponseWatchers)
+                        if (profiler != null) profiler.EndSample();   //__SILP__
+                    }                                                 //__SILP__
+                }                                                     //__SILP__
+                _AsyncResponseWatchers.ReleaseLock(needGc);           //__SILP__
+                if (profiler != null) profiler.EndSample();           //__SILP__
+            }                                                         //__SILP__
+        }
+
         public BlockSetupWatcher AddSetupWatcher(IBlockOwner owner, Action<ISetupAspect> block) {
             BlockSetupWatcher result = new BlockSetupWatcher(owner, block);
             if (AddSetupWatcher(result)) {
@@ -198,6 +234,14 @@ namespace angeldnd.dap {
         public BlockResponseWatcher AddResponseWatcher(IBlockOwner owner, Action<Handler, Data, Data> block) {
             BlockResponseWatcher result = new BlockResponseWatcher(owner, block);
             if (AddResponseWatcher(result)) {
+                return result;
+            }
+            return null;
+        }
+
+        public BlockAsyncResponseWatcher AddAsyncResponseWatcher(IBlockOwner owner, Action<Handler, Data> block) {
+            BlockAsyncResponseWatcher result = new BlockAsyncResponseWatcher(owner, block);
+            if (AddAsyncResponseWatcher(result)) {
                 return result;
             }
             return null;
@@ -272,5 +316,20 @@ namespace angeldnd.dap {
         public bool RemoveResponseWatcher(IResponseWatcher watcher) {   //__SILP__
             return WeakListHelper.Remove(_ResponseWatchers, watcher);   //__SILP__
         }                                                               //__SILP__
+
+        //SILP: DECLARE_LIST(AsyncResponseWatcher, watcher, IAsyncResponseWatcher, _AsyncResponseWatchers)
+        private WeakList<IAsyncResponseWatcher> _AsyncResponseWatchers = null;   //__SILP__
+                                                                                 //__SILP__
+        public int AsyncResponseWatcherCount {                                   //__SILP__
+            get { return WeakListHelper.Count(_AsyncResponseWatchers); }         //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool AddAsyncResponseWatcher(IAsyncResponseWatcher watcher) {     //__SILP__
+            return WeakListHelper.Add(ref _AsyncResponseWatchers, watcher);      //__SILP__
+        }                                                                        //__SILP__
+                                                                                 //__SILP__
+        public bool RemoveAsyncResponseWatcher(IAsyncResponseWatcher watcher) {  //__SILP__
+            return WeakListHelper.Remove(_AsyncResponseWatchers, watcher);       //__SILP__
+        }                                                                        //__SILP__
     }
 }
