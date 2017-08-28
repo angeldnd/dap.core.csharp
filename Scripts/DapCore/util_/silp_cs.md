@@ -1,6 +1,9 @@
 # REQUEST_HELPER_GET_TYPE(type, cs_type) #
 ```
 public static ${cs_type} Get${type}(Handler handler, Data req, string key, Data hint) {
+    if (hint == null) {
+        return Get${type}(handler, req, key);
+    }
     if (req == null || !req.Is${type}(key)) {
         throw new BadRequestException(handler, req, hint);
     }
@@ -21,7 +24,7 @@ public static ${cs_type} Get${type}(Handler handler, Data req, string key) {
     return req.Get${type}(key);
 }
 
-public static ${cs_type} Get${type}(Data req, string key, ${cs_type} defaultValue) {
+public static ${cs_type} Get${type}WithDefault(Handler handler, Data req, string key, ${cs_type} defaultValue) {
     if (req == null) {
         return defaultValue;
     }

@@ -8,6 +8,9 @@ namespace angeldnd.dap {
     public static class RequestHelper {
         //SILP: REQUEST_HELPER_GET_TYPE(Bool, bool)
         public static bool GetBool(Handler handler, Data req, string key, Data hint) {                              //__SILP__
+            if (hint == null) {                                                                                     //__SILP__
+                return GetBool(handler, req, key);                                                                  //__SILP__
+            }                                                                                                       //__SILP__
             if (req == null || !req.IsBool(key)) {                                                                  //__SILP__
                 throw new BadRequestException(handler, req, hint);                                                  //__SILP__
             }                                                                                                       //__SILP__
@@ -28,7 +31,7 @@ namespace angeldnd.dap {
             return req.GetBool(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
-        public static bool GetBool(Data req, string key, bool defaultValue) {                                       //__SILP__
+        public static bool GetBoolWithDefault(Handler handler, Data req, string key, bool defaultValue) {           //__SILP__
             if (req == null) {                                                                                      //__SILP__
                 return defaultValue;                                                                                //__SILP__
             }                                                                                                       //__SILP__
@@ -37,6 +40,9 @@ namespace angeldnd.dap {
                                                                                                                     //__SILP__
         //SILP: REQUEST_HELPER_GET_TYPE(Int, int)
         public static int GetInt(Handler handler, Data req, string key, Data hint) {                              //__SILP__
+            if (hint == null) {                                                                                   //__SILP__
+                return GetInt(handler, req, key);                                                                 //__SILP__
+            }                                                                                                     //__SILP__
             if (req == null || !req.IsInt(key)) {                                                                 //__SILP__
                 throw new BadRequestException(handler, req, hint);                                                //__SILP__
             }                                                                                                     //__SILP__
@@ -57,7 +63,7 @@ namespace angeldnd.dap {
             return req.GetInt(key);                                                                               //__SILP__
         }                                                                                                         //__SILP__
                                                                                                                   //__SILP__
-        public static int GetInt(Data req, string key, int defaultValue) {                                        //__SILP__
+        public static int GetIntWithDefault(Handler handler, Data req, string key, int defaultValue) {            //__SILP__
             if (req == null) {                                                                                    //__SILP__
                 return defaultValue;                                                                              //__SILP__
             }                                                                                                     //__SILP__
@@ -66,6 +72,9 @@ namespace angeldnd.dap {
                                                                                                                   //__SILP__
         //SILP: REQUEST_HELPER_GET_TYPE(Long, long)
         public static long GetLong(Handler handler, Data req, string key, Data hint) {                              //__SILP__
+            if (hint == null) {                                                                                     //__SILP__
+                return GetLong(handler, req, key);                                                                  //__SILP__
+            }                                                                                                       //__SILP__
             if (req == null || !req.IsLong(key)) {                                                                  //__SILP__
                 throw new BadRequestException(handler, req, hint);                                                  //__SILP__
             }                                                                                                       //__SILP__
@@ -86,7 +95,7 @@ namespace angeldnd.dap {
             return req.GetLong(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
-        public static long GetLong(Data req, string key, long defaultValue) {                                       //__SILP__
+        public static long GetLongWithDefault(Handler handler, Data req, string key, long defaultValue) {           //__SILP__
             if (req == null) {                                                                                      //__SILP__
                 return defaultValue;                                                                                //__SILP__
             }                                                                                                       //__SILP__
@@ -95,6 +104,9 @@ namespace angeldnd.dap {
                                                                                                                     //__SILP__
         //SILP: REQUEST_HELPER_GET_TYPE(Float, float)
         public static float GetFloat(Handler handler, Data req, string key, Data hint) {                              //__SILP__
+            if (hint == null) {                                                                                       //__SILP__
+                return GetFloat(handler, req, key);                                                                   //__SILP__
+            }                                                                                                         //__SILP__
             if (req == null || !req.IsFloat(key)) {                                                                   //__SILP__
                 throw new BadRequestException(handler, req, hint);                                                    //__SILP__
             }                                                                                                         //__SILP__
@@ -115,7 +127,7 @@ namespace angeldnd.dap {
             return req.GetFloat(key);                                                                                 //__SILP__
         }                                                                                                             //__SILP__
                                                                                                                       //__SILP__
-        public static float GetFloat(Data req, string key, float defaultValue) {                                      //__SILP__
+        public static float GetFloatWithDefault(Handler handler, Data req, string key, float defaultValue) {          //__SILP__
             if (req == null) {                                                                                        //__SILP__
                 return defaultValue;                                                                                  //__SILP__
             }                                                                                                         //__SILP__
@@ -124,6 +136,9 @@ namespace angeldnd.dap {
                                                                                                                       //__SILP__
         //SILP: REQUEST_HELPER_GET_TYPE(Double, double)
         public static double GetDouble(Handler handler, Data req, string key, Data hint) {                              //__SILP__
+            if (hint == null) {                                                                                         //__SILP__
+                return GetDouble(handler, req, key);                                                                    //__SILP__
+            }                                                                                                           //__SILP__
             if (req == null || !req.IsDouble(key)) {                                                                    //__SILP__
                 throw new BadRequestException(handler, req, hint);                                                      //__SILP__
             }                                                                                                           //__SILP__
@@ -144,7 +159,7 @@ namespace angeldnd.dap {
             return req.GetDouble(key);                                                                                  //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
-        public static double GetDouble(Data req, string key, double defaultValue) {                                     //__SILP__
+        public static double GetDoubleWithDefault(Handler handler, Data req, string key, double defaultValue) {         //__SILP__
             if (req == null) {                                                                                          //__SILP__
                 return defaultValue;                                                                                    //__SILP__
             }                                                                                                           //__SILP__
@@ -153,6 +168,9 @@ namespace angeldnd.dap {
                                                                                                                         //__SILP__
         //SILP: REQUEST_HELPER_GET_TYPE(String, string)
         public static string GetString(Handler handler, Data req, string key, Data hint) {                              //__SILP__
+            if (hint == null) {                                                                                         //__SILP__
+                return GetString(handler, req, key);                                                                    //__SILP__
+            }                                                                                                           //__SILP__
             if (req == null || !req.IsString(key)) {                                                                    //__SILP__
                 throw new BadRequestException(handler, req, hint);                                                      //__SILP__
             }                                                                                                           //__SILP__
@@ -173,7 +191,7 @@ namespace angeldnd.dap {
             return req.GetString(key);                                                                                  //__SILP__
         }                                                                                                               //__SILP__
                                                                                                                         //__SILP__
-        public static string GetString(Data req, string key, string defaultValue) {                                     //__SILP__
+        public static string GetStringWithDefault(Handler handler, Data req, string key, string defaultValue) {         //__SILP__
             if (req == null) {                                                                                          //__SILP__
                 return defaultValue;                                                                                    //__SILP__
             }                                                                                                           //__SILP__
@@ -182,6 +200,9 @@ namespace angeldnd.dap {
                                                                                                                         //__SILP__
         //SILP: REQUEST_HELPER_GET_TYPE(Data, Data)
         public static Data GetData(Handler handler, Data req, string key, Data hint) {                              //__SILP__
+            if (hint == null) {                                                                                     //__SILP__
+                return GetData(handler, req, key);                                                                  //__SILP__
+            }                                                                                                       //__SILP__
             if (req == null || !req.IsData(key)) {                                                                  //__SILP__
                 throw new BadRequestException(handler, req, hint);                                                  //__SILP__
             }                                                                                                       //__SILP__
@@ -202,7 +223,7 @@ namespace angeldnd.dap {
             return req.GetData(key);                                                                                //__SILP__
         }                                                                                                           //__SILP__
                                                                                                                     //__SILP__
-        public static Data GetData(Data req, string key, Data defaultValue) {                                       //__SILP__
+        public static Data GetDataWithDefault(Handler handler, Data req, string key, Data defaultValue) {           //__SILP__
             if (req == null) {                                                                                      //__SILP__
                 return defaultValue;                                                                                //__SILP__
             }                                                                                                       //__SILP__

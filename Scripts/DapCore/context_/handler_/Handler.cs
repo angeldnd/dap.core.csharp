@@ -87,24 +87,28 @@ namespace angeldnd.dap {
             NotifyRequestWatchers(req, profiler);
 
             Data res = null;
+            bool errorLogged = false;
             try {
                 res = _Handler.DoHandle(this, req);
             } catch (HandlerException e) {
                 res = e.Response;
-            } catch (Exception e) {
+                errorLogged = true;
                 Error("DoHandle Got Exception: {0}\n{1}", e.Message, e.ToString());
+            } catch (Exception e) {
                 if (LogDebug) {
                     res = ResponseHelper.InternalError(this, req, e.ToString());
                 } else {
                     res = ResponseHelper.InternalError(this, req, e.Message);
                 }
+                errorLogged = true;
+                Error("DoHandle Got Exception: {0}\n{1}", e.Message, e.ToString());
             }
             if (res != null) res.Seal();
             AdvanceRevision();
 
             NotifyResponseWatchers(req, res, profiler);
 
-            if (ResponseHelper.IsResFailed(res)) {
+            if (ResponseHelper.IsResFailed(res) && !errorLogged) {
                 Error("HandleRequest Failed: {0} -> {1}", req.ToFullString(), res.ToFullString());
             } else if (LogDebug) {
                 Debug("HandleRequest: {0} -> {1}", req.ToFullString(), res.ToFullString());
