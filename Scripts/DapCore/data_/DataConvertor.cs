@@ -213,6 +213,11 @@ namespace angeldnd.dap {
                 case DataType.String:
                     ok = data.SetString(partialData.Key, Convertor.StringConvertor.Parse(word.Value));
                     break;
+                case DataType.Data:
+                    if (word.Value == Convertor.Null) {
+                        ok = data.SetData(partialData.Key, null);
+                    }
+                    break;
             }
             if (ok) {
                 partialData.Clear();

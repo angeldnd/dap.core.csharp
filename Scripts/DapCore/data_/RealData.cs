@@ -29,9 +29,7 @@ namespace angeldnd.dap {
             var en = _ValueTypes.GetEnumerator();
             while (en.MoveNext()) {
                 var kv = en.Current;
-                if (!IsTempKey(kv.Key)) {
-                    clone._ValueTypes[kv.Key] = kv.Value;
-                }
+                clone._ValueTypes[kv.Key] = kv.Value;
             }
 
             clone._BoolValues = CloneDictionary<bool>(_BoolValues);
@@ -83,10 +81,8 @@ namespace angeldnd.dap {
             var en = src.GetEnumerator();
             while (en.MoveNext()) {
                 var kv = en.Current;
-                if (!IsTempKey(kv.Key)) {
-                    if (clone == null) clone = new Dictionary<string, T>();
-                    clone[kv.Key] = kv.Value;
-                }
+                if (clone == null) clone = new Dictionary<string, T>();
+                clone[kv.Key] = kv.Value;
             }
             return clone;
         }
