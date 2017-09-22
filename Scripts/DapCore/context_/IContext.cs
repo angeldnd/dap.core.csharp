@@ -9,6 +9,7 @@ namespace angeldnd.dap {
     }
 
     public interface IContext : IOwner, IInDictElement, IContextElement {
+        Root Root { get; }
         IDictContext OwnerAsDictContext { get; }
 
         Mapping Mapping { get; }

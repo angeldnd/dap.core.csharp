@@ -7,7 +7,8 @@ namespace angeldnd.dap {
                                                         where T : class, IContext {
         public DictContext(TO owner, string key) : base(owner, key) {
         //SILP: CONTEXT_MIXIN()
-            _Path = Env.GetContextPath(this);                                                         //__SILP__
+            _Root = Root.GetRoot(this);                                                               //__SILP__
+            _Path = Root.GetContextPath(this);                                                        //__SILP__
                                                                                                       //__SILP__
             _Mapping = AddTopAspect<Mapping>(ContextConsts.KeyMapping);                               //__SILP__
             _Properties = AddTopAspect<Properties>(ContextConsts.KeyProperties);                      //__SILP__
@@ -17,6 +18,11 @@ namespace angeldnd.dap {
             _Vars = AddTopAspect<Vars>(ContextConsts.KeyVars);                                        //__SILP__
             _Utils = AddTopAspect<Utils>(ContextConsts.KeyUtils);                                     //__SILP__
             _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);                               //__SILP__
+        }                                                                                             //__SILP__
+                                                                                                      //__SILP__
+        private readonly Root _Root = null;                                                           //__SILP__
+        public Root Root {                                                                            //__SILP__
+            get { return _Root; }                                                                     //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         public IDictContext OwnerAsDictContext {                                                      //__SILP__
@@ -98,7 +104,7 @@ namespace angeldnd.dap {
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
         protected override sealed void OnAdded() {                                                    //__SILP__
-            Env.Instance.Hooks._OnContextAdded(this);                                                 //__SILP__
+            Root.Hooks._OnContextAdded(this);                                                         //__SILP__
             OnContextAdded();                                                                         //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__
@@ -108,7 +114,7 @@ namespace angeldnd.dap {
                 return;                                                                               //__SILP__
             }                                                                                         //__SILP__
             _Removed = true;                                                                          //__SILP__
-            Env.Instance.Hooks._OnContextRemoved(this);                                               //__SILP__
+            Root.Hooks._OnContextRemoved(this);                                                       //__SILP__
             OnContextRemoved();                                                                       //__SILP__
         }                                                                                             //__SILP__
                                                                                                       //__SILP__

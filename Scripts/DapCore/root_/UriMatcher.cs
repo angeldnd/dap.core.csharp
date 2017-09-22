@@ -1,11 +1,11 @@
 using System;
 
 namespace angeldnd.dap {
-    public class EnvUriMatcher {
+    public class UriMatcher {
         public readonly PatternMatcher ContextPathPatternMatcher = null;
         public readonly PatternMatcher AspectPathPatternMatcher = null;
 
-        public EnvUriMatcher(string contextPathPattern, string aspectPathPattern) {
+        public UriMatcher(string contextPathPattern, string aspectPathPattern) {
             if (contextPathPattern != null) {
                 ContextPathPatternMatcher = new PatternMatcher(PathConsts.SegmentSeparator, contextPathPattern);
                 if (!string.IsNullOrEmpty(aspectPathPattern)) {
@@ -14,7 +14,7 @@ namespace angeldnd.dap {
             }
         }
 
-        public EnvUriMatcher(string contextPathPattern) : this(contextPathPattern, null) {
+        public UriMatcher(string contextPathPattern) : this(contextPathPattern, null) {
         }
 
         public override string ToString() {

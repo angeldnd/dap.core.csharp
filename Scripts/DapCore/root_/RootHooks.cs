@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class EnvHooks : TableAspect<IContext, EnvHook> {
+    public sealed class RootHooks : TableAspect<IContext, RootHook> {
         private DebugHook _DebugHook = null;
         public DebugHook DebugHook {
             get { return _DebugHook; }
         }
 
-        public EnvHooks(IContext owner, string key) : base(owner, key) {
+        public RootHooks(Root owner, string key) : base(owner, key) {
         }
 
         public void Setup() {
@@ -23,7 +23,7 @@ namespace angeldnd.dap {
         public void _OnContextAdded(IContext context) {
             IProfiler profiler = Log.BeginSample("Hooks._OnContextAdded");
             string[] contextPathSegments = context.Path.Split(PathConsts.SegmentSeparator);
-            ForEach((EnvHook hook) => {
+            ForEach((RootHook hook) => {
                 if (profiler != null) profiler.BeginSample(hook.Description);
                 hook._OnContextAdded(context, contextPathSegments);
                 if (profiler != null) profiler.EndSample();
@@ -35,7 +35,7 @@ namespace angeldnd.dap {
         public void _OnContextRemoved(IContext context) {
             IProfiler profiler = Log.BeginSample("Hooks._OnContextRemoved");
             string[] contextPathSegments = context.Path.Split(PathConsts.SegmentSeparator);
-            ForEach((EnvHook hook) => {
+            ForEach((RootHook hook) => {
                 if (profiler != null) profiler.BeginSample(hook.Description);
                 hook._OnContextRemoved(context, contextPathSegments);
                 if (profiler != null) profiler.EndSample();

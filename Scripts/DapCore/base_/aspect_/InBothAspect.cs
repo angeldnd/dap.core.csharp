@@ -7,21 +7,21 @@ namespace angeldnd.dap {
         //SILP:IN_BOTH_ASPECT_MIXIN_CONSTRUCTOR(InBothAspect)
         protected InBothAspect(TO owner, string key) : base(owner, key) {   //__SILP__
             _Context = owner == null ? null : owner.GetContext();           //__SILP__
-            _Path = Env.GetAspectPath(this);                                //__SILP__
-            _Uri = Env.GetAspectUri(this);                                  //__SILP__
+            _Path = Root.GetAspectPath(this);                               //__SILP__
+            _Uri = Root.GetAspectUri(this);                                 //__SILP__
         }                                                                   //__SILP__
                                                                             //__SILP__
         protected InBothAspect(TO owner, int index) : base(owner, index) {  //__SILP__
             _Context = owner == null ? null : owner.GetContext();           //__SILP__
-            _Path = Env.GetAspectPath(this);                                //__SILP__
-            _Uri = Env.GetAspectUri(this);                                  //__SILP__
+            _Path = Root.GetAspectPath(this);                               //__SILP__
+            _Uri = Root.GetAspectUri(this);                                 //__SILP__
         }                                                                   //__SILP__
                                                                             //__SILP__
         public override bool _SetIndex(IOwner owner, int index) {           //__SILP__
             if (!base._SetIndex(owner, index)) return false;                //__SILP__
                                                                             //__SILP__
-            _Path = Env.GetAspectPath(this);                                //__SILP__
-            _Uri = Env.GetAspectUri(this);                                  //__SILP__
+            _Path = Root.GetAspectPath(this);                               //__SILP__
+            _Uri = Root.GetAspectUri(this);                                 //__SILP__
             return true;                                                    //__SILP__
         }                                                                   //__SILP__
 
@@ -65,7 +65,7 @@ namespace angeldnd.dap {
                                                                                        //__SILP__
         protected override sealed void OnAdded() {                                     //__SILP__
             if (_Context != null) {                                                    //__SILP__
-                Env.Instance.Hooks._OnAspectAdded(this);                               //__SILP__
+                _Context.Root.Hooks._OnAspectAdded(this);                              //__SILP__
             }                                                                          //__SILP__
             OnAspectAdded();                                                           //__SILP__
         }                                                                              //__SILP__

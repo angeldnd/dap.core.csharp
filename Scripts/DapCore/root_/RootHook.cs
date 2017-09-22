@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public class EnvHook : InTableAspect<EnvHooks> {
+    public class RootHook : InTableAspect<RootHooks> {
         private bool _Setup = false;
 
         private string _Description = null;
@@ -12,7 +12,7 @@ namespace angeldnd.dap {
         private Action<IContext> _ContextAddedBlock;
         private Action<IContext> _ContextRemovedBlock;
 
-        public EnvHook(EnvHooks owner, int index) : base(owner, index) {
+        public RootHook(RootHooks owner, int index) : base(owner, index) {
         }
 
         public bool Setup(string description,
@@ -36,13 +36,13 @@ namespace angeldnd.dap {
             return Setup(description, contextAddedBlock, null);
         }
 
-        private List<EnvUriMatcher> _ContextPathMatchers = new List<EnvUriMatcher>();
+        private List<UriMatcher> _ContextPathMatchers = new List<UriMatcher>();
         public int ContextMatchersCount {
             get { return _ContextPathMatchers.Count; }
         }
 
         public void AddContextPattern(string contextPathPattern) {
-            EnvUriMatcher matcher = new EnvUriMatcher(contextPathPattern);
+            UriMatcher matcher = new UriMatcher(contextPathPattern);
             if (matcher.CanMatchContext()) {
                 _ContextPathMatchers.Add(matcher);
             } else {
@@ -77,12 +77,12 @@ namespace angeldnd.dap {
         protected override void AddSummaryFields(Data summary) {
             base.AddSummaryFields(summary);
             summary.S(ContextConsts.SummaryDescription, _Description);
-            Data patterns = DataCache.Take(this, EnvConsts.SummaryPatterns);
+            Data patterns = DataCache.Take(this, RootConsts.SummaryPatterns);
             for (int i = 0; i < _ContextPathMatchers.Count; i++) {
                 patterns.S("context_" + i.ToString(), _ContextPathMatchers[i].ContextPathPatternMatcher.Pattern);
             }
             AddSummaryExtraPatterns(patterns);
-            summary.A(EnvConsts.SummaryPatterns, patterns);
+            summary.A(RootConsts.SummaryPatterns, patterns);
         }
 
         protected virtual void AddSummaryExtraPatterns(Data patterns) {}

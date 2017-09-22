@@ -93,8 +93,8 @@ protected override void AddSummaryFields(Data summary) {
 ```
 protected ${class}(TO owner, string key) : base(owner, key) {
     _Context = owner == null ? null : owner.GetContext();
-    _Path = Env.GetAspectPath(this);
-    _Uri = Env.GetAspectUri(this);
+    _Path = Root.GetAspectPath(this);
+    _Uri = Root.GetAspectUri(this);
 }
 ```
 
@@ -112,8 +112,8 @@ public IDict OwnerAsDict {
 ```
 protected ${class}(TO owner, string key) : base(owner, key) {
     _Context = owner == null ? null : owner.GetContext();
-    _Path = Env.GetAspectPath(this);
-    _Uri = Env.GetAspectUri(this);
+    _Path = Root.GetAspectPath(this);
+    _Uri = Root.GetAspectUri(this);
 }
 ```
 
@@ -161,15 +161,15 @@ public override string RevInfo {
 ```
 protected ${class}(TO owner, int index) : base(owner, index) {
     _Context = owner == null ? null : owner.GetContext();
-    _Path = Env.GetAspectPath(this);
-    _Uri = Env.GetAspectUri(this);
+    _Path = Root.GetAspectPath(this);
+    _Uri = Root.GetAspectUri(this);
 }
 
 public override bool _SetIndex(IOwner owner, int index) {
     if (!base._SetIndex(owner, index)) return false;
 
-    _Path = Env.GetAspectPath(this);
-    _Uri = Env.GetAspectUri(this);
+    _Path = Root.GetAspectPath(this);
+    _Uri = Root.GetAspectUri(this);
     return true;
 }
 ```
@@ -254,7 +254,7 @@ public override sealed bool DebugMode {
 
 protected override sealed void OnAdded() {
     if (_Context != null) {
-        Env.Instance.Hooks._OnAspectAdded(this);
+        _Context.Root.Hooks._OnAspectAdded(this);
     }
     OnAspectAdded();
 }
@@ -304,7 +304,8 @@ protected override void AddSummaryFields(Data summary) {
 
 # CONTEXT_MIXIN() #
 ```
-    _Path = Env.GetContextPath(this);
+    _Root = Root.GetRoot(this);
+    _Path = Root.GetContextPath(this);
 
     _Mapping = AddTopAspect<Mapping>(ContextConsts.KeyMapping);
     _Properties = AddTopAspect<Properties>(ContextConsts.KeyProperties);
@@ -314,6 +315,11 @@ protected override void AddSummaryFields(Data summary) {
     _Vars = AddTopAspect<Vars>(ContextConsts.KeyVars);
     _Utils = AddTopAspect<Utils>(ContextConsts.KeyUtils);
     _Manners = AddTopAspect<Manners>(ContextConsts.KeyManners);
+}
+
+private readonly Root _Root = null;
+public Root Root {
+    get { return _Root; }
 }
 
 public IDictContext OwnerAsDictContext {
@@ -395,7 +401,7 @@ public bool Removed {
 }
 
 protected override sealed void OnAdded() {
-    Env.Instance.Hooks._OnContextAdded(this);
+    Root.Hooks._OnContextAdded(this);
     OnContextAdded();
 }
 
@@ -405,7 +411,7 @@ protected override sealed void OnRemoved() {
         return;
     }
     _Removed = true;
-    Env.Instance.Hooks._OnContextRemoved(this);
+    Root.Hooks._OnContextRemoved(this);
     OnContextRemoved();
 }
 

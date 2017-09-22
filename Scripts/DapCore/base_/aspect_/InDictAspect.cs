@@ -7,8 +7,8 @@ namespace angeldnd.dap {
         //SILP:IN_DICT_ASPECT_MIXIN_CONSTRUCTOR(InDictAspect)
         protected InDictAspect(TO owner, string key) : base(owner, key) {  //__SILP__
             _Context = owner == null ? null : owner.GetContext();          //__SILP__
-            _Path = Env.GetAspectPath(this);                               //__SILP__
-            _Uri = Env.GetAspectUri(this);                                 //__SILP__
+            _Path = Root.GetAspectPath(this);                              //__SILP__
+            _Uri = Root.GetAspectUri(this);                                //__SILP__
         }                                                                  //__SILP__
 
         //SILP: ASPECT_MIXIN()
@@ -51,7 +51,7 @@ namespace angeldnd.dap {
                                                                                        //__SILP__
         protected override sealed void OnAdded() {                                     //__SILP__
             if (_Context != null) {                                                    //__SILP__
-                Env.Instance.Hooks._OnAspectAdded(this);                               //__SILP__
+                _Context.Root.Hooks._OnAspectAdded(this);                              //__SILP__
             }                                                                          //__SILP__
             OnAspectAdded();                                                           //__SILP__
         }                                                                              //__SILP__

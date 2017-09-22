@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace angeldnd.dap {
-    public sealed class DebugHook : EnvHook {
+    public sealed class DebugHook : RootHook {
         private bool _Setup = false;
 
         private string _Description = null;
@@ -10,7 +10,7 @@ namespace angeldnd.dap {
             get { return _Description; }
         }
 
-        public DebugHook(EnvHooks owner, int index) : base(owner, index) {
+        public DebugHook(RootHooks owner, int index) : base(owner, index) {
             Setup(
                 "DebugHook",
                 (IContext context) => {
@@ -18,13 +18,13 @@ namespace angeldnd.dap {
             });
         }
 
-        private List<EnvUriMatcher> _AspectPathMatchers = new List<EnvUriMatcher>();
+        private List<UriMatcher> _AspectPathMatchers = new List<UriMatcher>();
         public int AspectMatchersCount {
             get { return _AspectPathMatchers.Count; }
         }
 
         public void AddAspectPattern(string contextPathPattern, string aspectPathPattern) {
-            EnvUriMatcher matcher = new EnvUriMatcher(contextPathPattern, aspectPathPattern);
+            UriMatcher matcher = new UriMatcher(contextPathPattern, aspectPathPattern);
             if (matcher.CanMatchAspect()) {
                 _AspectPathMatchers.Add(matcher);
             } else {
