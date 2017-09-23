@@ -24,4 +24,7 @@
     <PackageReference Include="System.Runtime" Version="4.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="DapCore\log_\FileLogProvider.cs.meta" />
+  </ItemGroup>
 </Project>

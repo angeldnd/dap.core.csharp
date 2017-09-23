@@ -3,13 +3,6 @@ using System.Collections.Generic;
 
 namespace angeldnd.dap {
     public sealed class DebugHook : RootHook {
-        private bool _Setup = false;
-
-        private string _Description = null;
-        public string Description {
-            get { return _Description; }
-        }
-
         public DebugHook(RootHooks owner, int index) : base(owner, index) {
             Setup(
                 "DebugHook",

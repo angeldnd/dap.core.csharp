@@ -53,22 +53,14 @@ namespace angeldnd.dap {
         }
 
         public void Critical(string format, params object[] values) {
-#if DOTNET_CORE
-            StackTrace stackTrace = Log.FakeStackTrace;
-#else
             StackTrace stackTrace = new StackTrace(1, true);
-#endif
             string msg = Log.GetMsg(format, values);
             AddLog(this, LoggerConsts.CRITICAL, msg, stackTrace);
             throw new DapException(msg);
         }
 
         public void Error(string format, params object[] values) {
-#if DOTNET_CORE
-            StackTrace stackTrace = Log.FakeStackTrace;
-#else
             StackTrace stackTrace = new StackTrace(1, true);
-#endif
             AddLog(this, LoggerConsts.ERROR, Log.GetMsg(format, values), stackTrace);
         }
 
@@ -95,9 +87,6 @@ namespace angeldnd.dap {
         }
 
         public string FormatStackTrace(StackTrace stackTrace, string prefix, int max) {
-#if DOTNET_CORE
-            return Environment.StackTrace;
-#else
             _StackBuilder.Length = 0;
             for (int i = 0; i< stackTrace.FrameCount; i++) {
                 if (i >= max) break;
@@ -116,7 +105,6 @@ namespace angeldnd.dap {
                 _StackBuilder.Append("()\n");
             }
             return _StackBuilder.ToString();
-#endif
         }
 
         public string FormatBytes(byte[] data, int startIndex, int size, string prefix = null) {
@@ -164,7 +152,7 @@ namespace angeldnd.dap {
         }
 
         protected virtual string GetTickMsg() {
-            return string.Format("[{0}:{1}:{2}] ", Env.Round, Env.TickCount, Env.FrameCount);
+            return "";
         }
     }
 }

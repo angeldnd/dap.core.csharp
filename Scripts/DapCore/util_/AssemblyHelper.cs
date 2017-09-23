@@ -6,10 +6,6 @@ using System.Text;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-#if DOTNET_CORE
-using Microsoft.Extensions.DependencyModel;
-using Microsoft.DotNet.InternalAbstractions;
-#endif
 
 namespace angeldnd.dap {
     public static class AssemblyHelper {
@@ -29,14 +25,8 @@ namespace angeldnd.dap {
         }
 
         public static void ForEachAssembly(Action<Assembly> callback) {
-#if DOTNET_CORE
-            var libs = DependencyContext.Default.CompileLibraries;
-            foreach (var lib in libs) {
-                Assembly asm = Assembly.Load(new AssemblyName(lib.Name));
-#else
             Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly asm in asms) {
-#endif
                 callback(asm);
             }
         }
